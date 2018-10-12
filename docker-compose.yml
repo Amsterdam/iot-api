@@ -1,0 +1,38 @@
+version: '2.0'
+services:
+
+  database:
+    image: amsterdam/postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: iot
+      POSTGRES_USER: iot
+      POSTGRES_PASSWORD: insecure
+    volumes:
+      - ~/.ssh/datapunt.key:/root/.ssh/datapunt.key
+      - ./backups:/tmp/backups
+
+  api:
+    build: ./api
+    ports:
+      - "8001:8001"
+    links:
+      - database
+    environment:
+      - SECRET_KEY=insecure
+      - DB_NAME=iot
+      - DB_PASSWORD=insecure
+      - DJANGO_SETTINGS_MODULE=iot.settings.development
+      - UWSGI_HTTP=0.0.0.0:8001
+      - UWSGI_MASTER=1
+      - UWSGI_STATIC_INDEX=index.html
+      - UWSGI_STATIC_MAP=/iot/static=/static
+      - UWSGI_CALLABLE=application
+      - UWSGI_VACUUM=1
+      - UWSGI_STATIC_EXPIRES=/* 3600
+      - UWSGI_OFFLOAD_THREADS=1
+      - UWSGI_HARAKIRI=15
+      - UWSGI_DIE_ON_TERM=1
+      - UWSGI_MODULE=iot.wsgi:application
+    command: uwsgi --py-auto-reload=1

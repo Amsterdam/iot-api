@@ -1,0 +1,35 @@
+# Django packages
+django-braces
+django-cors-headers
+django-extensions
+django-filter
+
+# REST
+drf_amsterdam
+drf-extensions
+djangorestframework
+djangorestframework-csv
+djangorestframework-xml
+djangorestframework-gis
+drf_yasg
+
+# Database
+psycopg2-binary
+
+# Datapunt packages
+datapunt-authorization-django
+datapunt-authorization-levels
+
+# Validation
+swagger-spec-validator
+
+# Logging
+graypy
+pygelf
+
+# Markup
+markdown
+pygments
+
+# Sentry
+raven
