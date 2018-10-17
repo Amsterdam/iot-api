@@ -4,7 +4,6 @@ from django.conf.urls import include, url
 
 from . import views
 
-
 urlpatterns = [
     url(r'^ping/$', views.PingView.as_view(), name='ping'),
 ]

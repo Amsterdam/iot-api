@@ -9,7 +9,7 @@ clean: pyclean
 	@rm -rf venv
 
 venv: clean
-	virtualenv -p python3 venv
+	virtualenv -p python3.6 venv
 	$(PIP) install -U "pip"
 	$(PIP) install -r $(DEPS)
 
