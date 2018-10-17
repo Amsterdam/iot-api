@@ -16,7 +16,6 @@ services:
       DATABASE_NAME: iot
       DATABASE_USER: iot
       DATABASE_PASSWORD: insecure
-      PARKEERVAKKEN_OS_PASSWORD:
       ENVIRONMENT: test
     volumes:
         - ./run_tests.sh:/app/run_tests.sh
