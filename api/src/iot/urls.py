@@ -29,8 +29,10 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     url(r'^iothings/', include(router.urls + [
-        url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=None), name='schema-json'),
-        url(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=None), name='schema-swagger-ui'),
+        url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=None),
+            name='schema-json'),
+        url(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=None),
+            name='schema-swagger-ui'),
         url(r'^ping/$', views.PingView.as_view(), name='ping'),
     ])),
     url(r'^status/', include('iot.health.urls')),
