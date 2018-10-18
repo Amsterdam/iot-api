@@ -4,6 +4,9 @@ django-cors-headers
 django-extensions
 django-filter
 
+# Country codes, names and flags #
+django-countries
+
 # REST
 drf_amsterdam
 drf-extensions
