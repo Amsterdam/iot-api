@@ -13,6 +13,7 @@ djangorestframework-csv==2.1.0
 djangorestframework-xml==1.3.0
 djangorestframework-gis==0.13
 drf-yasg==1.10.2
+flex==6.13.2
 # Database
 psycopg2-binary==2.7.5
 # Datapunt packages

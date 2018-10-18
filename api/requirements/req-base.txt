@@ -14,7 +14,9 @@ djangorestframework
 djangorestframework-csv
 djangorestframework-xml
 djangorestframework-gis
+
 drf_yasg
+flex
 
 # Database
 psycopg2-binary

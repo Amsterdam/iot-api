@@ -26,6 +26,8 @@ ALLOWED_HOSTS = [
 INTERNAL_IPS = ('127.0.0.1', '0.0.0.0')
 CORS_ORIGIN_ALLOW_ALL = True
 
+DATAPUNT_API_URL = os.getenv('DATAPUNT_API_URL', 'https://api.data.amsterdam.nl/')
+
 # Django security settings
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
@@ -45,6 +47,7 @@ THIRD_PARTY_APPS = (
 
     'datapunt_api',
 
+    'drf_yasg',
     'raven.contrib.django.raven_compat',
 
     'rest_framework',
