@@ -8,8 +8,10 @@ from iot.settings.settings_databases import (OVERRIDE_HOST_ENV_VAR,
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Django settings
-SECRET_KEY = os.getenv('SECRET_KEY', default='o=8|EqT#%+z+WxF>Osb')
-DEBUG = False
+INSECURE_SECRET_KEY = 'insecure'
+SECRET_KEY = os.getenv('SECRET_KEY', INSECURE_SECRET_KEY)
+DEBUG = SECRET_KEY == INSECURE_SECRET_KEY
+
 ALLOWED_HOSTS = [
     'api.data.amsterdam.nl',
     'acc.api.data.amsterdam.nl',
@@ -20,29 +22,20 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     '*',
 ]
-ADMIN_LOGIN = 'iot.admin@amsterdam.nl'
+
 INTERNAL_IPS = ('127.0.0.1', '0.0.0.0')
 CORS_ORIGIN_ALLOW_ALL = True
-SITE_ID = 1
-SITE_NAME = 'iot API'
-SITE_DOMAIN = os.getenv('SITE_DOMAIN', 'api.data.amsterdam.nl')
 
 # Django security settings
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
 
-
 # APP CONFIGURATION
 # ------------------------------------------------------------------------------
 DJANGO_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.staticfiles',
-    'django.contrib.messages',
-    'django.contrib.sessions',
-    'django.contrib.sites',
-    'django.contrib.auth',
-    'django.contrib.admin',
     'django.contrib.gis',
 )
 
@@ -70,16 +63,10 @@ LOCAL_APPS = (
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = (
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.contrib.sites.middleware.CurrentSiteMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'authorization_django.authorization_middleware',
 )
 
 DEBUG_MIDDLEWARE = (
@@ -128,24 +115,24 @@ TEMPLATES = [
 DATABASE_OPTIONS = {
     LocationKey.docker: {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': os.getenv('DATABASE_NAME', 'iot'),
-        'USER': os.getenv('DATABASE_USER', 'iot'),
+        'NAME': os.getenv('DATABASE_NAME', 'iothings'),
+        'USER': os.getenv('DATABASE_USER', 'iothings'),
         'PASSWORD': os.getenv('DATABASE_PASSWORD', 'insecure'),
         'HOST': 'database',
         'PORT': '5432',
     },
     LocationKey.local: {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': os.getenv('DATABASE_NAME', 'iot'),
-        'USER': os.getenv('DATABASE_USER', 'iot'),
+        'NAME': os.getenv('DATABASE_NAME', 'iothings'),
+        'USER': os.getenv('DATABASE_USER', 'iothings'),
         'PASSWORD': os.getenv('DATABASE_PASSWORD', 'insecure'),
         'HOST': get_docker_host(),
         'PORT': '5432',
     },
     LocationKey.override: {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': os.getenv('DATABASE_NAME', 'iot'),
-        'USER': os.getenv('DATABASE_USER', 'iot'),
+        'NAME': os.getenv('DATABASE_NAME', 'iothings'),
+        'USER': os.getenv('DATABASE_USER', 'iothings'),
         'PASSWORD': os.getenv('DATABASE_PASSWORD', 'insecure'),
         'HOST': os.getenv(OVERRIDE_HOST_ENV_VAR),
         'PORT': os.getenv(OVERRIDE_PORT_ENV_VAR, '5432'),

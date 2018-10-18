@@ -6,8 +6,8 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_DB: iot
-      POSTGRES_USER: iot
+      POSTGRES_DB: iothings
+      POSTGRES_USER: iothings
       POSTGRES_PASSWORD: insecure
     volumes:
       - ~/.ssh/datapunt.key:/root/.ssh/datapunt.key
@@ -23,7 +23,7 @@ services:
       - SECRET_KEY=insecure
       - DB_NAME=iot
       - DB_PASSWORD=insecure
-      - DJANGO_SETTINGS_MODULE=iot.settings.development
+      - DJANGO_SETTINGS_MODULE=iot.settings.settings
       - UWSGI_HTTP=0.0.0.0:8001
       - UWSGI_MASTER=1
       - UWSGI_STATIC_INDEX=index.html

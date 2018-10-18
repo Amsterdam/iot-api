@@ -5,16 +5,16 @@ services:
     image: amsterdam/postgres
     environment:
       POSTGRES_PASSWORD: insecure
-      POSTGRES_USER: iot
-      POSTGRES_DB: iot
+      POSTGRES_USER: iothings
+      POSTGRES_DB: iothings
 
   tests:
     build: ../../
     links:
       - database:iot_db
     environment:
-      DATABASE_NAME: iot
-      DATABASE_USER: iot
+      DATABASE_NAME: iothings
+      DATABASE_USER: iothings
       DATABASE_PASSWORD: insecure
       ENVIRONMENT: test
     volumes:

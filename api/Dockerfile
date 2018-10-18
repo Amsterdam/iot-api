@@ -22,7 +22,7 @@ RUN pip install --no-cache-dir -r /requirements/req-test.txt
 USER datapunt
 
 RUN export SECRET_KEY=insecure
-RUN export DJANGO_SETTINGS_MODULE=iot.settings.development
+RUN export DJANGO_SETTINGS_MODULE=iot.settings.settings
 
 RUN python manage.py collectstatic --no-input
 
