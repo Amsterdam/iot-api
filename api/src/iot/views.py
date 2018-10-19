@@ -16,7 +16,7 @@ class IotRootView(routers.APIRootView):
 
     [github/amsterdam/afvalcontainers](https://github.com/Amsterdam/iot-api)
 
-    [Author: David van Buiten](https://github.com/david-elements/)
+    [Author: David van Buiten](https://github.com/vanbuiten/)
     """
 
 
