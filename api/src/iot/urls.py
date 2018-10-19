@@ -8,7 +8,12 @@ from rest_framework.routers import DefaultRouter
 
 from . import views
 
-router = DefaultRouter()
+
+class IoTRouter(DefaultRouter):
+    APIRootView = views.IotRootView
+
+
+router = IoTRouter()
 router.register(r'devices', views.DevicesView, base_name='device')
 
 

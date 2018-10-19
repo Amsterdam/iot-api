@@ -3,11 +3,21 @@ from __future__ import absolute_import, unicode_literals
 
 from datapunt_api.rest import DatapuntViewSet
 from django.utils import timezone
-from rest_framework import views
+from rest_framework import routers, views
 from rest_framework.response import Response
 
 from .models import Device
 from .serializers import DeviceSerializer
+
+
+class IotRootView(routers.APIRootView):
+    """
+    IoT Devices in the city are shown here as a list
+
+    [github/amsterdam/afvalcontainers](https://github.com/Amsterdam/iot-api)
+
+    [Author: David van Buiten](https://github.com/david-elements/)
+    """
 
 
 class PingView(views.APIView):
