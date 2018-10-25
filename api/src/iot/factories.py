@@ -3,15 +3,12 @@ import random
 import factory
 import faker
 
-from .models import Address, Device, Owner, Type
+from .models import Address, Device, Person, Type
 
 fake = faker.Faker()
 
 
 class AddressFactory(factory.DjangoModelFactory):
-    class Meta:
-        model = Address
-
     street = factory.LazyAttribute(
         lambda o: fake.street_name()
     )
@@ -34,26 +31,24 @@ class AddressFactory(factory.DjangoModelFactory):
         lambda o: fake.country_code()
     )
 
-
-class OwnerFactory(factory.DjangoModelFactory):
-
     class Meta:
-        model = Owner
+        model = Address
 
+
+class PersonFactory(factory.DjangoModelFactory):
     name = factory.LazyAttribute(
-        lambda o: '{0}'.format(fake.user_name())
+        lambda o: '{0}'.format(fake.name())
     )
 
     email = factory.LazyAttribute(
         lambda o: '{0}@amsterdam.nl'.format(o.name)
     )
 
+    class Meta:
+        model = Person
+
 
 class TypeFactory(factory.DjangoModelFactory):
-
-    class Meta:
-        model = Type
-
     name = factory.LazyAttribute(
         lambda o: '{0}'.format(fake.text(max_nb_chars=32))
     )
@@ -66,30 +61,32 @@ class TypeFactory(factory.DjangoModelFactory):
         lambda o: fake.text(max_nb_chars=128)
     )
 
+    class Meta:
+        model = Type
+
 
 class DeviceFactory(factory.DjangoModelFactory):
-
-    class Meta:
-        model = Device
-
     reference = factory.LazyAttribute(
         lambda o: fake.text(max_nb_chars=32)
     )
-
     application = factory.LazyAttribute(
         lambda o: fake.text(max_nb_chars=32)
     )
+    type = factory.SubFactory(TypeFactory)
 
+    address = factory.SubFactory(AddressFactory)
     longitude = factory.LazyAttribute(
         lambda o: fake.longitude()
     )
-
     latitude = factory.LazyAttribute(
         lambda o: fake.latitude()
     )
 
-    owner = factory.SubFactory(OwnerFactory)
+    organisation = factory.LazyAttribute(
+        lambda o: fake.company()
+    )
+    owner = factory.SubFactory(PersonFactory)
+    contact = factory.SubFactory(PersonFactory)
 
-    address = factory.SubFactory(AddressFactory)
-
-    type = factory.SubFactory(TypeFactory)
+    class Meta:
+        model = Device

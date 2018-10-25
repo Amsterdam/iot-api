@@ -12,7 +12,7 @@ def health(request):
         with connection.cursor() as cursor:
             cursor.execute('select 1')
             assert cursor.fetchone()
-    except Exception as e:
+    except Exception:
         log.exception('Database connectivity failed')
         return HttpResponse(
             'Database connectivity failed',

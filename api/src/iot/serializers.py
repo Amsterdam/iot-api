@@ -1,6 +1,6 @@
 from datapunt_api.rest import HALSerializer
 
-from .models import Address, Device, Owner, Type
+from .models import Address, Device, Type
 
 
 class AddressSerializer(HALSerializer):
@@ -10,17 +10,6 @@ class AddressSerializer(HALSerializer):
             'street',
             'postal_code',
             'city',
-            'municipality',
-            'country',
-        )
-
-
-class OwnerSerializer(HALSerializer):
-    class Meta:
-        model = Owner
-        fields = (
-            'name',
-            'email',
         )
 
 
@@ -36,7 +25,6 @@ class TypeSerializer(HALSerializer):
 
 class DeviceSerializer(HALSerializer):
     address = AddressSerializer()
-    owner = OwnerSerializer()
     type = TypeSerializer()
 
     class Meta:
@@ -45,9 +33,10 @@ class DeviceSerializer(HALSerializer):
             '_links',
             'reference',
             'application',
+            'type',
+            'installation_point',
             'longitude',
             'latitude',
-            'owner',
             'address',
-            'type',
+            'organisation',
         )

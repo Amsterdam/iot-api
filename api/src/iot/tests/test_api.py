@@ -48,21 +48,15 @@ class DeviceTestCase(APITestCase):
 
         self.assertEqual(device.reference, data['results'][0]['reference'])
         self.assertEqual(device.application, data['results'][0]['application'])
-        self.assertAlmostEqual(float(device.longitude), float(data['results'][0]['longitude']))
-        self.assertAlmostEqual(float(device.latitude), float(data['results'][0]['latitude']))
-
-        self.assertEqual(device.owner.name, data['results'][0]['owner']['name'])
-        self.assertEqual(device.owner.email, data['results'][0]['owner']['email'])
-
-        self.assertEqual(device.address.street, data['results'][0]['address']['street'])
-        self.assertEqual(device.address.postal_code, data['results'][0]['address']['postal_code'])
-        self.assertEqual(device.address.city, data['results'][0]['address']['city'])
-        self.assertEqual(device.address.municipality, data['results'][0]['address']['municipality'])
-        self.assertEqual(device.address.country, data['results'][0]['address']['country'])
-
         self.assertEqual(device.type.name, data['results'][0]['type']['name'])
         self.assertEqual(device.type.application, data['results'][0]['type']['application'])
         self.assertEqual(device.type.description, data['results'][0]['type']['description'])
+        self.assertAlmostEqual(float(device.longitude), float(data['results'][0]['longitude']))
+        self.assertAlmostEqual(float(device.latitude), float(data['results'][0]['latitude']))
+        self.assertEqual(device.address.street, data['results'][0]['address']['street'])
+        self.assertEqual(device.address.postal_code, data['results'][0]['address']['postal_code'])
+        self.assertEqual(device.address.city, data['results'][0]['address']['city'])
+        self.assertEqual(device.organisation, data['results'][0]['organisation'])
 
     def test_list_pagination(self):
         DeviceFactory.create_batch(10)
@@ -110,21 +104,15 @@ class DeviceTestCase(APITestCase):
 
         self.assertEqual(device.reference, data['reference'])
         self.assertEqual(device.application, data['application'])
-        self.assertAlmostEqual(float(device.longitude), float(data['longitude']))
-        self.assertAlmostEqual(float(device.latitude), float(data['latitude']))
-
-        self.assertEqual(device.owner.name, data['owner']['name'])
-        self.assertEqual(device.owner.email, data['owner']['email'])
-
-        self.assertEqual(device.address.street, data['address']['street'])
-        self.assertEqual(device.address.postal_code, data['address']['postal_code'])
-        self.assertEqual(device.address.city, data['address']['city'])
-        self.assertEqual(device.address.municipality, data['address']['municipality'])
-        self.assertEqual(device.address.country, data['address']['country'])
-
         self.assertEqual(device.type.name, data['type']['name'])
         self.assertEqual(device.type.application, data['type']['application'])
         self.assertEqual(device.type.description, data['type']['description'])
+        self.assertAlmostEqual(float(device.longitude), float(data['longitude']))
+        self.assertAlmostEqual(float(device.latitude), float(data['latitude']))
+        self.assertEqual(device.address.street, data['address']['street'])
+        self.assertEqual(device.address.postal_code, data['address']['postal_code'])
+        self.assertEqual(device.address.city, data['address']['city'])
+        self.assertEqual(device.organisation, data['organisation'])
 
     def test_put(self):
         device = DeviceFactory.create()
