@@ -1,8 +1,9 @@
 from django.db import models
 from django.utils.translation import ugettext as _
 from django_countries.fields import CountryField
+from multiselectfield import MultiSelectField
 
-from iot.constants import FREQUENCY_CHOICES
+from iot.constants import CATEGORY_CHOICES, FREQUENCY_CHOICES
 
 
 class Address(models.Model):
@@ -44,6 +45,14 @@ class Address(models.Model):
         verbose_name_plural = _('addresses')
 
 
+class Location(models.Model):
+    """
+    The location of the device
+    """
+    longitude = models.FloatField()
+    latitude = models.FloatField()
+
+
 class Type(models.Model):
     """
     The type
@@ -60,11 +69,20 @@ class Type(models.Model):
 
 
 class Person(models.Model):
+    """
+    The owner/contact person
+    """
     name = models.CharField(
         max_length=255,
     )
 
     email = models.EmailField()
+
+    organisation = models.CharField(
+        max_length=250,
+        null=True,
+        blank=True,
+    )
 
 
 class Device(models.Model):
@@ -77,10 +95,17 @@ class Device(models.Model):
     application = models.CharField(
         max_length=64,
     )
-    type = models.ForeignKey(
+    types = models.ManyToManyField(
         to='Type',
-        on_delete=models.SET_NULL,
         null=True,
+        blank=True,
+    )
+    categories = MultiSelectField(
+        choices=CATEGORY_CHOICES,
+        max_length=64,
+        max_choices=6,
+        null=True,
+        blank=True,
     )
     installation_point = models.CharField(
         max_length=64,
@@ -94,33 +119,39 @@ class Device(models.Model):
     permit = models.BooleanField(
         default=False,
         null=True,
-        blank=True
+        blank=True,
     )
     in_use_since = models.DateField(
         null=True,
+        blank=True,
     )
 
-    # Location
+    # Address / Location
     address = models.ForeignKey(
         to='Address',
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
     )
-    longitude = models.FloatField()
-    latitude = models.FloatField()
+    location = models.ForeignKey(
+        to='Location',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
 
     # Owner and contact
-    organisation = models.CharField(
-        max_length=250,
-    )
     owner = models.ForeignKey(
         to='Person',
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         null=True,
+        blank=True,
         related_name='owner',
     )
     contact = models.ForeignKey(
         to='Person',
         on_delete=models.SET_NULL,
         null=True,
+        blank=True,
         related_name='contact',
     )
