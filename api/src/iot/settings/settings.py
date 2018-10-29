@@ -45,6 +45,8 @@ THIRD_PARTY_APPS = (
     'django_extensions',
     'django_filters',
 
+    'djcelery_email',
+
     'datapunt_api',
 
     'drf_yasg',
@@ -336,3 +338,37 @@ REST_FRAMEWORK = dict(
         'nouser': '60/hour'
     },
 )
+
+
+# Mail
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'djcelery_email.backends.CeleryEmailBackend')
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = os.getenv('EMAIL_PORT', 465)
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', False)
+if not EMAIL_USE_TLS:
+    EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL', True)
+
+NOREPLY = 'no-reply@amsterdam.nl'
+
+# This should be set to 'django.core.mail.backends.smtp.EmailBackend' for acc/prod
+CELERY_EMAIL_BACKEND = os.getenv('CELERY_EMAIL_BACKEND',
+                                 'django.core.mail.backends.smtp.EmailBackend')
+
+
+# Celery settings
+RABBITMQ_USER = os.getenv('RABBITMQ_USER', 'iothings')
+RABBITMQ_PASSWORD = os.getenv('RABBITMQ_PASSWORD', 'insecure')
+RABBITMQ_VHOST = os.getenv('RABBITMQ_VHOST', 'vhost')
+RABBITMQ_HOST = os.getenv('RABBITMQ_HOST', 'localhost')
+
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL',
+                              f'amqp://{RABBITMQ_USER}:{RABBITMQ_PASSWORD}'
+                              f'@{RABBITMQ_HOST}/{RABBITMQ_VHOST}')
+
+CELERY_EMAIL_TASK_CONFIG = {
+    'queue': 'email',
+    'ignore_result': True,
+    'rate_limit': '50/m',  # * CELERY_EMAIL_CHUNK_SIZE (default: 10)
+}

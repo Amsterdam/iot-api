@@ -4,10 +4,12 @@ from __future__ import absolute_import, unicode_literals
 from datapunt_api.rest import DatapuntViewSet
 from django.utils import timezone
 from rest_framework import routers, views
+from rest_framework.mixins import CreateModelMixin
 from rest_framework.response import Response
+from rest_framework.viewsets import GenericViewSet
 
-from .models import Device
-from .serializers import DeviceSerializer
+from iot.models import Device
+from iot.serializers import DeviceSerializer, IotContactSerializer
 
 
 class IotRootView(routers.APIRootView):
@@ -41,5 +43,8 @@ class DevicesView(DatapuntViewSet):
     serializer_class = DeviceSerializer
     serializer_detail_class = DeviceSerializer
 
-    def __init__(self, *args, **kwargs):
-        super(DevicesView, self).__init__(**kwargs)
+
+class ContactView(CreateModelMixin, GenericViewSet):
+    queryset = Device.objects.none()
+    serializer_class = IotContactSerializer
+    pagination_class = None

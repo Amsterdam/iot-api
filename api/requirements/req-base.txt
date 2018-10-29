@@ -21,6 +21,12 @@ djangorestframework-gis
 drf_yasg
 flex
 
+# Celery
+Celery
+
+# Celery and Mail
+django-celery-email
+
 # Database
 psycopg2-binary
 

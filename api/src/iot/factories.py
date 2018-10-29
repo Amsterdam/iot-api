@@ -55,7 +55,7 @@ class PersonFactory(factory.DjangoModelFactory):
     )
 
     email = factory.LazyAttribute(
-        lambda o: '{0}@amsterdam.nl'.format(o.name)
+        lambda o: '{0}@amsterdam.nl'.format(o.name.replace(' ', '.').lower())
     )
 
     organisation = factory.LazyAttribute(

@@ -1,6 +1,8 @@
 from datapunt_api.rest import HALSerializer
 from rest_framework import serializers
 
+from iot.tasks import send_iot_request
+
 from .models import Address, Device, Type
 
 
@@ -61,3 +63,50 @@ class DeviceSerializer(HALSerializer):
     def get_latitude(self, obj):
         if obj.location:
             return obj.location.latitude
+
+
+class IotContactSerializer(serializers.Serializer):
+    device = serializers.CharField(
+        required=True,
+    )
+
+    name = serializers.CharField(
+        required=True,
+    )
+
+    email = serializers.EmailField(
+        required=True,
+    )
+
+    comment = serializers.CharField(
+        required=False,
+        max_length=250,
+    )
+
+    can_i_have_access = serializers.BooleanField(
+        default=False,
+    )
+
+    can_i_get_more_information = serializers.BooleanField(
+        default=False,
+    )
+
+    can_i_use_collected_data = serializers.BooleanField(
+        default=False,
+    )
+
+    does_the_device_register_personal_data = serializers.BooleanField(
+        default=False,
+    )
+
+    def validate_device(self, value):
+        try:
+            device = Device.objects.get(pk=value)
+            return device.pk
+        except Device.DoesNotExist:
+            raise serializers.ValidationError('Something went wrong!')
+
+    def save(self, **kwargs):
+        # We do not actualy store any data
+        device = self.validated_data['device']
+        send_iot_request.delay(device_id=device, form_data=self.validated_data)
