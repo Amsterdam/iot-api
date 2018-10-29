@@ -19,9 +19,10 @@ services:
       - "8001:8001"
     links:
       - database
+      - rabbit
     environment:
       - SECRET_KEY=insecure
-      - DB_NAME=iot
+      - DB_NAME=iothings
       - DB_PASSWORD=insecure
       - DJANGO_SETTINGS_MODULE=iot.settings.settings
       - UWSGI_HTTP=0.0.0.0:8001
@@ -35,4 +36,40 @@ services:
       - UWSGI_HARAKIRI=15
       - UWSGI_DIE_ON_TERM=1
       - UWSGI_MODULE=iot.wsgi:application
+      - RABBITMQ_USER=iothings
+      - RABBITMQ_PASSWORD=insecure
+      - RABBITMQ_VHOST=vhost
+      - RABBITMQ_HOST=localhost
+    volumes:
+      - ./api/src:/app
+      - ./api/deploy:/deploy
     command: uwsgi --py-auto-reload=1
+
+  rabbit:
+    image: rabbitmq:3
+    ports:
+      - "5672:5672"
+    environment:
+      - RABBITMQ_ERLANG_COOKIE='RaViNgRaBbId64'
+      - RABBITMQ_DEFAULT_USER=iothings
+      - RABBITMQ_DEFAULT_PASS=insecure
+      - RABBITMQ_DEFAULT_VHOST=vhost
+
+  celery:
+    build: ./api
+    links:
+      - database
+      - rabbit
+    environment:
+      - SECRET_KEY=insecure
+      - DB_NAME=iothings
+      - DB_PASSWORD=insecure
+      - DJANGO_SETTINGS_MODULE=iot.settings.settings
+      - RABBITMQ_USER=iothings
+      - RABBITMQ_PASSWORD=insecure
+      - RABBITMQ_VHOST=vhost
+      - RABBITMQ_HOST=rabbit
+    volumes:
+      - ./api/src:/app
+      - ./api/deploy:/deploy
+    command: celery -A iot worker -l info

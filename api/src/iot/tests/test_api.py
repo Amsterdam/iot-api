@@ -1,3 +1,5 @@
+from django.core import mail
+from django.test import override_settings
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -138,3 +140,60 @@ class DeviceTestCase(APITestCase):
         response = self.client.delete(url)
 
         self.assertEqual(status.HTTP_405_METHOD_NOT_ALLOWED, response.status_code)
+
+
+class ContactTestCase(APITestCase):
+    def setUp(self):
+        self.device = DeviceFactory.create()
+
+    @override_settings(EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend',
+                       task_always_eager=True)
+    def test_contact(self):
+        mail.outbox = []
+        url = reverse('contact-list')
+        data = {
+            'device': self.device.pk,
+            'name': 'T. Est',
+            'email': 'test@amsterdam.nl',
+        }
+
+        response = self.client.post(url, data=data)
+
+        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
+        self.assertEqual(len(mail.outbox), 2)
+
+        subjects = [
+            'Requested use for IoT device reference {}'.format(
+                self.device.reference
+            ),
+            'Confirmation about request to use IoT device reference {}'.format(
+                self.device.reference
+            )
+        ]
+
+        for message in mail.outbox:
+            self.assertIn(message.subject, subjects)
+
+    def test_contact_invalid_data(self):
+        url = reverse('contact-list')
+        data = {
+            'device': self.device.pk,
+            # 'name': 'T. Est',  # The name is required
+            'email': 'this is not an email address',
+        }
+
+        response = self.client.post(url, data=data)
+
+        self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
+
+    def test_contact_device_does_not_exists(self):
+        url = reverse('contact-list')
+        data = {
+            'device': 666,
+            'name': 'T. Est',
+            'email': 'test@amsterdam.nl',
+        }
+
+        response = self.client.post(url, data=data)
+
+        self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
