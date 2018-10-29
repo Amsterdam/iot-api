@@ -7,6 +7,9 @@ django-filter
 # Country codes, names and flags #
 django-countries
 
+# Multiselectfield
+django-multiselectfield
+
 # REST
 drf_amsterdam
 drf-extensions

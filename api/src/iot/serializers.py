@@ -1,4 +1,5 @@
 from datapunt_api.rest import HALSerializer
+from rest_framework import serializers
 
 from .models import Address, Device, Type
 
@@ -25,7 +26,11 @@ class TypeSerializer(HALSerializer):
 
 class DeviceSerializer(HALSerializer):
     address = AddressSerializer()
-    type = TypeSerializer()
+    types = TypeSerializer(many=True)
+    categories = serializers.SerializerMethodField()
+    longitude = serializers.SerializerMethodField()
+    latitude = serializers.SerializerMethodField()
+    organisation = serializers.CharField(source='owner.organisation')
 
     class Meta:
         model = Device
@@ -33,10 +38,26 @@ class DeviceSerializer(HALSerializer):
             '_links',
             'reference',
             'application',
-            'type',
+            'types',
+            'categories',
             'installation_point',
             'longitude',
             'latitude',
             'address',
             'organisation',
         )
+
+    def get_categories(self, obj):
+        return [
+            obj.categories.choices[key.upper()]
+            for key in obj.categories
+
+        ]
+
+    def get_longitude(self, obj):
+        if obj.location:
+            return obj.location.longitude
+
+    def get_latitude(self, obj):
+        if obj.location:
+            return obj.location.latitude
