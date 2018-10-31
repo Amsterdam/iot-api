@@ -104,7 +104,7 @@ class IotContactSerializer(serializers.Serializer):
             device = Device.objects.get(pk=value)
             return device.pk
         except Device.DoesNotExist:
-            raise serializers.ValidationError('Something went wrong!')
+            raise serializers.ValidationError('Device does not exists')
 
     def save(self, **kwargs):
         # We do not actualy store any data
