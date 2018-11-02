@@ -1,1 +1,23 @@
-Contact IoT Owner TXT template
+Geachte eigenaar,
+
+Er is een verzoek voor u binnengekomen via de website https://slimmeapparaten.amsterdam.nl
+
+Hieronder staat de samenvatting van het  ingevulde formulier.
+
+Apparaat: {{ device.reference }}
+
+Naam: {{ form_data.name }}
+E-mailadres: {{ form_data.email }}
+
+[{% if form_data.can_i_have_access %}X{% else %} {% endif %}] Ik wil toegang tot de data uit dit apparaat
+[{% if form_data.can_i_get_more_information %}X{% else %} {% endif %}] Kan ik meer informatie krijgen over de data die uw 'slimme apparaat' (baken, camera, sensor ed) verzamelt?
+[{% if form_data.can_i_use_collected_data %}X{% else %} {% endif %}] Mag ik de verzamelde data evt gebruiken?
+[{% if form_data.does_the_device_register_personal_data %}X{% else %} {% endif %}] Registreert uw slimme apparaat ook gegevens over personen?
+
+Andere vraag of opmerking:
+{{ form_data.comment }}
+
+
+Met vriendelijke groet,
+
+Gemeente Amsterdam
