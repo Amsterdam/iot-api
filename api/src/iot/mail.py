@@ -9,12 +9,12 @@ def send_mail_to_contact(device, context={}):
 
     subject = 'Requested use for IoT device reference {}'.format(device.reference)
     txt_message = get_template('email/contact_iot_owner.txt').render(context)
-    html_message = get_template('email/contact_iot_owner.html').render(context)
+    # html_message = get_template('email/contact_iot_owner.html').render(context)
 
     return send_mail(
         subject=subject,
         message=txt_message,
-        html_message=html_message,
+        # html_message=html_message,
         from_email=settings.NOREPLY,
         recipient_list=to,
         fail_silently=False
@@ -26,12 +26,12 @@ def send_confirmation_mail(to, device, context={}):
 
     subject = 'Confirmation about request to use IoT device reference {}'.format(device.reference)
     txt_message = get_template('email/confirm_iot_request.txt').render(context)
-    html_message = get_template('email/confirm_iot_request.html').render(context)
+    # html_message = get_template('email/confirm_iot_request.html').render(context)
 
     return send_mail(
         subject=subject,
         message=txt_message,
-        html_message=html_message,
+        # html_message=html_message,
         from_email=settings.NOREPLY,
         recipient_list=to,
         fail_silently=False
