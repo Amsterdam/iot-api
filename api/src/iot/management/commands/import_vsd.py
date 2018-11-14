@@ -4,7 +4,6 @@ import requests
 from django.core.management import BaseCommand
 
 from iot.models import Address, Device, Location, Type
-from iot.settings import settings
 
 
 class Command(BaseCommand):
@@ -16,10 +15,6 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self.stdout.write('Import VSD into acceptance/local database')
-        if settings.SECRET_KEY != settings.INSECURE_SECRET_KEY:
-            self.stdout.write('Running the Import VSD command in production is not allowed')
-            return
-
         self.import_vsd()
 
     def import_vsd(self):
