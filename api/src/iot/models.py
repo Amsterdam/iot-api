@@ -16,10 +16,14 @@ class Address(models.Model):
 
     house_number = models.CharField(
         max_length=8,
+        null=True,
+        blank=True,
     )
 
     house_number_addition = models.CharField(
         max_length=16,
+        null=True,
+        blank=True,
     )
 
     postal_code = models.CharField(
@@ -30,6 +34,8 @@ class Address(models.Model):
 
     city = models.CharField(
         max_length=128,
+        null=True,
+        blank=True,
     )
 
     municipality = models.CharField(
