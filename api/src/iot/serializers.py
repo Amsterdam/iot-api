@@ -32,7 +32,7 @@ class DeviceSerializer(HALSerializer):
     categories = serializers.SerializerMethodField()
     longitude = serializers.SerializerMethodField()
     latitude = serializers.SerializerMethodField()
-    organisation = serializers.CharField(source='owner.organisation')
+    organisation = serializers.SerializerMethodField()
 
     class Meta:
         model = Device
@@ -63,6 +63,11 @@ class DeviceSerializer(HALSerializer):
     def get_latitude(self, obj):
         if obj.location:
             return obj.location.latitude
+
+    def get_organisation(self, obj):
+        if obj.owner:
+            return obj.owner.organisation
+        return 'Onbekend'
 
 
 class IotContactSerializer(serializers.Serializer):
