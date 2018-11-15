@@ -38,6 +38,7 @@ class DeviceSerializer(HALSerializer):
         model = Device
         fields = (
             '_links',
+            'id',
             'reference',
             'application',
             'types',
