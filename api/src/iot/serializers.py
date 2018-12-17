@@ -115,4 +115,4 @@ class IotContactSerializer(serializers.Serializer):
     def save(self, **kwargs):
         # We do not actualy store any data
         device = self.validated_data['device']
-        send_iot_request.delay(device_id=device, form_data=self.validated_data)
+        send_iot_request(device_id=device, form_data=self.validated_data)
