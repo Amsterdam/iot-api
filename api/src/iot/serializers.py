@@ -86,6 +86,7 @@ class IotContactSerializer(serializers.Serializer):
 
     comment = serializers.CharField(
         required=False,
+        allow_blank=True,
         max_length=250,
     )
 
