@@ -25,3 +25,15 @@ CATEGORY_CHOICES = (
     (CATEGORY_SMART_TRAFFIC_INFORMATION, _('Slimme verkeersinformatie')),
     (CATEGORY_SMART_LAMPPOST, _('Slimme lantaarnpaal')),
 )
+
+QUEUE_STATUS_NEW = 'N'
+QUEUE_STATUS_IN_PROGRESS = 'P'
+QUEUE_STATUS_FAILED = 'F'
+QUEUE_STATUS_DONE = 'D'
+
+QUEUE_STATUSES = (
+    (QUEUE_STATUS_NEW, 'New'),
+    (QUEUE_STATUS_IN_PROGRESS, 'In progress'),
+    (QUEUE_STATUS_FAILED, 'Failed'),
+    (QUEUE_STATUS_DONE, 'Done'),
+)
