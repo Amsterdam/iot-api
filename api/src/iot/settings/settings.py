@@ -350,6 +350,7 @@ EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', False)
 if not EMAIL_USE_TLS:
     EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL', True)
 
+EMAIL = 'registerslimmeapparaten@amsterdam.nl'
 NOREPLY = 'no-reply@amsterdam.nl'
 
 # This should be set to 'django.core.mail.backends.smtp.EmailBackend' for acc/prod
@@ -372,3 +373,5 @@ CELERY_EMAIL_TASK_CONFIG = {
     'ignore_result': True,
     'rate_limit': '50/m',  # * CELERY_EMAIL_CHUNK_SIZE (default: 10)
 }
+
+ATLAS_POSTCODE_SEARCH = 'https://api.data.amsterdam.nl/atlas/search/postcode'
