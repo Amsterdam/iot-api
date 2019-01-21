@@ -3,17 +3,7 @@ from rest_framework import serializers
 
 from iot.tasks import send_iot_request
 
-from .models import Address, Device, Type
-
-
-class AddressSerializer(HALSerializer):
-    class Meta:
-        model = Address
-        fields = (
-            'street',
-            'postal_code',
-            'city',
-        )
+from .models import Device, Type
 
 
 class TypeSerializer(HALSerializer):
@@ -27,7 +17,6 @@ class TypeSerializer(HALSerializer):
 
 
 class DeviceSerializer(HALSerializer):
-    address = AddressSerializer()
     types = TypeSerializer(many=True)
     categories = serializers.SerializerMethodField()
     longitude = serializers.SerializerMethodField()
@@ -43,10 +32,8 @@ class DeviceSerializer(HALSerializer):
             'application',
             'types',
             'categories',
-            'installation_point',
             'longitude',
             'latitude',
-            'address',
             'organisation',
         )
 
@@ -57,18 +44,18 @@ class DeviceSerializer(HALSerializer):
 
         ]
 
-    def get_longitude(self, obj):
-        if obj.location:
-            return obj.location.longitude
-
-    def get_latitude(self, obj):
-        if obj.location:
-            return obj.location.latitude
-
     def get_organisation(self, obj):
         if obj.owner:
             return obj.owner.organisation
         return 'Onbekend'
+
+    def get_longitude(self, obj):
+        if obj.geometrie:
+            return obj.geometrie.x
+
+    def get_latitude(self, obj):
+        if obj.geometrie:
+            return obj.geometrie.y
 
 
 class IotContactSerializer(serializers.Serializer):

@@ -2,51 +2,13 @@ import random
 
 import factory
 import faker
+from django.contrib.gis.geos import Point
 
 from iot.constants import CATEGORY_CHOICES
 
-from .models import Address, Device, Location, Person, Type
+from .models import Device, Person, Type
 
 fake = faker.Faker()
-
-
-class AddressFactory(factory.DjangoModelFactory):
-    street = factory.LazyAttribute(
-        lambda o: fake.street_name()
-    )
-
-    house_number = factory.LazyAttribute(
-        lambda o: random.randint(0, 100)
-    )
-
-    postal_code = factory.LazyAttribute(
-        lambda o: fake.postcode()
-    )
-
-    city = factory.LazyAttribute(
-        lambda o: fake.city()
-    )
-
-    municipality = 'Amsterdam'
-
-    country = factory.LazyAttribute(
-        lambda o: fake.country_code()
-    )
-
-    class Meta:
-        model = Address
-
-
-class LocationFactory(factory.DjangoModelFactory):
-    longitude = factory.LazyAttribute(
-        lambda o: fake.longitude()
-    )
-    latitude = factory.LazyAttribute(
-        lambda o: fake.latitude()
-    )
-
-    class Meta:
-        model = Location
 
 
 class PersonFactory(factory.DjangoModelFactory):
@@ -95,10 +57,9 @@ class DeviceFactory(factory.DjangoModelFactory):
         lambda o: '{},{}'.format(random.choice(CATEGORY_CHOICES)[0],
                                  random.choice(CATEGORY_CHOICES)[0])
     )
-
-    address = factory.SubFactory(AddressFactory)
-    location = factory.SubFactory(LocationFactory)
-
+    geometrie = factory.LazyAttribute(
+        lambda o: Point(4.58565, 52.03560)
+    )
     owner = factory.SubFactory(PersonFactory)
     contact = factory.SubFactory(PersonFactory)
 

@@ -1,62 +1,8 @@
+from django.contrib.gis.db import models as gis_models
 from django.db import models
-from django.utils.translation import ugettext as _
-from django_countries.fields import CountryField
 from multiselectfield import MultiSelectField
 
 from iot.constants import CATEGORY_CHOICES, FREQUENCY_CHOICES
-
-
-class Address(models.Model):
-    """
-    Address model, representing an actual address
-    """
-    street = models.CharField(
-        max_length=255,
-    )
-
-    house_number = models.CharField(
-        max_length=8,
-        null=True,
-        blank=True,
-    )
-
-    house_number_addition = models.CharField(
-        max_length=16,
-        null=True,
-        blank=True,
-    )
-
-    postal_code = models.CharField(
-        max_length=10,
-        null=True,
-        blank=True,
-    )
-
-    city = models.CharField(
-        max_length=128,
-        null=True,
-        blank=True,
-    )
-
-    municipality = models.CharField(
-        max_length=128,
-        blank=True,
-        null=True,
-    )
-
-    country = CountryField()
-
-    class Meta:
-        verbose_name = _('address')
-        verbose_name_plural = _('addresses')
-
-
-class Location(models.Model):
-    """
-    The location of the device
-    """
-    longitude = models.FloatField()
-    latitude = models.FloatField()
 
 
 class Type(models.Model):
@@ -103,8 +49,6 @@ class Device(models.Model):
     )
     types = models.ManyToManyField(
         to='Type',
-        null=True,
-        blank=True,
     )
     categories = MultiSelectField(
         choices=CATEGORY_CHOICES,
@@ -132,19 +76,18 @@ class Device(models.Model):
         blank=True,
     )
 
-    # Address / Location
-    address = models.ForeignKey(
-        to='Address',
-        on_delete=models.SET_NULL,
+    # Postal code, housenumber and location
+    postal_code = models.CharField(
+        max_length=6,
         null=True,
         blank=True,
     )
-    location = models.ForeignKey(
-        to='Location',
-        on_delete=models.SET_NULL,
+    house_number = models.CharField(
+        max_length=8,
         null=True,
         blank=True,
     )
+    geometrie = gis_models.PointField(name='geometrie', null=True, blank=True)
 
     # Owner and contact
     owner = models.ForeignKey(

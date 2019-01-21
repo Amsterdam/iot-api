@@ -51,18 +51,15 @@ class DeviceTestCase(APITestCase):
         self.assertEqual(device.reference, data['results'][0]['reference'])
         self.assertEqual(device.application, data['results'][0]['application'])
         self.assertEqual(len(device.categories.split(',')), len(data['results'][0]['categories']))
-        self.assertAlmostEqual(float(device.location.longitude),
+        self.assertAlmostEqual(float(device.geometrie.x),
                                float(data['results'][0]['longitude']))
-        self.assertAlmostEqual(float(device.location.latitude),
+        self.assertAlmostEqual(float(device.geometrie.y),
                                float(data['results'][0]['latitude']))
-        self.assertEqual(device.address.street, data['results'][0]['address']['street'])
-        self.assertEqual(device.address.postal_code, data['results'][0]['address']['postal_code'])
-        self.assertEqual(device.address.city, data['results'][0]['address']['city'])
         self.assertEqual(device.owner.organisation, data['results'][0]['organisation'])
 
     def test_list_pagination(self):
-        DeviceFactory.create_batch(8)
-        DeviceFactory.create(location=None)
+        DeviceFactory.create_batch(9)
+
         t = TypeFactory.create()
         DeviceFactory.create(types=[t, ])
 
@@ -110,11 +107,8 @@ class DeviceTestCase(APITestCase):
         self.assertEqual(device.reference, data['reference'])
         self.assertEqual(device.application, data['application'])
         self.assertEqual(len(device.categories.split(',')), len(data['categories']))
-        self.assertAlmostEqual(float(device.location.longitude), float(data['longitude']))
-        self.assertAlmostEqual(float(device.location.latitude), float(data['latitude']))
-        self.assertEqual(device.address.street, data['address']['street'])
-        self.assertEqual(device.address.postal_code, data['address']['postal_code'])
-        self.assertEqual(device.address.city, data['address']['city'])
+        self.assertAlmostEqual(float(device.geometrie.x), float(data['longitude']))
+        self.assertAlmostEqual(float(device.geometrie.y), float(data['latitude']))
         self.assertEqual(device.owner.organisation, data['organisation'])
 
     def test_put(self):
