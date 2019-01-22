@@ -18,11 +18,16 @@ CSV_MAPPING = {
 }
 
 
+class PostcodeSearchException(Exception):
+    pass
+
+
 def get_center_coordinates(postcode: str) -> Point:
     response = requests.get('{}/?q={}'.format(settings.ATLAS_POSTCODE_SEARCH, postcode))
     data = response.json()
-    if data['results'] and hasattr(data['results'][0], 'centroid'):
-        return Point(data['results'][0]['centroid'][1], data['results'][0]['centroid'][0])
+    if not data['results'] or 'centroid' not in data['results'][0]:
+        raise PostcodeSearchException()
+    return Point(data['results'][0]['centroid'][1], data['results'][0]['centroid'][0])
 
 
 CsvRow = namedtuple('CsvRow', ['name', 'categories', 'types', 'x', 'y', 'long', 'lat',
@@ -74,9 +79,10 @@ def import_row(csv_row: CsvRow) -> None:
     if csv_row.x and csv_row.y:
         # X and Y
         point = Point(x=float(csv_row.x), y=float(csv_row.y), srid=28992)
+        point.transform(ct=4326)
     elif csv_row.lat and csv_row.long:
         # Lat and Long
-        point = Point(x=float(csv_row.lat), y=float(csv_row.long), srid=4326)
+        point = Point(x=float(csv_row.long), y=float(csv_row.lat), srid=4326)
         device_data.update({'geometrie': point})
     else:
         # Need to calculate the long lat from the postcode

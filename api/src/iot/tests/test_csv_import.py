@@ -47,7 +47,7 @@ class CsvImportTests(TestCase):
         self.assertEqual(Person.objects.count(), 0)
 
         csv_row = CsvRow(
-            'TST-123', 'Luchtmeting', 'NO2 meter', '', '', '', '', '1011 ND', '',
+            'TST-123', 'Luchtmeting', 'NO2 meter', '', '', '', '', '1013AW', '',
             'O. wner', 'Organisation owner', 'owner@test.amsterdam.nl', 'C. ontact',
             'Organisation contact', 'contact@test.amsterdam.nl'
         )

@@ -7,7 +7,8 @@ from django.core.management import BaseCommand
 from django.db import transaction
 from django.db.models import Q
 
-from iot.import_utils import CsvRow, CsvRowValidationException, import_row
+from iot.import_utils import (CsvRow, CsvRowValidationException,
+                              PostcodeSearchException, import_row)
 from iot.mail import send_csv_import_report
 from iot.models import Device, Person, Type
 from iot.settings import settings
@@ -58,7 +59,7 @@ class Command(BaseCommand):
             for count, row in enumerate(reader):
                 try:
                     import_row(csv_row=CsvRow(*row))
-                except CsvRowValidationException:
+                except (CsvRowValidationException, PostcodeSearchException):
                     self._errors.append(row)
                 self._print_progress(iteration=count+1, total=self.line_count)
 
