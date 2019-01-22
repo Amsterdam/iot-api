@@ -38,7 +38,7 @@ class DevicesView(DatapuntViewSet):
     A view that will return the iot devices
     """
 
-    queryset = Device.objects.all().order_by('pk')
+    queryset = Device.objects.all().select_related('owner', 'contact').prefetch_related('types')
 
     serializer_class = DeviceSerializer
     serializer_detail_class = DeviceSerializer
