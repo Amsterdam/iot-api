@@ -20,7 +20,7 @@ celery==4.2.1
 # Celery and Mail
 django-celery-email==2.0.1
 # Database
-psycopg2-binary==2.7.5
+psycopg2-binary==2.8.2
 # Datapunt packages
 datapunt-authorization-django==0.2.23
 datapunt-authorization-levels==0.1.3
