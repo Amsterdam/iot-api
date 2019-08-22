@@ -9,7 +9,7 @@ django-multiselectfield==0.1.8
 # REST
 drf-amsterdam==0.1.7
 drf-extensions==0.4.0
-djangorestframework==3.8.2
+djangorestframework==3.9.1
 djangorestframework-csv==2.1.0
 djangorestframework-xml==1.3.0
 djangorestframework-gis==0.13
@@ -41,12 +41,12 @@ coreapi==2.3.3
 coreschema==0.0.4
 cryptography==2.3
 defusedxml==0.5.0
-Django==2.1.8
+Django==2.1.10
 django-debug-toolbar==1.10.1
 idna==2.7
 inflection==0.3.1
 itypes==1.1.0
-Jinja2==2.10
+Jinja2==2.10.1
 jsonschema==2.6.0
 Markdown==3.0.1
 MarkupSafe==1.0
@@ -61,4 +61,4 @@ six==1.11.0
 sqlparse==0.2.4
 unicodecsv==0.14.1
 uritemplate==3.0.0
-urllib3==1.23
+urllib3==1.24.2
