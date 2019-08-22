@@ -21,9 +21,6 @@ services:
       - database
       - rabbit
     environment:
-      - http_proxy=
-      - https_proxy=
-      - no_proxy=
       - SECRET_KEY=insecure
       - DB_NAME=iothings
       - DB_PASSWORD=insecure

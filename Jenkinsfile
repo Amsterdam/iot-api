@@ -31,7 +31,7 @@ node {
     stage("Build dockers") {
         tryStep "build", {
             docker.withRegistry('https://repo.data.amsterdam.nl','docker-registry') {
-                def api = docker.build("datapunt/iothings-api:${env.BUILD_NUMBER}", "--build-arg http_proxy=${JENKINS_HTTP_PROXY_STRING} --build-arg https_proxy=${JENKINS_HTTP_PROXY_STRING} api")
+                def api = docker.build("datapunt/iothings-api:${env.BUILD_NUMBER}", "api")
                 api.push()
                 api.push("acceptance")
             }

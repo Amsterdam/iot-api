@@ -13,8 +13,6 @@ services:
     links:
       - database:iot_db
     environment:
-      no_proxy: api.data.amsterdam.nl
-      NO_PROXY: api.data.amsterdam.nl
       DATABASE_NAME: iothings
       DATABASE_USER: iothings
       DATABASE_PASSWORD: insecure
