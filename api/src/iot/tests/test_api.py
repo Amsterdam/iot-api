@@ -123,7 +123,7 @@ class DeviceTestCase(APITestCase):
         device = DeviceFactory.create()
 
         url = reverse('device-detail', kwargs={'pk': device.pk})
-        response = self.client.put(url, data={})
+        response = self.client.post(url, data={})
 
         self.assertEqual(status.HTTP_405_METHOD_NOT_ALLOWED, response.status_code)
 

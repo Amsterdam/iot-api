@@ -33,18 +33,18 @@ class PingView(views.APIView):
         })
 
 
-class DevicesView(DatapuntViewSet):
+class DevicesViewSet(DatapuntViewSet):
     """
     A view that will return the iot devices
     """
 
-    queryset = Device.objects.all().select_related('owner', 'contact').prefetch_related('types')
+    queryset = Device.objects.all().select_related('owner', 'contact').prefetch_related('types').order_by('id')
 
     serializer_class = DeviceSerializer
     serializer_detail_class = DeviceSerializer
 
 
-class ContactView(CreateModelMixin, GenericViewSet):
+class ContactViewSet(CreateModelMixin, GenericViewSet):
     queryset = Device.objects.none()
     serializer_class = IotContactSerializer
     pagination_class = None
