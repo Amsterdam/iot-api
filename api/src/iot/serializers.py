@@ -38,10 +38,11 @@ class DeviceSerializer(HALSerializer):
         )
 
     def get_categories(self, obj):
+        if obj.categories is None:
+            return []
         return [
             obj.categories.choices[key.upper()]
             for key in obj.categories
-
         ]
 
     def get_organisation(self, obj):
@@ -56,6 +57,13 @@ class DeviceSerializer(HALSerializer):
     def get_latitude(self, obj):
         if obj.geometrie:
             return obj.geometrie.y
+
+    def create(self, validated_data):
+        types_data = validated_data.pop('types')
+        device = Device.objects.create(**validated_data)
+        for type_data in types_data:
+            Type.objects.create(device=device, **type_data)
+        return device
 
 
 class IotContactSerializer(serializers.Serializer):

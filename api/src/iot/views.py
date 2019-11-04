@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
-from datapunt_api.rest import DatapuntViewSet
+from datapunt_api.rest import DatapuntViewSetWritable
 from django.utils import timezone
 from rest_framework import routers, views
 from rest_framework.mixins import CreateModelMixin
@@ -33,15 +33,17 @@ class PingView(views.APIView):
         })
 
 
-class DevicesViewSet(DatapuntViewSet):
+class DevicesViewSet(DatapuntViewSetWritable):
     """
-    A view that will return the iot devices
+    A view that will return the iot devices and makes it possible to post new ones
     """
 
     queryset = Device.objects.all().select_related('owner', 'contact').prefetch_related('types').order_by('id')
 
     serializer_class = DeviceSerializer
     serializer_detail_class = DeviceSerializer
+
+    http_method_names = ['post', 'list', 'get']
 
 
 class ContactViewSet(CreateModelMixin, GenericViewSet):

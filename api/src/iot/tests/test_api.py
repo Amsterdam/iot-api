@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from iot.factories import DeviceFactory, TypeFactory
+from iot.models import Device
 
 
 class PingTestCase(APITestCase):
@@ -111,19 +112,28 @@ class DeviceTestCase(APITestCase):
         self.assertAlmostEqual(float(device.geometrie.y), float(data['latitude']))
         self.assertEqual(device.owner.organisation, data['organisation'])
 
+    def test_minimal_post(self):
+        device_count_before = Device.objects.all().count()
+
+        url = reverse('device-list')
+        response = self.client.post(
+            url,
+            data={"reference": "aaa", "application": "bbb", "types": []},
+            format='json'
+        )
+
+        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
+        self.assertEqual(device_count_before + 1, Device.objects.all().count())
+
+        last_record_in_db = Device.objects.all().order_by('-id')[:1][0]
+        self.assertEqual(last_record_in_db.reference, 'aaa')
+        self.assertEqual(last_record_in_db.application, 'bbb')
+
     def test_put(self):
         device = DeviceFactory.create()
 
         url = reverse('device-detail', kwargs={'pk': device.pk})
         response = self.client.put(url, data={})
-
-        self.assertEqual(status.HTTP_405_METHOD_NOT_ALLOWED, response.status_code)
-
-    def test_post(self):
-        device = DeviceFactory.create()
-
-        url = reverse('device-detail', kwargs={'pk': device.pk})
-        response = self.client.post(url, data={})
 
         self.assertEqual(status.HTTP_405_METHOD_NOT_ALLOWED, response.status_code)
 
