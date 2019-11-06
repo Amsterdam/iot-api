@@ -1,6 +1,7 @@
-from django.core import mail
+from django.core import mail, serializers
 from django.test import override_settings
 from django.urls import reverse
+from django.forms.models import model_to_dict
 from rest_framework import status
 from rest_framework.test import APITestCase
 
@@ -113,12 +114,13 @@ class DeviceTestCase(APITestCase):
         self.assertEqual(device.owner.organisation, data['organisation'])
 
     def test_minimal_post(self):
+        device = DeviceFactory.build()
         device_count_before = Device.objects.all().count()
 
         url = reverse('device-list')
         response = self.client.post(
             url,
-            data={"reference": "aaa", "application": "bbb", "types": []},
+            data={"reference": device.reference, "application": device.application, "types": []},
             format='json'
         )
 
@@ -126,8 +128,66 @@ class DeviceTestCase(APITestCase):
         self.assertEqual(device_count_before + 1, Device.objects.all().count())
 
         last_record_in_db = Device.objects.all().order_by('-id')[:1][0]
-        self.assertEqual(last_record_in_db.reference, 'aaa')
-        self.assertEqual(last_record_in_db.application, 'bbb')
+        self.assertEqual(last_record_in_db.reference, device.reference)
+        self.assertEqual(last_record_in_db.application, device.application)
+        self.assertEqual(last_record_in_db.types.count(), 0)
+
+    def test_full_post(self):
+        device = DeviceFactory.create()
+        for i in range(3):
+            device.types.add(TypeFactory.create())
+
+        device_count_before = Device.objects.all().count()
+
+        device_dict = model_to_dict(device)
+
+        ##### Convert model to DICT ####
+        # Remove the id
+        del device_dict['id']
+
+        # Convert point to lat/long
+
+        device_dict['geometrie'] = {
+            'longitude': device_dict['geometrie'].x,
+            'latitude': device_dict['geometrie'].y
+        }
+        # del device_dict['geometrie']
+
+        # Add the types as json objects instead of ints
+        new_types = []
+        for m in device_dict['types']:
+            new_types.append(model_to_dict(m))
+            del new_types[-1]['id']
+        device_dict['types'] = new_types
+
+        ##### Convert model to DICT ####
+
+
+        url = reverse('device-list')
+        response = self.client.post(
+            url,
+            data=device_dict,
+            format='json'
+        )
+        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
+        self.assertEqual(device_count_before + 1, Device.objects.all().count())
+        last_record_in_db = Device.objects.all().order_by('-id')[:1][0]
+
+        for k in device_dict.keys():
+            if k == 'geometrie':
+                self.assertEqual(last_record_in_db.geometrie.y, device_dict[k]['latitude'])
+                self.assertEqual(last_record_in_db.geometrie.x, device_dict[k]['longitude'])
+                continue
+
+            if k in ('types', 'categories', 'owner', 'contact'):
+                # print("======D", k, getattr(last_record_in_db, k), device_dict[k])
+                # self.assertEqual(getattr(last_record_in_db, k).count(), len(device_dict[k]))
+                # for categorie in device_dict[k]:
+                #     self.assertEqual(getattr(last_record_in_db, k)[0], categorie)
+                # continue
+                continue
+
+            self.assertEqual(getattr(last_record_in_db, k), device_dict[k])
 
     def test_put(self):
         device = DeviceFactory.create()

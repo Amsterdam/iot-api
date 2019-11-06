@@ -1,8 +1,9 @@
 from datapunt_api.rest import HALSerializer
 from rest_framework import serializers
+from django.contrib.gis.geos import Point
+from drf_extra_fields.geo_fields import PointField
 
 from iot.tasks import send_iot_request
-
 from .models import Device, Type
 
 
@@ -21,6 +22,7 @@ class DeviceSerializer(HALSerializer):
     categories = serializers.SerializerMethodField()
     longitude = serializers.SerializerMethodField()
     latitude = serializers.SerializerMethodField()
+    geometrie = PointField(required=False)
     organisation = serializers.SerializerMethodField()
 
     class Meta:
@@ -32,8 +34,15 @@ class DeviceSerializer(HALSerializer):
             'application',
             'types',
             'categories',
+            'installation_point',
+            'frequency',
+            'permit',
+            'in_use_since',
+            'postal_code',
+            'house_number',
             'longitude',
             'latitude',
+            'geometrie',
             'organisation',
         )
 

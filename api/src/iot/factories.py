@@ -1,12 +1,13 @@
 import random
+import datetime
 
 import factory
 import faker
 from django.contrib.gis.geos import Point
 
-from iot.constants import CATEGORY_CHOICES
-
+from iot.constants import CATEGORY_CHOICES, FREQUENCY_CHOICES
 from .models import Device, Person, Type
+
 
 fake = faker.Faker()
 
@@ -30,7 +31,7 @@ class PersonFactory(factory.DjangoModelFactory):
 
 class TypeFactory(factory.DjangoModelFactory):
     name = factory.LazyAttribute(
-        lambda o: '{0}'.format(fake.text(max_nb_chars=32))
+        lambda o: fake.text(max_nb_chars=32)
     )
 
     application = factory.LazyAttribute(
@@ -54,9 +55,17 @@ class DeviceFactory(factory.DjangoModelFactory):
     )
     types = factory.SubFactory(TypeFactory)
     categories = factory.LazyAttribute(
-        lambda o: '{},{}'.format(random.choice(CATEGORY_CHOICES)[0],
-                                 random.choice(CATEGORY_CHOICES)[0])
+        lambda o: f'{random.choice(CATEGORY_CHOICES)[0]},{random.choice(CATEGORY_CHOICES)[0]}')
+    installation_point = factory.LazyAttribute(
+        lambda o: fake.text(max_nb_chars=32)
     )
+    frequency = factory.LazyAttribute(
+        lambda o: random.choice(FREQUENCY_CHOICES)[0]
+    )
+    permit = bool(random.getrandbits(1))
+    in_use_since = fake.date_object(end_datetime=datetime.datetime.now())
+    postal_code = fake.text(max_nb_chars=6)
+    house_number = fake.text(max_nb_chars=8)
     geometrie = factory.LazyAttribute(
         lambda o: Point(4.58565, 52.03560)
     )
@@ -68,7 +77,6 @@ class DeviceFactory(factory.DjangoModelFactory):
 
     @factory.post_generation
     def types(self, create, extracted, **kwargs):
-        if create or extracted:
-            if extracted:
-                for t in extracted:
-                    self.types.add(t)
+        if extracted:
+            for t in extracted:
+                self.types.add(t)
