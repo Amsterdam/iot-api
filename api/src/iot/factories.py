@@ -80,3 +80,30 @@ class DeviceFactory(factory.DjangoModelFactory):
         if extracted:
             for t in extracted:
                 self.types.add(t)
+
+
+def device_dict():
+    return {
+        "reference": fake.text(max_nb_chars=64),
+        "application": fake.text(max_nb_chars=64),
+        "types": [
+            {
+                "name": fake.text(max_nb_chars=64),
+                "application": fake.text(max_nb_chars=64),
+                "description": fake.text(max_nb_chars=200),
+            }
+        ],
+        "categories": f'{random.choice(CATEGORY_CHOICES)[0]},{random.choice(CATEGORY_CHOICES)[0]}',
+        "installation_point": fake.text(max_nb_chars=64),
+        "frequency": random.choice(FREQUENCY_CHOICES)[0],
+        "permit": bool(random.getrandbits(1)),
+        "in_use_since": fake.date_object(end_datetime=datetime.datetime.now()),
+        "postal_code": fake.text(max_nb_chars=6),
+        "house_number": fake.text(max_nb_chars=8),
+        "geometrie": {
+            "longitude": 4.58565,
+            "latitude": 52.0356
+        },
+        "owner": 1,  # TODO: make this dependent on the authenticated user
+        "contact": 1,  # TODO: make this dependent on the authenticated user
+    }

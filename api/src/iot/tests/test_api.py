@@ -5,7 +5,7 @@ from django.forms.models import model_to_dict
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from iot.factories import DeviceFactory, TypeFactory
+from iot.factories import DeviceFactory, TypeFactory, device_dict
 from iot.models import Device
 
 
@@ -133,61 +133,35 @@ class DeviceTestCase(APITestCase):
         self.assertEqual(last_record_in_db.types.count(), 0)
 
     def test_full_post(self):
-        device = DeviceFactory.create()
-        for i in range(3):
-            device.types.add(TypeFactory.create())
-
         device_count_before = Device.objects.all().count()
 
-        device_dict = model_to_dict(device)
-
-        ##### Convert model to DICT ####
-        # Remove the id
-        del device_dict['id']
-
-        # Convert point to lat/long
-
-        device_dict['geometrie'] = {
-            'longitude': device_dict['geometrie'].x,
-            'latitude': device_dict['geometrie'].y
-        }
-        # del device_dict['geometrie']
-
-        # Add the types as json objects instead of ints
-        new_types = []
-        for m in device_dict['types']:
-            new_types.append(model_to_dict(m))
-            del new_types[-1]['id']
-        device_dict['types'] = new_types
-
-        ##### Convert model to DICT ####
-
+        device_input = device_dict()
 
         url = reverse('device-list')
         response = self.client.post(
             url,
-            data=device_dict,
+            data=device_input,
             format='json'
         )
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
         self.assertEqual(device_count_before + 1, Device.objects.all().count())
         last_record_in_db = Device.objects.all().order_by('-id')[:1][0]
 
-        for k in device_dict.keys():
+        for k in device_input.keys():
             if k == 'geometrie':
-                self.assertEqual(last_record_in_db.geometrie.y, device_dict[k]['latitude'])
-                self.assertEqual(last_record_in_db.geometrie.x, device_dict[k]['longitude'])
+                self.assertEqual(last_record_in_db.geometrie.y, device_input[k]['latitude'])
+                self.assertEqual(last_record_in_db.geometrie.x, device_input[k]['longitude'])
                 continue
 
             if k in ('types', 'categories', 'owner', 'contact'):
-                # print("======D", k, getattr(last_record_in_db, k), device_dict[k])
-                # self.assertEqual(getattr(last_record_in_db, k).count(), len(device_dict[k]))
-                # for categorie in device_dict[k]:
+                # print("======D", k, getattr(last_record_in_db, k), device_input[k])
+                # self.assertEqual(getattr(last_record_in_db, k).count(), len(device_input[k]))
+                # for categorie in device_input[k]:
                 #     self.assertEqual(getattr(last_record_in_db, k)[0], categorie)
                 # continue
                 continue
 
-            self.assertEqual(getattr(last_record_in_db, k), device_dict[k])
+            self.assertEqual(getattr(last_record_in_db, k), device_input[k])
 
     def test_put(self):
         device = DeviceFactory.create()
