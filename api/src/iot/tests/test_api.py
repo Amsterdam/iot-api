@@ -1,5 +1,4 @@
-from django.core import mail, serializers
-from django.forms.models import model_to_dict
+from django.core import mail
 from django.test import override_settings
 from django.urls import reverse
 from rest_framework import status
