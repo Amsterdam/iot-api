@@ -1,9 +1,9 @@
 from datapunt_api.rest import HALSerializer
-from rest_framework import serializers
-from django.contrib.gis.geos import Point
 from drf_extra_fields.geo_fields import PointField
+from rest_framework import serializers
 
 from iot.tasks import send_iot_request
+
 from .models import Device, Type
 
 

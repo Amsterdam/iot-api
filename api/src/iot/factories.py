@@ -1,13 +1,13 @@
-import random
 import datetime
+import random
 
 import factory
 import faker
 from django.contrib.gis.geos import Point
 
 from iot.constants import CATEGORY_CHOICES, FREQUENCY_CHOICES
-from .models import Device, Person, Type
 
+from .models import Device, Person, Type
 
 fake = faker.Faker()
 

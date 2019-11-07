@@ -40,7 +40,8 @@ class Device(models.Model):
     reference = models.CharField(max_length=64)
     application = models.CharField(max_length=64)
     types = models.ManyToManyField(to='Type')
-    categories = PatchedMultiSelectField(choices=CATEGORY_CHOICES, max_length=64, max_choices=6, null=True, blank=True)
+    categories = PatchedMultiSelectField(
+        choices=CATEGORY_CHOICES, max_length=64, max_choices=6, null=True, blank=True)
     installation_point = models.CharField(max_length=64, null=True)
     frequency = models.CharField(max_length=16, choices=FREQUENCY_CHOICES, null=True)
     permit = models.BooleanField(default=False, null=True, blank=True)
@@ -52,5 +53,7 @@ class Device(models.Model):
     geometrie = gis_models.PointField(name='geometrie', null=True, blank=True)
 
     # Owner and contact
-    owner = models.ForeignKey(to='Person', on_delete=models.SET_NULL, null=True, blank=True, related_name='owner')
-    contact = models.ForeignKey(to='Person', on_delete=models.SET_NULL, null=True, blank=True, related_name='contact')
+    owner = models.ForeignKey(
+        to='Person', on_delete=models.SET_NULL, null=True, blank=True, related_name='owner')
+    contact = models.ForeignKey(
+        to='Person', on_delete=models.SET_NULL, null=True, blank=True, related_name='contact')

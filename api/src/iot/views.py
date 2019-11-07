@@ -38,7 +38,8 @@ class DevicesViewSet(DatapuntViewSetWritable):
     A view that will return the iot devices and makes it possible to post new ones
     """
 
-    queryset = Device.objects.all().select_related('owner', 'contact').prefetch_related('types').order_by('id')
+    queryset = Device.objects.all().select_related('owner', 'contact')\
+        .prefetch_related('types').order_by('id')
 
     serializer_class = DeviceSerializer
     serializer_detail_class = DeviceSerializer
