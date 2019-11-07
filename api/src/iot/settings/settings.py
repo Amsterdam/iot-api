@@ -94,7 +94,7 @@ if DEBUG:
         'debug_toolbar.panels.cache.CachePanel',
         'debug_toolbar.panels.logging.LoggingPanel',
         'debug_toolbar.panels.redirects.RedirectsPanel',
-        'debug_toolbar.panels.profiling.ProfilingDebugPanel',
+        'debug_toolbar.panels.profiling.ProfilingPanel',
     ]
 
 ROOT_URLCONF = "iot.urls"
@@ -148,7 +148,7 @@ DATABASES = {
 }
 
 # Internationalization
-LANGUAGE_CODE = 'nl_NL'
+LANGUAGE_CODE = 'nl-NL'
 TIME_ZONE = 'Europe/Amsterdam'
 USE_I18N = True
 USE_L10N = True
