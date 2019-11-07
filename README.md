@@ -3,31 +3,31 @@ This project serves the data for [slimmeapparaten.amsterdam.nl](https://slimmeap
 frontend can be found over at [github.com/Amsterdam/register-slimme-apparaten-frontend](https://github.com/Amsterdam/).
 
 ### Note to reader
-There is am import command in `management/commands/import_csv.py`, but it is unclear where in Jenkins 
-(or anywhere else) this command is run and what should be the data source. Can the future reader who 
-is _"in the know"_ be so kind as to add that information to this readme?
+There is an import command in `management/commands/import_csv.py`, but that seems to not be run ever, at all? The data 
+which is in the acceptance and production databases supposedly comes from a csv which arrived by email. That csv 
+has however, been lost since. 
 
 
 ### How to run
 
 Start the docker containers manually
 ```
-docker-compose up -d
+docker-compose up
 ```
 
-#### Local development
+### Running tests
 
-To create the virtualenvironment (python3) and install requirements run:
-```
-make virtualenv
-```
+Also install test requirements
+    
+    pip install -r requirements/req-test.txt
 
-iot API
-==================
+and then run the tests
 
-This is a standard Django Rest Framework API.
+    python3 manage.py test
 
-```
-docker-compose up database
-python manage.py runserver
-```
+### Developing
+
+While developing it's easiest to run the db in the container and django locally
+
+    docker-compose up database
+    python manage.py runserver

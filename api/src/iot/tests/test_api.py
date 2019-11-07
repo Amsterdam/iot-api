@@ -4,7 +4,8 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from iot.factories import DeviceFactory, TypeFactory
+from iot.factories import DeviceFactory, TypeFactory, device_dict
+from iot.models import Device
 
 
 class PingTestCase(APITestCase):
@@ -111,15 +112,57 @@ class DeviceTestCase(APITestCase):
         self.assertAlmostEqual(float(device.geometrie.y), float(data['latitude']))
         self.assertEqual(device.owner.organisation, data['organisation'])
 
+    def test_minimal_post(self):
+        device = DeviceFactory.build()
+        device_count_before = Device.objects.all().count()
+
+        url = reverse('device-list')
+        response = self.client.post(
+            url,
+            data={"reference": device.reference, "application": device.application, "types": []},
+            format='json'
+        )
+
+        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
+        self.assertEqual(device_count_before + 1, Device.objects.all().count())
+
+        last_record_in_db = Device.objects.all().order_by('-id')[:1][0]
+        self.assertEqual(last_record_in_db.reference, device.reference)
+        self.assertEqual(last_record_in_db.application, device.application)
+        self.assertEqual(last_record_in_db.types.count(), 0)
+
+    def test_full_post(self):
+        device_count_before = Device.objects.all().count()
+
+        device_input = device_dict()
+
+        url = reverse('device-list')
+        response = self.client.post(
+            url,
+            data=device_input,
+            format='json'
+        )
+        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
+        self.assertEqual(device_count_before + 1, Device.objects.all().count())
+        last_record_in_db = Device.objects.all().order_by('-id')[:1][0]
+
+        for k in device_input.keys():
+            if k == 'geometrie':
+                self.assertEqual(last_record_in_db.geometrie.y, device_input[k]['latitude'])
+                self.assertEqual(last_record_in_db.geometrie.x, device_input[k]['longitude'])
+                continue
+
+            if k in ('types', 'categories', 'owner', 'contact'):
+                # print("======D", k, getattr(last_record_in_db, k), device_input[k])
+                # self.assertEqual(getattr(last_record_in_db, k).count(), len(device_input[k]))
+                # for categorie in device_input[k]:
+                #     self.assertEqual(getattr(last_record_in_db, k)[0], categorie)
+                # continue
+                continue
+
+            self.assertEqual(getattr(last_record_in_db, k), device_input[k])
+
     def test_put(self):
-        device = DeviceFactory.create()
-
-        url = reverse('device-detail', kwargs={'pk': device.pk})
-        response = self.client.put(url, data={})
-
-        self.assertEqual(status.HTTP_405_METHOD_NOT_ALLOWED, response.status_code)
-
-    def test_post(self):
         device = DeviceFactory.create()
 
         url = reverse('device-detail', kwargs={'pk': device.pk})

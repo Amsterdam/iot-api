@@ -1,6 +1,6 @@
 # Test dependencies go here.
 flake8
-fake-factory
+faker
 factory_boy
 tox
 pytest
