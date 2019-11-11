@@ -3,27 +3,36 @@ from drf_extra_fields.geo_fields import PointField
 from rest_framework import serializers
 
 from iot.tasks import send_iot_request
+from iot.constants import CATEGORY_CHOICE_ABBREVIATIONS
 
-from .models import Device, Type
+from .models import Device, Type, Person
 
 
 class TypeSerializer(HALSerializer):
     class Meta:
         model = Type
-        fields = (
-            'name',
-            'application',
-            'description',
-        )
+        fields = ('name', 'application', 'description')
+
+
+class PersonSerializer(HALSerializer):
+    name = serializers.CharField(required=True, allow_blank=False, max_length=255)
+    email = serializers.EmailField()
+    organisation = serializers.CharField(required=False, allow_blank=True, max_length=250)
+
+    class Meta:
+        model = Person
+        fields = ('name', 'email','organisation')
 
 
 class DeviceSerializer(HALSerializer):
     types = TypeSerializer(many=True)
-    categories = serializers.SerializerMethodField()
+    categories = serializers.CharField(required=True, allow_blank=False, max_length=100)
     longitude = serializers.SerializerMethodField()
     latitude = serializers.SerializerMethodField()
     geometrie = PointField(required=False)
     organisation = serializers.SerializerMethodField()
+    owner = PersonSerializer(required=False)
+    contact = PersonSerializer(required=False)
 
     class Meta:
         model = Device
@@ -44,6 +53,8 @@ class DeviceSerializer(HALSerializer):
             'latitude',
             'geometrie',
             'organisation',
+            'owner',
+            'contact'
         )
 
     def get_categories(self, obj):
@@ -67,11 +78,34 @@ class DeviceSerializer(HALSerializer):
         if obj.geometrie:
             return obj.geometrie.y
 
+    def validate_categories(self, categories):
+        for category in categories.split(","):
+            if category not in CATEGORY_CHOICE_ABBREVIATIONS:
+                raise serializers.ValidationError(
+                    f'categories needs to be either of {",".join(CATEGORY_CHOICE_ABBREVIATIONS)}')
+        return categories
+
     def create(self, validated_data):
         types_data = validated_data.pop('types')
+        owner_data = validated_data.pop('owner', None)
+        contact_data = validated_data.pop('contact', None)
+
         device = Device.objects.create(**validated_data)
+
+        # Serialize Types
         for type_data in types_data:
-            Type.objects.create(device=device, **type_data)
+            t = Type.objects.create(device=device, **type_data)
+            device.types.add(t)
+
+        # Serialize Owner and Contact
+        if owner_data:
+            owner = Person.objects.create(**owner_data)
+            device.owner = owner
+        if contact_data:
+            contact = Person.objects.create(**contact_data)
+            device.contact = contact
+
+        device.save()
         return device
 
 
