@@ -194,11 +194,6 @@ JWKS_TEST_KEY = """
     }
 """
 
-DATAPUNT_AUTHZ = {
-    'JWKS': os.getenv('PUB_JWKS', JWKS_TEST_KEY),
-    'ALWAYS_OK': False,
-}
-
 # Django cache settings
 CACHES = {
     'default': {
