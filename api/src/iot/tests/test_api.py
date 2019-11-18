@@ -52,7 +52,7 @@ class DeviceTestCase(APITestCase):
 
         self.assertEqual(device.reference, data['results'][0]['reference'])
         self.assertEqual(device.application, data['results'][0]['application'])
-        self.assertEqual(len(device.categories.split(',')), len(data['results'][0]['categories'].split(',')))
+        self.assertEqual(len(device.categories.split(",")), len(data['results'][0]['categories']))
         self.assertAlmostEqual(float(device.geometrie.x),
                                float(data['results'][0]['longitude']))
         self.assertAlmostEqual(float(device.geometrie.y),
@@ -108,7 +108,7 @@ class DeviceTestCase(APITestCase):
 
         self.assertEqual(device.reference, data['reference'])
         self.assertEqual(device.application, data['application'])
-        self.assertEqual(len(device.categories.split(',')), len(data['categories'].split(',')))
+        self.assertEqual(len(device.categories.split(",")), len(data['categories']))
         self.assertAlmostEqual(float(device.geometrie.x), float(data['longitude']))
         self.assertAlmostEqual(float(device.geometrie.y), float(data['latitude']))
         self.assertEqual(device.owner.organisation, data['organisation'])
@@ -156,7 +156,7 @@ class DeviceTestCase(APITestCase):
             elif k == 'in_use_since':
                 self.assertEqual(str(getattr(last_record_in_db, k)), device_input[k])
             elif k == 'categories':
-                self.assertEqual(device_input[k].split(','), list(last_record_in_db.categories))
+                self.assertEqual(device_input[k].split(','), last_record_in_db.categories.split(","))
             elif k == 'types':
                 self.assertEqual(len(device_input['types']), last_record_in_db.types.all().count())
             elif k in ('owner', 'contact'):

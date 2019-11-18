@@ -3,7 +3,7 @@ from drf_extra_fields.geo_fields import PointField
 from rest_framework import serializers
 
 from iot.tasks import send_iot_request
-from iot.constants import CATEGORY_CHOICE_ABBREVIATIONS
+from iot.constants import CATEGORY_CHOICE_ABBREVIATIONS, CATEGORY_CHOICES
 
 from .models import Device, Type, Person
 
@@ -12,6 +12,20 @@ class TypeSerializer(HALSerializer):
     class Meta:
         model = Type
         fields = ('name', 'application', 'description')
+
+
+class ChoicesField(serializers.CharField):
+    def __init__(self, choices, **kwargs):
+        self._choices = choices
+        super(ChoicesField, self).__init__(**kwargs)
+
+    def to_internal_value(self, data):
+        return data
+
+    def to_representation(self, value):
+        if value is None or value == "":
+            return []
+        return [dict(self._choices)[key.upper()] for key in value.split(",")]
 
 
 class PersonSerializer(HALSerializer):
@@ -26,7 +40,7 @@ class PersonSerializer(HALSerializer):
 
 class DeviceSerializer(HALSerializer):
     types = TypeSerializer(many=True)
-    categories = serializers.CharField(required=True, allow_blank=False, max_length=100)
+    categories = ChoicesField(CATEGORY_CHOICES, required=True, allow_blank=False)
     longitude = serializers.SerializerMethodField()
     latitude = serializers.SerializerMethodField()
     geometrie = PointField(required=False)
@@ -56,14 +70,6 @@ class DeviceSerializer(HALSerializer):
             'owner',
             'contact'
         )
-
-    def get_categories(self, obj):
-        if obj.categories is None:
-            return []
-        return [
-            obj.categories.choices[key.upper()]
-            for key in obj.categories
-        ]
 
     def get_organisation(self, obj):
         if obj.owner:
