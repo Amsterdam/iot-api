@@ -91,19 +91,37 @@ def device_dict():
                 "name": fake.text(max_nb_chars=64),
                 "application": fake.text(max_nb_chars=64),
                 "description": fake.text(max_nb_chars=200),
+            },
+            {
+                "name": fake.text(max_nb_chars=64),
+                "application": fake.text(max_nb_chars=64),
+                "description": fake.text(max_nb_chars=200),
+            },
+            {
+                "name": fake.text(max_nb_chars=64),
+                "application": fake.text(max_nb_chars=64),
+                "description": fake.text(max_nb_chars=200),
             }
         ],
         "categories": f'{random.choice(CATEGORY_CHOICES)[0]},{random.choice(CATEGORY_CHOICES)[0]}',
         "installation_point": fake.text(max_nb_chars=64),
         "frequency": random.choice(FREQUENCY_CHOICES)[0],
         "permit": bool(random.getrandbits(1)),
-        "in_use_since": fake.date_object(end_datetime=datetime.datetime.now()),
+        "in_use_since": str(fake.date_object(end_datetime=datetime.datetime.now())),
         "postal_code": fake.text(max_nb_chars=6),
         "house_number": fake.text(max_nb_chars=8),
         "geometrie": {
             "longitude": 4.58565,
             "latitude": 52.0356
         },
-        "owner": 1,  # TODO: make this dependent on the authenticated user
-        "contact": 1,  # TODO: make this dependent on the authenticated user
+        "owner": {
+            "name": fake.text(max_nb_chars=8),
+            "email": fake.email(),
+            "organisation": fake.text(max_nb_chars=8),
+        },
+        "contact": {
+            "name": fake.text(max_nb_chars=8),
+            "email": fake.email(),
+            "organisation": fake.text(max_nb_chars=8),
+        },
     }

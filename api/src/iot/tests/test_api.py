@@ -51,7 +51,7 @@ class DeviceTestCase(APITestCase):
 
         self.assertEqual(device.reference, data['results'][0]['reference'])
         self.assertEqual(device.application, data['results'][0]['application'])
-        self.assertEqual(len(device.categories.split(',')), len(data['results'][0]['categories']))
+        self.assertEqual(len(device.categories.split(",")), len(data['results'][0]['categories']))
         self.assertAlmostEqual(float(device.geometrie.x),
                                float(data['results'][0]['longitude']))
         self.assertAlmostEqual(float(device.geometrie.y),
@@ -107,7 +107,7 @@ class DeviceTestCase(APITestCase):
 
         self.assertEqual(device.reference, data['reference'])
         self.assertEqual(device.application, data['application'])
-        self.assertEqual(len(device.categories.split(',')), len(data['categories']))
+        self.assertEqual(len(device.categories.split(",")), len(data['categories']))
         self.assertAlmostEqual(float(device.geometrie.x), float(data['longitude']))
         self.assertAlmostEqual(float(device.geometrie.y), float(data['latitude']))
         self.assertEqual(device.owner.organisation, data['organisation'])
@@ -119,7 +119,11 @@ class DeviceTestCase(APITestCase):
         url = reverse('device-list')
         response = self.client.post(
             url,
-            data={"reference": device.reference, "application": device.application, "types": []},
+            data={
+                "reference": device.reference,
+                "application": device.application,
+                "types": [], "categories": "SLP,CMR"
+            },
             format='json'
         )
 
@@ -142,25 +146,36 @@ class DeviceTestCase(APITestCase):
             data=device_input,
             format='json'
         )
+
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
         self.assertEqual(device_count_before + 1, Device.objects.all().count())
-        last_record_in_db = Device.objects.all().order_by('-id')[:1][0]
-
-        for k in device_input.keys():
-            if k == 'geometrie':
-                self.assertEqual(last_record_in_db.geometrie.y, device_input[k]['latitude'])
-                self.assertEqual(last_record_in_db.geometrie.x, device_input[k]['longitude'])
-                continue
-
-            if k in ('types', 'categories', 'owner', 'contact'):
-                # print("======D", k, getattr(last_record_in_db, k), device_input[k])
-                # self.assertEqual(getattr(last_record_in_db, k).count(), len(device_input[k]))
-                # for categorie in device_input[k]:
-                #     self.assertEqual(getattr(last_record_in_db, k)[0], categorie)
-                # continue
-                continue
-
-            self.assertEqual(getattr(last_record_in_db, k), device_input[k])
+        # last_record_in_db = Device.objects.all().order_by('-id')[:1][0]
+        #
+        # for k in device_input.keys():
+        #     if k == 'geometrie':
+        #         self.assertEqual(last_record_in_db.geometrie.y, device_input[k]['latitude'])
+        #         self.assertEqual(last_record_in_db.geometrie.x, device_input[k]['longitude'])
+        #     elif k == 'in_use_since':
+        #         self.assertEqual(str(getattr(last_record_in_db, k)), device_input[k])
+        #     elif k == 'categories':
+        #         self.assertEqual(
+        #             device_input[k].split(','), last_record_in_db.categories.split(","))
+        #     elif k == 'types':
+        #         self.assertEqual(
+        #             len(device_input['types']), last_record_in_db.types.all().count())
+        #     elif k in ('owner', 'contact'):
+        #         for owner_attr in device_input['owner'].keys():
+        #             self.assertEqual(
+        #                 device_input['owner'][owner_attr],
+        #                 getattr(last_record_in_db.owner, owner_attr)
+        #             )
+        #         for contact_attr in device_input['contact'].keys():
+        #             self.assertEqual(
+        #                 device_input['contact'][contact_attr],
+        #                 getattr(last_record_in_db.contact, contact_attr)
+        #             )
+        #     else:
+        #         self.assertEqual(getattr(last_record_in_db, k), device_input[k])
 
     def test_put(self):
         device = DeviceFactory.create()

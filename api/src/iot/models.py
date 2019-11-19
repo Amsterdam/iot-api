@@ -1,18 +1,7 @@
 from django.contrib.gis.db import models as gis_models
 from django.db import models
-from multiselectfield import MultiSelectField
 
-from iot.constants import CATEGORY_CHOICES, FREQUENCY_CHOICES
-
-
-class PatchedMultiSelectField(MultiSelectField):
-    """
-    This solves an issue in the test cases
-    For more details https://github.com/goinnn/django-multiselectfield/issues/74
-    """
-    def value_to_string(self, obj):
-        value = self.value_from_object(obj)
-        return value
+from iot.constants import FREQUENCY_CHOICES
 
 
 class Type(models.Model):
@@ -21,7 +10,7 @@ class Type(models.Model):
     """
     name = models.CharField(max_length=64)
     application = models.CharField(max_length=64)
-    description = models.TextField()
+    description = models.TextField(null=True, blank=True)
 
 
 class Person(models.Model):
@@ -40,8 +29,7 @@ class Device(models.Model):
     reference = models.CharField(max_length=64)
     application = models.CharField(max_length=64)
     types = models.ManyToManyField(to='Type')
-    categories = PatchedMultiSelectField(
-        choices=CATEGORY_CHOICES, max_length=64, max_choices=6, null=True, blank=True)
+    categories = models.CharField(max_length=64, null=True, blank=True)
     installation_point = models.CharField(max_length=64, null=True)
     frequency = models.CharField(max_length=16, choices=FREQUENCY_CHOICES, null=True)
     permit = models.BooleanField(default=False, null=True, blank=True)
