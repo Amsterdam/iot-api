@@ -1,9 +1,7 @@
 from django.contrib.gis.db import models as gis_models
 from django.db import models
-from multiselectfield import MultiSelectField
 
-from iot.constants import CATEGORY_CHOICES, FREQUENCY_CHOICES
-
+from iot.constants import FREQUENCY_CHOICES
 
 
 class Type(models.Model):

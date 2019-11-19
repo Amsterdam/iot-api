@@ -6,7 +6,6 @@ from rest_framework.test import APITestCase
 
 from iot.factories import DeviceFactory, TypeFactory, device_dict
 from iot.models import Device
-from iot.constants import CATEGORY_CHOICES
 
 
 class PingTestCase(APITestCase):
@@ -120,7 +119,11 @@ class DeviceTestCase(APITestCase):
         url = reverse('device-list')
         response = self.client.post(
             url,
-            data={"reference": device.reference, "application": device.application, "types": [], "categories": "SLP,CMR"},
+            data={
+                "reference": device.reference,
+                "application": device.application,
+                "types": [], "categories": "SLP,CMR"
+            },
             format='json'
         )
 
@@ -156,15 +159,21 @@ class DeviceTestCase(APITestCase):
             elif k == 'in_use_since':
                 self.assertEqual(str(getattr(last_record_in_db, k)), device_input[k])
             elif k == 'categories':
-                self.assertEqual(device_input[k].split(','), last_record_in_db.categories.split(","))
+                self.assertEqual(
+                    device_input[k].split(','), last_record_in_db.categories.split(","))
             elif k == 'types':
                 self.assertEqual(len(device_input['types']), last_record_in_db.types.all().count())
             elif k in ('owner', 'contact'):
                 for owner_attr in device_input['owner'].keys():
-                    self.assertEqual(device_input['owner'][owner_attr], getattr(last_record_in_db.owner, owner_attr))
+                    self.assertEqual(
+                        device_input['owner'][owner_attr],
+                        getattr(last_record_in_db.owner, owner_attr)
+                    )
                 for contact_attr in device_input['contact'].keys():
                     self.assertEqual(
-                        device_input['contact'][contact_attr], getattr(last_record_in_db.contact, contact_attr))
+                        device_input['contact'][contact_attr],
+                        getattr(last_record_in_db.contact, contact_attr)
+                    )
             else:
                 self.assertEqual(getattr(last_record_in_db, k), device_input[k])
 

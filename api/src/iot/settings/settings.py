@@ -3,7 +3,7 @@ import os
 from iot.settings.settings_databases import (OVERRIDE_HOST_ENV_VAR,
                                              OVERRIDE_PORT_ENV_VAR,
                                              LocationKey, get_database_key,
-                                             get_docker_host, in_docker)
+                                             get_docker_host)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 

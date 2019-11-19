@@ -1,11 +1,11 @@
 from datapunt_api.rest import HALSerializer
-from drf_extra_fields.geo_fields import PointField
 from rest_framework import serializers
 
-from iot.tasks import send_iot_request
+from drf_extra_fields.geo_fields import PointField
 from iot.constants import CATEGORY_CHOICE_ABBREVIATIONS, CATEGORY_CHOICES
+from iot.tasks import send_iot_request
 
-from .models import Device, Type, Person
+from .models import Device, Person, Type
 
 
 class TypeSerializer(HALSerializer):
