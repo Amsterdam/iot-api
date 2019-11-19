@@ -12,7 +12,7 @@ class Type(models.Model):
     """
     name = models.CharField(max_length=64)
     application = models.CharField(max_length=64)
-    description = models.TextField()
+    description = models.TextField(null=True, blank=True)
 
 
 class Person(models.Model):

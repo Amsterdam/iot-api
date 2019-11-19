@@ -35,7 +35,7 @@ class PersonSerializer(HALSerializer):
 
     class Meta:
         model = Person
-        fields = ('name', 'email','organisation')
+        fields = ('name', 'email', 'organisation')
 
 
 class DeviceSerializer(HALSerializer):
@@ -100,15 +100,15 @@ class DeviceSerializer(HALSerializer):
 
         # Serialize Types
         for type_data in types_data:
-            t = Type.objects.create(device=device, **type_data)
+            t, _ = Type.objects.get_or_create(**type_data)
             device.types.add(t)
 
         # Serialize Owner and Contact
         if owner_data:
-            owner = Person.objects.create(**owner_data)
+            owner, _ = Person.objects.get_or_create(**owner_data)
             device.owner = owner
         if contact_data:
-            contact = Person.objects.create(**contact_data)
+            contact, created = Person.objects.get_or_create(**contact_data)
             device.contact = contact
 
         device.save()

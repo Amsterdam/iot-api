@@ -72,4 +72,8 @@ services:
     volumes:
       - ./api/src:/app
       - ./api/deploy:/deploy
-    command: uwsgi --py-auto-reload=1
+    command: >
+      bash -c '
+      python manage.py makemigrations &&
+      python manage.py migrate &&
+      python manage.py runserver 0.0.0.0:8001'
