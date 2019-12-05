@@ -25,12 +25,47 @@ class DeviceTestCase(APITestCase):
     EMAIL = 'a@b.com'
     PASSWORD = "password1"
 
+    def compare_geometrie(self, k, last_record_in_db, device_input):
+        self.assertEqual(last_record_in_db.geometrie.y, device_input[k]['latitude'])
+        self.assertEqual(last_record_in_db.geometrie.x, device_input[k]['longitude'])
+
+    def compare_in_use_since(self, k, last_record_in_db, device_input):
+        self.assertEqual(str(getattr(last_record_in_db, k)), device_input[k])
+
+    def compare_categories(self, k, last_record_in_db, device_input):
+        self.assertEqual(device_input[k].split(','), last_record_in_db.categories.split(","))
+
+    def compare_types(self, k, last_record_in_db, device_input):
+        self.assertEqual(len(device_input[k]), last_record_in_db.types.all().count())
+
+    def compare_owner(self, k, last_record_in_db, device_input):
+        # From the owner we disregard everything except the organisation
+        self.assertEqual(last_record_in_db.owner.organisation, device_input[k]['organisation'])
+
+    def compare_contact(self, k, last_record_in_db, device_input):
+        for contact_attr in device_input[k].keys():
+            self.assertEqual(
+                device_input[k][contact_attr],
+                getattr(last_record_in_db.contact, contact_attr)
+            )
+
+    def compare_other(self, k, last_record_in_db, device_input):
+        self.assertEqual(getattr(last_record_in_db, k), device_input[k])
+
     def setUp(self):
         self.slimme_app_group, _ = Group.objects.get_or_create(
             name=settings.KEYCLOAK_SLIMMEAPPARATEN_WRITE_PERMISSION_NAME)
         self.authorized_user = User.objects.create_user(self.USERNAME, self.EMAIL, self.PASSWORD)
         self.slimme_app_group.user_set.add(self.authorized_user)
-        # self.unauthorized_user = mommy.make(User)
+
+        self.RESULT_TESTS = {
+            'geometrie': self.compare_geometrie,
+            'in_use_since': self.compare_in_use_since,
+            'categories': self.compare_categories,
+            'types': self.compare_types,
+            'owner': self.compare_owner,
+            'contact': self.compare_contact
+        }
 
     def test_list(self):
         url = reverse('device-list')
@@ -171,27 +206,7 @@ class DeviceTestCase(APITestCase):
         self.assertEqual(last_record_in_db.owner.email, self.authorized_user.email)
 
         for k in device_input.keys():
-            if k == 'geometrie':
-                self.assertEqual(last_record_in_db.geometrie.y, device_input[k]['latitude'])
-                self.assertEqual(last_record_in_db.geometrie.x, device_input[k]['longitude'])
-            elif k == 'in_use_since':
-                self.assertEqual(str(getattr(last_record_in_db, k)), device_input[k])
-            elif k == 'categories':
-                self.assertEqual(
-                    device_input[k].split(','), last_record_in_db.categories.split(","))
-            elif k == 'types':
-                self.assertEqual(
-                    len(device_input[k]), last_record_in_db.types.all().count())
-            elif k == 'owner':
-                self.assertEqual(last_record_in_db.owner.organisation, device_input[k]['organisation'])
-            elif k == 'contact':
-                for contact_attr in device_input[k].keys():
-                    self.assertEqual(
-                        device_input[k][contact_attr],
-                        getattr(last_record_in_db.contact, contact_attr)
-                    )
-            else:
-                self.assertEqual(getattr(last_record_in_db, k), device_input[k])
+            self.RESULT_TESTS.get(k, self.compare_other)(k, last_record_in_db, device_input)
 
     def test_put(self):
         device = DeviceFactory.create()
