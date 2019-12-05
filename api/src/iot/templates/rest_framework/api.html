@@ -1,0 +1,17 @@
+{% extends "rest_framework/api.html" %}
+
+{% block userlinks %}
+    {% if user.is_authenticated %}
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                {{ user }}
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a href='{% url 'oidc_logout' %}'>Log out</a></li>
+            </ul>
+        </li>
+    {% else %}
+        <li><a href='{% url 'oidc_authentication_init' %}'>Login</a></li>
+    {% endif %}
+{% endblock %}

@@ -42,6 +42,7 @@ urlpatterns = [
         url(r'^ping/$', views.PingView.as_view(), name='ping'),
     ])),
     url(r'^status/', include('iot.health.urls')),
+    url(r'^oidc/', include('keycloak_oidc.urls')),
 ]
 
 if settings.DEBUG:

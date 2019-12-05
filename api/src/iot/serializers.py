@@ -2,10 +2,9 @@ from datapunt_api.rest import HALSerializer
 from drf_extra_fields.geo_fields import PointField
 from rest_framework import serializers
 
-from iot.constants import CATEGORY_CHOICE_ABBREVIATIONS, CATEGORY_CHOICES
-from iot.tasks import send_iot_request
-
+from .constants import CATEGORY_CHOICE_ABBREVIATIONS, CATEGORY_CHOICES
 from .models import Device, Person, Type
+from .tasks import send_iot_request
 
 
 class TypeSerializer(HALSerializer):
@@ -45,7 +44,7 @@ class DeviceSerializer(HALSerializer):
     latitude = serializers.SerializerMethodField()
     geometrie = PointField(required=False)
     organisation = serializers.SerializerMethodField()
-    owner = PersonSerializer(required=False)
+    owner = PersonSerializer()
     contact = PersonSerializer(required=False)
 
     class Meta:
@@ -103,13 +102,26 @@ class DeviceSerializer(HALSerializer):
             t, _ = Type.objects.get_or_create(**type_data)
             device.types.add(t)
 
-        # Serialize Owner and Contact
-        if owner_data:
-            owner, _ = Person.objects.get_or_create(**owner_data)
+        # Serialize Owner
+        user = self.context['request'].user
+        device.owner = Person.objects.filter(email__iexact=user.email).first()
+        if not device.owner:
+            # We always take the name and email address of the keycloak credentials,
+            # so we just use the organisation from the supplied owner object
+            owner = Person.objects.create(
+                name=f"{user.first_name} {user.last_name}",
+                email=user.email.lower(),
+                organisation=owner_data.get('organisation', None)
+            )
             device.owner = owner
+
+        # Serialize Contact
         if contact_data:
-            contact, created = Person.objects.get_or_create(**contact_data)
-            device.contact = contact
+            if not contact_data.get('organisation', None):
+                contact_data['organisation'] = owner_data.get('organisation', None)
+            device.contact, created = Person.objects.get_or_create(**contact_data)
+        else:
+            device.contact = device.owner
 
         device.save()
         return device
