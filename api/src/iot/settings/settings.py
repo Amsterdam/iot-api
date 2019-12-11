@@ -54,6 +54,8 @@ OIDC_OP_JWKS_ENDPOINT = os.getenv('OIDC_OP_JWKS_ENDPOINT',
     'https://iam.amsterdam.nl/auth/realms/datapunt-acc/protocol/openid-connect/certs')
 OIDC_OP_LOGOUT_ENDPOINT = os.getenv('OIDC_OP_LOGOUT_ENDPOINT',
     'https://iam.amsterdam.nl/auth/realms/datapunt-acc/protocol/openid-connect/logout')
+LOGIN_REDIRECT_URL = "/iothings/devices/"
+LOGOUT_REDIRECT_URL = "/iothings/devices/"
 
 
 # APP CONFIGURATION
