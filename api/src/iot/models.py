@@ -1,7 +1,7 @@
 from django.contrib.gis.db import models as gis_models
 from django.db import models
 
-from iot.constants import FREQUENCY_CHOICES
+from .constants import FREQUENCY_CHOICES
 
 
 class Type(models.Model):

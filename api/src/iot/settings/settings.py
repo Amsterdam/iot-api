@@ -1,9 +1,14 @@
 import os
 
-from iot.settings.settings_databases import (OVERRIDE_HOST_ENV_VAR,
-                                             OVERRIDE_PORT_ENV_VAR,
-                                             LocationKey, get_database_key,
-                                             get_docker_host)
+from keycloak_oidc.default_settings import *
+
+from .settings_databases import (
+    OVERRIDE_HOST_ENV_VAR,
+    OVERRIDE_PORT_ENV_VAR,
+    LocationKey,
+    get_database_key,
+    get_docker_host
+)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -28,10 +33,30 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 DATAPUNT_API_URL = os.getenv('DATAPUNT_API_URL', 'https://api.data.amsterdam.nl/')
 
+KEYCLOAK_SLIMMEAPPARATEN_WRITE_PERMISSION_NAME = "slim_app_w"
+
 # Django security settings
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
+
+## KEYCLOAK ##
+# External identity provider settings (Keycloak)
+OIDC_RP_CLIENT_ID = os.environ['OIDC_RP_CLIENT_ID']
+OIDC_RP_CLIENT_SECRET = os.environ['OIDC_RP_CLIENT_SECRET']
+OIDC_OP_AUTHORIZATION_ENDPOINT = os.getenv('OIDC_OP_AUTHORIZATION_ENDPOINT',
+    'https://iam.amsterdam.nl/auth/realms/datapunt-acc/protocol/openid-connect/auth')
+OIDC_OP_TOKEN_ENDPOINT = os.getenv('OIDC_OP_TOKEN_ENDPOINT',
+    'https://iam.amsterdam.nl/auth/realms/datapunt-acc/protocol/openid-connect/token')
+OIDC_OP_USER_ENDPOINT = os.getenv('OIDC_OP_USER_ENDPOINT',
+    'https://iam.amsterdam.nl/auth/realms/datapunt-acc/protocol/openid-connect/userinfo')
+OIDC_OP_JWKS_ENDPOINT = os.getenv('OIDC_OP_JWKS_ENDPOINT',
+    'https://iam.amsterdam.nl/auth/realms/datapunt-acc/protocol/openid-connect/certs')
+OIDC_OP_LOGOUT_ENDPOINT = os.getenv('OIDC_OP_LOGOUT_ENDPOINT',
+    'https://iam.amsterdam.nl/auth/realms/datapunt-acc/protocol/openid-connect/logout')
+LOGIN_REDIRECT_URL = "/iothings/devices/"
+LOGOUT_REDIRECT_URL = "/iothings/devices/"
+
 
 # APP CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -39,6 +64,8 @@ DJANGO_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.staticfiles',
     'django.contrib.gis',
+    'django.contrib.auth',
+    'django.contrib.sessions',
 )
 
 THIRD_PARTY_APPS = (
@@ -54,6 +81,8 @@ THIRD_PARTY_APPS = (
 
     'rest_framework',
     'rest_framework_gis',
+
+    'keycloak_oidc',  # load after django.contrib.auth!
 )
 
 DEBUG_APPS = (
@@ -72,6 +101,9 @@ MIDDLEWARE = (
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'mozilla_django_oidc.middleware.SessionRefresh',
 )
 
 DEBUG_MIDDLEWARE = (
@@ -97,13 +129,17 @@ if DEBUG:
         'debug_toolbar.panels.profiling.ProfilingPanel',
     ]
 
+AUTHENTICATION_BACKENDS = [
+    'keycloak_oidc.auth.OIDCAuthenticationBackend',
+]
+
 ROOT_URLCONF = "iot.urls"
 WSGI_APPLICATION = "iot.wsgi.application"
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -315,8 +351,9 @@ REST_FRAMEWORK = dict(
     UNAUTHENTICATED_USER={},
     UNAUTHENTICATED_TOKEN={},
     DEFAULT_AUTHENTICATION_CLASSES=(
+        'mozilla_django_oidc.contrib.drf.OIDCAuthentication',
         # 'rest_framework.authentication.BasicAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ),
     DEFAULT_PAGINATION_CLASS=(
         'datapunt_api.pagination.HALPagination',

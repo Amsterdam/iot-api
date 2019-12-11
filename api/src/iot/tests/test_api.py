@@ -1,11 +1,13 @@
+from django.conf import settings
+from django.contrib.auth.models import Group, User
 from django.core import mail
 from django.test import override_settings
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from iot.factories import DeviceFactory, TypeFactory, device_dict
-from iot.models import Device
+from ..factories import DeviceFactory, TypeFactory, device_dict
+from ..models import Device
 
 
 class PingTestCase(APITestCase):
@@ -19,6 +21,52 @@ class PingTestCase(APITestCase):
 
 
 class DeviceTestCase(APITestCase):
+    USERNAME = "user1"
+    EMAIL = 'a@b.com'
+    PASSWORD = "password1"
+
+    def compare_geometrie(self, k, last_record_in_db, device_input):
+        self.assertEqual(last_record_in_db.geometrie.y, device_input[k]['latitude'])
+        self.assertEqual(last_record_in_db.geometrie.x, device_input[k]['longitude'])
+
+    def compare_in_use_since(self, k, last_record_in_db, device_input):
+        self.assertEqual(str(getattr(last_record_in_db, k)), device_input[k])
+
+    def compare_categories(self, k, last_record_in_db, device_input):
+        self.assertEqual(device_input[k].split(','), last_record_in_db.categories.split(","))
+
+    def compare_types(self, k, last_record_in_db, device_input):
+        self.assertEqual(len(device_input[k]), last_record_in_db.types.all().count())
+
+    def compare_owner(self, k, last_record_in_db, device_input):
+        # From the owner we disregard everything except the organisation
+        self.assertEqual(last_record_in_db.owner.organisation, device_input[k]['organisation'])
+
+    def compare_contact(self, k, last_record_in_db, device_input):
+        for contact_attr in device_input[k].keys():
+            self.assertEqual(
+                device_input[k][contact_attr],
+                getattr(last_record_in_db.contact, contact_attr)
+            )
+
+    def compare_other(self, k, last_record_in_db, device_input):
+        self.assertEqual(getattr(last_record_in_db, k), device_input[k])
+
+    def setUp(self):
+        self.slimme_app_group, _ = Group.objects.get_or_create(
+            name=settings.KEYCLOAK_SLIMMEAPPARATEN_WRITE_PERMISSION_NAME)
+        self.authorized_user = User.objects.create_user(self.USERNAME, self.EMAIL, self.PASSWORD)
+        self.slimme_app_group.user_set.add(self.authorized_user)
+
+        self.RESULT_TESTS = {
+            'geometrie': self.compare_geometrie,
+            'in_use_since': self.compare_in_use_since,
+            'categories': self.compare_categories,
+            'types': self.compare_types,
+            'owner': self.compare_owner,
+            'contact': self.compare_contact
+        }
+
     def test_list(self):
         url = reverse('device-list')
         response = self.client.get(url)
@@ -117,15 +165,19 @@ class DeviceTestCase(APITestCase):
         device_count_before = Device.objects.all().count()
 
         url = reverse('device-list')
+        self.client.force_login(self.authorized_user)
         response = self.client.post(
             url,
             data={
                 "reference": device.reference,
                 "application": device.application,
-                "types": [], "categories": "SLP,CMR"
+                "types": [],
+                "categories": "SLP,CMR",
+                "owner": {"name": "Jan", "email": "a@b.com", "organisation": "organisation name"}
             },
             format='json'
         )
+        self.client.logout()
 
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
         self.assertEqual(device_count_before + 1, Device.objects.all().count())
@@ -139,49 +191,30 @@ class DeviceTestCase(APITestCase):
         device_count_before = Device.objects.all().count()
 
         device_input = device_dict()
-
         url = reverse('device-list')
+        self.client.force_login(self.authorized_user)
         response = self.client.post(
             url,
             data=device_input,
             format='json'
         )
+        self.client.logout()
 
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
         self.assertEqual(device_count_before + 1, Device.objects.all().count())
-        # last_record_in_db = Device.objects.all().order_by('-id')[:1][0]
-        #
-        # for k in device_input.keys():
-        #     if k == 'geometrie':
-        #         self.assertEqual(last_record_in_db.geometrie.y, device_input[k]['latitude'])
-        #         self.assertEqual(last_record_in_db.geometrie.x, device_input[k]['longitude'])
-        #     elif k == 'in_use_since':
-        #         self.assertEqual(str(getattr(last_record_in_db, k)), device_input[k])
-        #     elif k == 'categories':
-        #         self.assertEqual(
-        #             device_input[k].split(','), last_record_in_db.categories.split(","))
-        #     elif k == 'types':
-        #         self.assertEqual(
-        #             len(device_input['types']), last_record_in_db.types.all().count())
-        #     elif k in ('owner', 'contact'):
-        #         for owner_attr in device_input['owner'].keys():
-        #             self.assertEqual(
-        #                 device_input['owner'][owner_attr],
-        #                 getattr(last_record_in_db.owner, owner_attr)
-        #             )
-        #         for contact_attr in device_input['contact'].keys():
-        #             self.assertEqual(
-        #                 device_input['contact'][contact_attr],
-        #                 getattr(last_record_in_db.contact, contact_attr)
-        #             )
-        #     else:
-        #         self.assertEqual(getattr(last_record_in_db, k), device_input[k])
+        last_record_in_db = Device.objects.all().order_by('-id')[:1][0]
+        self.assertEqual(last_record_in_db.owner.email, self.authorized_user.email)
+
+        for k in device_input.keys():
+            self.RESULT_TESTS.get(k, self.compare_other)(k, last_record_in_db, device_input)
 
     def test_put(self):
         device = DeviceFactory.create()
 
         url = reverse('device-detail', kwargs={'pk': device.pk})
+        self.client.force_login(self.authorized_user)
         response = self.client.put(url, data={})
+        self.client.logout()
 
         self.assertEqual(status.HTTP_405_METHOD_NOT_ALLOWED, response.status_code)
 
@@ -189,7 +222,9 @@ class DeviceTestCase(APITestCase):
         device = DeviceFactory.create()
 
         url = reverse('device-detail', kwargs={'pk': device.pk})
+        self.client.force_login(self.authorized_user)
         response = self.client.delete(url)
+        self.client.logout()
 
         self.assertEqual(status.HTTP_405_METHOD_NOT_ALLOWED, response.status_code)
 
