@@ -21,6 +21,7 @@ class PingTestCase(APITestCase):
 
 
 class DeviceTestCase(APITestCase):
+    # Credentials for a user which will have all authorizations
     USERNAME = "user1"
     EMAIL = 'a@b.com'
     PASSWORD = "password1"
@@ -141,7 +142,7 @@ class DeviceTestCase(APITestCase):
         self.assertIsNone(data['_links']['next']['href'])
         self.assertIsNotNone(data['_links']['previous']['href'])
 
-    def test_detail(self):
+    def test_detail_not_logged_in(self):
         device = DeviceFactory.create()
 
         url = reverse('device-detail', kwargs={'pk': device.pk})
@@ -159,6 +160,89 @@ class DeviceTestCase(APITestCase):
         self.assertAlmostEqual(float(device.geometrie.x), float(data['longitude']))
         self.assertAlmostEqual(float(device.geometrie.y), float(data['latitude']))
         self.assertEqual(device.owner.organisation, data['organisation'])
+        self.assertEqual(data.get('owner'), None)
+        self.assertEqual(data.get('contact'), None)
+
+    # We explicitly remove the SessionRefresh middleware because it will respond with redirects
+    # to check the validity of our tokens. That fails our tests, and is out of the scope of this test.
+    @override_settings(
+        MIDDLEWARE=[mc for mc in settings.MIDDLEWARE if mc != 'mozilla_django_oidc.middleware.SessionRefresh']
+    )
+    def test_detail_logged_in_not_owned(self):
+        """ Tests getting a resource which is not owned by the logged in user """
+        device = DeviceFactory.create()
+
+        url = reverse('device-detail', kwargs={'pk': device.pk})
+
+        self.client.force_login(self.authorized_user)
+        response = self.client.get(url)
+        self.client.logout()
+
+        self.assertEqual(
+            status.HTTP_200_OK, response.status_code, 'Wrong response code for {}'.format(url)
+        )
+
+        data = response.json()
+
+        self.assertEqual(device.reference, data['reference'])
+        self.assertEqual(device.application, data['application'])
+        self.assertEqual(len(device.categories.split(",")), len(data['categories']))
+        self.assertAlmostEqual(float(device.geometrie.x), float(data['longitude']))
+        self.assertAlmostEqual(float(device.geometrie.y), float(data['latitude']))
+        self.assertEqual(device.owner.organisation, data['organisation'])
+        self.assertEqual(data.get('owner'), None)
+        self.assertEqual(data.get('contact'), None)
+
+    # We explicitly remove the SessionRefresh middleware because it will respond with redirects
+    # to check the validity of our tokens. That fails our tests, and is out of the scope of this test.
+    @override_settings(
+        MIDDLEWARE=[mc for mc in settings.MIDDLEWARE if mc != 'mozilla_django_oidc.middleware.SessionRefresh']
+    )
+    def test_detail_logged_in_and_owned(self):
+        """ Tests getting a resource which is owned by the logged in user """
+        device = DeviceFactory.create()
+        device.owner.email = self.EMAIL
+        device.owner.save()
+
+        url = reverse('device-detail', kwargs={'pk': device.pk})
+
+        self.client.force_login(self.authorized_user)
+        response = self.client.get(url)
+        self.client.logout()
+
+        self.assertEqual(status.HTTP_200_OK, response.status_code, 'Wrong response code for {}'.format(url))
+
+        data = response.json()
+
+        self.assertEqual(device.reference, data['reference'])
+        self.assertEqual(device.application, data['application'])
+        self.assertEqual(len(device.categories.split(",")), len(data['categories']))
+        self.assertAlmostEqual(float(device.geometrie.x), float(data['longitude']))
+        self.assertAlmostEqual(float(device.geometrie.y), float(data['latitude']))
+        self.assertEqual(device.owner.organisation, data['organisation'])
+        self.assertEqual(data['owner']['email'], device.owner.email)
+        self.assertNotEqual(data['contact'], None)
+
+    def test_minimal_post_fails_when_not_logged_in(self):
+        device = DeviceFactory.build()
+        device_count_before = Device.objects.all().count()
+
+        url = reverse('device-list')
+        self.client.logout()  # Make sure the user is logged out
+        response = self.client.post(
+            url,
+            data={
+                "reference": device.reference,
+                "application": device.application,
+                "types": [],
+                "categories": "SLP,CMR",
+                "owner": {"name": "Jan", "email": "a@b.com", "organisation": "organisation name"}
+            },
+            format='json'
+        )
+
+        self.assertEqual(status.HTTP_401_UNAUTHORIZED, response.status_code)
+        self.assertEqual(device_count_before, Device.objects.all().count())
 
     def test_minimal_post(self):
         device = DeviceFactory.build()

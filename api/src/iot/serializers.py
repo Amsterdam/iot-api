@@ -90,6 +90,17 @@ class DeviceSerializer(HALSerializer):
                     f'categories needs to be either of {",".join(CATEGORY_CHOICE_ABBREVIATIONS)}')
         return categories
 
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+
+        # Only serve the owner and contact if the logged in user is the owner of the data.
+        # Note that the organisation is served anyway by get_organisation() above.
+        if not self.context['request'].user or instance.owner.email != self.context['request'].user.email:
+            data.pop('owner')
+            data.pop('contact')
+
+        return data
+
     def create(self, validated_data):
         types_data = validated_data.pop('types')
         owner_data = validated_data.pop('owner', None)

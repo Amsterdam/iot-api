@@ -4,6 +4,7 @@ from __future__ import absolute_import, unicode_literals
 from datapunt_api.rest import DatapuntViewSetWritable
 from django.conf import settings
 from django.utils import timezone
+# from django.contrib.auth import
 from keycloak_oidc.drf.permissions import InAuthGroup
 from rest_framework import routers, views
 from rest_framework.mixins import CreateModelMixin
@@ -17,7 +18,7 @@ from .serializers import DeviceSerializer, IotContactSerializer
 
 class APIAuthGroup(InAuthGroup):
     """
-    A permission to only allow WRITE/POST access if and only if a user is logged in,
+    A permission to allow all GETS, but only allow a POST if a user is logged in
     and is a member of the slimme apparaten role inside keycloak.
     """
     allowed_group_names = [settings.KEYCLOAK_SLIMMEAPPARATEN_WRITE_PERMISSION_NAME]
