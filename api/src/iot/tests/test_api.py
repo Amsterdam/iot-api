@@ -163,10 +163,12 @@ class DeviceTestCase(APITestCase):
         self.assertEqual(data.get('owner'), None)
         self.assertEqual(data.get('contact'), None)
 
-    # We explicitly remove the SessionRefresh middleware because it will respond with redirects
-    # to check the validity of our tokens. That fails our tests, and is out of the scope of this test.
+    # We explicitly remove the SessionRefresh middleware because it will respond with
+    # redirects to check the validity of our tokens. That fails our tests, and is out of
+    # the scope of this test.
     @override_settings(
-        MIDDLEWARE=[mc for mc in settings.MIDDLEWARE if mc != 'mozilla_django_oidc.middleware.SessionRefresh']
+        MIDDLEWARE=[mc for mc in settings.MIDDLEWARE if mc !=
+                    'mozilla_django_oidc.middleware.SessionRefresh']
     )
     def test_detail_logged_in_not_owned(self):
         """ Tests getting a resource which is not owned by the logged in user """
@@ -193,10 +195,12 @@ class DeviceTestCase(APITestCase):
         self.assertEqual(data.get('owner'), None)
         self.assertEqual(data.get('contact'), None)
 
-    # We explicitly remove the SessionRefresh middleware because it will respond with redirects
-    # to check the validity of our tokens. That fails our tests, and is out of the scope of this test.
+    # We explicitly remove the SessionRefresh middleware because it will respond with
+    # redirects to check the validity of our tokens. That fails our tests, and is out of
+    # the scope of this test.
     @override_settings(
-        MIDDLEWARE=[mc for mc in settings.MIDDLEWARE if mc != 'mozilla_django_oidc.middleware.SessionRefresh']
+        MIDDLEWARE=[mc for mc in settings.MIDDLEWARE if mc !=
+                    'mozilla_django_oidc.middleware.SessionRefresh']
     )
     def test_detail_logged_in_and_owned(self):
         """ Tests getting a resource which is owned by the logged in user """
@@ -210,7 +214,9 @@ class DeviceTestCase(APITestCase):
         response = self.client.get(url)
         self.client.logout()
 
-        self.assertEqual(status.HTTP_200_OK, response.status_code, 'Wrong response code for {}'.format(url))
+        self.assertEqual(
+            status.HTTP_200_OK, response.status_code, 'Wrong response code for {}'.format(url)
+        )
 
         data = response.json()
 

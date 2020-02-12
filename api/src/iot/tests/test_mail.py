@@ -1,9 +1,9 @@
 from django.core import mail
 from django.test import TestCase, override_settings
 
-from iot.factories import DeviceFactory
-from iot.mail import send_confirmation_mail, send_mail_to_contact
-from iot.tasks import send_iot_request
+from ..factories import DeviceFactory
+from ..mail import send_confirmation_mail, send_mail_to_contact
+from ..tasks import send_iot_request
 
 
 class MailTestCase(TestCase):
