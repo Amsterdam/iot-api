@@ -21,9 +21,10 @@ RUN pip install -r /requirements/req-test.txt
 
 USER datapunt
 
-RUN export SECRET_KEY=insecure
-RUN export DJANGO_SETTINGS_MODULE=iot.settings.settings
-
+ARG SECRET_KEY=x
+ARG OIDC_RP_CLIENT_ID=x
+ARG OIDC_RP_CLIENT_SECRET=x
+ARG AMSTERDAM_PRIVACY_MAP_EMAIL_ADDRESS=x
 RUN python manage.py collectstatic --no-input
 
 CMD uwsgi
