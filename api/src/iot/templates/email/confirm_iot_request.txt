@@ -4,7 +4,7 @@ Hierbij vindt u een copy van het verzoek dat u onlangs heeft gesteld via de webs
 
 Hieronder staat de samenvatting van het  ingevulde formulier.
 
-Apparaat: {{ device.reference }}
+Apparaat: {{ device_reference }}
 
 Naam: {{ form_data.name }}
 E-mailadres: {{ form_data.email }}
