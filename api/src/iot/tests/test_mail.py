@@ -14,8 +14,8 @@ class MailTestCase(TestCase):
     def test_send_mail_to_contact(self):
         mail.outbox = []
 
-        context = {}
-        send_mail_to_contact(device=self.device, context=context)
+        context = {'device_reference': self.device.reference}
+        send_mail_to_contact(email_address=self.device.contact.email, context=context)
 
         self.assertEqual(len(mail.outbox), 1)
 
@@ -32,8 +32,8 @@ class MailTestCase(TestCase):
     def test_send_confirmation_mail(self):
         mail.outbox = []
 
-        context = {}
-        send_confirmation_mail(to=['test@test.com'], device=self.device, context=context)
+        context = {'device_reference': self.device.reference}
+        send_confirmation_mail(to=['test@test.com'], context=context)
 
         self.assertEqual(len(mail.outbox), 1)
 

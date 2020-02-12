@@ -184,4 +184,14 @@ class IotContactSerializer(serializers.Serializer):
     def save(self, **kwargs):
         # We do not actualy store any data
         device = self.validated_data['device']
-        send_iot_request(device_id=device, form_data=self.validated_data)
+        contact_owner = self.validated_data.get('contact_owner', None)
+        device_data = self.validated_data.get('device_data', None)
+
+        if contact_owner and device_data:
+            # This means the device is fetched from an external source on the frontend,
+            # and we have no record of this on the backend. So we assume it comes from
+            # the maps.amsterdam.nl/privacy and we send the email to the person in
+            # charge there.
+            send_iot_request(form_data=self.validated_data, send_to_privacy_map=True)
+        else:
+            send_iot_request(form_data=self.validated_data, device_id=device)

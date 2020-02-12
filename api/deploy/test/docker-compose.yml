@@ -21,6 +21,7 @@ services:
       - CELERY_EMAIL_BACKEND=django.core.mail.backends.locmem.EmailBackend
       - OIDC_RP_CLIENT_ID=x
       - OIDC_RP_CLIENT_SECRET=x
+      - AMSTERDAM_PRIVACY_MAP_EMAIL_ADDRESS=a@b.c
     extra_hosts:
       - "api.data.amsterdam.nl:10.243.17.201"
     volumes:
