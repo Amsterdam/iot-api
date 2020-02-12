@@ -13,12 +13,14 @@ services:
     links:
       - database:iot_db
     environment:
-      DATABASE_NAME: iothings
-      DATABASE_USER: iothings
-      DATABASE_PASSWORD: insecure
-      ENVIRONMENT: test
-      EMAIL_BACKEND: django.core.mail.backends.locmem.EmailBackend
-      CELERY_EMAIL_BACKEND: django.core.mail.backends.locmem.EmailBackend
+      - DATABASE_NAME=iothings
+      - DATABASE_USER=iothings
+      - DATABASE_PASSWORD=insecure
+      - ENVIRONMENT=test
+      - EMAIL_BACKEND=django.core.mail.backends.locmem.EmailBackend
+      - CELERY_EMAIL_BACKEND=django.core.mail.backends.locmem.EmailBackend
+      - OIDC_RP_CLIENT_ID=x
+      - OIDC_RP_CLIENT_SECRET=x
     extra_hosts:
       - "api.data.amsterdam.nl:10.243.17.201"
     volumes:

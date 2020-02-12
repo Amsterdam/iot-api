@@ -52,7 +52,6 @@ services:
       - RABBITMQ_HOST=localhost
       - OIDC_RP_CLIENT_ID=x
       - OIDC_RP_CLIENT_SECRET=x
-      - AMSTERDAM_PRIVACY_MAP_EMAIL_ADDRESS=a@b.c
     volumes:
       - ./api/src:/app
       - ./api/deploy:/deploy

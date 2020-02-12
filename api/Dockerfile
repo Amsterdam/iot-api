@@ -21,6 +21,7 @@ RUN pip install -r /requirements/req-test.txt
 
 USER datapunt
 
+# To run `manage.py collectstatic` I need some env values defined, or it will crash
 ARG SECRET_KEY=x
 ARG OIDC_RP_CLIENT_ID=x
 ARG OIDC_RP_CLIENT_SECRET=x

@@ -95,7 +95,8 @@ class DeviceSerializer(HALSerializer):
 
         # Only serve the owner and contact if the logged in user is the owner of the data.
         # Note that the organisation is served anyway by get_organisation() above.
-        if not self.context['request'].user or instance.owner.email != self.context['request'].user.email:
+        if not self.context['request'].user \
+                or instance.owner.email != self.context['request'].user.email:
             data.pop('owner')
             data.pop('contact')
 
