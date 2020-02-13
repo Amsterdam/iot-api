@@ -65,6 +65,7 @@ class DeviceSerializer(HALSerializer):
             'longitude',
             'latitude',
             'geometrie',
+            'privacy',
             'organisation',
             'owner',
             'contact'
