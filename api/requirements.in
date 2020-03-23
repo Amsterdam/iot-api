@@ -1,8 +1,15 @@
+# Define all requirements, only pin when necessary (and if so, add a comment explaining why).
+# See # https://git.datapunt.amsterdam.nl/Datapunt/python-best-practices/blob/master/dependency_management/
+
+# not updating to 3.0. See https://github.com/jpadilla/django-rest-framework-xml/issues/45
+django<3
+
 # Django packages
 django-braces
 django-cors-headers
 django-extensions
 django-filter
+django-extra-fields
 
 # Country codes, names and flags #
 django-countries
@@ -33,6 +40,7 @@ psycopg2-binary
 # Datapunt packages
 datapunt-authorization-django
 datapunt-authorization-levels
+datapunt-keycloak-oidc
 
 # Validation
 swagger-spec-validator
