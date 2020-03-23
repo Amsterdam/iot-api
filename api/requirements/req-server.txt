@@ -1,2 +1,0 @@
--r req-django.txt
--r req-base.txt

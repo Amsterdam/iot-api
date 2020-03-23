@@ -1,6 +1,0 @@
-# Local development dependencies go here
--r req-django.txt
--r req-base.txt
-
-# Debugging
-django-debug-toolbar

@@ -14,8 +14,8 @@ class IoTRouter(DefaultRouter):
 
 
 router = IoTRouter()
-router.register(r'devices', views.DevicesViewSet, base_name='device')
-router.register(r'contact', views.ContactViewSet, base_name='contact')
+router.register(r'devices', views.DevicesViewSet, basename='device')
+router.register(r'contact', views.ContactViewSet, basename='contact')
 
 
 schema_view = get_schema_view(

@@ -1,0 +1,23 @@
+
+# Define all DEV requirements used for local development (pinned to a version if necessary).
+# See https://git.datapunt.amsterdam.nl/Datapunt/python-best-practices/blob/master/dependency_management/
+
+# Base website
+-r ./requirements.txt
+
+# Tools for maintaining requirements.txt:
+pip-tools
+
+# Useful extra developer packages:
+django-debug-toolbar
+flake8
+faker
+factory_boy
+tox
+pytest
+pytest-django
+pytest-factoryboy
+pytest-cov
+pytest-flake8
+pytest-faker
+pytest-isort
