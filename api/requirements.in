@@ -1,8 +1,7 @@
 # Define all requirements, only pin when necessary (and if so, add a comment explaining why).
 # See # https://git.datapunt.amsterdam.nl/Datapunt/python-best-practices/blob/master/dependency_management/
 
-# not updating to 3.0. See https://github.com/jpadilla/django-rest-framework-xml/issues/45
-django<3
+django
 
 # Django packages
 django-braces
@@ -38,8 +37,6 @@ django-celery-email
 psycopg2-binary
 
 # Datapunt packages
-datapunt-authorization-django
-datapunt-authorization-levels
 datapunt-keycloak-oidc
 
 # Validation
