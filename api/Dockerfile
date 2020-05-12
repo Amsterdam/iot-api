@@ -12,12 +12,12 @@ RUN mkdir -p /deploy && chown datapunt /deploy
 COPY src /app/
 COPY deploy /deploy/
 COPY requirements.txt /
-COPY requirements /requirements/
+COPY requirements_dev.txt /
 
 WORKDIR /app
 
 RUN pip install -r /requirements.txt
-RUN pip install -r /requirements/req-test.txt
+RUN pip install -r /requirements_dev.txt
 
 USER datapunt
 
