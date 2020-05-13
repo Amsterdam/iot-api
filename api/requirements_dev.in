@@ -16,6 +16,7 @@ factory_boy
 tox
 pytest
 pytest-django
+pytest-env
 pytest-factoryboy
 pytest-cov
 pytest-flake8
