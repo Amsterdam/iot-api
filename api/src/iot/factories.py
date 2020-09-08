@@ -113,6 +113,7 @@ def device_dict():
             "longitude": 4.58565,
             "latitude": 52.0356
         },
+        "privacy": fake.text(max_nb_chars=200),
         "owner": {
             "name": fake.text(max_nb_chars=8),
             "email": fake.email(),

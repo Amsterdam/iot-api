@@ -39,6 +39,7 @@ class Device(models.Model):
     postal_code = models.CharField(max_length=6, null=True, blank=True)
     house_number = models.CharField(max_length=8, null=True, blank=True)
     geometrie = gis_models.PointField(name='geometrie', null=True, blank=True)
+    privacy = models.CharField(max_length=255, null=True, blank=True)
 
     # Owner and contact
     owner = models.ForeignKey(
