@@ -10,7 +10,7 @@ pip-tools
 
 # Useful extra developer packages:
 django-debug-toolbar
-flake8
+flake8<4
 faker
 factory_boy
 tox
