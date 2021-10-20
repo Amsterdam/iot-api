@@ -23,8 +23,9 @@ services:
       - RABBITMQ_DEFAULT_PASS=insecure
       - RABBITMQ_DEFAULT_VHOST=vhost
 
-  api:
-    build: ./api
+  api: &api
+    build:
+      context: ./api
     ports:
       - "8001:8001"
     links:
