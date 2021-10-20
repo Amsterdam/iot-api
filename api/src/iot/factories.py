@@ -11,7 +11,7 @@ from .models import Device, Person, Type
 fake = faker.Faker()
 
 
-class PersonFactory(factory.DjangoModelFactory):
+class PersonFactory(factory.django.DjangoModelFactory):
     name = factory.LazyAttribute(
         lambda o: '{0}'.format(fake.name())
     )
@@ -28,7 +28,7 @@ class PersonFactory(factory.DjangoModelFactory):
         model = Person
 
 
-class TypeFactory(factory.DjangoModelFactory):
+class TypeFactory(factory.django.DjangoModelFactory):
     name = factory.LazyAttribute(
         lambda o: fake.text(max_nb_chars=32)
     )
@@ -45,7 +45,7 @@ class TypeFactory(factory.DjangoModelFactory):
         model = Type
 
 
-class DeviceFactory(factory.DjangoModelFactory):
+class DeviceFactory(factory.django.DjangoModelFactory):
     reference = factory.LazyAttribute(
         lambda o: fake.text(max_nb_chars=32)
     )
