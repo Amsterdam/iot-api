@@ -10,24 +10,19 @@ has however, been lost since.
 
 ### How to run
 
-Start the docker containers manually
 ```
-docker-compose up
+make app
 ```
 
 ### Running tests
 
-Also install test requirements
-    
-    pip install -r requirements/req-test.txt
-
-and then run the tests
-
-    python3 manage.py test
+```
+make test
+```
 
 ### Developing
 
-While developing it's easiest to run the db in the container and django locally
+While developing it's possible to run the db in the container and django locally
 
     docker-compose up database
     python manage.py runserver
