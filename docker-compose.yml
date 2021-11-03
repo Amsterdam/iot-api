@@ -24,8 +24,7 @@ services:
       - RABBITMQ_DEFAULT_VHOST=vhost
 
   api:
-    build:
-      context: ./api
+    build: ./api
     ports:
       - "8001:8001"
     links:
