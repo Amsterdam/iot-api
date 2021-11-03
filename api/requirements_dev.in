@@ -10,7 +10,7 @@ pip-tools
 
 # Useful extra developer packages:
 django-debug-toolbar
-flake8<4
+flake8<4  # pin flake8 to version 3 to prevent StringIO error (see tholo/pytest-flake8#81)
 faker
 factory_boy
 tox
