@@ -411,3 +411,5 @@ CELERY_EMAIL_TASK_CONFIG = {
 }
 
 ATLAS_POSTCODE_SEARCH = 'https://api.data.amsterdam.nl/atlas/search/postcode'
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
