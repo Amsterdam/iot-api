@@ -1,4 +1,5 @@
 from django.contrib.gis.db import models as gis_models
+from django.contrib.postgres.fields import CIEmailField
 from django.db import models
 
 from .constants import FREQUENCY_CHOICES
@@ -45,3 +46,152 @@ class Device(models.Model):
         to='Person', on_delete=models.SET_NULL, null=True, blank=True, related_name='owner')
     contact = models.ForeignKey(
         to='Person', on_delete=models.SET_NULL, null=True, blank=True, related_name='contact')
+
+
+# These models are loosely based on the data model from sensrnet, the intention
+# is to migrate this data to the sensrnet system once we are able to host our
+# own sensrnet node. For more information about the sensrnet data model see
+# https://kadaster-labs.github.io/sensrnet-home/Model/
+
+
+class Person2(models.Model):
+    """
+    The owner/contact person
+    """
+    # ContactDetails
+    name = models.CharField(
+        max_length=255,
+        verbose_name="Naam (Voornaam [Tussenvoegsel] Achternaam)",
+    )
+    email = CIEmailField(unique=True, verbose_name="E-mail")
+    telephone = models.CharField(max_length=15, verbose_name="Telefoon")
+
+    # LegalEntity
+    organisation = models.CharField(max_length=255, verbose_name="Naam organisatie/bedrijf")
+    website = models.URLField(verbose_name="Website")
+
+    class Meta:
+        verbose_name = 'Eigenaar'
+        verbose_name_plural = 'Eigenaren'
+
+    def __str__(self):
+        return f'{self.email} ({self.name})'
+
+
+class Type2(models.Model):
+    name = models.CharField(unique=True, max_length=255, verbose_name="Kies soort / type sensor")
+    is_other = models.BooleanField(default=True, verbose_name="Anders, namelijk")
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Type'
+        verbose_name_plural = 'Types'
+
+
+class Theme(models.Model):
+    name = models.CharField(unique=True, max_length=255, verbose_name="Thema")
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Thema'
+        verbose_name_plural = 'Themas'
+
+
+class LegalGround(models.Model):
+    name = models.CharField(unique=True, max_length=255, verbose_name="Wettelijke grondslag")
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Wettelijke grondslag'
+        verbose_name_plural = 'Wettelijke grondslagen'
+
+
+class Region(models.Model):
+    """
+    A part of Amsterdam city, usually a "Stadsdeel" but users can also enter
+    "other, namely..."
+    """
+    name = models.CharField(unique=True, max_length=255, verbose_name="Gebied")
+    is_other = models.BooleanField(default=True, verbose_name="Anders, namelijk")
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Gebied'
+        verbose_name_plural = 'Gebieden'
+
+
+class Device2(models.Model):
+    """
+    The iot device "thing"
+    """
+    reference = models.CharField(max_length=64, verbose_name="Referentienummer")
+
+    # LegalEntity
+    owner = models.ForeignKey(
+        Person2,
+        on_delete=models.CASCADE,
+        verbose_name="Eigenaar",
+    )
+
+    # Sensor
+    type = models.ForeignKey(
+        Type2,
+        on_delete=models.PROTECT,
+        verbose_name="Kies soort / type sensor",
+    )
+
+    # Location
+    region = models.ForeignKey(
+        Region,
+        null=True,
+        blank=True,
+        verbose_name="In welk gebied bevindt zich de mobiele sensor?",
+        on_delete=models.PROTECT,
+    )
+    location = gis_models.PointField(
+        name="location",
+        null=True,
+        blank=True,
+        verbose_name="Vul de XYZ-coördinaten in",
+    )
+    location_description = models.CharField(
+        max_length=255,
+        null=True,
+        blank=True,
+        verbose_name="Omschrijving van de locatie van de sensor",
+    )
+
+    # Datastream
+    datastream = models.CharField(max_length=255, verbose_name="Wat meet de sensor?")
+    themes = models.ManyToManyField(Theme, verbose_name="Thema")
+    contains_pi_data = models.BooleanField(verbose_name="Worden er persoonsgegevens verwerkt?")
+
+    # ObservationGoal
+    observation_goal = models.CharField(max_length=255, verbose_name="Waarvoor meet u dat?")
+    legal_ground = models.ForeignKey(
+        LegalGround,
+        on_delete=models.PROTECT,
+        verbose_name="Wettelijke grondslag",
+        null=True,
+        blank=True,
+    )
+    privacy_declaration = models.URLField(verbose_name="Privacyverklaring", blank=True, null=True)
+
+    # Device
+    active_until = models.DateField(null=True, verbose_name="Tot wanneer is de sensor actief?")
+
+    def __str__(self):
+        return self.reference
+
+    class Meta:
+        verbose_name = 'Sensor'
+        verbose_name_plural = 'Sensoren'
+        unique_together = 'reference', 'owner'
