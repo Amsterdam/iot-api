@@ -1,4 +1,5 @@
 from django.contrib.gis.db import models as gis_models
+from django.contrib.postgres.fields import CIEmailField
 from django.db import models
 
 from .constants import FREQUENCY_CHOICES
@@ -62,7 +63,7 @@ class Person2(models.Model):
         max_length=255,
         verbose_name="Naam (Voornaam [Tussenvoegsel] Achternaam)",
     )
-    email = models.EmailField(unique=True, verbose_name="E-mail")
+    email = CIEmailField(unique=True, verbose_name="E-mail")
     telephone = models.CharField(max_length=15, verbose_name="Telefoon")
 
     # LegalEntity
@@ -78,7 +79,7 @@ class Person2(models.Model):
 
 
 class Type2(models.Model):
-    name = models.CharField(max_length=255, verbose_name="Kies soort / type sensor")
+    name = models.CharField(unique=True, max_length=255, verbose_name="Kies soort / type sensor")
     is_other = models.BooleanField(default=True, verbose_name="Anders, namelijk")
 
     def __str__(self):
@@ -90,7 +91,7 @@ class Type2(models.Model):
 
 
 class Theme(models.Model):
-    name = models.CharField(max_length=255, verbose_name="Thema")
+    name = models.CharField(unique=True, max_length=255, verbose_name="Thema")
 
     def __str__(self):
         return self.name
@@ -101,8 +102,7 @@ class Theme(models.Model):
 
 
 class LegalGround(models.Model):
-    name = models.CharField(max_length=255, verbose_name="Wettelijke grondslag")
-    link = models.URLField(verbose_name="Privacyverklaring")
+    name = models.CharField(unique=True, max_length=255, verbose_name="Wettelijke grondslag")
 
     def __str__(self):
         return self.name
@@ -117,7 +117,15 @@ class Region(models.Model):
     A part of Amsterdam city, usually a "Stadsdeel" but users can also enter
     "other, namely..."
     """
-    name = models.CharField(max_length=255, verbose_name="Gebied")
+    name = models.CharField(unique=True, max_length=255, verbose_name="Gebied")
+    is_other = models.BooleanField(default=True, verbose_name="Anders, namelijk")
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Gebied'
+        verbose_name_plural = 'Gebieden'
 
 
 class Device2(models.Model):
@@ -175,6 +183,7 @@ class Device2(models.Model):
         null=True,
         blank=True,
     )
+    privacy_declaration = models.URLField(verbose_name="Privacyverklaring")
 
     # Device
     active_until = models.DateField(null=True, verbose_name="Tot wanneer is de sensor actief?")
@@ -185,3 +194,4 @@ class Device2(models.Model):
     class Meta:
         verbose_name = 'Sensor'
         verbose_name_plural = 'Sensoren'
+        unique_together = 'reference', 'owner'
