@@ -194,5 +194,7 @@ class Migration(migrations.Migration):
                 'unique_together': {('reference', 'owner')},
             },
         ),
+        # reverse not needed, since when reversing this the models will be
+        # deleted anyway
         migrations.RunPython(load_initial_data),
     ]

@@ -1,3 +1,5 @@
+import typing
+
 from django.contrib.gis.db import models as gis_models
 from django.contrib.postgres.fields import CIEmailField
 from django.db import models
@@ -68,7 +70,7 @@ class Person2(models.Model):
 
     # LegalEntity
     organisation = models.CharField(max_length=255, verbose_name="Naam organisatie/bedrijf")
-    website = models.URLField(verbose_name="Website")
+    website = models.URLField(verbose_name="Website", blank=True, null=True)
 
     class Meta:
         verbose_name = 'Eigenaar'
@@ -110,6 +112,14 @@ class LegalGround(models.Model):
     class Meta:
         verbose_name = 'Wettelijke grondslag'
         verbose_name_plural = 'Wettelijke grondslagen'
+
+
+def id_from_name(model: typing.Type[models.Model], name: str):
+    """
+    Get the id of the instance of model with the given name. Name should be a
+    unique key, when the instance does not exist a DoesNotExist will be raised.
+    """
+    return model.objects.values_list('id', flat=True).filter(name=name).get()
 
 
 class Region(models.Model):

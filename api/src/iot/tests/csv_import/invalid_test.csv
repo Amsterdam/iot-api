@@ -1,3 +1,0 @@
-"name","categories","types","x","y","long","lat","postalcode","housenumber","owner_name","owner_organisation","owner_email","contact_name","contact_organisation","contact_email"
-"TST-123","Sensor","NO2 meter","","","4.90810","52.36990","","","O. wner","Organisation owner","owner@test.amsterdam.nl","C. ontact","Organisation contact","contact@test.amsterdam.nl"
-"Not valid","Sensor","NO2 meter","","","4.90810","52.36990","","","O. wner","Organisation owner","invalid-email","C. ontact","Organisation contact","contact@test.amsterdam.nl"

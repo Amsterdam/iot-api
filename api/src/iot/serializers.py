@@ -3,7 +3,7 @@ from drf_extra_fields.geo_fields import PointField
 from rest_framework import serializers
 
 from .constants import CATEGORY_CHOICE_ABBREVIATIONS, CATEGORY_CHOICES
-from .models import Device, Person, Type
+from .models import Device, Device2, Person, Person2, Type
 from .tasks import send_iot_request
 
 
@@ -195,3 +195,40 @@ class IotContactSerializer(serializers.Serializer):
             send_iot_request(form_data=self.validated_data, send_to_privacy_map=True)
         else:
             send_iot_request(form_data=self.validated_data, device_id=device)
+
+
+class Person2Serializer(HALSerializer):
+    class Meta:
+        model = Person2
+        fields = ['name', 'email', 'organisation']
+
+
+class Device2Serializer(HALSerializer):
+    type = serializers.StringRelatedField()
+    region = serializers.StringRelatedField()
+    themes = serializers.StringRelatedField(many=True)
+    legal_ground = serializers.StringRelatedField()
+    owner = Person2Serializer()
+    location = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Device2
+        fields = [
+            'owner',
+            'type',
+            'region',
+            'location',
+            'location_description',
+            'datastream',
+            'themes',
+            'contains_pi_data',
+            'observation_goal',
+            'legal_ground',
+            'privacy_declaration',
+            'active_until',
+            'reference'
+        ]
+
+    def get_location(self, obj):
+        if obj.location:
+            return {'latitude': obj.location.x, 'longitude': obj.location.y}
