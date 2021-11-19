@@ -2,7 +2,7 @@ import contextlib
 import dataclasses
 import datetime
 import re
-from itertools import islice
+from itertools import islice, zip_longest
 from typing import Generator, Union
 
 import requests
@@ -14,15 +14,19 @@ from typing_extensions import Literal
 from iot import models
 
 
-class PostcodeSearchException(Exception):
-    pass
+@dataclasses.dataclass
+class PostcodeSearchException(ValueError):
+    postcode: str
+
+    def __str__(self):
+        return f"Ongeldige postcode {self.postcode}"
 
 
 def get_center_coordinates(postcode: str) -> Point:
     response = requests.get('{}/?q={}'.format(settings.ATLAS_POSTCODE_SEARCH, postcode))
     data = response.json()
     if not data['results'] or 'centroid' not in data['results'][0]:
-        raise PostcodeSearchException()
+        raise PostcodeSearchException(postcode)
     return Point(data['results'][0]['centroid'][1], data['results'][0]['centroid'][0])
 
 
@@ -169,10 +173,16 @@ class Values:
 @dataclasses.dataclass
 class InvalidFields(ValueError):
     fields: list
+    expected = NotImplemented
+
+    def __str__(self):
+        for actual_field, expected_field in zip_longest(self.fields, self.expected):
+            if actual_field != expected_field:
+                return f"Onverwachte veldnaam : {actual_field}, verwacht {expected_field}"
 
 
 class InvalidIproxFields(InvalidFields):
-    pass
+    expected = IPROX_FIELDS
 
 
 def parse_iprox_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
@@ -281,11 +291,11 @@ BULK_SENSOR_FIELDS = [
 
 
 class InvalidPersonFields(InvalidFields):
-    pass
+    expected = BULK_PERSON_FIELDS
 
 
 class InvalidSensorFields(InvalidFields):
-    pass
+    expected = BULK_SENSOR_FIELDS
 
 
 def parse_bulk_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
@@ -363,50 +373,67 @@ def get_location(sensor_data: SensorData):
 @dataclasses.dataclass
 class ValidationError(ValueError):
     sensor_data: SensorData
+    source = NotImplemented
+    target = NotImplemented
+
+    def __str__(self):
+        return f"Foutieve data voor sensor met referentie {self.sensor_data.reference} " \
+               f" {self.source}={getattr(self.sensor_data, self.target)}"
 
 
 class InvalidSensorType(ValidationError):
-    pass
+    source = 'Kies soort / type sensor'
+    target = 'type'
 
 
 class InvalidContainsPiData(ValidationError):
-    pass
+    source = 'Worden er persoonsgegevens verwerkt?'
+    target = 'contains_pi_data'
 
 
 class InvalidThemes(ValidationError):
-    pass
+    source = 'Thema'
+    target = 'themes'
 
 
 class InvalidLatitude(ValidationError):
-    pass
+    source = 'Latitude'
+    target = 'latitude'
 
 
 class InvalidLongitude(ValidationError):
-    pass
+    source = 'Longitude'
+    target = 'longitude'
 
 
 class InvalidLegalGround(ValidationError):
-    pass
+    source = 'Wettelijke grondslag'
+    target = 'legal_ground'
 
 
 class InvalidPostcode(ValidationError):
-    pass
+    source = 'Postcode'
+    target = 'location'
 
 
 class InvalidHouseNumber(ValidationError):
-    pass
+    source = 'Huisnummer'
+    target = 'location'
 
 
 class InvalidRegion(ValidationError):
-    pass
+    source = 'In welk gebied bevindt zich de mobiele sensor?'
+    target = 'location'
 
 
 class InvalidLocationDescription(ValidationError):
-    pass
+    source = 'Omschrijving van de locatie van de sensor'
+    target = 'location'
 
 
 class InvalidDate(ValidationError):
-    pass
+    source = 'Tot wanneer is de sensor actief?'
+    target = 'active_until'
 
 
 def validate_sensor(sensor_data: SensorData):

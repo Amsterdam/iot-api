@@ -64,6 +64,8 @@ DJANGO_APPS = (
     'django.contrib.gis',
     'django.contrib.auth',
     'django.contrib.sessions',
+    'django.contrib.admin',
+    'django.contrib.messages',
 )
 
 THIRD_PARTY_APPS = (
@@ -81,6 +83,7 @@ THIRD_PARTY_APPS = (
     'rest_framework_gis',
 
     'keycloak_oidc',  # load after django.contrib.auth!
+    'leaflet'
 )
 
 DEBUG_APPS = (
@@ -101,6 +104,7 @@ MIDDLEWARE = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
     'mozilla_django_oidc.middleware.SessionRefresh',
 )
 
@@ -411,5 +415,6 @@ CELERY_EMAIL_TASK_CONFIG = {
 }
 
 ATLAS_POSTCODE_SEARCH = 'https://api.data.amsterdam.nl/atlas/search/postcode'
+ATLAS_ADDRESS_SEARCH = 'https://api.data.amsterdam.nl/atlas/search/adres'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'

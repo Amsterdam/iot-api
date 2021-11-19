@@ -9,6 +9,7 @@ django-cors-headers
 django-extensions
 django-filter
 django-extra-fields
+django-leaflet
 
 # Country codes, names and flags #
 django-countries
@@ -26,6 +27,8 @@ djangorestframework-gis
 
 drf_yasg
 flex
+
+openpyxl
 
 # Celery
 Celery

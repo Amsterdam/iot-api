@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings
 from django.conf.urls import include, url
+from django.contrib import admin
+from django.urls import path
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
@@ -43,6 +45,7 @@ urlpatterns = [
     ])),
     url(r'^status/', include('iot.health.urls')),
     url(r'^oidc/', include('keycloak_oidc.urls')),
+    path('admin/', admin.site.urls),
 ]
 
 if settings.DEBUG:
@@ -51,3 +54,5 @@ if settings.DEBUG:
     urlpatterns.extend([
         url(r'^__debug__/', include(debug_toolbar.urls)),
     ])
+
+admin.autodiscover()
