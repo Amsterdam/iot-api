@@ -17,17 +17,63 @@ from iot import models
 @dataclasses.dataclass
 class PostcodeSearchException(ValueError):
     postcode: str
+    house_number: int
 
     def __str__(self):
-        return f"Ongeldige postcode {self.postcode}"
+        return f"Ongeldige postcode {self.postcode} of huisnummer {self.house_number}"
 
 
-def get_center_coordinates(postcode: str) -> Point:
-    response = requests.get('{}/?q={}'.format(settings.ATLAS_POSTCODE_SEARCH, postcode))
-    data = response.json()
-    if not data['results'] or 'centroid' not in data['results'][0]:
-        raise PostcodeSearchException(postcode)
-    return Point(data['results'][0]['centroid'][1], data['results'][0]['centroid'][0])
+def get_postcode_url(postcode: str) -> str:
+    normalized = postcode.replace(' ', '')
+    return f'{settings.ATLAS_POSTCODE_SEARCH}/?q={normalized}'
+
+
+def get_address_url(street: str, house_number: int) -> str:
+    normalized = f'{street.lower()}%20{house_number}'
+    return f'{settings.ATLAS_ADDRESS_SEARCH}/?q={normalized}'
+
+
+def get_center_coordinates(postcode: str, house_number: int) -> Point:
+    """
+    :return: The centroid longitude and latitude coordinates for a postcode and
+             the house number on that street.
+    """
+    url = get_postcode_url(postcode)
+    data = requests.get(url).json()
+
+    if not data or not data.get('results') or 'naam' not in data['results'][0]:
+        raise PostcodeSearchException(postcode, house_number)
+
+    url = get_address_url(data['results'][0]['naam'], house_number)
+
+    while url is not None:
+
+        data = requests.get(url).json()
+        if not data.get('results'):
+            break
+
+        # ensure that we get the actual house number we were looking for, it may
+        # be that this number does not exist on the street. The search is fuzzy
+        # so we will most likely get a result, but it might not be the result we
+        # want
+        postcode_normalized = postcode.replace(' ', '')
+        for result in data['results']:
+
+            if 'centroid' not in result:
+                raise PostcodeSearchException(postcode, house_number)
+
+            if result.get('postcode') == postcode_normalized and \
+                    result.get('huisnummer') == house_number:
+                centroid = result['centroid']
+                return Point(centroid[0], centroid[1])
+
+        # not found in this page, try next one
+        url = data.get('_links')['next']['href']
+
+    # If we got here it is because we didn't find a result with the correct
+    # postcode and house number, so it seems this house number does not exist
+    # for the given postcode.
+    raise PostcodeSearchException(postcode, house_number)
 
 
 @dataclasses.dataclass
@@ -365,7 +411,11 @@ def get_location(sensor_data: SensorData):
     elif isinstance(sensor_data.location, LocationDescription):
         return {'location_description': dataclasses.astuple(sensor_data.location)}
     elif isinstance(sensor_data.location, PostcodeHouseNumber):
-        return {'location': get_center_coordinates(sensor_data.location.postcode)}
+        location = get_center_coordinates(
+            sensor_data.location.postcode,
+            sensor_data.location.house_number,
+        )
+        return {'location': location}
     else:
         raise TypeError(f'Onbekend locatie type {type(sensor_data.location)}')
 

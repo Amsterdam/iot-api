@@ -1,10 +1,13 @@
 import csv
+import json
 import os
 from dataclasses import asdict
 from pathlib import Path
 from unittest.mock import patch
 
 import pytest
+import requests
+import responses
 from django.contrib.gis.geos import Point
 from openpyxl import Workbook
 
@@ -416,3 +419,105 @@ class TestValidate:
         sensor_data.active_until = value
         with pytest.raises(import_utils.InvalidDate):
             import_utils.validate_sensor(sensor_data)
+
+
+DATA_DIR = Path(__file__).parent / 'data' / 'json'
+
+
+@pytest.fixture()
+def requests_mock():
+    with responses.RequestsMock() as requests_mock:
+        yield requests_mock
+
+
+def mock_get(requests_mock, url, response):
+    response = json.loads(response) if isinstance(response, str) else response
+    requests_mock.add(responses.GET, url, json=response)
+    requests.get(url)
+
+
+@pytest.fixture(autouse=True)
+def override_url_settings(settings):
+    # make sure we don't accidentally call the actual API during tests
+    # we should use the mocked values
+    settings.ATLAS_POSTCODE_SEARCH = 'http://postcode'
+    settings.ATLAS_ADDRESS_SEARCH = 'http://adres'
+
+
+class TestGetCenterCoordinates:
+
+    @pytest.fixture(autouse=True)
+    def inject_requests_mock(self, requests_mock):
+        self.requests_mock = requests_mock
+        for path in os.listdir(DATA_DIR):
+            for file in os.listdir(DATA_DIR / path):
+                response = json.loads((DATA_DIR / path / file).read_text())
+                query = file.replace(".json", "")
+                url = f'http://{path}/?q={query}'
+                mock_get(self.requests_mock, url, response)
+
+    def test_house_number_expected_point(self):
+        """
+        Check that when the correct response is given we get the expected
+        result for the postcode + house number.
+        """
+        actual = import_utils.get_center_coordinates('1015 BA', 1)
+        assert tuple(actual) == (4.892287512614596, 52.37905673120624)
+
+    def test_house_number_not_found_should_raise_exception(self):
+        """
+        Searching by herengracht%201&page=2.json is fuzzy, so for example
+        Herengracht 11 will return results, even though there is no Herengracht
+        11, in this case the closest text result is Herengracht 111. In this
+        situation the best thing is to just produce an error and let the person
+        who is doing the import figure out the best course of action.
+        """
+        with pytest.raises(import_utils.PostcodeSearchException):
+            import_utils.get_center_coordinates('1015 BA', 11)
+
+    def test_pagination_links_should_be_followed(self):
+        """
+        It may be that the herengracht we are looking for is not on the first page,
+        for example when searching for "Herengracht 1" and we mean the
+        Heregracht in Weesp.
+        """
+        actual = import_utils.get_center_coordinates('1382 AE', 1)
+        assert tuple(actual) == (5.042682700063272, 52.30925075920674)
+
+
+class TestGetCenterCoordinatesInvalidResponses:
+
+    HERENGRACHT_POSTCODE_RESPONSE = json.dumps({"results": [{"straat": 'Herengracht'}]})
+
+    @pytest.fixture(autouse=True)
+    def inject_requests_mock(self, requests_mock):
+        self.requests_mock = requests_mock
+
+    @pytest.mark.parametrize('postcode_response, address_response', [
+        ('{}', '{}'),
+        ('{"results": null}', '{}'),
+        ('{"results": []}', '{}'),
+        ('{"results": [{}]}', '{}'),
+        ('{"results": [{"straat": null}]}', '{}'),
+        (HERENGRACHT_POSTCODE_RESPONSE, '{}'),
+        (HERENGRACHT_POSTCODE_RESPONSE, '{"results": null}'),
+        (HERENGRACHT_POSTCODE_RESPONSE, '{"results": []}'),
+        (HERENGRACHT_POSTCODE_RESPONSE, '{"results": [{}]}'),
+    ])
+    def test_house_number_exception_should_be_raised_on_invalid_response(
+        self,
+        postcode_response: str,
+        address_response: str,
+    ):
+        """
+        When getting the center coordinates of a postcode with a house number,
+        check that an exception is raised if the response (postcode or herengracht%201&page=2.json)
+        from atlas is not in the expected form.
+        """
+        url = import_utils.get_postcode_url('1015 BA')
+        mock_get(self.requests_mock, url, postcode_response)
+        url = import_utils.get_address_url('Herengracht', 1)
+        mock_get(self.requests_mock, url, address_response)
+
+        with pytest.raises(import_utils.PostcodeSearchException):
+            import_utils.get_center_coordinates('1015 BA', 1)
