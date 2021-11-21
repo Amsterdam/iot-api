@@ -1,126 +1,49 @@
-import datetime
 import random
 
 import factory
 import faker
 from django.contrib.gis.geos import Point
 
-from .constants import CATEGORY_CHOICES, FREQUENCY_CHOICES
-from .models import Device, Person, Type
+from .models import Device2, LegalGround, Person2, Theme, Type2
 
 fake = faker.Faker()
 
 
-class PersonFactory(factory.django.DjangoModelFactory):
-    name = factory.LazyAttribute(
-        lambda o: '{0}'.format(fake.name())
-    )
-
-    email = factory.LazyAttribute(
-        lambda o: '{0}@amsterdam.nl'.format(o.name.replace(' ', '.').lower())
-    )
-
-    organisation = factory.LazyAttribute(
-        lambda o: fake.company()
-    )
+class Person2Factory(factory.django.DjangoModelFactory):
+    name = fake.name()
+    email = fake.company_email()
+    telephone = '06123456789'
+    organisation = fake.company()
+    website = fake.url(['https'])
 
     class Meta:
-        model = Person
+        model = Person2
 
 
-class TypeFactory(factory.django.DjangoModelFactory):
-    name = factory.LazyAttribute(
-        lambda o: fake.text(max_nb_chars=32)
-    )
-
-    application = factory.LazyAttribute(
-        lambda o: fake.text(max_nb_chars=32)
-    )
-
-    description = factory.LazyAttribute(
-        lambda o: fake.text(max_nb_chars=128)
-    )
-
-    class Meta:
-        model = Type
+def sample_model(model, n=1):
+    return random.sample(list(model.objects.all()), n)
 
 
-class DeviceFactory(factory.django.DjangoModelFactory):
-    reference = factory.LazyAttribute(
-        lambda o: fake.text(max_nb_chars=32)
-    )
-    application = factory.LazyAttribute(
-        lambda o: fake.text(max_nb_chars=32)
-    )
-    types = factory.SubFactory(TypeFactory)
-    categories = factory.LazyAttribute(
-        lambda o: f'{random.choice(CATEGORY_CHOICES)[0]},{random.choice(CATEGORY_CHOICES)[0]}')
-    installation_point = factory.LazyAttribute(
-        lambda o: fake.text(max_nb_chars=32)
-    )
-    frequency = factory.LazyAttribute(
-        lambda o: random.choice(FREQUENCY_CHOICES)[0]
-    )
-    permit = bool(random.getrandbits(1))
-    in_use_since = fake.date_object(end_datetime=datetime.datetime.now())
-    postal_code = fake.text(max_nb_chars=6)
-    house_number = fake.text(max_nb_chars=8)
-    geometrie = factory.LazyAttribute(
-        lambda o: Point(4.58565, 52.03560)
-    )
-    owner = factory.SubFactory(PersonFactory)
-    contact = factory.SubFactory(PersonFactory)
-
-    class Meta:
-        model = Device
+class Device2Factory(factory.django.DjangoModelFactory):
+    reference = fake.text(64)
+    owner = factory.SubFactory(Person2Factory)
+    type = factory.LazyFunction(lambda: sample_model(Type2)[0])
+    region = None
+    location = Point(4.58565, 52.03560)
+    location_description = None
+    datastream = fake.text(255)
 
     @factory.post_generation
-    def types(self, create, extracted, **kwargs):
-        if extracted:
-            for t in extracted:
-                self.types.add(t)
+    def themes(self, *args, **kwargs):
+        for theme in sample_model(Theme, random.randint(1, 3)):
+            self.themes.add(theme)
 
+    contains_pi_data = fake.boolean()
 
-def device_dict():
-    return {
-        "reference": fake.text(max_nb_chars=64),
-        "application": fake.text(max_nb_chars=64),
-        "types": [
-            {
-                "name": fake.text(max_nb_chars=64),
-                "application": fake.text(max_nb_chars=64),
-                "description": fake.text(max_nb_chars=200),
-            },
-            {
-                "name": fake.text(max_nb_chars=64),
-                "application": fake.text(max_nb_chars=64),
-                "description": fake.text(max_nb_chars=200),
-            },
-            {
-                "name": fake.text(max_nb_chars=64),
-                "application": fake.text(max_nb_chars=64),
-                "description": fake.text(max_nb_chars=200),
-            }
-        ],
-        "categories": f'{random.choice(CATEGORY_CHOICES)[0]},{random.choice(CATEGORY_CHOICES)[0]}',
-        "installation_point": fake.text(max_nb_chars=64),
-        "frequency": random.choice(FREQUENCY_CHOICES)[0],
-        "permit": bool(random.getrandbits(1)),
-        "in_use_since": str(fake.date_object(end_datetime=datetime.datetime.now())),
-        "postal_code": fake.text(max_nb_chars=6),
-        "house_number": fake.text(max_nb_chars=8),
-        "geometrie": {
-            "longitude": 4.58565,
-            "latitude": 52.0356
-        },
-        "owner": {
-            "name": fake.text(max_nb_chars=8),
-            "email": fake.email(),
-            "organisation": fake.text(max_nb_chars=8),
-        },
-        "contact": {
-            "name": fake.text(max_nb_chars=8),
-            "email": fake.email(),
-            "organisation": fake.text(max_nb_chars=8),
-        },
-    }
+    observation_goal = fake.text(255)
+    legal_ground = factory.LazyFunction(lambda: sample_model(LegalGround)[0])
+    privacy_declaration = fake.url(['https'])
+    active_until = fake.date()
+
+    class Meta:
+        model = Device2

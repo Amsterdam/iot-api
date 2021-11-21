@@ -1,31 +1,12 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, unicode_literals
 
-from datapunt_api.rest import DatapuntViewSetWritable
-from django.conf import settings
+from datapunt_api.rest import DatapuntViewSet
 from django.utils import timezone
-# from django.contrib.auth import
-from keycloak_oidc.drf.permissions import InAuthGroup
 from rest_framework import routers, views
-from rest_framework.mixins import CreateModelMixin
-from rest_framework.permissions import SAFE_METHODS
 from rest_framework.response import Response
-from rest_framework.viewsets import GenericViewSet
 
-from .models import Device
-from .serializers import DeviceSerializer, IotContactSerializer
-
-
-class APIAuthGroup(InAuthGroup):
-    """
-    A permission to allow all GETS, but only allow a POST if a user is logged in
-    and is a member of the slimme apparaten role inside keycloak.
-    """
-    allowed_group_names = [settings.KEYCLOAK_SLIMMEAPPARATEN_WRITE_PERMISSION_NAME]
-
-    def has_permission(self, request, view):
-        return request.method in SAFE_METHODS \
-               or super(APIAuthGroup, self).has_permission(request, view)
+from .models import Device2
+from .serializers import Device2Serializer
 
 
 class IotRootView(routers.APIRootView):
@@ -49,23 +30,12 @@ class PingView(views.APIView):
         })
 
 
-class DevicesViewSet(DatapuntViewSetWritable):
+class DevicesViewSet(DatapuntViewSet):
     """
     A view that will return the iot devices and makes it possible to post new ones
     """
+    queryset = Device2.objects.all()
+    serializer_class = Device2Serializer
+    serializer_detail_class = Device2Serializer
 
-    queryset = Device.objects.all().select_related('owner', 'contact')\
-        .prefetch_related('types').order_by('id')
-
-    serializer_class = DeviceSerializer
-    serializer_detail_class = DeviceSerializer
-
-    http_method_names = ['post', 'list', 'get']
-
-    permission_classes = [APIAuthGroup]
-
-
-class ContactViewSet(CreateModelMixin, GenericViewSet):
-    queryset = Device.objects.none()
-    serializer_class = IotContactSerializer
-    pagination_class = None
+    http_method_names = ['get']
