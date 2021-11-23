@@ -184,7 +184,7 @@ class Migration(migrations.Migration):
                 ('active_until', models.DateField(null=True, verbose_name='Tot wanneer is de sensor actief?')),
                 ('legal_ground', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to='iot.legalground', verbose_name='Wettelijke grondslag')),
                 ('owner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='iot.person2', verbose_name='Eigenaar')),
-                ('region', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to='iot.region', verbose_name='In welk gebied bevindt zich de mobiele sensor?')),
+                ('regions', models.ManyToManyField( to='iot.Region', blank=True, verbose_name='In welk gebied bevindt zich de mobiele sensor?')),
                 ('themes', models.ManyToManyField(to='iot.Theme', verbose_name='Thema')),
                 ('type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='iot.type2', verbose_name='Kies soort / type sensor')),
             ],

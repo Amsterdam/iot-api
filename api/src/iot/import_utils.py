@@ -106,8 +106,8 @@ class LocationDescription:
 
 
 @dataclasses.dataclass
-class Region:
-    region: str
+class Regions:
+    regions: str
 
 
 @dataclasses.dataclass
@@ -115,7 +115,7 @@ class SensorData:
     owner: PersonData
     reference: str
     type: str
-    location: Union[LatLong, PostcodeHouseNumber, LocationDescription, Region]
+    location: Union[LatLong, PostcodeHouseNumber, LocationDescription, Regions]
     datastream: str
     observation_goal: str
     themes: str
@@ -276,7 +276,7 @@ def parse_iprox_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
                         row['Omschrijving van de locatie van de sensor', sensor_number],
                     )
             else:
-                location = Region(
+                location = Regions(
                     row['In welk gebied bevindt zich de mobiele sensor?', sensor_number]
                 )
 
@@ -409,8 +409,8 @@ def get_location(sensor_data: SensorData):
     Get the specific django field and value which should be filled for the
     location data that was provided.
     """
-    if isinstance(sensor_data.location, Region):
-        return {'region': models.Region.objects.get_or_create(name=sensor_data.location.region)[0]}
+    if isinstance(sensor_data.location, Regions):
+        return {'regions': sensor_data.location.regions}
     elif isinstance(sensor_data.location, LatLong):
         return {'location': Point(*dataclasses.astuple(sensor_data.location))}
     elif isinstance(sensor_data.location, LocationDescription):
@@ -476,7 +476,7 @@ class InvalidHouseNumber(ValidationError):
     target = 'location'
 
 
-class InvalidRegion(ValidationError):
+class InvalidRegions(ValidationError):
     source = 'In welk gebied bevindt zich de mobiele sensor?'
     target = 'location'
 
@@ -537,14 +537,14 @@ def validate_themes(sensor_data):
         raise InvalidThemes(sensor_data)
 
 
-def validate_region(sensor_data):
-    if not sensor_data.location.region:
-        raise InvalidRegion(sensor_data)
+def validate_regions(sensor_data):
+    if not sensor_data.location.regions:
+        raise InvalidRegions(sensor_data)
 
 
 def validate_location(sensor_data):
-    if isinstance(sensor_data.location, Region):
-        validate_region(sensor_data)
+    if isinstance(sensor_data.location, Regions):
+        validate_regions(sensor_data)
     elif isinstance(sensor_data.location, LatLong):
         validate_latitude_longitude(sensor_data)
     elif isinstance(sensor_data.location, PostcodeHouseNumber):
@@ -625,8 +625,11 @@ def import_sensor(sensor_data: SensorData, owner: models.Person2):
         'active_until': parse_date(sensor_data.active_until),
         'owner': owner,
         'privacy_declaration': sensor_data.privacy_declaration,
-        **get_location(sensor_data),
     }
+
+    location = get_location(sensor_data)
+    if 'regions' not in location:
+        defaults.update(location)
 
     if defaults['contains_pi_data']:
         defaults['legal_ground_id'] = models.id_from_name(
@@ -640,6 +643,11 @@ def import_sensor(sensor_data: SensorData, owner: models.Person2):
         reference=sensor_data.reference,
         defaults=defaults,
     )
+
+    if 'regions' in location:
+        for region_name in location['regions'].split(','):
+            region, _ = models.Region.objects.get_or_create(name=region_name)
+            device.regions.add(region)
 
     for theme_name in sensor_data.themes.split(','):
         theme_id = models.id_from_name(models.Theme, theme_name)

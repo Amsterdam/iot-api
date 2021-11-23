@@ -28,9 +28,7 @@ class Device2Factory(factory.django.DjangoModelFactory):
     reference = fake.text(64)
     owner = factory.SubFactory(Person2Factory)
     type = factory.LazyFunction(lambda: sample_model(Type2)[0])
-    region = None
     location = Point(4.58565, 52.03560)
-    location_description = None
     datastream = fake.text(255)
 
     @factory.post_generation

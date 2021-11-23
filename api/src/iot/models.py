@@ -159,12 +159,10 @@ class Device2(models.Model):
     )
 
     # Location
-    region = models.ForeignKey(
+    regions = models.ManyToManyField(
         Region,
-        null=True,
         blank=True,
         verbose_name="In welk gebied bevindt zich de mobiele sensor?",
-        on_delete=models.PROTECT,
     )
     location = gis_models.PointField(
         name="location",

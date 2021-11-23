@@ -205,7 +205,7 @@ class Person2Serializer(HALSerializer):
 
 class Device2Serializer(HALSerializer):
     type = serializers.StringRelatedField()
-    region = serializers.StringRelatedField()
+    regions = serializers.StringRelatedField(many=True)
     themes = serializers.StringRelatedField(many=True)
     legal_ground = serializers.StringRelatedField()
     owner = Person2Serializer()
@@ -216,7 +216,7 @@ class Device2Serializer(HALSerializer):
         fields = [
             'owner',
             'type',
-            'region',
+            'regions',
             'location',
             'location_description',
             'datastream',

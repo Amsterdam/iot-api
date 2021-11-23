@@ -274,7 +274,7 @@ class TestImportSensor:
             'organisation': 'Gemeente Amsterdam',
         },
         'privacy_declaration': 'www.amsterdam.nl/privacy',
-        'region': None,
+        'regions': [],
         'themes': ['Bodem', 'Veiligheid'],
         'type': 'Chemiesensor',
         'reference': '1234',
@@ -324,19 +324,20 @@ class TestImportSensor:
         import_utils.import_sensor(sensor_data, owner)
         assert self.actual == [dict(self.expected, type="Midi-chlorian teller")]
 
-    def test_import_sensor_region(self, sensor_data):
+    def test_import_sensor_regions(self, sensor_data):
         # check that we can import as "mobile" sensor
         owner = import_utils.import_person(sensor_data.owner)
-        sensor_data.location = import_utils.Region("Centrum")
+        sensor_data.location = import_utils.Regions("Centrum,Oost")
         import_utils.import_sensor(sensor_data, owner)
-        assert self.actual == [dict(self.expected, location_description=None, region="Centrum")]
+        expected = dict(self.expected, location_description=None, regions=["Centrum", "Oost"])
+        assert self.actual == [expected]
 
     def test_import_sensor_other_region(self, sensor_data):
         # check that we can import a "other" region
         owner = import_utils.import_person(sensor_data.owner)
-        sensor_data.location = import_utils.Region("Diemen")
+        sensor_data.location = import_utils.Regions("Diemen")
         import_utils.import_sensor(sensor_data, owner)
-        assert self.actual == [dict(self.expected, location_description=None, region="Diemen")]
+        assert self.actual == [dict(self.expected, location_description=None, regions=["Diemen"])]
 
     def test_import_postcode_house_number(self, sensor_data):
         # check that we can import a location based on postcode and house number
@@ -367,9 +368,9 @@ class TestValidate:
             import_utils.validate_sensor(sensor_data)
 
     @pytest.mark.parametrize("value", [None, ''])
-    def test_invalid_region(self, sensor_data, value):
-        sensor_data.location = import_utils.Region(value)
-        with pytest.raises(import_utils.InvalidRegion):
+    def test_invalid_regions(self, sensor_data, value):
+        sensor_data.location = import_utils.Regions(value)
+        with pytest.raises(import_utils.InvalidRegions):
             import_utils.validate_sensor(sensor_data)
 
     @pytest.mark.parametrize("value", [None, '', 'onzin'])
