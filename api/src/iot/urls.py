@@ -8,7 +8,7 @@ from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 from rest_framework.routers import DefaultRouter
 
-from . import views
+from . import auth, views
 
 
 class IoTRouter(DefaultRouter):
@@ -44,6 +44,7 @@ urlpatterns = [
     ])),
     url(r'^status/', include('iot.health.urls')),
     url(r'^oidc/', include('keycloak_oidc.urls')),
+    path('admin/login/', auth.oidc_login),
     path('admin/', admin.site.urls),
 ]
 

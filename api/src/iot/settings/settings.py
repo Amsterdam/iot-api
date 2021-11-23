@@ -135,6 +135,11 @@ AUTHENTICATION_BACKENDS = [
     'keycloak_oidc.auth.OIDCAuthenticationBackend',
 ]
 
+SENSOR_REGISTER_ADMIN_ROLE_NAME = os.environ.get(
+    'SENSOR_REGISTER_ADMIN_ROLE_NAME',
+    'sensoren-register-admin',
+)
+
 ROOT_URLCONF = "iot.urls"
 WSGI_APPLICATION = "iot.wsgi.application"
 
