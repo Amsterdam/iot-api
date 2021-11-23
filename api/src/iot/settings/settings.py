@@ -418,3 +418,6 @@ ATLAS_POSTCODE_SEARCH = 'https://api.data.amsterdam.nl/atlas/search/postcode'
 ATLAS_ADDRESS_SEARCH = 'https://api.data.amsterdam.nl/atlas/search/adres'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+# In the IPROX formuler the user can register 5 sensors at a time
+IPROX_NUM_SENSORS = 5

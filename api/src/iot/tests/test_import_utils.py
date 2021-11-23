@@ -390,12 +390,6 @@ class TestValidate:
         with pytest.raises(import_utils.InvalidPostcode):
             import_utils.validate_sensor(sensor_data)
 
-    @pytest.mark.parametrize("value", [None, '', 'onzin'])
-    def test_invalid_house_number(self, sensor_data, value):
-        sensor_data.location = import_utils.PostcodeHouseNumber('1111XX', value)
-        with pytest.raises(import_utils.InvalidHouseNumber):
-            import_utils.validate_sensor(sensor_data)
-
     @pytest.mark.parametrize("value", [None, ''])
     def test_invalid_location_description(self, sensor_data, value):
         sensor_data.location = import_utils.LocationDescription(value)

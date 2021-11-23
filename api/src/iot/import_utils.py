@@ -29,7 +29,7 @@ def get_postcode_url(postcode: str) -> str:
 
 
 def get_address_url(street: str, house_number: int) -> str:
-    normalized = f'{street.lower()}%20{house_number}'
+    normalized = f'{street.lower()} {house_number}'
     return f'{settings.ATLAS_ADDRESS_SEARCH}/?q={normalized}'
 
 
@@ -169,7 +169,8 @@ IPROX_SENSOR_FIELDS = [
 ]
 
 
-IPROX_FIELDS = IPROX_REGISTRATION_FIELDS + IPROX_PERSON_FIELDS + (IPROX_SENSOR_FIELDS * 5)
+ALL_IPROX_SENSOR_FIELDS = (IPROX_SENSOR_FIELDS * settings.IPROX_NUM_SENSORS)
+IPROX_FIELDS = IPROX_REGISTRATION_FIELDS + IPROX_PERSON_FIELDS + ALL_IPROX_SENSOR_FIELDS
 
 
 @dataclasses.dataclass
@@ -179,17 +180,21 @@ class Values:
     column of rows) so that we can provide 'named access' to those values,
     e.g.
 
-    >>> values = Values(['a', 'b', 'c'], [1, 2, 3])
+    >>> from collections import namedtuple
+    >>> Cell = namedtuple('Cell', 'value')
+    >>> values = Values(['a', 'b', 'c'], list(map(Cell, [1, 2, 3])))
     >>> values['a']
     1
     >>> values['d']
-    KeyError()
+    Traceback (most recent call last):
+      ...
+    KeyError: 'd'
 
     It is possible to have duplicate keys, in which case slicing can be used
     to get the nth item (0 based) with a particular name, e.g.
 
-    >>> values = Values(['a', 'a', 'a'], [10, 20, 30])
-    >>> values['a', 3]
+    >>> values = Values(['a', 'a', 'a'], list(map(Cell, [10, 20, 30])))
+    >>> values['a', 2]
     30
     """
     fields: list
@@ -202,11 +207,11 @@ class Values:
         retrieve.
         """
         if isinstance(field, tuple):
-            field, nth = field
-            matches = (idx for idx, val in enumerate(self.fields) if val == field)
-            result = next(islice(matches, nth, nth + 1), None)
-            if result is not None:
-                return self.values[result].value
+            requested_field, nth = field
+            matches = (i for i, field in enumerate(self.fields) if field == requested_field)
+            matching_index = next(islice(matches, nth, nth + 1), None)
+            if matching_index is not None:
+                return self.values[matching_index].value
         else:
             # raise KeyError when field not present
             with contextlib.suppress(ValueError):
@@ -255,7 +260,7 @@ def parse_iprox_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
 
         reference = row['Referentienummer']
 
-        for sensor_number in range(5):
+        for sensor_number in range(settings.IPROX_NUM_SENSORS):
 
             if row['Locatie sensor'] == 'Vast':
                 if row['Hebt u een postcode en huisnummer?'] == 'Ja':
@@ -558,10 +563,6 @@ def validate_postcode_house_number(sensor_data):
     if not sensor_data.location.postcode or \
             not re.match(postcode_regex, sensor_data.location.postcode):
         raise InvalidPostcode(sensor_data)
-    try:
-        int(sensor_data.location.house_number)
-    except Exception as e:
-        raise InvalidHouseNumber(sensor_data) from e
 
 
 def validate_latitude_longitude(sensor_data):
