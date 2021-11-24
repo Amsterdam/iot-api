@@ -1,6 +1,5 @@
-version: '2.0'
+version: "2.0"
 services:
-
   database:
     image: amsterdam/postgres11
     ports:
@@ -25,8 +24,6 @@ services:
 
   api:
     build: ./api
-    ports:
-      - "8001:8001"
     links:
       - database
       - rabbit
@@ -35,7 +32,7 @@ services:
       - DB_NAME=iothings
       - DB_PASSWORD=insecure
       - DJANGO_SETTINGS_MODULE=iot.settings.settings
-      - UWSGI_HTTP=0.0.0.0:8001
+      - UWSGI_HTTP=0.0.0.0:8000
       - UWSGI_MASTER=1
       - UWSGI_STATIC_INDEX=index.html
       - UWSGI_STATIC_MAP=/iot/static=/static
@@ -60,7 +57,7 @@ services:
       bash -c '
       python manage.py makemigrations &&
       python manage.py migrate &&
-      python manage.py runserver 0.0.0.0:8001'
+      python manage.py runserver 0.0.0.0:8000'
 
   celery:
     build: ./api
@@ -84,4 +81,3 @@ services:
       - ./api/src:/app
       - ./api/deploy:/deploy
     command: celery -A iot worker -l info
-

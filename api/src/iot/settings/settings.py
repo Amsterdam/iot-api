@@ -82,8 +82,9 @@ THIRD_PARTY_APPS = (
     'rest_framework',
     'rest_framework_gis',
 
-    'keycloak_oidc',  # load after django.contrib.auth!
-    'leaflet'
+    # 'keycloak_oidc',  # load after django.contrib.auth!
+    'leaflet',
+    'corsheaders'
 )
 
 DEBUG_APPS = (
@@ -98,6 +99,7 @@ LOCAL_APPS = (
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = (
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -131,9 +133,9 @@ if DEBUG:
         'debug_toolbar.panels.profiling.ProfilingPanel',
     ]
 
-AUTHENTICATION_BACKENDS = [
-    'keycloak_oidc.auth.OIDCAuthenticationBackend',
-]
+# AUTHENTICATION_BACKENDS = [
+#     'keycloak_oidc.auth.OIDCAuthenticationBackend',
+# ]
 
 ROOT_URLCONF = "iot.urls"
 WSGI_APPLICATION = "iot.wsgi.application"
@@ -353,7 +355,7 @@ REST_FRAMEWORK = dict(
     UNAUTHENTICATED_USER={},
     UNAUTHENTICATED_TOKEN={},
     DEFAULT_AUTHENTICATION_CLASSES=(
-        'mozilla_django_oidc.contrib.drf.OIDCAuthentication',
+        # 'mozilla_django_oidc.contrib.drf.OIDCAuthentication',
         # 'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ),
