@@ -160,7 +160,7 @@ IPROX_SENSOR_FIELDS = [
     'In welk gebied bevindt zich de mobiele sensor?',
     'Wat meet de sensor?',
     'Waarvoor meet u dat?',
-    'Thema',
+    "Kies een of meerdere thema's",
     'Worden er persoonsgegevens verwerkt?',
     'Wettelijke grondslag',
     'Privacyverklaring',
@@ -613,6 +613,58 @@ def parse_date(value: Union[str, datetime.date, datetime.datetime]):
         raise TypeError(f'Expected `str`, `date` or `datetime` instance got {type(value)}')
 
 
+THEME_TEXT_TO_THEME_NAME = {
+    # This is what it is currently...
+    'Afval (milieu)': 'Afval',
+    'Bewakings- en/of beveiligingscamera (veligheid)': 'Bewakings- en/of beveiligingscamera',
+    'Bouwen en verbouwen (economie)': 'Bouwen en verbouwen',
+    'Dienstensector (economie)': 'Dienstensector',
+    'Energie (milieu)': 'Energie',
+    'Geluid (milieu)': 'Geluid',
+    'Gezondheid (veiligheid)': 'Gezondheid',
+    'ICT / Netwerken': 'ICT / Netwerken',
+    'Inkoop en beheer (economie)': 'Inkoop en beheer',
+    'Klimaatverandering (milieu)': 'Klimaatverandering',
+    'Landbouw (economie)': 'Landbouw',
+    'Luchtvaart (mobiliteit)': 'Luchtvaart',
+    'Markttoezicht (economie)': 'Markttoezicht',
+    'Natuur- en landschapsbeheer (milieu)': 'Natuur- en landschapsbeheer',
+    'Ondernemen (economie)': 'Ondernemen',
+    'Openbaar vervoer (mobiliteit)': 'Openbaar vervoer',
+    'Railverkeer (mobiliteit)': 'Railverkeer',
+    'Scheepvaart (mobiliteit)': 'Scheepvaart',
+    'Stoffen (milieu)': 'Stoffen',
+    'Water, bodem, lucht (milieu)': 'Water, bodem, lucht',
+    'Wegverkeer - voet (mobiliteit)': 'Wegverkeer - voet',
+    'Wegverkeer - fiets (mobiliteit)': 'Wegverkeer - fiets',
+    'Wegverkeer - auto (mobiliteit)': 'Wegverkeer - auto',
+    # This would be my suggestion...
+    # 'Economie - Bouwen en verbouwen': 'Bouwen en verbouwen',
+    # 'Economie - Dienstensector': 'Dienstensector',
+    # 'Economie - Inkoop en beheer': 'Inkoop en beheer',
+    # 'Economie - Landbouw': 'Landbouw',
+    # 'Economie - Markttoezicht': 'Markttoezicht',
+    # 'Economie - Ondernemen': 'Ondernemen',
+    # 'ICT / Netwerken': 'ICT / Netwerken',
+    # 'Milieu - Afval': 'Afval',
+    # 'Milieu - Energie': 'Energie',
+    # 'Milieu - Geluid': 'Geluid',
+    # 'Milieu - Klimaatverandering': 'Klimaatverandering',
+    # 'Milieu - Natuur- en landschapsbeheer': 'Natuur- en landschapsbeheer',
+    # 'Milieu - Stoffen': 'Stoffen',
+    # 'Milieu - Water, bodem, lucht': 'Water, bodem, lucht',
+    # 'Mobiliteit - Luchtvaart': 'Luchtvaart',
+    # 'Mobiliteit - Openbaar vervoer': 'Openbaar vervoer',
+    # 'Mobiliteit - Railverkeer': 'Railverkeer',
+    # 'Mobiliteit - Scheepvaart': 'Scheepvaart',
+    # 'Mobiliteit - Wegverkeer - Voet': 'Wegverkeer - voet',
+    # 'Mobiliteit - Wegverkeer - Fiets': 'Wegverkeer - fiets',
+    # 'Mobiliteit - Wegverkeer - Auto': 'Wegverkeer - auto',
+    # 'Veiligheid - Bewakings- en-of beveiligingscamera': 'Bewakings- en-of beveiligingscamera',
+    # 'Veiligheid - Gezondheid': 'Gezondheid',
+}
+
+
 def import_sensor(sensor_data: SensorData, owner: models.Person2):
     """
     Import sensor data parsed from an iprox or bulk registration excel file.
@@ -642,6 +694,7 @@ def import_sensor(sensor_data: SensorData, owner: models.Person2):
     )
 
     for theme_name in sensor_data.themes.split(','):
+        theme_name = THEME_TEXT_TO_THEME_NAME[theme_name]
         theme_id = models.id_from_name(models.Theme, theme_name)
         device.themes.add(theme_id)
 
