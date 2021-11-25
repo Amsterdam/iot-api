@@ -111,7 +111,7 @@ class TestParse:
                 location=expected_location,
                 datastream='Of er chemie is tussen mensen',
                 observation_goal='Vind ik gewoon leuk',
-                themes='Veiligheid,Lucht',
+                themes='Veiligheid;Lucht',
                 contains_pi_data='Ja',
                 legal_ground='Bescherming vitale belangen betrokkene(n) of'
                              ' van een andere natuurlijke persoon)',
@@ -242,7 +242,7 @@ def sensor_data(person_data):
         location=import_utils.LocationDescription('Somewhere over the rainbow'),
         datastream='water',
         observation_goal='Nare bedoelingen',
-        themes='Bodem,Veiligheid',
+        themes='Bodem;Veiligheid',
         contains_pi_data='Ja',
         legal_ground='Publieke taak',
         privacy_declaration='www.amsterdam.nl/privacy',
@@ -327,7 +327,7 @@ class TestImportSensor:
     def test_import_sensor_regions(self, sensor_data):
         # check that we can import as "mobile" sensor
         owner = import_utils.import_person(sensor_data.owner)
-        sensor_data.location = import_utils.Regions("Centrum,Oost")
+        sensor_data.location = import_utils.Regions("Centrum;Oost")
         import_utils.import_sensor(sensor_data, owner)
         expected = dict(self.expected, location_description=None, regions=["Centrum", "Oost"])
         assert self.actual == [expected]

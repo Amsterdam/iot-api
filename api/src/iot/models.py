@@ -1,7 +1,7 @@
 import typing
 
 from django.contrib.gis.db import models as gis_models
-from django.contrib.postgres.fields import CIEmailField
+from django.contrib.postgres.fields import CIEmailField, CITextField
 from django.db import models
 
 from .constants import FREQUENCY_CHOICES
@@ -81,7 +81,7 @@ class Person2(models.Model):
 
 
 class Type2(models.Model):
-    name = models.CharField(unique=True, max_length=255, verbose_name="Kies soort / type sensor")
+    name = CITextField(unique=True, verbose_name="Kies soort / type sensor")
     is_other = models.BooleanField(default=True, verbose_name="Anders, namelijk")
 
     def __str__(self):
@@ -93,7 +93,7 @@ class Type2(models.Model):
 
 
 class Theme(models.Model):
-    name = models.CharField(unique=True, max_length=255, verbose_name="Thema")
+    name = CITextField(unique=True, verbose_name="Thema")
 
     def __str__(self):
         return self.name
@@ -104,7 +104,7 @@ class Theme(models.Model):
 
 
 class LegalGround(models.Model):
-    name = models.CharField(unique=True, max_length=255, verbose_name="Wettelijke grondslag")
+    name = CITextField(unique=True, verbose_name="Wettelijke grondslag")
 
     def __str__(self):
         return self.name

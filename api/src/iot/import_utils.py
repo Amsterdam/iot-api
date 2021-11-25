@@ -385,7 +385,7 @@ def parse_bulk_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
             ),
             datastream=row["Wat meet de sensor?"],
             observation_goal=row["Waarvoor meet u dat?"],
-            themes=','.join(filter(None, [
+            themes=settings.IPROX_SEPARATOR.join(filter(None, [
                 row["Thema 1"],
                 row["Thema 2 (niet verplicht)"],
                 row["Thema 3 (niet verplicht)"],
@@ -531,7 +531,7 @@ def validate_type(sensor_data):
 
 
 def validate_themes(sensor_data):
-    themes = (sensor_data.themes or '').split(',')
+    themes = (sensor_data.themes or '').split(settings.IPROX_SEPARATOR)
     valid_themes = models.Theme.objects.filter(name__in=themes).count()
     if valid_themes != len(themes):
         raise InvalidThemes(sensor_data)
@@ -645,11 +645,11 @@ def import_sensor(sensor_data: SensorData, owner: models.Person2):
     )
 
     if 'regions' in location:
-        for region_name in location['regions'].split(','):
+        for region_name in location['regions'].split(settings.IPROX_SEPARATOR):
             region, _ = models.Region.objects.get_or_create(name=region_name)
             device.regions.add(region)
 
-    for theme_name in sensor_data.themes.split(','):
+    for theme_name in sensor_data.themes.split(settings.IPROX_SEPARATOR):
         theme_id = models.id_from_name(models.Theme, theme_name)
         device.themes.add(theme_id)
 
@@ -682,6 +682,6 @@ def import_xlsx(workbook):
             else:
                 updated.append(sensor_data)
         except Exception as e:
-            errors.append((sensor_data, e))
+            errors.append(e)
 
     return errors, created, updated
