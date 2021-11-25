@@ -139,7 +139,7 @@ class Migration(migrations.Migration):
             name='Region',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255, unique=True, verbose_name='Gebied')),
+                ('name', django.contrib.postgres.fields.citext.CITextField(unique=True, verbose_name='Gebied')),
                 ('is_other', models.BooleanField(default=True, verbose_name='Anders, namelijk')),
             ],
             options={

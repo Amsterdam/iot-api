@@ -127,7 +127,7 @@ class Region(models.Model):
     A part of Amsterdam city, usually a "Stadsdeel" but users can also enter
     "other, namely..."
     """
-    name = models.CharField(unique=True, max_length=255, verbose_name="Gebied")
+    name = CITextField(unique=True, verbose_name="Gebied")
     is_other = models.BooleanField(default=True, verbose_name="Anders, namelijk")
 
     def __str__(self):
