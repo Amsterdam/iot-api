@@ -40,20 +40,14 @@ X_FRAME_OPTIONS = 'DENY'
 
 ## KEYCLOAK ##
 # External identity provider settings (Keycloak)
+LOGIN_REDIRECT_URL = "/admin"
 OIDC_RP_CLIENT_ID = os.environ['OIDC_RP_CLIENT_ID']
 OIDC_RP_CLIENT_SECRET = os.environ['OIDC_RP_CLIENT_SECRET']
-OIDC_OP_AUTHORIZATION_ENDPOINT = os.getenv('OIDC_OP_AUTHORIZATION_ENDPOINT',
-    'https://iam.amsterdam.nl/auth/realms/datapunt-acc/protocol/openid-connect/auth')
-OIDC_OP_TOKEN_ENDPOINT = os.getenv('OIDC_OP_TOKEN_ENDPOINT',
-    'https://iam.amsterdam.nl/auth/realms/datapunt-acc/protocol/openid-connect/token')
-OIDC_OP_USER_ENDPOINT = os.getenv('OIDC_OP_USER_ENDPOINT',
-    'https://iam.amsterdam.nl/auth/realms/datapunt-acc/protocol/openid-connect/userinfo')
-OIDC_OP_JWKS_ENDPOINT = os.getenv('OIDC_OP_JWKS_ENDPOINT',
-    'https://iam.amsterdam.nl/auth/realms/datapunt-acc/protocol/openid-connect/certs')
-OIDC_OP_LOGOUT_ENDPOINT = os.getenv('OIDC_OP_LOGOUT_ENDPOINT',
-    'https://iam.amsterdam.nl/auth/realms/datapunt-acc/protocol/openid-connect/logout')
-LOGIN_REDIRECT_URL = "/iothings/devices/"
-LOGOUT_REDIRECT_URL = "/iothings/devices/"
+OIDC_OP_AUTHORIZATION_ENDPOINT = os.environ['OIDC_OP_AUTHORIZATION_ENDPOINT']
+OIDC_OP_TOKEN_ENDPOINT = os.environ['OIDC_OP_TOKEN_ENDPOINT']
+OIDC_OP_USER_ENDPOINT = os.environ['OIDC_OP_USER_ENDPOINT']
+OIDC_OP_JWKS_ENDPOINT = os.environ['OIDC_OP_JWKS_ENDPOINT']
+OIDC_OP_LOGOUT_ENDPOINT = LOGOUT_REDIRECT_URL = os.environ['OIDC_OP_LOGOUT_ENDPOINT']
 
 
 # APP CONFIGURATION
@@ -132,13 +126,10 @@ if DEBUG:
     ]
 
 AUTHENTICATION_BACKENDS = [
-   'keycloak_oidc.auth.OIDCAuthenticationBackend',
+   'iot.auth.OIDCAuthenticationBackend',
 ]
 
-SENSOR_REGISTER_ADMIN_ROLE_NAME = os.environ.get(
-    'SENSOR_REGISTER_ADMIN_ROLE_NAME',
-    'sensoren-register-admin',
-)
+SENSOR_REGISTER_ADMIN_ROLE_NAME = os.environ.get('SENSOR_REGISTER_ADMIN_ROLE_NAME', 'x')
 
 ROOT_URLCONF = "iot.urls"
 WSGI_APPLICATION = "iot.wsgi.application"

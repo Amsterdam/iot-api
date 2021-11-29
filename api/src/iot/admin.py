@@ -26,7 +26,7 @@ class FileForm(forms.Form):
 
 
 @staff_member_required
-def import_xlsx_view(request, message_user):
+def import_xlsx_view(request, message_user, redirect_to):
     if request.method == "POST":
         try:
             file = request.FILES["selecteer_bestand"]
@@ -36,7 +36,6 @@ def import_xlsx_view(request, message_user):
                 for e in errors:
                     message_user(request, mark_safe(str(e)), level=messages.ERROR)
             else:
-                # TODO: information about what was imported
                 for sensor in created:
                     message_user(request, f"Sensor met referentie"
                                           f" {sensor.reference} aangemaakt")
@@ -45,7 +44,7 @@ def import_xlsx_view(request, message_user):
                                           f" {sensor.reference} bijgewerkt")
         except Exception as e:
             message_user(request, mark_safe(str(e)), level=messages.ERROR)
-        return redirect("..")
+        return redirect(redirect_to)
     else:
         return render(request, "import_xlsx.html", {"form": FileForm()})
 
@@ -60,11 +59,12 @@ class DeviceAdmin(LeafletGeoAdmin):
     search_fields = 'reference', 'owner__organisation', 'owner__email', 'owner__name'
 
     def get_urls(self):
-        import_xlsx_path = path(
-            'import_xlsx/',
-            import_xlsx_view,
-            dict(message_user=self.message_user),
+        _meta = self.model._meta
+        context = dict(
+            message_user=self.message_user,
+            redirect_to=f"admin:{_meta.app_label}_{_meta.model_name}_changelist",
         )
+        import_xlsx_path = path('import_xlsx/', import_xlsx_view, context)
         return [import_xlsx_path] + super().get_urls()
 
 
