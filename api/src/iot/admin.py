@@ -27,23 +27,22 @@ class FileForm(forms.Form):
 
 @staff_member_required
 def import_xlsx_view(request, message_user, redirect_to):
+
     if request.method == "POST":
         try:
             file = request.FILES["selecteer_bestand"]
             workbook = load_workbook(file)
             errors, created, updated = import_xlsx(workbook)
-            if errors:
-                for e in errors:
-                    message_user(request, mark_safe(str(e)), level=messages.ERROR)
-            else:
-                for sensor in created:
-                    message_user(request, f"Sensor met referentie"
-                                          f" {sensor.reference} aangemaakt")
-                for sensor in updated:
-                    message_user(request, f"Sensor met referentie"
-                                          f" {sensor.reference} bijgewerkt")
+            if created:
+                message_user(request, f"{len(created)} sensoren aangemaakt")
+            if updated:
+                message_user(request, f"{len(updated)} sensoren bijgewerkt")
         except Exception as e:
+            errors = [e]
+
+        for e in errors:
             message_user(request, mark_safe(str(e)), level=messages.ERROR)
+
         return redirect(redirect_to)
     else:
         return render(request, "import_xlsx.html", {"form": FileForm()})
