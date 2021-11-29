@@ -26,6 +26,7 @@ class OIDCAuthenticationBackend(keycloak_oidc.auth.OIDCAuthenticationBackend):
             for role in claims.get('roles'):
                 group, _ = Group.objects.get_or_create(name=role)
                 if settings.DEBUG or role == settings.SENSOR_REGISTER_ADMIN_ROLE_NAME:
+                    user.is_staff = True
                     user.is_superuser = True
                 user.save()
                 group.user_set.add(user)
