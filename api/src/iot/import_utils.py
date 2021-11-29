@@ -9,6 +9,7 @@ import requests
 from django.conf import settings
 from django.contrib.gis.geos import Point
 from openpyxl import Workbook
+from openpyxl.cell import Cell
 from typing_extensions import Literal
 
 from iot import models
@@ -181,8 +182,7 @@ class Values:
     e.g.
 
     >>> from collections import namedtuple
-    >>> Cell = namedtuple('Cell', 'value')
-    >>> values = Values(['a', 'b', 'c'], list(map(Cell, [1, 2, 3])))
+    >>> values = Values(['a', 'b', 'c'], [1, 2, 3])
     >>> values['a']
     1
     >>> values['d']
@@ -193,7 +193,7 @@ class Values:
     It is possible to have duplicate keys, in which case slicing can be used
     to get the nth item (0 based) with a particular name, e.g.
 
-    >>> values = Values(['a', 'a', 'a'], list(map(Cell, [10, 20, 30])))
+    >>> values = Values(['a', 'a', 'a'], [10, 20, 30])
     >>> values['a', 2]
     30
     """
@@ -211,11 +211,13 @@ class Values:
             matches = (i for i, field in enumerate(self.fields) if field == requested_field)
             matching_index = next(islice(matches, nth, nth + 1), None)
             if matching_index is not None:
-                return self.values[matching_index].value
+                matching_value = self.values[matching_index]
+                return matching_value.value if isinstance(matching_value, Cell) else matching_value
         else:
             # raise KeyError when field not present
             with contextlib.suppress(ValueError):
-                return self.values[self.fields.index(field)].value
+                matching_value = self.values[self.fields.index(field)]
+                return matching_value.value if isinstance(matching_value, Cell) else matching_value
 
         # didn't return yet, then item could not be found
         raise KeyError(field)
@@ -632,10 +634,9 @@ def import_sensor(sensor_data: SensorData, owner: models.Person2):
         defaults.update(location)
 
     if defaults['contains_pi_data']:
-        defaults['legal_ground_id'] = models.id_from_name(
-            models.LegalGround,
-            sensor_data.legal_ground,
-        )
+        defaults['legal_ground'] = models.LegalGround.objects.get_or_create(
+            name=sensor_data.legal_ground
+        )[0]
 
     # use the sensor_number to give each sensor a unique reference
     device, _ = models.Device2.objects.update_or_create(
