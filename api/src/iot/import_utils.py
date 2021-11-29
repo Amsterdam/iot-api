@@ -262,41 +262,41 @@ def parse_iprox_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
 
         reference = row['Referentienummer']
 
-        for sensor_number in range(settings.IPROX_NUM_SENSORS):
+        for sensor_index in range(settings.IPROX_NUM_SENSORS):
 
             if row['Locatie sensor'] == 'Vast':
                 if row['Hebt u een postcode en huisnummer?'] == 'Ja':
-                    # sensor_number + 1 since there is already a Postcode, Huisnummer and
+                    # sensor_index + 1 since there is already a Postcode, Huisnummer and
                     # Toevoeging in the contact details :(
                     location = PostcodeHouseNumber(
-                        row["Postcode", sensor_number + 1],
-                        row["Huisnummer", sensor_number + 1],
-                        row["Toevoeging", sensor_number + 1],
+                        row["Postcode", sensor_index + 1],
+                        row["Huisnummer", sensor_index + 1],
+                        row["Toevoeging", sensor_index + 1],
                     )
                 else:
                     location = LocationDescription(
-                        row['Omschrijving van de locatie van de sensor', sensor_number],
+                        row['Omschrijving van de locatie van de sensor', sensor_index],
                     )
             else:
                 location = Regions(
-                    row['In welk gebied bevindt zich de mobiele sensor?', sensor_number]
+                    row['In welk gebied bevindt zich de mobiele sensor?', sensor_index]
                 )
 
             yield SensorData(
                 owner=owner,
-                reference=f'{reference}.{sensor_number}',
-                type=row["Kies soort / type sensor", sensor_number],
+                reference=f'{reference}.{sensor_index}',
+                type=row["Kies soort / type sensor", sensor_index],
                 location=location,
-                datastream=row["Wat meet de sensor?", sensor_number],
-                observation_goal=row["Waarvoor meet u dat?", sensor_number],
-                themes=row["Thema", sensor_number],
-                contains_pi_data=row["Worden er persoonsgegevens verwerkt?", sensor_number],
-                legal_ground=row["Wettelijke grondslag", sensor_number],
-                privacy_declaration=row["Privacyverklaring", sensor_number],
-                active_until=row["Tot wanneer is de sensor actief?", sensor_number],
+                datastream=row["Wat meet de sensor?", sensor_index],
+                observation_goal=row["Waarvoor meet u dat?", sensor_index],
+                themes=row["Thema", sensor_index],
+                contains_pi_data=row["Worden er persoonsgegevens verwerkt?", sensor_index],
+                legal_ground=row["Wettelijke grondslag", sensor_index],
+                privacy_declaration=row["Privacyverklaring", sensor_index],
+                active_until=row["Tot wanneer is de sensor actief?", sensor_index],
             )
 
-            if row["Wilt u nog een sensor melden?", sensor_number] != 'Ja':
+            if row["Wilt u nog een sensor melden?", sensor_index] != 'Ja':
                 break
 
 
@@ -638,7 +638,7 @@ def import_sensor(sensor_data: SensorData, owner: models.Person2):
             name=sensor_data.legal_ground
         )[0]
 
-    # use the sensor_number to give each sensor a unique reference
+    # use the sensor_index to give each sensor a unique reference
     device, _ = models.Device2.objects.update_or_create(
         owner=owner,
         reference=sensor_data.reference,
