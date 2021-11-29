@@ -518,7 +518,7 @@ def validate_active_until(sensor_data):
 
 def validate_legal_ground(sensor_data):
     if sensor_data.contains_pi_data == 'Ja':
-        if not models.LegalGround.objects.filter(name=sensor_data.legal_ground).exists():
+        if sensor_data.legal_ground in (None, ''):
             raise InvalidLegalGround(sensor_data)
 
 
