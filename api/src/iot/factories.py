@@ -21,7 +21,9 @@ class Person2Factory(factory.django.DjangoModelFactory):
 
 
 def sample_model(model, n=1):
-    return random.sample(list(model.objects.all()), n)
+    population = list(model.objects.all())
+    assert n <= len(population)
+    return random.sample(population, n)
 
 
 class Device2Factory(factory.django.DjangoModelFactory):
