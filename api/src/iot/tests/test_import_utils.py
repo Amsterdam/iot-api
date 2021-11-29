@@ -8,6 +8,7 @@ from unittest.mock import patch
 import pytest
 import requests
 import responses
+from django.conf import settings
 from django.contrib.gis.geos import Point
 from openpyxl import Workbook
 
@@ -327,9 +328,10 @@ class TestImportSensor:
     def test_import_sensor_regions(self, sensor_data):
         # check that we can import as "mobile" sensor
         owner = import_utils.import_person(sensor_data.owner)
-        sensor_data.location = import_utils.Regions("Centrum;Oost")
+        regions = ["Centrum", "Oost"]
+        sensor_data.location = import_utils.Regions(settings.IPROX_SEPARATOR.join(regions))
         import_utils.import_sensor(sensor_data, owner)
-        expected = dict(self.expected, location_description=None, regions=["Centrum", "Oost"])
+        expected = dict(self.expected, location_description=None, regions=regions)
         assert self.actual == [expected]
 
     def test_import_sensor_other_region(self, sensor_data):
