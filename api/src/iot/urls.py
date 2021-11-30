@@ -41,11 +41,11 @@ urlpatterns = [
         url(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=None),
             name='schema-swagger-ui'),
         url(r'^ping/$', views.PingView.as_view(), name='ping'),
+        url(r'^oidc/', include('keycloak_oidc.urls')),
+        path('^admin/login/', auth.oidc_login),
+        path('^admin/', admin.site.urls),
     ])),
     url(r'^status/', include('iot.health.urls')),
-    url(r'^oidc/', include('keycloak_oidc.urls')),
-    path('admin/login/', auth.oidc_login),
-    path('admin/', admin.site.urls),
 ]
 
 if settings.DEBUG:
