@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings
 from django.conf.urls import include, url
+from django.contrib import admin
+from django.urls import path
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 from rest_framework.routers import DefaultRouter
 
-from . import views
+from . import auth, views
 
 
 class IoTRouter(DefaultRouter):
@@ -15,7 +17,6 @@ class IoTRouter(DefaultRouter):
 
 router = IoTRouter()
 router.register(r'devices', views.DevicesViewSet, basename='device')
-router.register(r'contact', views.ContactViewSet, basename='contact')
 
 
 schema_view = get_schema_view(
@@ -43,6 +44,8 @@ urlpatterns = [
     ])),
     url(r'^status/', include('iot.health.urls')),
     url(r'^oidc/', include('keycloak_oidc.urls')),
+    path('admin/login/', auth.oidc_login),
+    path('admin/', admin.site.urls),
 ]
 
 if settings.DEBUG:
@@ -51,3 +54,5 @@ if settings.DEBUG:
     urlpatterns.extend([
         url(r'^__debug__/', include(debug_toolbar.urls)),
     ])
+
+admin.autodiscover()

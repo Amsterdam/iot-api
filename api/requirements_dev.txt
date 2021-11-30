@@ -17,13 +17,13 @@ attrs==21.2.0
     #   -r api/./requirements.txt
     #   jsonschema
     #   pytest
-backports.entry-points-selectable==1.1.0
+backports.entry-points-selectable==1.1.1
     # via virtualenv
 billiard==3.6.4.0
     # via
     #   -r api/./requirements.txt
     #   celery
-celery==5.1.2
+celery==5.2.1
     # via
     #   -r api/./requirements.txt
     #   django-celery-email
@@ -39,7 +39,7 @@ charset-normalizer==2.0.7
     # via
     #   -r api/./requirements.txt
     #   requests
-click==7.1.2
+click==8.0.3
     # via
     #   -r api/./requirements.txt
     #   celery
@@ -69,7 +69,7 @@ coreschema==0.0.4
     #   -r api/./requirements.txt
     #   coreapi
     #   drf-yasg
-coverage[toml]==6.0.2
+coverage[toml]==6.1.2
     # via pytest-cov
 cryptography==35.0.0
     # via
@@ -85,7 +85,7 @@ defusedxml==0.7.1
     #   djangorestframework-xml
 distlib==0.3.3
     # via virtualenv
-django==3.2.8
+django==3.2.9
     # via
     #   -r api/./requirements.txt
     #   django-appconf
@@ -96,6 +96,7 @@ django==3.2.8
     #   django-extensions
     #   django-extra-fields
     #   django-filter
+    #   django-leaflet
     #   django-multiselectfield
     #   djangorestframework
     #   drf-yasg
@@ -104,7 +105,7 @@ django-appconf==1.0.5
     # via
     #   -r api/./requirements.txt
     #   django-celery-email
-django-braces==1.14.0
+django-braces==1.15.0
     # via -r api/./requirements.txt
 django-celery-email==3.0.0
     # via -r api/./requirements.txt
@@ -114,11 +115,13 @@ django-countries==7.2.1
     # via -r api/./requirements.txt
 django-debug-toolbar==3.2.2
     # via -r api/requirements_dev.in
-django-extensions==3.1.3
+django-extensions==3.1.5
     # via -r api/./requirements.txt
 django-extra-fields==3.0.2
     # via -r api/./requirements.txt
 django-filter==21.1
+    # via -r api/./requirements.txt
+django-leaflet==0.28.2
     # via -r api/./requirements.txt
 django-multiselectfield==0.1.12
     # via -r api/./requirements.txt
@@ -149,16 +152,20 @@ drf-extensions==0.7.1
     #   drf-amsterdam
 drf-yasg==1.20.0
     # via -r api/./requirements.txt
-factory-boy==3.2.0
+et-xmlfile==1.1.0
+    # via
+    #   -r api/./requirements.txt
+    #   openpyxl
+factory-boy==3.2.1
     # via
     #   -r api/requirements_dev.in
     #   pytest-factoryboy
-faker==9.5.0
+faker==9.8.2
     # via
     #   -r api/requirements_dev.in
     #   factory-boy
     #   pytest-faker
-filelock==3.3.1
+filelock==3.4.0
     # via
     #   tox
     #   virtualenv
@@ -174,6 +181,14 @@ idna==3.3
     # via
     #   -r api/./requirements.txt
     #   requests
+importlib-metadata==4.8.2
+    # via
+    #   -r api/./requirements.txt
+    #   markdown
+importlib-resources==5.4.0
+    # via
+    #   -r api/./requirements.txt
+    #   jsonschema
 inflection==0.5.1
     # via
     #   -r api/./requirements.txt
@@ -181,33 +196,33 @@ inflection==0.5.1
     #   pytest-factoryboy
 iniconfig==1.1.1
     # via pytest
-isort==5.9.3
+isort==5.10.1
     # via pytest-isort
 itypes==1.2.0
     # via
     #   -r api/./requirements.txt
     #   coreapi
-jinja2==3.0.2
+jinja2==3.0.3
     # via
     #   -r api/./requirements.txt
     #   coreschema
-josepy==1.10.0
+josepy==1.11.0
     # via
     #   -r api/./requirements.txt
     #   mozilla-django-oidc
-jsonpointer==2.1
+jsonpointer==2.2
     # via
     #   -r api/./requirements.txt
     #   flex
-jsonschema==4.1.1
+jsonschema==4.2.1
     # via
     #   -r api/./requirements.txt
     #   swagger-spec-validator
-kombu==5.1.0
+kombu==5.2.2
     # via
     #   -r api/./requirements.txt
     #   celery
-markdown==3.3.4
+markdown==3.3.6
     # via -r api/./requirements.txt
 markupsafe==2.0.1
     # via
@@ -219,7 +234,9 @@ mozilla-django-oidc==1.2.4
     # via
     #   -r api/./requirements.txt
     #   datapunt-keycloak-oidc
-packaging==21.0
+openpyxl==3.0.9
+    # via -r api/./requirements.txt
+packaging==21.3
     # via
     #   -r api/./requirements.txt
     #   drf-yasg
@@ -235,19 +252,19 @@ pluggy==1.0.0
     # via
     #   pytest
     #   tox
-prompt-toolkit==3.0.20
+prompt-toolkit==3.0.22
     # via
     #   -r api/./requirements.txt
     #   click-repl
-psycopg2-binary==2.9.1
+psycopg2-binary==2.9.2
     # via -r api/./requirements.txt
-py==1.10.0
+py==1.11.0
     # via
     #   pytest
     #   tox
 pycodestyle==2.7.0
     # via flake8
-pycparser==2.20
+pycparser==2.21
     # via
     #   -r api/./requirements.txt
     #   cffi
@@ -261,7 +278,7 @@ pyopenssl==21.0.0
     # via
     #   -r api/./requirements.txt
     #   josepy
-pyparsing==2.4.7
+pyparsing==3.0.6
     # via
     #   -r api/./requirements.txt
     #   packaging
@@ -311,11 +328,14 @@ requests==2.26.0
     #   coreapi
     #   flex
     #   mozilla-django-oidc
+    #   responses
+responses==0.16.0
+    # via -r api/requirements_dev.in
 rfc3987==1.3.8
     # via
     #   -r api/./requirements.txt
     #   flex
-ruamel.yaml==0.17.16
+ruamel.yaml==0.17.17
     # via
     #   -r api/./requirements.txt
     #   drf-yasg
@@ -327,12 +347,12 @@ six==1.16.0
     # via
     #   -r api/./requirements.txt
     #   click-repl
-    #   django-braces
     #   djangorestframework-csv
     #   flex
     #   mozilla-django-oidc
     #   pyopenssl
     #   python-dateutil
+    #   responses
     #   swagger-spec-validator
     #   tox
     #   virtualenv
@@ -345,7 +365,7 @@ strict-rfc3339==0.7
     # via
     #   -r api/./requirements.txt
     #   flex
-swagger-spec-validator==2.7.3
+swagger-spec-validator==2.7.4
     # via -r api/./requirements.txt
 text-unidecode==1.3
     # via faker
@@ -353,7 +373,7 @@ toml==0.10.2
     # via
     #   pytest
     #   tox
-tomli==1.2.1
+tomli==1.2.2
     # via
     #   coverage
     #   pep517
@@ -372,6 +392,7 @@ urllib3==1.26.7
     # via
     #   -r api/./requirements.txt
     #   requests
+    #   responses
 validate-email==1.3
     # via
     #   -r api/./requirements.txt
@@ -382,7 +403,7 @@ vine==5.0.0
     #   amqp
     #   celery
     #   kombu
-virtualenv==20.8.1
+virtualenv==20.10.0
     # via tox
 wcwidth==0.2.5
     # via
@@ -390,6 +411,11 @@ wcwidth==0.2.5
     #   prompt-toolkit
 wheel==0.37.0
     # via pip-tools
+zipp==3.6.0
+    # via
+    #   -r api/./requirements.txt
+    #   importlib-metadata
+    #   importlib-resources
 
 # The following packages are considered to be unsafe in a requirements file:
 # pip

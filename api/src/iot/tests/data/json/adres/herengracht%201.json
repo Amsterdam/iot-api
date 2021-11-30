@@ -1,0 +1,3017 @@
+{
+  "_links": {
+    "self": {
+      "href": "http://adres/?q=herengracht%201&page=1"
+    },
+    "next": {
+      "href": "http://adres/?q=herengracht%201&page=2"
+    },
+    "prev": {
+      "href": null
+    }
+  },
+  "count_hits": 464,
+  "count": 464,
+  "results": [
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000664293/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 1-1",
+      "postcode": "1015BA",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 1,
+      "toevoeging": "1 1",
+      "bag_huisletter": "",
+      "bag_toevoeging": "1",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000126404",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000664293",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.892287512614596,
+        52.37905673120624
+      ],
+      "subtype_id": "0363010000664293",
+      "_display": "Herengracht 1-1"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010001007794/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 1-2",
+      "postcode": "1015BA",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 1,
+      "toevoeging": "1 2",
+      "bag_huisletter": "",
+      "bag_toevoeging": "2",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000456682",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010001007794",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.892287512614596,
+        52.37905673120624
+      ],
+      "subtype_id": "0363010001007794",
+      "_display": "Herengracht 1-2"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000664294/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 1-3",
+      "postcode": "1015BA",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 1,
+      "toevoeging": "1 3",
+      "bag_huisletter": "",
+      "bag_toevoeging": "3",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000126405",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000664294",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.892287512614596,
+        52.37905673120624
+      ],
+      "subtype_id": "0363010000664294",
+      "_display": "Herengracht 1-3"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000821184/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 1-4",
+      "postcode": "1015BA",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 1,
+      "toevoeging": "1 4",
+      "bag_huisletter": "",
+      "bag_toevoeging": "4",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000126406",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000821184",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.892287512614596,
+        52.37905673120624
+      ],
+      "subtype_id": "0363010000821184",
+      "_display": "Herengracht 1-4"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000664292/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 1-O",
+      "postcode": "1015BA",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 1,
+      "toevoeging": "1 O",
+      "bag_huisletter": "",
+      "bag_toevoeging": "O",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000126403",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000664292",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.892287512614596,
+        52.37905673120624
+      ],
+      "subtype_id": "0363010000664292",
+      "_display": "Herengracht 1-O"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000955225/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 10A",
+      "postcode": "1015BK",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 10,
+      "toevoeging": "10 A",
+      "bag_huisletter": "A",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000456753",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000955225",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.891216549884482,
+        52.378953385705664
+      ],
+      "subtype_id": "0363010000955225",
+      "_display": "Herengracht 10A"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000955226/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 10B",
+      "postcode": "1015BK",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 10,
+      "toevoeging": "10 B",
+      "bag_huisletter": "B",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000456754",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000955226",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.891216750910328,
+        52.37893541115076
+      ],
+      "subtype_id": "0363010000955226",
+      "_display": "Herengracht 10B"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000955227/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 10C",
+      "postcode": "1015BK",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 10,
+      "toevoeging": "10 C",
+      "bag_huisletter": "C",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000456755",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000955227",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.891216851423179,
+        52.3789264238733
+      ],
+      "subtype_id": "0363010000955227",
+      "_display": "Herengracht 10C"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000955228/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 10D",
+      "postcode": "1015BK",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 10,
+      "toevoeging": "10 D",
+      "bag_huisletter": "D",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000456756",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000955228",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.891217052448742,
+        52.378908449318295
+      ],
+      "subtype_id": "0363010000955228",
+      "_display": "Herengracht 10D"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010012128817/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 10E",
+      "postcode": "1015BK",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 10,
+      "toevoeging": "10 E",
+      "bag_huisletter": "E",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200012130726",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010012128817",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.891231939287011,
+        52.378890536273055
+      ],
+      "subtype_id": "0363010012128817",
+      "_display": "Herengracht 10E"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000955231/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 10G",
+      "postcode": "1015BK",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 10,
+      "toevoeging": "10 G",
+      "bag_huisletter": "G",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000456759",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000955231",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.89129088353446,
+        52.3788728077388
+      ],
+      "subtype_id": "0363010000955231",
+      "_display": "Herengracht 10G"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010012062270/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 12A",
+      "postcode": "1015BK",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 12,
+      "toevoeging": "12 A",
+      "bag_huisletter": "A",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200012062363",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010012062270",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.891224323927423,
+        52.378824256050926
+      ],
+      "subtype_id": "0363010012062270",
+      "_display": "Herengracht 12A"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010012062271/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 12B",
+      "postcode": "1015BK",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 12,
+      "toevoeging": "12 B",
+      "bag_huisletter": "B",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200012062364",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010012062271",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.891201019258954,
+        52.37883320006445
+      ],
+      "subtype_id": "0363010012062271",
+      "_display": "Herengracht 12B"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010012062272/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 12C",
+      "postcode": "1015BK",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 12,
+      "toevoeging": "12 C",
+      "bag_huisletter": "C",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200012062365",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010012062272",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.8911798869239655,
+        52.378835691017464
+      ],
+      "subtype_id": "0363010012062272",
+      "_display": "Herengracht 12C"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010012062273/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 12D",
+      "postcode": "1015BK",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 12,
+      "toevoeging": "12 D",
+      "bag_huisletter": "D",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200012062366",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010012062273",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.891160811539899,
+        52.3788433585099
+      ],
+      "subtype_id": "0363010012062273",
+      "_display": "Herengracht 12D"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010001172327/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 12E",
+      "postcode": "1015BK",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 12,
+      "toevoeging": "12 E",
+      "bag_huisletter": "E",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000542578",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010001172327",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.8912177560367445,
+        52.37884553837533
+      ],
+      "subtype_id": "0363010001172327",
+      "_display": "Herengracht 12E"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/ligplaats/0363020001024622/?format=json"
+        }
+      },
+      "type": "ligplaats",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 12G",
+      "postcode": "1015BK",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 12,
+      "toevoeging": "12 G",
+      "bag_huisletter": "G",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000510397",
+      "vbo_status": "Plaats aangewezen",
+      "adresseerbaar_object_id": "0363020001024622",
+      "subtype": "ligplaats",
+      "centroid": [
+        4.891488998000393,
+        52.3788011253475
+      ],
+      "subtype_id": "0363020001024622",
+      "_display": "Herengracht 12G"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010012113516/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 13",
+      "postcode": "1015BA",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 13,
+      "toevoeging": "13",
+      "bag_huisletter": "",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200012115268",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010012113516",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.892127874289909,
+        52.378885297648175
+      ],
+      "subtype_id": "0363010012113516",
+      "_display": "Herengracht 13"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000807361/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 14A",
+      "postcode": "1015BK",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 14,
+      "toevoeging": "14 A",
+      "bag_huisletter": "A",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000433182",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000807361",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.891189088068254,
+        52.37878250440684
+      ],
+      "subtype_id": "0363010000807361",
+      "_display": "Herengracht 14A"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000807362/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 14B",
+      "postcode": "1015BK",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 14,
+      "toevoeging": "14 B",
+      "bag_huisletter": "B",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000433183",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000807362",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.891174603333153,
+        52.378764468336314
+      ],
+      "subtype_id": "0363010000807362",
+      "_display": "Herengracht 14B"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000807363/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 14C",
+      "postcode": "1015BK",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 14,
+      "toevoeging": "14 C",
+      "bag_huisletter": "C",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000433184",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000807363",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.891160219133594,
+        52.378737444986214
+      ],
+      "subtype_id": "0363010000807363",
+      "_display": "Herengracht 14C"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000807364/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 14D",
+      "postcode": "1015BK",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 14,
+      "toevoeging": "14 D",
+      "bag_huisletter": "D",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000433185",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000807364",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.891159615990236,
+        52.378791368652486
+      ],
+      "subtype_id": "0363010000807364",
+      "_display": "Herengracht 14D"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000807365/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 14E",
+      "postcode": "1015BK",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 14,
+      "toevoeging": "14 E",
+      "bag_huisletter": "E",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000433186",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000807365",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.89115981703821,
+        52.378773394097145
+      ],
+      "subtype_id": "0363010000807365",
+      "_display": "Herengracht 14E"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010012066825/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 14F",
+      "postcode": "1015BK",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 14,
+      "toevoeging": "14 F",
+      "bag_huisletter": "F",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200012067004",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010012066825",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.891138306199455,
+        52.37877296245508
+      ],
+      "subtype_id": "0363010012066825",
+      "_display": "Herengracht 14F"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000807369/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 14H",
+      "postcode": "1015BK",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 14,
+      "toevoeging": "14 H",
+      "bag_huisletter": "H",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000433189",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000807369",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.891130344960427,
+        52.378782258335534
+      ],
+      "subtype_id": "0363010000807369",
+      "_display": "Herengracht 14H"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000664317/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 16",
+      "postcode": "1015BK",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 16,
+      "toevoeging": "16",
+      "bag_huisletter": "",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000126427",
+      "vbo_status": "Verbouwing verblijfsobject",
+      "adresseerbaar_object_id": "0363010000664317",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.891116563977943,
+        52.37870131131385
+      ],
+      "subtype_id": "0363010000664317",
+      "_display": "Herengracht 16"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/ligplaats/0363020001024623/?format=json"
+        }
+      },
+      "type": "ligplaats",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 16G",
+      "postcode": "1015BK",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 16,
+      "toevoeging": "16 G",
+      "bag_huisletter": "G",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000510398",
+      "vbo_status": "Plaats aangewezen",
+      "adresseerbaar_object_id": "0363020001024623",
+      "subtype": "ligplaats",
+      "centroid": [
+        4.891271690613931,
+        52.378558629700876
+      ],
+      "subtype_id": "0363020001024623",
+      "_display": "Herengracht 16G"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000664318/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 18",
+      "postcode": "1015BL",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 18,
+      "toevoeging": "18",
+      "bag_huisletter": "",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000126428",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000664318",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.891087494093123,
+        52.3786742264306
+      ],
+      "subtype_id": "0363010000664318",
+      "_display": "Herengracht 18"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000891425/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 100-1A",
+      "postcode": "1015BS",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 100,
+      "toevoeging": "100 1 A",
+      "bag_huisletter": "",
+      "bag_toevoeging": "1A",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000387567",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000891425",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.889012572184527,
+        52.37642757736932
+      ],
+      "subtype_id": "0363010000891425",
+      "_display": "Herengracht 100-1A"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000903415/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 100-1V",
+      "postcode": "1015BS",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 100,
+      "toevoeging": "100 1 V",
+      "bag_huisletter": "",
+      "bag_toevoeging": "1V",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000387568",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000903415",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.889012572184527,
+        52.37642757736932
+      ],
+      "subtype_id": "0363010000903415",
+      "_display": "Herengracht 100-1V"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000890146/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 100-2V",
+      "postcode": "1015BS",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 100,
+      "toevoeging": "100 2 V",
+      "bag_huisletter": "",
+      "bag_toevoeging": "2V",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000387569",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000890146",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.889012572184527,
+        52.37642757736932
+      ],
+      "subtype_id": "0363010000890146",
+      "_display": "Herengracht 100-2V"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000885994/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 100-HA",
+      "postcode": "1015BS",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 100,
+      "toevoeging": "100 H A",
+      "bag_huisletter": "",
+      "bag_toevoeging": "HA",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000387564",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000885994",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.889012572184527,
+        52.37642757736932
+      ],
+      "subtype_id": "0363010000885994",
+      "_display": "Herengracht 100-HA"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000962896/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 100-HV",
+      "postcode": "1015BS",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 100,
+      "toevoeging": "100 H V",
+      "bag_huisletter": "",
+      "bag_toevoeging": "HV",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000387565",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000962896",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.889012572184527,
+        52.37642757736932
+      ],
+      "subtype_id": "0363010000962896",
+      "_display": "Herengracht 100-HV"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000664539/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 101-1",
+      "postcode": "1015BE",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 101,
+      "toevoeging": "101 1",
+      "bag_huisletter": "",
+      "bag_toevoeging": "1",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000387571",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000664539",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.8903720347776405,
+        52.376990526729145
+      ],
+      "subtype_id": "0363010000664539",
+      "_display": "Herengracht 101-1"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000616931/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 101-2",
+      "postcode": "1015BE",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 101,
+      "toevoeging": "101 2",
+      "bag_huisletter": "",
+      "bag_toevoeging": "2",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000424933",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000616931",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.8903720347776405,
+        52.376990526729145
+      ],
+      "subtype_id": "0363010000616931",
+      "_display": "Herengracht 101-2"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000664538/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 101-H",
+      "postcode": "1015BE",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 101,
+      "toevoeging": "101 H",
+      "bag_huisletter": "",
+      "bag_toevoeging": "H",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000387570",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000664538",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.8903720347776405,
+        52.376990526729145
+      ],
+      "subtype_id": "0363010000664538",
+      "_display": "Herengracht 101-H"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000664540/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 102A",
+      "postcode": "1015BS",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 102,
+      "toevoeging": "102 A",
+      "bag_huisletter": "A",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000126606",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000664540",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.8889548418518975,
+        52.376337457425485
+      ],
+      "subtype_id": "0363010000664540",
+      "_display": "Herengracht 102A"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000664541/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 102B",
+      "postcode": "1015BS",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 102,
+      "toevoeging": "102 B",
+      "bag_huisletter": "B",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000126607",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000664541",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.888910383071751,
+        52.376373221164776
+      ],
+      "subtype_id": "0363010000664541",
+      "_display": "Herengracht 102B"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000664542/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 102C",
+      "postcode": "1015BS",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 102,
+      "toevoeging": "102 C",
+      "bag_huisletter": "C",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000126608",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000664542",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.888895698096861,
+        52.37637315936798
+      ],
+      "subtype_id": "0363010000664542",
+      "_display": "Herengracht 102C"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000664543/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 102D",
+      "postcode": "1015BS",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 102,
+      "toevoeging": "102 D",
+      "bag_huisletter": "D",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000126609",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000664543",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.8889547408881695,
+        52.37634644470519
+      ],
+      "subtype_id": "0363010000664543",
+      "_display": "Herengracht 102D"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000664544/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 102E",
+      "postcode": "1015BS",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 102,
+      "toevoeging": "102 E",
+      "bag_huisletter": "E",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000126610",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000664544",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.8888955971210395,
+        52.37638214664756
+      ],
+      "subtype_id": "0363010000664544",
+      "_display": "Herengracht 102E"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000664549/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 102F",
+      "postcode": "1015BS",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 102,
+      "toevoeging": "102 F",
+      "bag_huisletter": "F",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000126611",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000664549",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.8889548418518975,
+        52.376337457425485
+      ],
+      "subtype_id": "0363010000664549",
+      "_display": "Herengracht 102F"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000664550/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 102G",
+      "postcode": "1015BS",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 102,
+      "toevoeging": "102 G",
+      "bag_huisletter": "G",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000126612",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000664550",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.888895496145171,
+        52.37639113392711
+      ],
+      "subtype_id": "0363010000664550",
+      "_display": "Herengracht 102G"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000664551/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 102H",
+      "postcode": "1015BS",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 102,
+      "toevoeging": "102 H",
+      "bag_huisletter": "H",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000126613",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000664551",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.8889547408881695,
+        52.37634644470519
+      ],
+      "subtype_id": "0363010000664551",
+      "_display": "Herengracht 102H"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000664552/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 102K",
+      "postcode": "1015BS",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 102,
+      "toevoeging": "102 K",
+      "bag_huisletter": "K",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000126614",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000664552",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.888851643172476,
+        52.37637297396667
+      ],
+      "subtype_id": "0363010000664552",
+      "_display": "Herengracht 102K"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000664553/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 102L",
+      "postcode": "1015BS",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 102,
+      "toevoeging": "102 L",
+      "bag_huisletter": "L",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000126615",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000664553",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.8889548418518975,
+        52.376337457425485
+      ],
+      "subtype_id": "0363010000664553",
+      "_display": "Herengracht 102L"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000664554/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 102M",
+      "postcode": "1015BS",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 102,
+      "toevoeging": "102 M",
+      "bag_huisletter": "M",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000126616",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000664554",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.888851340218079,
+        52.37639993580519
+      ],
+      "subtype_id": "0363010000664554",
+      "_display": "Herengracht 102M"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000664555/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 103",
+      "postcode": "1015BE",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 103,
+      "toevoeging": "103",
+      "bag_huisletter": "",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000126617",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000664555",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.890328381980624,
+        52.37695439275624
+      ],
+      "subtype_id": "0363010000664555",
+      "_display": "Herengracht 103"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010001172685/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 104A",
+      "postcode": "1015BS",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 104,
+      "toevoeging": "104 A",
+      "bag_huisletter": "A",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000542802",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010001172685",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.8887936102492375,
+        52.37630981578267
+      ],
+      "subtype_id": "0363010001172685",
+      "_display": "Herengracht 104A"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010001172686/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 104B",
+      "postcode": "1015BS",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 104,
+      "toevoeging": "104 B",
+      "bag_huisletter": "B",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000542803",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010001172686",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.8887936102492375,
+        52.37630981578267
+      ],
+      "subtype_id": "0363010001172686",
+      "_display": "Herengracht 104B"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010001172687/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 104C",
+      "postcode": "1015BS",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 104,
+      "toevoeging": "104 C",
+      "bag_huisletter": "C",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000542804",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010001172687",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.8887936102492375,
+        52.37630981578267
+      ],
+      "subtype_id": "0363010001172687",
+      "_display": "Herengracht 104C"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010001172688/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 104D",
+      "postcode": "1015BS",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 104,
+      "toevoeging": "104 D",
+      "bag_huisletter": "D",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000542805",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010001172688",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.8887936102492375,
+        52.37630981578267
+      ],
+      "subtype_id": "0363010001172688",
+      "_display": "Herengracht 104D"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010001172689/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 104E",
+      "postcode": "1015BS",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 104,
+      "toevoeging": "104 E",
+      "bag_huisletter": "E",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000542806",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010001172689",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.8887936102492375,
+        52.37630981578267
+      ],
+      "subtype_id": "0363010001172689",
+      "_display": "Herengracht 104E"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010012087375/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 104F",
+      "postcode": "1015BS",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 104,
+      "toevoeging": "104 F",
+      "bag_huisletter": "F",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200012088711",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010012087375",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.888822244077559,
+        52.37631924756373
+      ],
+      "subtype_id": "0363010012087375",
+      "_display": "Herengracht 104F"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010012087376/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 104G",
+      "postcode": "1015BS",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 104,
+      "toevoeging": "104 G",
+      "bag_huisletter": "G",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200012088712",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010012087376",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.888829189403303,
+        52.37630495938183
+      ],
+      "subtype_id": "0363010012087376",
+      "_display": "Herengracht 104G"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010012087377/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 104K",
+      "postcode": "1015BS",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 104,
+      "toevoeging": "104 K",
+      "bag_huisletter": "K",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200012088713",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010012087377",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.888833893077991,
+        52.37629020339199
+      ],
+      "subtype_id": "0363010012087377",
+      "_display": "Herengracht 104K"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010012087378/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 104L",
+      "postcode": "1015BS",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 104,
+      "toevoeging": "104 L",
+      "bag_huisletter": "L",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200012088714",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010012087378",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.888875314883849,
+        52.37629730723927
+      ],
+      "subtype_id": "0363010012087378",
+      "_display": "Herengracht 104L"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010012087379/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 104M",
+      "postcode": "1015BS",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 104,
+      "toevoeging": "104 M",
+      "bag_huisletter": "M",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200012088715",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010012087379",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.888860307014495,
+        52.37628938882525
+      ],
+      "subtype_id": "0363010012087379",
+      "_display": "Herengracht 104M"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010012087380/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 104N",
+      "postcode": "1015BS",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 104,
+      "toevoeging": "104 N",
+      "bag_huisletter": "N",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200012088716",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010012087380",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.888853299393984,
+        52.376309222160614
+      ],
+      "subtype_id": "0363010012087380",
+      "_display": "Herengracht 104N"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000664556/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 106",
+      "postcode": "1015BT",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 106,
+      "toevoeging": "106",
+      "bag_huisletter": "",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000126619",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000664556",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.88883867498195,
+        52.376220128408306
+      ],
+      "subtype_id": "0363010000664556",
+      "_display": "Herengracht 106"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010011290726/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 107",
+      "postcode": "1015BE",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 107,
+      "toevoeging": "107",
+      "bag_huisletter": "",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200011290596",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010011290726",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.890038406184236,
+        52.37662063062417
+      ],
+      "subtype_id": "0363010011290726",
+      "_display": "Herengracht 107"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000664557/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 108A",
+      "postcode": "1015BT",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 108,
+      "toevoeging": "108 A",
+      "bag_huisletter": "A",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000407990",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000664557",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.888516314029172,
+        52.37615585730716
+      ],
+      "subtype_id": "0363010000664557",
+      "_display": "Herengracht 108A"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000664558/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 108B",
+      "postcode": "1015BT",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 108,
+      "toevoeging": "108 B",
+      "bag_huisletter": "B",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000407991",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000664558",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.888574346356171,
+        52.376219015628315
+      ],
+      "subtype_id": "0363010000664558",
+      "_display": "Herengracht 108B"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000664559/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 108C",
+      "postcode": "1015BT",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 108,
+      "toevoeging": "108 C",
+      "bag_huisletter": "C",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000407992",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000664559",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.888722710746267,
+        52.3760848247153
+      ],
+      "subtype_id": "0363010000664559",
+      "_display": "Herengracht 108C"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000664560/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 108D",
+      "postcode": "1015BT",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 108,
+      "toevoeging": "108 D",
+      "bag_huisletter": "D",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000407993",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000664560",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.888574346356171,
+        52.376219015628315
+      ],
+      "subtype_id": "0363010000664560",
+      "_display": "Herengracht 108D"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000664561/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 108E",
+      "postcode": "1015BT",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 108,
+      "toevoeging": "108 E",
+      "bag_huisletter": "E",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000407994",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000664561",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.888780743274987,
+        52.37614798293642
+      ],
+      "subtype_id": "0363010000664561",
+      "_display": "Herengracht 108E"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000664562/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 108F",
+      "postcode": "1015BT",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 108,
+      "toevoeging": "108 F",
+      "bag_huisletter": "F",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000407995",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000664562",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.888722710746267,
+        52.3760848247153
+      ],
+      "subtype_id": "0363010000664562",
+      "_display": "Herengracht 108F"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000664563/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 108G",
+      "postcode": "1015BT",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 108,
+      "toevoeging": "108 G",
+      "bag_huisletter": "G",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000407996",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000664563",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.888516314029172,
+        52.37615585730716
+      ],
+      "subtype_id": "0363010000664563",
+      "_display": "Herengracht 108G"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000664564/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 108H",
+      "postcode": "1015BT",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 108,
+      "toevoeging": "108 H",
+      "bag_huisletter": "H",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000407997",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000664564",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.888780743274987,
+        52.37614798293642
+      ],
+      "subtype_id": "0363010000664564",
+      "_display": "Herengracht 108H"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000664565/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 108K",
+      "postcode": "1015BT",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 108,
+      "toevoeging": "108 K",
+      "bag_huisletter": "K",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000407998",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000664565",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.888722710746267,
+        52.3760848247153
+      ],
+      "subtype_id": "0363010000664565",
+      "_display": "Herengracht 108K"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000664566/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 108L",
+      "postcode": "1015BT",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 108,
+      "toevoeging": "108 L",
+      "bag_huisletter": "L",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000407999",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000664566",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.888574346356171,
+        52.376219015628315
+      ],
+      "subtype_id": "0363010000664566",
+      "_display": "Herengracht 108L"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000664567/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 108M",
+      "postcode": "1015BT",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 108,
+      "toevoeging": "108 M",
+      "bag_huisletter": "M",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000408000",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000664567",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.888780743274987,
+        52.37614798293642
+      ],
+      "subtype_id": "0363010000664567",
+      "_display": "Herengracht 108M"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000664568/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 108N",
+      "postcode": "1015BT",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 108,
+      "toevoeging": "108 N",
+      "bag_huisletter": "N",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000408001",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000664568",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.888722710746267,
+        52.3760848247153
+      ],
+      "subtype_id": "0363010000664568",
+      "_display": "Herengracht 108N"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000664569/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 108P",
+      "postcode": "1015BT",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 108,
+      "toevoeging": "108 P",
+      "bag_huisletter": "P",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000408002",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000664569",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.888780743274987,
+        52.37614798293642
+      ],
+      "subtype_id": "0363010000664569",
+      "_display": "Herengracht 108P"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000664570/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 109-1",
+      "postcode": "1015BE",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 109,
+      "toevoeging": "109 1",
+      "bag_huisletter": "",
+      "bag_toevoeging": "1",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000126625",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000664570",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.889936920723736,
+        52.376503364342085
+      ],
+      "subtype_id": "0363010000664570",
+      "_display": "Herengracht 109-1"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000664571/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 109-2L",
+      "postcode": "1015BE",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 109,
+      "toevoeging": "109 2 L",
+      "bag_huisletter": "",
+      "bag_toevoeging": "2L",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000126626",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000664571",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.889936920723736,
+        52.376503364342085
+      ],
+      "subtype_id": "0363010000664571",
+      "_display": "Herengracht 109-2L"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000664572/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 109-2R",
+      "postcode": "1015BE",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 109,
+      "toevoeging": "109 2 R",
+      "bag_huisletter": "",
+      "bag_toevoeging": "2R",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000126627",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000664572",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.889936920723736,
+        52.376503364342085
+      ],
+      "subtype_id": "0363010000664572",
+      "_display": "Herengracht 109-2R"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000713515/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 109-HA",
+      "postcode": "1015BE",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 109,
+      "toevoeging": "109 H A",
+      "bag_huisletter": "",
+      "bag_toevoeging": "HA",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000126622",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000713515",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.889936920723736,
+        52.376503364342085
+      ],
+      "subtype_id": "0363010000713515",
+      "_display": "Herengracht 109-HA"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000713516/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 109-HV",
+      "postcode": "1015BE",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 109,
+      "toevoeging": "109 H V",
+      "bag_huisletter": "",
+      "bag_toevoeging": "HV",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000126623",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000713516",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.889936920723736,
+        52.376503364342085
+      ],
+      "subtype_id": "0363010000713516",
+      "_display": "Herengracht 109-HV"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010011211600/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 109-OA",
+      "postcode": "1015BE",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 109,
+      "toevoeging": "109 O A",
+      "bag_huisletter": "",
+      "bag_toevoeging": "OA",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200011211486",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010011211600",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.889936920723736,
+        52.376503364342085
+      ],
+      "subtype_id": "0363010011211600",
+      "_display": "Herengracht 109-OA"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010011211599/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 109-OV",
+      "postcode": "1015BE",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 109,
+      "toevoeging": "109 O V",
+      "bag_huisletter": "",
+      "bag_toevoeging": "OV",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200011211485",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010011211599",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.889936920723736,
+        52.376503364342085
+      ],
+      "subtype_id": "0363010011211599",
+      "_display": "Herengracht 109-OV"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000664573/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 111",
+      "postcode": "1015BE",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 111,
+      "toevoeging": "111",
+      "bag_huisletter": "",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000126628",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000664573",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.889849919215346,
+        52.37640413421231
+      ],
+      "subtype_id": "0363010000664573",
+      "_display": "Herengracht 111"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000664580/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 112",
+      "postcode": "1015BT",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 112,
+      "toevoeging": "112",
+      "bag_huisletter": "",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000126629",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000664580",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.88869384606747,
+        52.37603976467391
+      ],
+      "subtype_id": "0363010000664580",
+      "_display": "Herengracht 112"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000955223/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 113-2",
+      "postcode": "1015BE",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 113,
+      "toevoeging": "113 2",
+      "bag_huisletter": "",
+      "bag_toevoeging": "2",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000387577",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000955223",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.889791884827796,
+        52.376340976516275
+      ],
+      "subtype_id": "0363010000955223",
+      "_display": "Herengracht 113-2"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000955224/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 113-3",
+      "postcode": "1015BE",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 113,
+      "toevoeging": "113 3",
+      "bag_huisletter": "",
+      "bag_toevoeging": "3",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000387578",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000955224",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.889791884827796,
+        52.376340976516275
+      ],
+      "subtype_id": "0363010000955224",
+      "_display": "Herengracht 113-3"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000955221/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 113-H",
+      "postcode": "1015BE",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 113,
+      "toevoeging": "113 H",
+      "bag_huisletter": "",
+      "bag_toevoeging": "H",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000387574",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000955221",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.889791884827796,
+        52.376340976516275
+      ],
+      "subtype_id": "0363010000955221",
+      "_display": "Herengracht 113-H"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010001170183/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 114-1A",
+      "postcode": "1015BT",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 114,
+      "toevoeging": "114 1 A",
+      "bag_huisletter": "",
+      "bag_toevoeging": "1A",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000540727",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010001170183",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.888635510721685,
+        52.376003568249104
+      ],
+      "subtype_id": "0363010001170183",
+      "_display": "Herengracht 114-1A"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010012064202/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 114-1V",
+      "postcode": "1015BT",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 114,
+      "toevoeging": "114 1 V",
+      "bag_huisletter": "",
+      "bag_toevoeging": "1V",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200012064342",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010012064202",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.888628747090615,
+        52.37601867506678
+      ],
+      "subtype_id": "0363010012064202",
+      "_display": "Herengracht 114-1V"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010001170182/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 114-2A",
+      "postcode": "1015BT",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 114,
+      "toevoeging": "114 2 A",
+      "bag_huisletter": "",
+      "bag_toevoeging": "2A",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000540728",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010001170182",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.888635510721685,
+        52.376003568249104
+      ],
+      "subtype_id": "0363010001170182",
+      "_display": "Herengracht 114-2A"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010011048526/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 114-2V",
+      "postcode": "1015BT",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 114,
+      "toevoeging": "114 2 V",
+      "bag_huisletter": "",
+      "bag_toevoeging": "2V",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200011048314",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010011048526",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.888635510721685,
+        52.376003568249104
+      ],
+      "subtype_id": "0363010011048526",
+      "_display": "Herengracht 114-2V"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010001170181/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 114-3A",
+      "postcode": "1015BT",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 114,
+      "toevoeging": "114 3 A",
+      "bag_huisletter": "",
+      "bag_toevoeging": "3A",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000540729",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010001170181",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.888635510721685,
+        52.376003568249104
+      ],
+      "subtype_id": "0363010001170181",
+      "_display": "Herengracht 114-3A"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010012064203/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 114-HA",
+      "postcode": "1015BT",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 114,
+      "toevoeging": "114 H A",
+      "bag_huisletter": "",
+      "bag_toevoeging": "HA",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200012064343",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010012064203",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.88863720509229,
+        52.37601614019523
+      ],
+      "subtype_id": "0363010012064203",
+      "_display": "Herengracht 114-HA"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010012064204/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 114-HV",
+      "postcode": "1015BT",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 114,
+      "toevoeging": "114 H V",
+      "bag_huisletter": "",
+      "bag_toevoeging": "HV",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200012064344",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010012064204",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.888645087316722,
+        52.376012569312714
+      ],
+      "subtype_id": "0363010012064204",
+      "_display": "Herengracht 114-HV"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010001041533/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 115A",
+      "postcode": "1015BE",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 115,
+      "toevoeging": "115 A",
+      "bag_huisletter": "A",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000527478",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010001041533",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.889748535550203,
+        52.376277880483954
+      ],
+      "subtype_id": "0363010001041533",
+      "_display": "Herengracht 115A"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010001041536/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 115B",
+      "postcode": "1015BE",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 115,
+      "toevoeging": "115 B",
+      "bag_huisletter": "B",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000527479",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010001041536",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.889778006236676,
+        52.37626901658331
+      ],
+      "subtype_id": "0363010001041536",
+      "_display": "Herengracht 115B"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010001041537/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 115C",
+      "postcode": "1015BE",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 115,
+      "toevoeging": "115 C",
+      "bag_huisletter": "C",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000527480",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010001041537",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.889792791972318,
+        52.37626009098983
+      ],
+      "subtype_id": "0363010001041537",
+      "_display": "Herengracht 115C"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010001041826/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 116A",
+      "postcode": "1015BT",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 116,
+      "toevoeging": "116 A",
+      "bag_huisletter": "A",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000527881",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010001041826",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.888577377549366,
+        52.37594939723542
+      ],
+      "subtype_id": "0363010001041826",
+      "_display": "Herengracht 116A"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010001041823/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 116C",
+      "postcode": "1015BT",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 116,
+      "toevoeging": "116 C",
+      "bag_huisletter": "C",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000527883",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010001041823",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.888547906836542,
+        52.37595826083773
+      ],
+      "subtype_id": "0363010001041823",
+      "_display": "Herengracht 116C"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010001041824/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 116E",
+      "postcode": "1015BT",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 116,
+      "toevoeging": "116 E",
+      "bag_huisletter": "E",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000527884",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010001041824",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.88853312095168,
+        52.375967186276064
+      ],
+      "subtype_id": "0363010001041824",
+      "_display": "Herengracht 116E"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010001041825/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Herengracht 116F",
+      "postcode": "1015BT",
+      "straatnaam": "Herengracht",
+      "straatnaam_no_ws": "Herengracht",
+      "huisnummer": 116,
+      "toevoeging": "116 F",
+      "bag_huisletter": "F",
+      "bag_toevoeging": "",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000527885",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010001041825",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.888518436111953,
+        52.375967124432655
+      ],
+      "subtype_id": "0363010001041825",
+      "_display": "Herengracht 116F"
+    }
+  ]
+}

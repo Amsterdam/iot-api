@@ -40,20 +40,14 @@ X_FRAME_OPTIONS = 'DENY'
 
 ## KEYCLOAK ##
 # External identity provider settings (Keycloak)
+LOGIN_REDIRECT_URL = "/admin"
 OIDC_RP_CLIENT_ID = os.environ['OIDC_RP_CLIENT_ID']
 OIDC_RP_CLIENT_SECRET = os.environ['OIDC_RP_CLIENT_SECRET']
-OIDC_OP_AUTHORIZATION_ENDPOINT = os.getenv('OIDC_OP_AUTHORIZATION_ENDPOINT',
-    'https://iam.amsterdam.nl/auth/realms/datapunt-acc/protocol/openid-connect/auth')
-OIDC_OP_TOKEN_ENDPOINT = os.getenv('OIDC_OP_TOKEN_ENDPOINT',
-    'https://iam.amsterdam.nl/auth/realms/datapunt-acc/protocol/openid-connect/token')
-OIDC_OP_USER_ENDPOINT = os.getenv('OIDC_OP_USER_ENDPOINT',
-    'https://iam.amsterdam.nl/auth/realms/datapunt-acc/protocol/openid-connect/userinfo')
-OIDC_OP_JWKS_ENDPOINT = os.getenv('OIDC_OP_JWKS_ENDPOINT',
-    'https://iam.amsterdam.nl/auth/realms/datapunt-acc/protocol/openid-connect/certs')
-OIDC_OP_LOGOUT_ENDPOINT = os.getenv('OIDC_OP_LOGOUT_ENDPOINT',
-    'https://iam.amsterdam.nl/auth/realms/datapunt-acc/protocol/openid-connect/logout')
-LOGIN_REDIRECT_URL = "/iothings/devices/"
-LOGOUT_REDIRECT_URL = "/iothings/devices/"
+OIDC_OP_AUTHORIZATION_ENDPOINT = os.environ['OIDC_OP_AUTHORIZATION_ENDPOINT']
+OIDC_OP_TOKEN_ENDPOINT = os.environ['OIDC_OP_TOKEN_ENDPOINT']
+OIDC_OP_USER_ENDPOINT = os.environ['OIDC_OP_USER_ENDPOINT']
+OIDC_OP_JWKS_ENDPOINT = os.environ['OIDC_OP_JWKS_ENDPOINT']
+OIDC_OP_LOGOUT_ENDPOINT = LOGOUT_REDIRECT_URL = os.environ['OIDC_OP_LOGOUT_ENDPOINT']
 
 
 # APP CONFIGURATION
@@ -64,6 +58,8 @@ DJANGO_APPS = (
     'django.contrib.gis',
     'django.contrib.auth',
     'django.contrib.sessions',
+    'django.contrib.admin',
+    'django.contrib.messages',
 )
 
 THIRD_PARTY_APPS = (
@@ -81,6 +77,7 @@ THIRD_PARTY_APPS = (
     'rest_framework_gis',
 
     'keycloak_oidc',  # load after django.contrib.auth!
+    'leaflet'
 )
 
 DEBUG_APPS = (
@@ -101,6 +98,7 @@ MIDDLEWARE = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
     'mozilla_django_oidc.middleware.SessionRefresh',
 )
 
@@ -128,8 +126,10 @@ if DEBUG:
     ]
 
 AUTHENTICATION_BACKENDS = [
-    'keycloak_oidc.auth.OIDCAuthenticationBackend',
+   'iot.auth.OIDCAuthenticationBackend',
 ]
+
+SENSOR_REGISTER_ADMIN_ROLE_NAME = os.environ.get('SENSOR_REGISTER_ADMIN_ROLE_NAME', 'x')
 
 ROOT_URLCONF = "iot.urls"
 WSGI_APPLICATION = "iot.wsgi.application"
@@ -411,3 +411,10 @@ CELERY_EMAIL_TASK_CONFIG = {
 }
 
 ATLAS_POSTCODE_SEARCH = 'https://api.data.amsterdam.nl/atlas/search/postcode'
+ATLAS_ADDRESS_SEARCH = 'https://api.data.amsterdam.nl/atlas/search/adres'
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+# In the IPROX formuler the user can register 5 sensors at a time
+IPROX_NUM_SENSORS = 5
+IPROX_SEPARATOR = ';'

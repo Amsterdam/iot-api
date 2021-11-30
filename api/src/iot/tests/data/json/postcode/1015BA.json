@@ -1,0 +1,99 @@
+{
+  "_links": {
+    "self": {
+      "href": "http://postcode/?q=1015%20BA&page=1"
+    },
+    "next": {
+      "href": null
+    },
+    "prev": {
+      "href": null
+    }
+  },
+  "count_hits": 1,
+  "count": 1,
+  "results": [
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/openbareruimte/0363300000003533/?format=json"
+        }
+      },
+      "type": "openbare_ruimte",
+      "dataset": "bag_v11_gebied",
+      "subtype": "weg",
+      "subtype_id": "0363300000003533",
+      "naam": "Herengracht",
+      "naam_nen": "Herengracht",
+      "naam_no_ws": "Herengracht",
+      "postcode": [
+        "1016CJ",
+        "1017CD",
+        "1015BV",
+        "1015BP",
+        "1016BR",
+        "1016BB",
+        "1015BA",
+        "1016AX",
+        "1016CH",
+        "1016BW",
+        "1017CA",
+        "1016AW",
+        "1016AV",
+        "1017BW",
+        "1017CE",
+        "1016BP",
+        "1015BR",
+        "1015BC",
+        "1016BG",
+        "1016BT",
+        "1016CG",
+        "1015BW",
+        "1017BV",
+        "1016BE",
+        "1015BB",
+        "1017BT",
+        "1015BT",
+        "1016BJ",
+        "1015BE",
+        "1016CD",
+        "1017BZ",
+        "1016BK",
+        "1016AZ",
+        "1017CC",
+        "1016BS",
+        "1015BJ",
+        "1016BV",
+        "1016CE",
+        "1015BL",
+        "1017BR",
+        "1017BS",
+        "1017CH",
+        "1016BL",
+        "1015BH",
+        "1016BH",
+        "1017BP",
+        "1016BA",
+        "1017CJ",
+        "1017BX",
+        "1015BS",
+        "1015BK",
+        "1015BN",
+        "1017CB",
+        "1017CG",
+        "1015BM",
+        "1016BX",
+        "1016BC",
+        "1015BG",
+        "1015BD",
+        "1016BN"
+      ],
+      "_display": "Herengracht",
+      "centroid": [
+        4.890440304307609,
+        52.36990139261767
+      ],
+      "landelijk_id": "0363300000003533"
+    }
+  ]
+}
