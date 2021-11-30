@@ -20,17 +20,17 @@ router.register(r'devices', views.DevicesViewSet, basename='device')
 
 
 schema_view = get_schema_view(
-   openapi.Info(
-      title='IoT API',
-      default_version='v1',
-      description='IoT Devices in Amsterdam',
-      terms_of_service='https://data.amsterdam.nl/',
-      contact=openapi.Contact(email='datapunt@amsterdam.nl'),
-      license=openapi.License(name='CC0 1.0 Universal'),
-   ),
-   validators=['flex', 'ssv'],
-   public=True,
-   permission_classes=(permissions.AllowAny,),
+    openapi.Info(
+        title='IoT API',
+        default_version='v1',
+        description='IoT Devices in Amsterdam',
+        terms_of_service='https://data.amsterdam.nl/',
+        contact=openapi.Contact(email='datapunt@amsterdam.nl'),
+        license=openapi.License(name='CC0 1.0 Universal'),
+    ),
+    validators=['flex', 'ssv'],
+    public=True,
+    permission_classes=(permissions.AllowAny,),
 )
 
 
@@ -42,8 +42,8 @@ urlpatterns = [
             name='schema-swagger-ui'),
         url(r'^ping/$', views.PingView.as_view(), name='ping'),
         url(r'^oidc/', include('keycloak_oidc.urls')),
-        path('^admin/login/', auth.oidc_login),
-        path('^admin/', admin.site.urls),
+        path('admin/login/', auth.oidc_login),
+        path('admin/', admin.site.urls),
     ])),
     url(r'^status/', include('iot.health.urls')),
 ]
