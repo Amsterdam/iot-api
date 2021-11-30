@@ -20,9 +20,12 @@ class OIDCAuthenticationBackend(keycloak_oidc.auth.OIDCAuthenticationBackend):
         will be removed from the user.
         """
         with transaction.atomic():
+
             user.groups.clear()
+            user.is_staff = False
             user.is_superuser = False
             user.save()
+
             for role in claims.get('roles'):
                 group, _ = Group.objects.get_or_create(name=role)
                 if settings.DEBUG or role == settings.SENSOR_REGISTER_ADMIN_ROLE_NAME:
@@ -30,3 +33,12 @@ class OIDCAuthenticationBackend(keycloak_oidc.auth.OIDCAuthenticationBackend):
                     user.is_superuser = True
                 user.save()
                 group.user_set.add(user)
+
+    def authenticate(self, request, **kwargs):
+        user = super().authenticate(request, **kwargs)
+        # Ensure that the user does not come into an endless redirect loop
+        # when they try to login in to the admin, but do not have the correct
+        # role to edit sensors.
+        if user and user.is_staff:
+            return user
+        return None
