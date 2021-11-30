@@ -243,7 +243,10 @@ def sensor_data(person_data):
         location=import_utils.LocationDescription('Somewhere over the rainbow'),
         datastream='water',
         observation_goal='Nare bedoelingen',
-        themes='Bodem;Veiligheid',
+        themes=settings.IPROX_SEPARATOR.join([
+            'Mobiliteit: auto',
+            'Mobiliteit: fiets',
+        ]),
         contains_pi_data='Ja',
         legal_ground='Publieke taak',
         privacy_declaration='www.amsterdam.nl/privacy',
@@ -276,7 +279,10 @@ class TestImportSensor:
         },
         'privacy_declaration': 'www.amsterdam.nl/privacy',
         'regions': [],
-        'themes': ['Bodem', 'Veiligheid'],
+        'themes': [
+            'Mobiliteit: auto',
+            'Mobiliteit: fiets',
+        ],
         'type': 'Chemiesensor',
         'reference': '1234',
     }
@@ -363,7 +369,12 @@ class TestValidate:
         with pytest.raises(import_utils.InvalidSensorType):
             import_utils.validate_sensor(sensor_data)
 
-    @pytest.mark.parametrize("value", [None, '', 'Vleghid,Bodem', 'onzin'])
+    @pytest.mark.parametrize("value", [
+        None,
+        '',
+        settings.IPROX_SEPARATOR.join(['Vleghid', 'Mobiliteit: auto']),
+        'onzin',
+    ])
     def test_invalid_themes(self, sensor_data, value):
         sensor_data.themes = value
         with pytest.raises(import_utils.InvalidThemes):
@@ -405,7 +416,7 @@ class TestValidate:
         with pytest.raises(import_utils.InvalidContainsPiData):
             import_utils.validate_sensor(sensor_data)
 
-    @pytest.mark.parametrize("value", [None, '', 'onzin'])
+    @pytest.mark.parametrize("value", [None, ''])
     def test_invalid_legal_ground(self, sensor_data, value):
         sensor_data.legal_ground = value
         with pytest.raises(import_utils.InvalidLegalGround):
