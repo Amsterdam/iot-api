@@ -416,7 +416,7 @@ def get_location(sensor_data: SensorData):
     elif isinstance(sensor_data.location, LatLong):
         return {'location': Point(sensor_data.location.longitude, sensor_data.location.latitude)}
     elif isinstance(sensor_data.location, LocationDescription):
-        return {'location_description': dataclasses.astuple(sensor_data.location)}
+        return {'location_description': sensor_data.location.description}
     elif isinstance(sensor_data.location, PostcodeHouseNumber):
         location = get_center_coordinates(
             sensor_data.location.postcode,
