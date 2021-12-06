@@ -21,7 +21,7 @@ class PostcodeSearchException(ValueError):
     house_number: int
 
     def __str__(self):
-        return f"Ongeldige postcode {self.postcode} of huisnummer {self.house_number}"
+        return f"Ongeldige postcode ({self.postcode}) / huisnummer ({self.house_number})"
 
 
 def get_postcode_url(postcode: str) -> str:
@@ -29,12 +29,12 @@ def get_postcode_url(postcode: str) -> str:
     return f'{settings.ATLAS_POSTCODE_SEARCH}/?q={normalized}'
 
 
-def get_address_url(street: str, house_number: int) -> str:
+def get_address_url(street: str, house_number: Union[int, str]) -> str:
     normalized = f'{street.lower()} {house_number}'
     return f'{settings.ATLAS_ADDRESS_SEARCH}/?q={normalized}'
 
 
-def get_center_coordinates(postcode: str, house_number: int) -> Point:
+def get_center_coordinates(postcode: str, house_number: Union[int, str]) -> Point:
     """
     :return: The centroid longitude and latitude coordinates for a postcode and
              the house number on that street.
@@ -64,7 +64,7 @@ def get_center_coordinates(postcode: str, house_number: int) -> Point:
                 raise PostcodeSearchException(postcode, house_number)
 
             if result.get('postcode') == postcode_normalized and \
-                    result.get('huisnummer') == house_number:
+                    str(result.get('huisnummer')) == str(house_number):
                 centroid = result['centroid']
                 return Point(centroid[0], centroid[1])
 
@@ -134,43 +134,46 @@ IPROX_REGISTRATION_FIELDS = [
     'Vul uw e-mailadres in',
 ]
 
+
 IPROX_PERSON_FIELDS = [
     'Naam organisatie/bedrijf',
+    'E-mail',
     'Postcode',
     'Huisnummer',
     'Toevoeging',
     'Straatnaam',
     'Plaatsnaam',
-    'E-mail',
-    'Telefoon',
     'KVK-nummer',
     'Website',
     'Voornaam',
     'Tussenvoegsel',
     'Achternaam',
+    'Telefoonnummer',
 ]
 
 IPROX_SENSOR_FIELDS = [
-    'Kies soort / type sensor',
-    'Locatie sensor',
-    'Hebt u een postcode en huisnummer?',
-    'Postcode',
-    'Huisnummer',
-    'Toevoeging',
-    'Omschrijving van de locatie van de sensor',
-    'In welk gebied bevindt zich de mobiele sensor?',
-    'Wat meet de sensor?',
-    'Waarvoor meet u dat?',
-    'Thema',
-    'Worden er persoonsgegevens verwerkt?',
-    'Wettelijke grondslag',
-    'Privacyverklaring',
-    'Tot wanneer is de sensor actief?',
-    'Wilt u nog een sensor melden?',
+    "Kies soort / type sensor",
+    "Locatie sensor",
+    "Hebt u een postcode en huisnummer?",
+    "Postcode",
+    "Huisnummer",
+    "Toevoeging",
+    "Omschrijving van de locatie van de sensor",
+    "In welk gebied bevindt zich de mobiele sensor?",
+    "Wat meet de sensor?",
+    "Waarvoor meet u dat?",
+    "Kies een of meerdere thema's",
+    "Worden er persoonsgegevens verwerkt?",
+    "Privacyverklaring",
+    "Wettelijke grondslag",
+    "Wanneer wordt de sensor verwijderd?",
+    "Wilt u nog een sensor melden?",
 ]
 
 
 ALL_IPROX_SENSOR_FIELDS = (IPROX_SENSOR_FIELDS * settings.IPROX_NUM_SENSORS)
+# Last sensor does not have "Wilt u nog een sensor melden?"
+ALL_IPROX_SENSOR_FIELDS.pop()
 IPROX_FIELDS = IPROX_REGISTRATION_FIELDS + IPROX_PERSON_FIELDS + ALL_IPROX_SENSOR_FIELDS
 
 
@@ -250,10 +253,14 @@ def parse_iprox_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
 
     for row in (Values(IPROX_FIELDS, row) for row in rows):
 
+        # Don't process an empty row in the excel file
+        if not row['Referentienummer']:
+            continue
+
         owner = PersonData(
             organisation=row['Naam organisatie/bedrijf'],
             email=row['E-mail'],
-            telephone=row['Telefoon'],
+            telephone=row['Telefoonnummer'],
             website=row['Website'],
             first_name=row['Voornaam'],
             last_name_affix=row['Tussenvoegsel'],
@@ -289,11 +296,11 @@ def parse_iprox_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
                 location=location,
                 datastream=row["Wat meet de sensor?", sensor_index],
                 observation_goal=row["Waarvoor meet u dat?", sensor_index],
-                themes=row["Thema", sensor_index],
+                themes=row["Kies een of meerdere thema's", sensor_index],
                 contains_pi_data=row["Worden er persoonsgegevens verwerkt?", sensor_index],
                 legal_ground=row["Wettelijke grondslag", sensor_index],
                 privacy_declaration=row["Privacyverklaring", sensor_index],
-                active_until=row["Tot wanneer is de sensor actief?", sensor_index],
+                active_until=row["Wanneer wordt de sensor verwijderd?", sensor_index],
             )
 
             if row["Wilt u nog een sensor melden?", sensor_index] != 'Ja':
@@ -308,7 +315,7 @@ BULK_PERSON_FIELDS = [
     'Straatnaam',
     'Plaatsnaam',
     'E-mail',
-    'Telefoon',
+    'Telefoonnummer',
     'KVK-nummer (niet verplicht)',
     'Website (niet verplicht)',
     'Voornaam',
@@ -338,7 +345,7 @@ BULK_SENSOR_FIELDS = [
     'Worden er persoonsgegevens verwerkt?',
     'Wettelijke grondslag',
     'Privacyverklaring',
-    'Tot wanneer is de sensor actief?',
+    'Wanneer wordt de sensor verwijderd?',
     'Opmerking (niet verplicht)',
 ]
 
@@ -364,7 +371,7 @@ def parse_bulk_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
     owner = PersonData(
         organisation=values['Naam organisatie/bedrijf'],
         email=values['E-mail'],
-        telephone=values['Telefoon'],
+        telephone=values['Telefoonnummer'],
         website=values['Website (niet verplicht)'],
         first_name=values['Voornaam'],
         last_name_affix=values['Tussenvoegsel (niet verplicht)'],
@@ -400,7 +407,7 @@ def parse_bulk_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
             contains_pi_data=row["Worden er persoonsgegevens verwerkt?"],
             legal_ground=row["Wettelijke grondslag"],
             privacy_declaration=row["Privacyverklaring"],
-            active_until=row["Tot wanneer is de sensor actief?"],
+            active_until=row["Wanneer wordt de sensor verwijderd?"],
         )
         for row in (Values(BULK_SENSOR_FIELDS, row) for row in rows)
     )
@@ -489,7 +496,7 @@ class InvalidLocationDescription(ValidationError):
 
 
 class InvalidDate(ValidationError):
-    source = 'Tot wanneer is de sensor actief?'
+    source = 'Wanneer wordt de sensor verwijderd?'
     target = 'active_until'
 
 
