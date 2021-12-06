@@ -319,7 +319,7 @@ class TestImportSensor:
     def test_import_sensor_location(self, sensor_data):
         # check that the location is imported correctly
         owner = import_utils.import_person(sensor_data.owner)
-        sensor_data.location = import_utils.LatLong(52.3676, 4.9041)
+        sensor_data.location = import_utils.LatLong(latitude=52.3676, longitude=4.9041)
         import_utils.import_sensor(sensor_data, owner)
         location = {"latitude": 52.3676, "longitude": 4.9041}
         assert self.actual == [dict(self.expected, location_description=None, location=location)]
@@ -351,7 +351,7 @@ class TestImportSensor:
         # check that we can import a location based on postcode and house number
         owner = import_utils.import_person(sensor_data.owner)
         sensor_data.location = import_utils.PostcodeHouseNumber("1111AA", 1)
-        with patch('iot.import_utils.get_center_coordinates', lambda *_: Point(52.3676, 4.9041)):
+        with patch('iot.import_utils.get_center_coordinates', lambda *_: Point(4.9041, 52.3676)):
             import_utils.import_sensor(sensor_data, owner)
         location = {"latitude": 52.3676, "longitude": 4.9041}
         assert self.actual == [dict(self.expected, location_description=None, location=location)]
