@@ -103,7 +103,7 @@ class TestParse:
                 contains_pi_data='Nee',
                 legal_ground='',
                 privacy_declaration='',
-                active_until='2021-07-06',
+                active_until='06-07-2021',
             ),
             import_utils.SensorData(
                 reference=expected_references[1],
@@ -117,7 +117,7 @@ class TestParse:
                 legal_ground='Bescherming vitale belangen betrokkene(n) of'
                              ' van een andere natuurlijke persoon)',
                 privacy_declaration='',
-                active_until='2050-01-01',
+                active_until='01-01-2050',
             ),
         ]
 
