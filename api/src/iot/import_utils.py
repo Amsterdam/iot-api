@@ -462,12 +462,12 @@ class InvalidThemes(ValidationError):
 
 class InvalidLatitude(ValidationError):
     source = 'Latitude'
-    target = 'latitude'
+    target = 'location'
 
 
 class InvalidLongitude(ValidationError):
     source = 'Longitude'
-    target = 'longitude'
+    target = 'location'
 
 
 class InvalidLegalGround(ValidationError):
