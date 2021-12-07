@@ -261,7 +261,7 @@ def parse_iprox_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
 
         # Don't process an empty row in the excel file
         referentienummer = row.get('Referentienummer') or ''
-        if not referentienummer.split():
+        if not referentienummer.strip():
             continue
 
         owner = PersonData(
