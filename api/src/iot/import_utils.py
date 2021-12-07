@@ -547,9 +547,7 @@ def validate_type(sensor_data):
 
 
 def validate_themes(sensor_data):
-    themes = (sensor_data.themes or '').split(settings.IPROX_SEPARATOR)
-    valid_themes = models.Theme.objects.filter(name__in=themes).count()
-    if valid_themes != len(themes):
+    if sensor_data.themes in ('', None):
         raise InvalidThemes(sensor_data)
 
 
@@ -665,8 +663,8 @@ def import_sensor(sensor_data: SensorData, owner: models.Person2):
             device.regions.add(region)
 
     for theme_name in sensor_data.themes.split(settings.IPROX_SEPARATOR):
-        theme_id = models.id_from_name(models.Theme, theme_name)
-        device.themes.add(theme_id)
+        theme = models.Theme.objects.get_or_create(name=theme_name)[0]
+        device.themes.add(theme)
 
 
 def import_xlsx(workbook):
