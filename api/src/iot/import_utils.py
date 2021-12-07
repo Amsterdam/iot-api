@@ -254,7 +254,7 @@ def parse_iprox_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
     for row in (Values(IPROX_FIELDS, row) for row in rows):
 
         # Don't process an empty row in the excel file
-        if not row['Referentienummer']:
+        if set(row['Referentienummer']) not in ({None}, {' '}, {''}):
             continue
 
         owner = PersonData(
