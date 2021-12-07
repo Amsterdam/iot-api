@@ -172,6 +172,10 @@ class TestParse:
         with pytest.raises(import_utils.InvalidSensorFields):
             list(import_utils.parse_bulk_xlsx(workbook))
 
+    def test_empty_reference_should_be_skipped(self):
+        workbook = csv_to_workbook(Path(__file__).parent / 'data' / 'iprox_empty_reference')
+        assert len(list(import_utils.parse_iprox_xlsx(workbook))) == 1
+
 
 @pytest.fixture
 def person_data():

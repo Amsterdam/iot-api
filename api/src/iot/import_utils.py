@@ -203,6 +203,12 @@ class Values:
     fields: list
     values: list
 
+    def get(self, field, default=None):
+        try:
+            return self[field]
+        except KeyError:
+            return default
+
     def __getitem__(self, field):
         """
         Get the item with the name field, if field is a tuple then the first
@@ -254,7 +260,8 @@ def parse_iprox_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
     for row in (Values(IPROX_FIELDS, row) for row in rows):
 
         # Don't process an empty row in the excel file
-        if set(row['Referentienummer']) not in ({None}, {' '}, {''}):
+        referentienummer = row.get('Referentienummer') or ''
+        if not referentienummer.split():
             continue
 
         owner = PersonData(
