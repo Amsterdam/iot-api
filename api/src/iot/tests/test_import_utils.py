@@ -333,7 +333,14 @@ class TestImportSensor:
         owner = import_utils.import_person(sensor_data.owner)
         sensor_data.type = "Midi-chlorian teller"
         import_utils.import_sensor(sensor_data, owner)
-        assert self.actual == [dict(self.expected, type="Midi-chlorian teller")]
+        assert self.actual == [dict(self.expected, type="Overig")]
+
+    def test_import_sensor_other_themes(self, sensor_data):
+        # check that we can import some "other" sensor themes
+        owner = import_utils.import_person(sensor_data.owner)
+        sensor_data.themes = "abc;123"
+        import_utils.import_sensor(sensor_data, owner)
+        assert self.actual == [dict(self.expected, themes=["Overig"])]
 
     def test_import_sensor_regions(self, sensor_data):
         # check that we can import as "mobile" sensor
@@ -373,12 +380,7 @@ class TestValidate:
         with pytest.raises(import_utils.InvalidSensorType):
             import_utils.validate_sensor(sensor_data)
 
-    @pytest.mark.parametrize("value", [
-        None,
-        '',
-        settings.IPROX_SEPARATOR.join(['Vleghid', 'Mobiliteit: auto']),
-        'onzin',
-    ])
+    @pytest.mark.parametrize("value", [None, ''])
     def test_invalid_themes(self, sensor_data, value):
         sensor_data.themes = value
         with pytest.raises(import_utils.InvalidThemes):
