@@ -103,7 +103,7 @@ class TestParse:
                 contains_pi_data='Nee',
                 legal_ground='',
                 privacy_declaration='',
-                active_until='2021-07-06',
+                active_until='06-07-2021',
             ),
             import_utils.SensorData(
                 reference=expected_references[1],
@@ -117,7 +117,7 @@ class TestParse:
                 legal_ground='Bescherming vitale belangen betrokkene(n) of'
                              ' van een andere natuurlijke persoon)',
                 privacy_declaration='',
-                active_until='2050-01-01',
+                active_until='01-01-2050',
             ),
         ]
 
@@ -171,6 +171,10 @@ class TestParse:
         workbook = dict_to_workbook({'Uw gegevens': person_fields, 'Sensorregistratie': [fields]})
         with pytest.raises(import_utils.InvalidSensorFields):
             list(import_utils.parse_bulk_xlsx(workbook))
+
+    def test_empty_reference_should_be_skipped(self):
+        workbook = csv_to_workbook(Path(__file__).parent / 'data' / 'iprox_empty_reference')
+        assert len(list(import_utils.parse_iprox_xlsx(workbook))) == 1
 
 
 @pytest.fixture
