@@ -40,7 +40,7 @@ X_FRAME_OPTIONS = 'DENY'
 
 ## KEYCLOAK ##
 # External identity provider settings (Keycloak)
-LOGIN_REDIRECT_URL = "/iothings/admin"
+LOGIN_REDIRECT_URL = "/iothings/admin/"
 OIDC_RP_CLIENT_ID = os.environ['OIDC_RP_CLIENT_ID']
 OIDC_RP_CLIENT_SECRET = os.environ['OIDC_RP_CLIENT_SECRET']
 OIDC_OP_AUTHORIZATION_ENDPOINT = os.environ['OIDC_OP_AUTHORIZATION_ENDPOINT']
@@ -48,7 +48,7 @@ OIDC_OP_TOKEN_ENDPOINT = os.environ['OIDC_OP_TOKEN_ENDPOINT']
 OIDC_OP_USER_ENDPOINT = os.environ['OIDC_OP_USER_ENDPOINT']
 OIDC_OP_JWKS_ENDPOINT = os.environ['OIDC_OP_JWKS_ENDPOINT']
 OIDC_OP_LOGOUT_ENDPOINT = LOGOUT_REDIRECT_URL = os.environ['OIDC_OP_LOGOUT_ENDPOINT']
-
+LOGIN_REDIRECT_URL_FAILURE = '/iothings/static/403.html'
 
 # APP CONFIGURATION
 # ------------------------------------------------------------------------------
