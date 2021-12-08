@@ -542,17 +542,20 @@ def validate_contains_pi_data(sensor_data):
 
 
 def validate_type(sensor_data):
-    if sensor_data.type in ('', None):
+    type = (sensor_data.type or '').strip()
+    if not type:
         raise InvalidSensorType(sensor_data)
 
 
 def validate_themes(sensor_data):
-    if sensor_data.themes in ('', None):
+    themes = (sensor_data.themes or '').strip()
+    if not themes:
         raise InvalidThemes(sensor_data)
 
 
 def validate_regions(sensor_data):
-    if not sensor_data.location.regions:
+    regions = (sensor_data.location.regions or '').strip()
+    if not regions:
         raise InvalidRegions(sensor_data)
 
 

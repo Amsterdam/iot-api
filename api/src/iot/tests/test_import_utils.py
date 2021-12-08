@@ -374,19 +374,19 @@ class TestValidate:
     Check that the validation function can report problematic values.
     """
 
-    @pytest.mark.parametrize("value", [None, ''])
+    @pytest.mark.parametrize("value", [None, '', ' ', '  '])
     def test_invalid_sensor_type(self, sensor_data, value):
         sensor_data.type = value
         with pytest.raises(import_utils.InvalidSensorType):
             import_utils.validate_sensor(sensor_data)
 
-    @pytest.mark.parametrize("value", [None, ''])
+    @pytest.mark.parametrize("value", [None, '', ' ', '  '])
     def test_invalid_themes(self, sensor_data, value):
         sensor_data.themes = value
         with pytest.raises(import_utils.InvalidThemes):
             import_utils.validate_sensor(sensor_data)
 
-    @pytest.mark.parametrize("value", [None, ''])
+    @pytest.mark.parametrize("value", [None, '', ' ', '  '])
     def test_invalid_regions(self, sensor_data, value):
         sensor_data.location = import_utils.Regions(value)
         with pytest.raises(import_utils.InvalidRegions):
