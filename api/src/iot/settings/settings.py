@@ -77,7 +77,8 @@ THIRD_PARTY_APPS = (
     'rest_framework_gis',
 
     'keycloak_oidc',  # load after django.contrib.auth!
-    'leaflet'
+    'leaflet',
+    'simple_history',
 )
 
 DEBUG_APPS = (
@@ -100,6 +101,7 @@ MIDDLEWARE = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'mozilla_django_oidc.middleware.SessionRefresh',
+    'simple_history.middleware.HistoryRequestMiddleware',
 )
 
 DEBUG_MIDDLEWARE = (

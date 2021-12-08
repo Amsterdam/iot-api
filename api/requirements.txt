@@ -20,7 +20,7 @@ certifi==2021.10.8
     # via requests
 cffi==1.15.0
     # via cryptography
-charset-normalizer==2.0.7
+charset-normalizer==2.0.8
     # via requests
 click==8.0.3
     # via
@@ -41,7 +41,7 @@ coreschema==0.0.4
     # via
     #   coreapi
     #   drf-yasg
-cryptography==35.0.0
+cryptography==36.0.0
     # via
     #   josepy
     #   mozilla-django-oidc
@@ -84,6 +84,8 @@ django-filter==21.1
 django-leaflet==0.28.2
     # via -r api/requirements.in
 django-multiselectfield==0.1.12
+    # via -r api/requirements.in
+django-simple-history==3.0.0
     # via -r api/requirements.in
 djangorestframework==3.12.4
     # via
@@ -148,7 +150,7 @@ openpyxl==3.0.9
     # via -r api/requirements.in
 packaging==21.3
     # via drf-yasg
-prompt-toolkit==3.0.22
+prompt-toolkit==3.0.23
     # via click-repl
 psycopg2-binary==2.9.2
     # via -r api/requirements.in

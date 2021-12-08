@@ -4,8 +4,9 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import redirect, render
 from django.urls import path
 from django.utils.safestring import mark_safe
-from leaflet.admin import LeafletGeoAdmin, LeafletGeoAdminMixin
+from leaflet.admin import LeafletGeoAdminMixin
 from openpyxl import load_workbook
+from simple_history.admin import SimpleHistoryAdmin
 
 from iot import models
 from iot.import_utils import import_xlsx
@@ -49,7 +50,7 @@ def import_xlsx_view(request, message_user, redirect_to):
 
 
 @admin.register(models.Device2)
-class DeviceAdmin(LeafletGeoAdmin):
+class DeviceAdmin(LeafletGeoAdminMixin, SimpleHistoryAdmin):
 
     change_list_template = "devices_change_list.html"
     list_display = 'reference', 'owner', 'type'
@@ -69,11 +70,11 @@ class DeviceAdmin(LeafletGeoAdmin):
 
 class DeviceInline(LeafletGeoAdminMixin, admin.StackedInline):
     model = models.Device2
-    extra = 1
+    extra = 0
     settings_overrides = LEAFLET_SETTINGS_OVERRIDES
 
 
 @admin.register(models.Person2)
-class PersonAdmin(LeafletGeoAdmin):
+class PersonAdmin(LeafletGeoAdminMixin, SimpleHistoryAdmin):
     search_fields = 'organisation', 'email', 'name'
     inlines = [DeviceInline]

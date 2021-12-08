@@ -3,6 +3,7 @@ import typing
 from django.contrib.gis.db import models as gis_models
 from django.contrib.postgres.fields import CIEmailField, CITextField
 from django.db import models
+from simple_history.models import HistoricalRecords
 
 from .constants import FREQUENCY_CHOICES
 
@@ -72,6 +73,8 @@ class Person2(models.Model):
     organisation = models.CharField(max_length=255, verbose_name="Naam organisatie/bedrijf")
     website = models.URLField(verbose_name="Website", blank=True, null=True)
 
+    history = HistoricalRecords()
+
     class Meta:
         verbose_name = 'Eigenaar'
         verbose_name_plural = 'Eigenaren'
@@ -83,6 +86,7 @@ class Person2(models.Model):
 class Type2(models.Model):
     name = CITextField(unique=True, verbose_name="Kies soort / type sensor")
     is_other = models.BooleanField(default=True, verbose_name="Anders, namelijk")
+    history = HistoricalRecords()
 
     def __str__(self):
         return self.name
@@ -94,6 +98,7 @@ class Type2(models.Model):
 
 class Theme(models.Model):
     name = CITextField(unique=True, verbose_name="Thema")
+    history = HistoricalRecords()
 
     def __str__(self):
         return self.name
@@ -129,6 +134,7 @@ class Region(models.Model):
     """
     name = CITextField(unique=True, verbose_name="Gebied")
     is_other = models.BooleanField(default=True, verbose_name="Anders, namelijk")
+    history = HistoricalRecords()
 
     def __str__(self):
         return self.name
@@ -143,6 +149,7 @@ class Device2(models.Model):
     The iot device "thing"
     """
     reference = models.CharField(max_length=64, verbose_name="Referentienummer")
+    history = HistoricalRecords()
 
     # LegalEntity
     owner = models.ForeignKey(

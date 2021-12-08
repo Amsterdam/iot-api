@@ -35,7 +35,7 @@ cffi==1.15.0
     # via
     #   -r api/./requirements.txt
     #   cryptography
-charset-normalizer==2.0.7
+charset-normalizer==2.0.8
     # via
     #   -r api/./requirements.txt
     #   requests
@@ -69,9 +69,9 @@ coreschema==0.0.4
     #   -r api/./requirements.txt
     #   coreapi
     #   drf-yasg
-coverage[toml]==6.1.2
+coverage[toml]==6.2
     # via pytest-cov
-cryptography==35.0.0
+cryptography==36.0.0
     # via
     #   -r api/./requirements.txt
     #   josepy
@@ -125,6 +125,8 @@ django-leaflet==0.28.2
     # via -r api/./requirements.txt
 django-multiselectfield==0.1.12
     # via -r api/./requirements.txt
+django-simple-history==3.0.0
+    # via -r api/./requirements.txt
 djangorestframework==3.12.4
     # via
     #   -r api/./requirements.txt
@@ -160,7 +162,7 @@ factory-boy==3.2.1
     # via
     #   -r api/requirements_dev.in
     #   pytest-factoryboy
-faker==9.8.2
+faker==9.9.0
     # via
     #   -r api/requirements_dev.in
     #   factory-boy
@@ -252,7 +254,7 @@ pluggy==1.0.0
     # via
     #   pytest
     #   tox
-prompt-toolkit==3.0.22
+prompt-toolkit==3.0.23
     # via
     #   -r api/./requirements.txt
     #   click-repl
