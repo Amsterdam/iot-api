@@ -226,9 +226,9 @@ class Device2Serializer(HALSerializer):
             'legal_ground',
             'privacy_declaration',
             'active_until',
-            'reference'
+            'reference',
         ]
 
     def get_location(self, obj):
         if obj.location:
-            return {'latitude': obj.location.x, 'longitude': obj.location.y}
+            return {'latitude': obj.location.y, 'longitude': obj.location.x}
