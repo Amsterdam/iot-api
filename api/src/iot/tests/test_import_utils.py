@@ -270,7 +270,7 @@ class TestImportSensor:
         'datastream': 'water',
         'legal_ground': 'Publieke taak',
         'location': None,
-        'location_description': "('Somewhere over the rainbow',)",
+        'location_description': "Somewhere over the rainbow",
         'observation_goal': 'Nare bedoelingen',
         'owner': {
             'name': 'Piet Er Soon',
