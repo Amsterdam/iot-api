@@ -2,6 +2,7 @@ import contextlib
 import dataclasses
 import datetime
 import re
+from collections import Counter
 from itertools import islice, zip_longest
 from typing import Generator, Union
 
@@ -689,8 +690,7 @@ def import_xlsx(workbook, action_logger=lambda x: x):
         for person_data in {s.owner.email.lower(): s.owner for s in sensors}.values()
     }
 
-    num_created = 0
-    num_updated = 0
+    counter = Counter()
     errors = []
 
     for sensor_data in sensors:
@@ -698,9 +698,8 @@ def import_xlsx(workbook, action_logger=lambda x: x):
             validate_sensor(sensor_data)
             owner = people[sensor_data.owner.email.lower()]
             _, created = import_sensor(sensor_data, owner, action_logger)
-            num_created += int(created)
-            num_updated += int(not created)
+            counter.update([created])
         except Exception as e:
             errors.append(e)
 
-    return errors, num_created, num_updated
+    return errors, counter[True], counter[False]
