@@ -592,7 +592,7 @@ def validate_latitude_longitude(sensor_data):
         raise InvalidLongitude(sensor_data) from e
 
 
-def import_person(person_data: PersonData):
+def import_person(person_data: PersonData, action_logger=lambda x: x):
     """
     Import person data parsed from an iprox or bulk registration excel
     file.
@@ -604,14 +604,14 @@ def import_person(person_data: PersonData):
 
     names.append(person_data.last_name)
 
-    owner, _ = models.Person2.objects.update_or_create(
+    owner, _ = action_logger(models.Person2.objects.update_or_create(
         email=person_data.email, organisation=person_data.organisation,
         defaults={
             'name': ' '.join(names),
             'telephone': person_data.telephone,
             'website': person_data.website,
-        }
-    )
+        },
+    ))
 
     return owner
 
@@ -629,12 +629,12 @@ def parse_date(value: Union[str, datetime.date, datetime.datetime]):
         raise TypeError(f'Expected `str`, `date` or `datetime` instance got {type(value)}')
 
 
-def import_sensor(sensor_data: SensorData, owner: models.Person2):
+def import_sensor(sensor_data: SensorData, owner: models.Person2, action_logger=lambda x: x):
     """
     Import sensor data parsed from an iprox or bulk registration excel file.
     """
     defaults = {
-        'type': models.Type2.objects.get_or_create(name=sensor_data.type)[0],
+        'type': action_logger(models.Type2.objects.get_or_create(name=sensor_data.type))[0],
         'datastream': sensor_data.datastream,
         'observation_goal': sensor_data.observation_goal,
         'contains_pi_data': sensor_data.contains_pi_data == 'Ja',
@@ -648,28 +648,30 @@ def import_sensor(sensor_data: SensorData, owner: models.Person2):
         defaults.update(location)
 
     if defaults['contains_pi_data']:
-        defaults['legal_ground'] = models.LegalGround.objects.get_or_create(
+        defaults['legal_ground'] = action_logger(models.LegalGround.objects.get_or_create(
             name=sensor_data.legal_ground
-        )[0]
+        ))[0]
 
     # use the sensor_index to give each sensor a unique reference
-    device, _ = models.Device2.objects.update_or_create(
+    device, created = action_logger(models.Device2.objects.update_or_create(
         owner=owner,
         reference=sensor_data.reference,
         defaults=defaults,
-    )
+    ))
 
     if 'regions' in location:
         for region_name in location['regions'].split(settings.IPROX_SEPARATOR):
-            region, _ = models.Region.objects.get_or_create(name=region_name)
+            region, _ = action_logger(models.Region.objects.get_or_create(name=region_name))
             device.regions.add(region)
 
     for theme_name in sensor_data.themes.split(settings.IPROX_SEPARATOR):
         theme_id = models.id_from_name(models.Theme, theme_name)
         device.themes.add(theme_id)
 
+    return device, created
 
-def import_xlsx(workbook):
+
+def import_xlsx(workbook, action_logger=lambda x: x):
     """
     Load, parse and import person and sensor data from the given bulk or iprox
     excel file.
@@ -683,20 +685,22 @@ def import_xlsx(workbook):
     sensors = list(parser(workbook))
 
     people = {
-        person_data.email.lower(): import_person(person_data)
+        person_data.email.lower(): import_person(person_data, action_logger)
         for person_data in {s.owner.email.lower(): s.owner for s in sensors}.values()
     }
 
-    created, updated, errors = [], [], []
+    num_created = 0
+    num_updated = 0
+    errors = []
 
     for sensor_data in sensors:
         try:
             validate_sensor(sensor_data)
-            if import_sensor(sensor_data, people[sensor_data.owner.email.lower()]):
-                created.append(sensor_data)
-            else:
-                updated.append(sensor_data)
+            owner = people[sensor_data.owner.email.lower()]
+            _, created = import_sensor(sensor_data, owner, action_logger)
+            num_created += int(created)
+            num_updated += int(not created)
         except Exception as e:
             errors.append(e)
 
-    return errors, created, updated
+    return errors, num_created, num_updated
