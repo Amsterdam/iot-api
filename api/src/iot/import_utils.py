@@ -8,6 +8,7 @@ from typing import Generator, Union
 import requests
 from django.conf import settings
 from django.contrib.gis.geos import Point
+from django.core.validators import URLValidator
 from openpyxl import Workbook
 from openpyxl.cell import Cell
 from typing_extensions import Literal
@@ -507,6 +508,11 @@ class InvalidDate(ValidationError):
     target = 'active_until'
 
 
+class InvalidPrivacyDeclaration(ValidationError):
+    source = 'Privacyverklaring'
+    target = 'privacy_declaration'
+
+
 def validate_sensor(sensor_data: SensorData):
     """
     Ensure that the sensor data contains valid data, raises an exception when
@@ -517,6 +523,7 @@ def validate_sensor(sensor_data: SensorData):
     validate_location(sensor_data)
     validate_contains_pi_data(sensor_data)
     validate_legal_ground(sensor_data)
+    validate_privacy_declaration(sensor_data)
     validate_active_until(sensor_data)
 
 
@@ -528,6 +535,13 @@ def validate_active_until(sensor_data):
         datetime.datetime.strptime(sensor_data.active_until, DATE_FORMAT)
     except Exception as e:
         raise InvalidDate(sensor_data) from e
+
+
+def validate_privacy_declaration(sensor_data):
+    try:
+        URLValidator()(sensor_data.privacy_declaration)
+    except Exception as e:
+        raise InvalidPrivacyDeclaration(sensor_data) from e
 
 
 def validate_legal_ground(sensor_data):
