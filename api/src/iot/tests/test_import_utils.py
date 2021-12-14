@@ -130,7 +130,6 @@ class TestParse:
             ['non', 'sense'],
             import_utils.IPROX_FIELDS[:-1],
             import_utils.IPROX_FIELDS[:-1] + ['nonsense'],
-            import_utils.IPROX_FIELDS + ['nonsense'],
         ]
     )
     def test_parse_prox_invalid_fields_should_be_detected(self, fields):
@@ -146,7 +145,6 @@ class TestParse:
             ['non', 'sense'],
             import_utils.BULK_PERSON_FIELDS[:-1],
             import_utils.BULK_PERSON_FIELDS[:-1] + ['nonsense'],
-            import_utils.BULK_PERSON_FIELDS + ['nonsense'],
         ]
     )
     def test_parse_bulk_invalid_person_fields_should_be_detected(self, fields):
@@ -162,7 +160,6 @@ class TestParse:
             ['non', 'sense'],
             import_utils.BULK_SENSOR_FIELDS[:-1],
             import_utils.BULK_SENSOR_FIELDS[:-1] + ['nonsense'],
-            import_utils.BULK_SENSOR_FIELDS + ['nonsense'],
         ]
     )
     def test_parse_bulk_invalid_sensor_fields_should_be_detected(self, fields):
@@ -172,9 +169,20 @@ class TestParse:
         with pytest.raises(import_utils.InvalidSensorFields):
             list(import_utils.parse_bulk_xlsx(workbook))
 
-    def test_empty_reference_should_be_skipped(self):
-        workbook = csv_to_workbook(Path(__file__).parent / 'data' / 'iprox_empty_reference')
-        assert len(list(import_utils.parse_iprox_xlsx(workbook))) == 1
+    @pytest.mark.parametrize("dir, parser", [
+        (
+            'empty_rows_columns_iprox',
+            import_utils.parse_iprox_xlsx,
+        ),
+        (
+            'empty_rows_columns_bulk',
+            import_utils.parse_bulk_xlsx,
+        ),
+    ])
+    def test_empty_rows_and_columns_should_be_skipped(self, dir, parser):
+        # verify that empty rows and columns after the expected data is ignored
+        workbook = csv_to_workbook(Path(__file__).parent / 'data' / dir)
+        assert len(list(parser(workbook))) == 1
 
 
 @pytest.fixture

@@ -253,7 +253,11 @@ def parse_iprox_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
     found in the file.
     """
     rows = workbook['Sensorregistratie'].rows
-    fields = [cell.value for cell in next(rows, [])]
+    fields = [
+        cell.value
+        for i, cell in enumerate(next(rows, []))
+        if i < len(IPROX_FIELDS)  # ignore columns after expected data
+    ]
     if fields != IPROX_FIELDS:
         raise InvalidIproxFields(fields)
 
@@ -370,7 +374,11 @@ def parse_bulk_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
     Parse a bulk excel, yielding all the sensors that are present in the file.
     """
     rows = list(workbook['Uw gegevens'].rows)
-    fields = [row[0].value for row in rows]
+    fields = [
+        row[0].value
+        for i, row in enumerate(rows)
+        if i < len(BULK_PERSON_FIELDS)  # ignore any rows after the expected data
+    ]
     if fields != BULK_PERSON_FIELDS:
         raise InvalidPersonFields(fields)
 
@@ -386,7 +394,11 @@ def parse_bulk_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
     )
 
     rows = workbook['Sensorregistratie'].rows
-    fields = [cell.value for cell in next(rows, [])]
+    fields = [
+        cell.value
+        for i, cell in enumerate(next(rows, []))
+        if i < len(BULK_SENSOR_FIELDS)  # ignore all columns after the expected data
+    ]
     if fields != BULK_SENSOR_FIELDS:
         raise InvalidSensorFields(fields)
 
@@ -417,6 +429,7 @@ def parse_bulk_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
             active_until=row["Wanneer wordt de sensor verwijderd?"],
         )
         for row in (Values(BULK_SENSOR_FIELDS, row) for row in rows)
+        if (row['Referentie'] or '').strip()  # Ignore any rows with an empty reference
     )
 
 
