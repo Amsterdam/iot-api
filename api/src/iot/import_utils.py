@@ -241,6 +241,7 @@ class InvalidFields(ValueError):
         for actual_field, expected_field in zip_longest(self.fields, self.expected):
             if actual_field != expected_field:
                 return f"Onverwachte veldnaam : {actual_field}, verwacht {expected_field}"
+        return "Onverwachte velden"
 
 
 class InvalidIproxFields(InvalidFields):
