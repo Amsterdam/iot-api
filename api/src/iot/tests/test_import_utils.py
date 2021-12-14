@@ -253,7 +253,7 @@ def sensor_data(person_data):
         ]),
         contains_pi_data='Ja',
         legal_ground='Publieke taak',
-        privacy_declaration='www.amsterdam.nl/privacy',
+        privacy_declaration='https://amsterdam.nl/privacy',
         active_until='05-05-2050',
     )
 
@@ -281,7 +281,7 @@ class TestImportSensor:
             'email': 'p.er.soon@amsterdam.nl',
             'organisation': 'Gemeente Amsterdam',
         },
-        'privacy_declaration': 'www.amsterdam.nl/privacy',
+        'privacy_declaration': 'https://amsterdam.nl/privacy',
         'regions': [],
         'themes': [
             'Mobiliteit: auto',
@@ -430,6 +430,12 @@ class TestValidate:
     def test_invalid_date(self, sensor_data, value):
         sensor_data.active_until = value
         with pytest.raises(import_utils.InvalidDate):
+            import_utils.validate_sensor(sensor_data)
+
+    @pytest.mark.parametrize("value", [None, '', 'nee', '-', 'n/a', 'n.v.t.'])
+    def test_invalid_privacy_declaration(self, sensor_data, value):
+        sensor_data.privacy_declaration = value
+        with pytest.raises(import_utils.InvalidPrivacyDeclaration):
             import_utils.validate_sensor(sensor_data)
 
 
