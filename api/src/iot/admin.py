@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib import admin, messages
+from django.contrib.admin.models import ADDITION, CHANGE, LogEntry
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import redirect, render
 from django.urls import path
 from django.utils.safestring import mark_safe
@@ -32,11 +34,24 @@ def import_xlsx_view(request, message_user, redirect_to):
         try:
             file = request.FILES["selecteer_bestand"]
             workbook = load_workbook(file)
-            errors, created, updated = import_xlsx(workbook)
-            if created:
-                message_user(request, f"{len(created)} sensoren aangemaakt")
-            if updated:
-                message_user(request, f"{len(updated)} sensoren bijgewerkt")
+
+            def action_logger(result):
+                instance, created = result
+                action = 'Aangemaakt' if created else 'Bijgewerkt'
+                LogEntry.objects.log_action(
+                    user_id=request.user.pk,
+                    object_id=instance.pk,
+                    object_repr=str(instance),
+                    content_type_id=ContentType.objects.get_for_model(type(instance)).pk,
+                    action_flag=ADDITION if created else CHANGE,
+                    change_message=f'{action} door het importeren van "{file.name}"',
+                )
+                return result
+
+            errors, num_created, num_updated = import_xlsx(workbook, action_logger)
+
+            message_user(request, f"{num_created} sensoren aangemaakt")
+            message_user(request, f"{num_updated} sensoren bijgewerkt")
         except Exception as e:
             errors = [e]
 
