@@ -234,9 +234,8 @@ class Device2Serializer(HALSerializer):
             return {'latitude': obj.location.y, 'longitude': obj.location.x}
 
     def get_themes(self, obj):
-        # use a dict to try and preserve original order as much as possible.
         themes = ('Overig' if theme.is_other else theme.name for theme in obj.themes.all())
-        return list(dict.fromkeys(themes).keys())
+        return list(dict.fromkeys(themes))  # use a dict.fromkeys to preserve original order
 
     def get_type(self, obj):
         return 'Overig' if obj.type.is_other else obj.type.name
