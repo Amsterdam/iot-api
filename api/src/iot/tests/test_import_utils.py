@@ -377,6 +377,13 @@ class TestImportSensor:
         location = {"latitude": 52.3676, "longitude": 4.9041}
         assert self.actual == [dict(self.expected, location_description=None, location=location)]
 
+    @pytest.mark.parametrize("source", ["iprox", "bulk"])
+    def test_duplicate_references_should_be_rejected(self, source):
+        path = Path(__file__).parent / 'data' / f'{source}_duplicate_references'
+        workbook = csv_to_workbook(path)
+        with pytest.raises(import_utils.DuplicateReferenceError):
+            list(import_utils.import_xlsx(workbook))
+
 
 @pytest.mark.django_db
 class TestValidate:

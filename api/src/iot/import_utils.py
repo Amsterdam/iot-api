@@ -4,7 +4,7 @@ import datetime
 import re
 from collections import Counter
 from itertools import islice, zip_longest
-from typing import Generator, Union
+from typing import Generator, List, Tuple, Union
 
 import requests
 from django.conf import settings
@@ -749,6 +749,14 @@ def import_sensor(sensor_data: SensorData, owner: models.Person2, action_logger=
     return device, created
 
 
+@dataclasses.dataclass
+class DuplicateReferenceError(Exception):
+    duplicate_references: List[Tuple[str, int]]
+
+    def __str__(self):
+        return f"Duplicate referenties zijn niet toegestaan: {self.duplicate_references}"
+
+
 def import_xlsx(workbook, action_logger=lambda x: x):
     """
     Load, parse and import person and sensor data from the given bulk or iprox
@@ -761,6 +769,15 @@ def import_xlsx(workbook, action_logger=lambda x: x):
     # For bulk registration the contact details are in a separate sheet
     parser = parse_bulk_xlsx if "Uw gegevens" in workbook else parse_iprox_xlsx
     sensors = list(parser(workbook))
+
+    sensor_counter = Counter(sensor.reference for sensor in sensors)
+    duplicate_references = [
+        (reference, count)
+        for reference, count in sensor_counter.most_common()
+        if count > 1
+    ]
+    if duplicate_references:
+        raise DuplicateReferenceError(duplicate_references)
 
     people = [s.owner for s in sensors]
     for person in people:
