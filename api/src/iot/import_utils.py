@@ -571,19 +571,20 @@ def validate_contains_pi_data(sensor_data):
 
 
 def validate_type(sensor_data):
-    if sensor_data.type in ('', None):
+    type = (sensor_data.type or '').strip()
+    if not type:
         raise InvalidSensorType(sensor_data)
 
 
 def validate_themes(sensor_data):
-    themes = (sensor_data.themes or '').split(settings.IPROX_SEPARATOR)
-    valid_themes = models.Theme.objects.filter(name__in=themes).count()
-    if valid_themes != len(themes):
+    themes = (sensor_data.themes or '').strip()
+    if not themes:
         raise InvalidThemes(sensor_data)
 
 
 def validate_regions(sensor_data):
-    if not sensor_data.location.regions:
+    regions = (sensor_data.location.regions or '').strip()
+    if not regions:
         raise InvalidRegions(sensor_data)
 
 
@@ -694,8 +695,8 @@ def import_sensor(sensor_data: SensorData, owner: models.Person2, action_logger=
             device.regions.add(region)
 
     for theme_name in sensor_data.themes.split(settings.IPROX_SEPARATOR):
-        theme_id = models.id_from_name(models.Theme, theme_name)
-        device.themes.add(theme_id)
+        theme = models.Theme.objects.get_or_create(name=theme_name)[0]
+        device.themes.add(theme)
 
     return device, created
 

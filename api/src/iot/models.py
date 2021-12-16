@@ -94,6 +94,7 @@ class Type2(models.Model):
 
 class Theme(models.Model):
     name = CITextField(unique=True, verbose_name="Thema")
+    is_other = models.BooleanField(default=True, verbose_name="Anders, namelijk")
 
     def __str__(self):
         return self.name

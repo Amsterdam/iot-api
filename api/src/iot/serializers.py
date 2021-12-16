@@ -204,9 +204,9 @@ class Person2Serializer(HALSerializer):
 
 
 class Device2Serializer(HALSerializer):
-    type = serializers.StringRelatedField()
+    type = serializers.SerializerMethodField()
     regions = serializers.StringRelatedField(many=True)
-    themes = serializers.StringRelatedField(many=True)
+    themes = serializers.SerializerMethodField()
     legal_ground = serializers.StringRelatedField()
     owner = Person2Serializer()
     location = serializers.SerializerMethodField()
@@ -232,3 +232,10 @@ class Device2Serializer(HALSerializer):
     def get_location(self, obj):
         if obj.location:
             return {'latitude': obj.location.y, 'longitude': obj.location.x}
+
+    def get_themes(self, obj):
+        themes = ('Overig' if theme.is_other else theme.name for theme in obj.themes.all())
+        return list(dict.fromkeys(themes))  # use a dict.fromkeys to preserve original order
+
+    def get_type(self, obj):
+        return 'Overig' if obj.type.is_other else obj.type.name
