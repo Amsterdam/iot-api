@@ -12,6 +12,7 @@ import responses
 from django.conf import settings
 from django.contrib.gis.geos import Point
 from openpyxl import Workbook
+from rest_framework.exceptions import ValidationError
 
 from iot import import_utils, models
 from iot.serializers import Device2Serializer
@@ -470,6 +471,24 @@ class TestValidate:
             import_utils.validate_sensor(sensor_data)
         except import_utils.InvalidPrivacyDeclaration:
             pytest.fail('Should not raise on empty declaration when no personal data collected')
+
+    @pytest.mark.parametrize("value", [None, '', ' ', 'not-an-email'])
+    def test_invalid_email(self, person_data, value):
+        person_data.email = value
+        with pytest.raises(ValidationError):
+            person_data.validate()
+
+    @pytest.mark.parametrize("value", [None, '', ' '])
+    def test_invalid_first_name(self, person_data, value):
+        person_data.first_name = value
+        with pytest.raises(ValidationError):
+            person_data.validate()
+
+    @pytest.mark.parametrize("value", [None, '', ' '])
+    def test_invalid_last_name(self, person_data, value):
+        person_data.last_name = value
+        with pytest.raises(ValidationError):
+            person_data.validate()
 
 
 DATA_DIR = Path(__file__).parent / 'data' / 'json'
