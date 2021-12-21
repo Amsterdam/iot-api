@@ -553,10 +553,13 @@ def validate_active_until(sensor_data):
 
 
 def validate_privacy_declaration(sensor_data):
-    try:
-        URLValidator()(sensor_data.privacy_declaration)
-    except Exception as e:
-        raise InvalidPrivacyDeclaration(sensor_data) from e
+    if (sensor_data.privacy_declaration or '').strip():
+        try:
+            URLValidator()(sensor_data.privacy_declaration)
+        except Exception as e:
+            raise InvalidPrivacyDeclaration(sensor_data) from e
+    elif sensor_data.contains_pi_data == 'Ja':
+        raise InvalidPrivacyDeclaration(sensor_data)
 
 
 def validate_legal_ground(sensor_data):

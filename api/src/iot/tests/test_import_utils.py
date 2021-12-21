@@ -1,4 +1,5 @@
 import csv
+import itertools
 import json
 import os
 from dataclasses import asdict
@@ -442,11 +443,33 @@ class TestValidate:
         with pytest.raises(import_utils.InvalidDate):
             import_utils.validate_sensor(sensor_data)
 
-    @pytest.mark.parametrize("value", [None, '', 'nee', '-', 'n/a', 'n.v.t.'])
+    @pytest.mark.parametrize("value", [None, ''])
     def test_invalid_privacy_declaration(self, sensor_data, value):
+        # don't accept empty values when the sensor collects personal data
+        sensor_data.contains_pi_data = 'Ja'
         sensor_data.privacy_declaration = value
         with pytest.raises(import_utils.InvalidPrivacyDeclaration):
             import_utils.validate_sensor(sensor_data)
+
+    @pytest.mark.parametrize(
+        "value,contains_pi_data",
+        itertools.product(['nee', '-', 'n/a', 'n.v.t.'], ['Ja', 'Nee']),
+    )
+    def test_invalid_privacy_declaration_invalid_urls(self, sensor_data, value, contains_pi_data):
+        # never accept invalid urls
+        sensor_data.contains_pi_data = contains_pi_data
+        sensor_data.privacy_declaration = value
+        with pytest.raises(import_utils.InvalidPrivacyDeclaration):
+            import_utils.validate_sensor(sensor_data)
+
+    @pytest.mark.parametrize("value", [None, ''])
+    def test_invalid_privacy_declaration_can_be_empty_if_no_pi_data(self, sensor_data, value):
+        sensor_data.contains_pi_data = 'Nee'
+        sensor_data.privacy_declaration = value
+        try:
+            import_utils.validate_sensor(sensor_data)
+        except import_utils.InvalidPrivacyDeclaration:
+            pytest.fail('Should not raise on empty declaration when no personal data collected')
 
 
 DATA_DIR = Path(__file__).parent / 'data' / 'json'
