@@ -100,13 +100,12 @@ class RequiredCharField(fields.CharField):
 
 
 class PersonDataSerializer(Serializer):
-    organisation = RequiredCharField(max_length=255, source="Naam organisatie/bedrijf")
+    organisation = fields.CharField(max_length=255, source="Naam organisatie/bedrijf")
     email = EmailField(allow_blank=False, allow_null=False, source="E-mail")
     telephone = RequiredCharField(max_length=15, source="Telefoonnummer")
     website = fields.URLField(allow_blank=True, allow_null=True, source="Website")
     first_name = RequiredCharField(max_length=84, source="Voornaam")
-    last_name_affix = fields.CharField(max_length=84, allow_blank=True,
-                                       allow_null=True, source="Tussenvoegsel")
+    last_name_affix = fields.CharField(max_length=84, source="Tussenvoegsel")
     last_name = RequiredCharField(max_length=84, source="Achternaam")
 
 
