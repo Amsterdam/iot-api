@@ -751,10 +751,11 @@ def import_sensor(sensor_data: SensorData, owner: models.Person2, action_logger=
 
 @dataclasses.dataclass
 class DuplicateReferenceError(Exception):
-    duplicate_references: List[Tuple[str, int]]
+    reference: str
+    count: int
 
     def __str__(self):
-        return f"Duplicate referenties zijn niet toegestaan: {self.duplicate_references}"
+        return f"Referenties moeten uniek zijn: {self.reference} komt {self.count} keer voor"
 
 
 def import_xlsx(workbook, action_logger=lambda x: x):
@@ -771,13 +772,13 @@ def import_xlsx(workbook, action_logger=lambda x: x):
     sensors = list(parser(workbook))
 
     sensor_counter = Counter(sensor.reference for sensor in sensors)
-    duplicate_references = [
-        (reference, count)
+    errors: List[Exception] = [
+        DuplicateReferenceError(reference, count)
         for reference, count in sensor_counter.most_common()
         if count > 1
     ]
-    if duplicate_references:
-        raise DuplicateReferenceError(duplicate_references)
+    if errors:
+        return errors, 0, 0
 
     people = [s.owner for s in sensors]
     for person in people:
@@ -789,7 +790,6 @@ def import_xlsx(workbook, action_logger=lambda x: x):
     }
 
     counter = Counter()
-    errors = []
 
     for sensor_data in sensors:
         try:

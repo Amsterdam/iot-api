@@ -31,8 +31,11 @@ class FileForm(forms.Form):
 def import_xlsx_view(request, message_user, redirect_to):
 
     if request.method == "POST":
+        file = request.FILES["selecteer_bestand"]
+        num_created = 0
+        num_updated = 0
+
         try:
-            file = request.FILES["selecteer_bestand"]
             workbook = load_workbook(file)
 
             def action_logger(result):
@@ -49,18 +52,41 @@ def import_xlsx_view(request, message_user, redirect_to):
                 return result
 
             errors, num_created, num_updated = import_xlsx(workbook, action_logger)
-
-            message_user(request, f"{num_created} sensoren aangemaakt")
-            message_user(request, f"{num_updated} sensoren bijgewerkt")
         except Exception as e:
             errors = [e]
 
-        for e in errors:
-            message_user(request, mark_safe(str(e)), level=messages.ERROR)
+        send_messages_to_user(request, message_user, num_created, num_updated, errors)
 
         return redirect(redirect_to)
     else:
         return render(request, "import_xlsx.html", {"form": FileForm()})
+
+
+def send_messages_to_user(request, message_user, num_created, num_updated, errors):
+    """
+    Give the user feedback about what was imported, and any errors that
+    occurred.
+    """
+    message = f"{num_created} sensoren aangemaakt<br>{num_updated} sensoren bijgewerkt"
+
+    if errors:
+        level = messages.WARNING if num_created and not num_updated else messages.ERROR
+        plural = 'en' if len(errors) > 1 else ''
+        message += f"<br>{len(errors)} fout{plural} gevonden:"
+    else:
+        level = messages.INFO
+
+    message_user(request, mark_safe(message), level)
+
+    if errors:
+        max_num_errors_to_show = 10
+        show, hide = errors[:max_num_errors_to_show], errors[max_num_errors_to_show:]
+        for e in show:
+            message_user(request, mark_safe(str(e)), level=messages.ERROR)
+
+        if hide:
+            plural = 'en' if len(hide) > 1 else ''
+            message_user(request, f'+ nog {len(hide)} fout{plural}', level=messages.ERROR)
 
 
 @admin.register(models.Device2)
