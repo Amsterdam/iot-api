@@ -223,12 +223,14 @@ class Values:
             matching_index = next(islice(matches, nth, nth + 1), None)
             if matching_index is not None:
                 matching_value = self.values[matching_index]
-                return matching_value.value if isinstance(matching_value, Cell) else matching_value
+                val = matching_value.value if isinstance(matching_value, Cell) else matching_value
+                return val.strip() if isinstance(val, str) else val
         else:
             # raise KeyError when field not present
             with contextlib.suppress(ValueError):
                 matching_value = self.values[self.fields.index(field)]
-                return matching_value.value if isinstance(matching_value, Cell) else matching_value
+                val = matching_value.value if isinstance(matching_value, Cell) else matching_value
+                return val.strip() if isinstance(val, str) else val
 
         # didn't return yet, then item could not be found
         raise KeyError(field)
