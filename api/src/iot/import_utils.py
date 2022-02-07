@@ -224,13 +224,13 @@ class Values:
             if matching_index is not None:
                 matching_value = self.values[matching_index]
                 val = matching_value.value if isinstance(matching_value, Cell) else matching_value
-                return val.strip()
+                return val.strip() if isinstance(val, str) else val
         else:
             # raise KeyError when field not present
             with contextlib.suppress(ValueError):
                 matching_value = self.values[self.fields.index(field)]
                 val = matching_value.value if isinstance(matching_value, Cell) else matching_value
-                return val.strip()
+                return val.strip() if isinstance(val, str) else val
 
         # didn't return yet, then item could not be found
         raise KeyError(field)
