@@ -12,6 +12,10 @@ from django.contrib.gis.geos import Point
 from django.core.validators import URLValidator
 from openpyxl import Workbook
 from openpyxl.cell import Cell
+from rest_framework import fields
+from rest_framework.exceptions import ValidationError
+from rest_framework.fields import EmailField
+from rest_framework.serializers import Serializer
 from typing_extensions import Literal
 
 from iot import models
@@ -79,6 +83,39 @@ def get_center_coordinates(postcode: str, house_number: Union[int, str]) -> Poin
     raise PostcodeSearchException(postcode, house_number)
 
 
+class InvalidPersonDataError(ValidationError):
+    def __str__(self):
+        fields = self.args[0].detail.serializer.fields
+        return "<br>".join(
+            fields[field].source + ': ' + (','.join(str(e) for e in error_detail))
+            for field, error_detail in self.args[0].args[0].items()
+        )
+
+
+class RequiredCharField(fields.CharField):
+    def __init__(self, **kwargs):
+        kwargs.setdefault('allow_blank', False)
+        kwargs.setdefault('allow_null', False)
+        super().__init__(**kwargs)
+
+
+class OptionalCharField(fields.CharField):
+    def __init__(self, **kwargs):
+        kwargs.setdefault('allow_blank', True)
+        kwargs.setdefault('allow_null', True)
+        super().__init__(**kwargs)
+
+
+class PersonDataSerializer(Serializer):
+    organisation = OptionalCharField(max_length=255, source="Naam organisatie/bedrijf")
+    email = EmailField(allow_blank=False, allow_null=False, source="E-mail")
+    telephone = RequiredCharField(max_length=15, source="Telefoonnummer")
+    website = fields.URLField(allow_blank=True, allow_null=True, source="Website")
+    first_name = RequiredCharField(max_length=84, source="Voornaam")
+    last_name_affix = OptionalCharField(max_length=84, source="Tussenvoegsel")
+    last_name = RequiredCharField(max_length=84, source="Achternaam")
+
+
 @dataclasses.dataclass
 class PersonData:
     organisation: str
@@ -88,6 +125,12 @@ class PersonData:
     first_name: str
     last_name_affix: str
     last_name: str
+
+    def validate(self):
+        try:
+            PersonDataSerializer(data=dataclasses.asdict(self)).is_valid(True)
+        except ValidationError as e:
+            raise InvalidPersonDataError(e) from e
 
 
 @dataclasses.dataclass
@@ -460,7 +503,7 @@ def get_location(sensor_data: SensorData):
 
 
 @dataclasses.dataclass
-class ValidationError(ValueError):
+class SensorValidationError(ValueError):
     sensor_data: SensorData
     source = NotImplemented
     target = NotImplemented
@@ -470,62 +513,62 @@ class ValidationError(ValueError):
                f" {self.source}={getattr(self.sensor_data, self.target)}"
 
 
-class InvalidSensorType(ValidationError):
+class InvalidSensorType(SensorValidationError):
     source = 'Kies soort / type sensor'
     target = 'type'
 
 
-class InvalidContainsPiData(ValidationError):
+class InvalidContainsPiData(SensorValidationError):
     source = 'Worden er persoonsgegevens verwerkt?'
     target = 'contains_pi_data'
 
 
-class InvalidThemes(ValidationError):
+class InvalidThemes(SensorValidationError):
     source = 'Thema'
     target = 'themes'
 
 
-class InvalidLatitude(ValidationError):
+class InvalidLatitude(SensorValidationError):
     source = 'Latitude'
     target = 'location'
 
 
-class InvalidLongitude(ValidationError):
+class InvalidLongitude(SensorValidationError):
     source = 'Longitude'
     target = 'location'
 
 
-class InvalidLegalGround(ValidationError):
+class InvalidLegalGround(SensorValidationError):
     source = 'Wettelijke grondslag'
     target = 'legal_ground'
 
 
-class InvalidPostcode(ValidationError):
+class InvalidPostcode(SensorValidationError):
     source = 'Postcode'
     target = 'location'
 
 
-class InvalidHouseNumber(ValidationError):
+class InvalidHouseNumber(SensorValidationError):
     source = 'Huisnummer'
     target = 'location'
 
 
-class InvalidRegions(ValidationError):
+class InvalidRegions(SensorValidationError):
     source = 'In welk gebied bevindt zich de mobiele sensor?'
     target = 'location'
 
 
-class InvalidLocationDescription(ValidationError):
+class InvalidLocationDescription(SensorValidationError):
     source = 'Omschrijving van de locatie van de sensor'
     target = 'location'
 
 
-class InvalidDate(ValidationError):
+class InvalidDate(SensorValidationError):
     source = 'Wanneer wordt de sensor verwijderd?'
     target = 'active_until'
 
 
-class InvalidPrivacyDeclaration(ValidationError):
+class InvalidPrivacyDeclaration(SensorValidationError):
     source = 'Privacyverklaring'
     target = 'privacy_declaration'
 
@@ -719,9 +762,13 @@ def import_xlsx(workbook, action_logger=lambda x: x):
     parser = parse_bulk_xlsx if "Uw gegevens" in workbook else parse_iprox_xlsx
     sensors = list(parser(workbook))
 
-    people = {
+    people = [s.owner for s in sensors]
+    for person in people:
+        person.validate()
+
+    imported_owners = {
         person_data.email.lower(): import_person(person_data, action_logger)
-        for person_data in {s.owner.email.lower(): s.owner for s in sensors}.values()
+        for person_data in people
     }
 
     counter = Counter()
@@ -730,7 +777,7 @@ def import_xlsx(workbook, action_logger=lambda x: x):
     for sensor_data in sensors:
         try:
             validate_sensor(sensor_data)
-            owner = people[sensor_data.owner.email.lower()]
+            owner = imported_owners[sensor_data.owner.email.lower()]
             _, created = import_sensor(sensor_data, owner, action_logger)
             counter.update([created])
         except Exception as e:
