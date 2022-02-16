@@ -15,6 +15,7 @@ from openpyxl import Workbook
 from rest_framework.exceptions import ValidationError
 
 from iot import import_utils, models
+from iot.import_utils import DuplicateReferenceError
 from iot.serializers import Device2Serializer
 
 
@@ -381,8 +382,12 @@ class TestImportSensor:
     def test_duplicate_references_should_be_rejected(self, source):
         path = Path(__file__).parent / 'data' / f'{source}_duplicate_references'
         workbook = csv_to_workbook(path)
-        with pytest.raises(import_utils.DuplicateReferenceError):
-            list(import_utils.import_xlsx(workbook))
+        errors = import_utils.import_xlsx(workbook)[0]
+        expected = [
+            DuplicateReferenceError('7079-2296.0', 2),
+            DuplicateReferenceError('7079-2296.1', 2),
+        ]
+        assert errors == expected
 
 
 @pytest.mark.django_db

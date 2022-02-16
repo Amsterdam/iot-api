@@ -4,7 +4,7 @@ import datetime
 import re
 from collections import Counter
 from itertools import islice, zip_longest
-from typing import Generator, List, Tuple, Union
+from typing import Generator, List, Union
 
 import requests
 from django.conf import settings
