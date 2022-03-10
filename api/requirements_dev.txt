@@ -4,7 +4,7 @@
 #
 #    pip-compile --output-file=api/requirements_dev.txt api/requirements_dev.in
 #
-amqp==5.0.9
+amqp==5.1.0
     # via
     #   -r api/./requirements.txt
     #   kombu
@@ -17,10 +17,6 @@ attrs==21.4.0
     #   -r api/./requirements.txt
     #   jsonschema
     #   pytest
-backports.zoneinfo==0.2.1
-    # via
-    #   -r api/./requirements.txt
-    #   django
 billiard==3.6.4.0
     # via
     #   -r api/./requirements.txt
@@ -37,11 +33,11 @@ cffi==1.15.0
     # via
     #   -r api/./requirements.txt
     #   cryptography
-charset-normalizer==2.0.11
+charset-normalizer==2.0.12
     # via
     #   -r api/./requirements.txt
     #   requests
-click==8.0.3
+click==8.0.4
     # via
     #   -r api/./requirements.txt
     #   celery
@@ -71,7 +67,7 @@ coreschema==0.0.4
     #   -r api/./requirements.txt
     #   coreapi
     #   drf-yasg
-coverage[toml]==6.3.1
+coverage[toml]==6.3.2
     # via pytest-cov
 cryptography==36.0.1
     # via
@@ -87,7 +83,7 @@ defusedxml==0.7.1
     #   djangorestframework-xml
 distlib==0.3.4
     # via virtualenv
-django==4.0.2
+django==3.2.12
     # via
     #   -r api/./requirements.txt
     #   django-appconf
@@ -113,7 +109,7 @@ django-celery-email==3.0.0
     # via -r api/./requirements.txt
 django-cors-headers==3.11.0
     # via -r api/./requirements.txt
-django-countries==7.2.1
+django-countries==7.3.2
     # via -r api/./requirements.txt
 django-debug-toolbar==3.2.4
     # via -r api/requirements_dev.in
@@ -162,12 +158,12 @@ factory-boy==3.2.1
     # via
     #   -r api/requirements_dev.in
     #   pytest-factoryboy
-faker==12.1.0
+faker==13.3.1
     # via
     #   -r api/requirements_dev.in
     #   factory-boy
     #   pytest-faker
-filelock==3.4.2
+filelock==3.6.0
     # via
     #   tox
     #   virtualenv
@@ -183,7 +179,7 @@ idna==3.3
     # via
     #   -r api/./requirements.txt
     #   requests
-importlib-metadata==4.10.1
+importlib-metadata==4.11.2
     # via
     #   -r api/./requirements.txt
     #   markdown
@@ -220,13 +216,13 @@ jsonschema==4.4.0
     # via
     #   -r api/./requirements.txt
     #   swagger-spec-validator
-kombu==5.2.3
+kombu==5.2.4
     # via
     #   -r api/./requirements.txt
     #   celery
 markdown==3.3.6
     # via -r api/./requirements.txt
-markupsafe==2.0.1
+markupsafe==2.1.0
     # via
     #   -r api/./requirements.txt
     #   jinja2
@@ -246,15 +242,15 @@ packaging==21.3
     #   tox
 pep517==0.12.0
     # via pip-tools
-pip-tools==6.5.0
+pip-tools==6.5.1
     # via -r api/requirements_dev.in
-platformdirs==2.4.1
+platformdirs==2.5.1
     # via virtualenv
 pluggy==1.0.0
     # via
     #   pytest
     #   tox
-prompt-toolkit==3.0.26
+prompt-toolkit==3.0.28
     # via
     #   -r api/./requirements.txt
     #   click-repl
@@ -288,7 +284,7 @@ pyrsistent==0.18.1
     # via
     #   -r api/./requirements.txt
     #   jsonschema
-pytest==7.0.0
+pytest==7.0.1
     # via
     #   -r api/requirements_dev.in
     #   pytest-cov
@@ -296,6 +292,7 @@ pytest==7.0.0
     #   pytest-env
     #   pytest-factoryboy
     #   pytest-flake8
+    #   pytest-isort
 pytest-cov==3.0.0
     # via -r api/requirements_dev.in
 pytest-django==4.5.2
@@ -306,9 +303,9 @@ pytest-factoryboy==2.1.0
     # via -r api/requirements_dev.in
 pytest-faker==2.0.0
     # via -r api/requirements_dev.in
-pytest-flake8==1.0.7
+pytest-flake8==1.1.0
     # via -r api/requirements_dev.in
-pytest-isort==2.0.0
+pytest-isort==3.0.0
     # via -r api/requirements_dev.in
 python-dateutil==2.8.2
     # via faker
@@ -316,6 +313,7 @@ pytz==2021.3
     # via
     #   -r api/./requirements.txt
     #   celery
+    #   django
     #   djangorestframework
 pyyaml==6.0
     # via
@@ -331,19 +329,21 @@ requests==2.27.1
     #   flex
     #   mozilla-django-oidc
     #   responses
-responses==0.18.0
+responses==0.19.0
     # via -r api/requirements_dev.in
 rfc3987==1.3.8
     # via
     #   -r api/./requirements.txt
     #   flex
-ruamel.yaml==0.17.20
+ruamel-yaml==0.17.21
+    # via -r api/./requirements.txt
+ruamel-yaml-clib==0.2.6
+    # via -r api/./requirements.txt
+ruamel-yaml==0.17.21
+    # via drf-yasg
+ruamel-yaml-clib==0.2.6
     # via
-    #   -r api/./requirements.txt
-    #   drf-yasg
-ruamel.yaml.clib==0.2.6
-    # via
-    #   -r api/./requirements.txt
+    #   ruamel-yaml
     #   ruamel.yaml
 six==1.16.0
     # via
@@ -369,13 +369,17 @@ swagger-spec-validator==2.7.4
     # via -r api/./requirements.txt
 toml==0.10.2
     # via tox
-tomli==2.0.0
+tomli==2.0.1
     # via
     #   coverage
     #   pep517
     #   pytest
 tox==3.24.5
     # via -r api/requirements_dev.in
+typing-extensions==4.1.1
+    # via
+    #   -r api/./requirements.txt
+    #   django-countries
 unicodecsv==0.14.1
     # via
     #   -r api/./requirements.txt
@@ -400,7 +404,7 @@ vine==5.0.0
     #   amqp
     #   celery
     #   kombu
-virtualenv==20.13.1
+virtualenv==20.13.3
     # via tox
 wcwidth==0.2.5
     # via
