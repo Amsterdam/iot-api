@@ -41,6 +41,6 @@ class Command(BaseCommand):
                     api_url=API_MAPPER[api_name]
                 )
                 result_list.append(result)  # append the import response as a tuple
-            self.stdout.write(self.style.SUCCESS(f'Import result: {result_list}'))
+            self.stdout.write(self.style.SUCCESS(f'API IMPORT RESULT: {result_list}'))
         except Exception as e:
-            self.stdout.write(self.style.ERROR_OUTPUT(f'API IMPORT ERROR {e}'))
+            self.stdout.write(self.style.ERROR_OUTPUT(f'API {e} NOT FOUND ERROR'))
