@@ -7,67 +7,84 @@ from django.conf import settings
 from iot import import_utils, models
 from iot.import_utils import LatLong, PersonData, SensorData
 
-PARSERS_MAPPER = {
-    'wifi_sensor_crowd_management': 'parse_wifi_sensor_crowd_management',
-    'camera_brug_en_sluisbediening': 'parse_camera_brug_en_sluisbediening',
-    'cctv_camera_verkeersmanagement': 'parse_cctv_camera_verkeersmanagement',
-    'kentekencamera_reistijd': 'parse_kentekencamera_reistijd',
-    'kentekencamera_milieuzone': 'parse_kkentekencamera_milieuzone',
-    'ais_masten': 'parse_ais_masten',
-    'verkeersonderzoek_met_cameras': 'parse_verkeersonderzoek_met_cameras',
-    'beweegbare_fysieke_afsluiting': 'parse_beweegbare_fysieke_afsluiting',
+API = 'https://maps.amsterdam.nl/open_geodata/geojson_lnglat.php?'
+API_MAPPER = {
+    'wifi_sensor_crowd_management': f'{API}KAARTLAAG=CROWDSENSOREN&THEMA=cmsa',
+    'camera_brug_en_sluisbediening': f'{API}KAARTLAAG=PRIVACY_BRUGSLUIS&THEMA=privacy',
+    # 'cctv_camera_verkeersmanagement': f'{API}KAARTLAAG=VIS&THEMA=vis',
+    # 'kentekencamera_reistijd': f'{API}KAARTLAAG=VIS&THEMA=vis',
+    # 'kentekencamera_milieuzone': f'{API}KAARTLAAG=VIS&THEMA=vis',
+    # 'ais_masten': f'{API}KAARTLAAG=PRIVACY_AISMASTEN&THEMA=privacy',
+    # 'verkeersonderzoek_met_cameras': f'{API}KAARTLAAG=PRIVACY_OVERIG&THEMA=privacy',
+    # 'beweegbare_fysieke_afsluiting': f'{API}KAARTLAAG=VIS_BFA&THEMA=vis',
 }
 
 
-def import_api_data(api_name: str, api_url: str) -> str:
+def import_api_data(api_name: str) -> tuple:
     """
-    takes the name of the api as a param, execute the parser that belongs
-    to the function. The parser will return a generator of SensorData.
-    from the generator, use the import_person_data and import_senso_data.
+    takes the name of the api as a param, calls the url that belongs to it in the
+    API_MAPPER. when the data is fetched from the api, it will convert it to a dict
+    and pass it to the migrate_api_data together with the api_name.
+    A tuple will be returned that will contain the results.
     """
-    # make a request and get the json data. covert it to a dict
-    # return f'ERROR importing data from api {api_name}: {globals()}'
     try:
+        api_url = API_MAPPER.get(api_name, None)  # get the url that belongs to the api or None.
+        if not api_url:
+            err = f"unknown api_name {api_name}"
+            return (err,)
+
         response = requests.get(url=api_url)
+
         # check if response is 200 and content type is json, if not, return
         if response.status_code != 200 or \
                 'application/json' not in response.headers["Content-Type"]:
-            return f'ERROR importing api {api_name}: {response.status_code} - {response.content}'
+            err = f"{response.status_code} - {response.content}"
+            return (err,)
 
-        data = response.json()
-        parser = globals().get(PARSERS_MAPPER[api_name])
+        data = response.json()  # get the content of the response as dict
+        return migrate_api_data(api_name=api_name, api_data=data)
 
-        sensors = list(parser(data))
-        owners_list = [sensor.owner for sensor in sensors]
-        # return f'ERROR importing data from api {api_name}: {sensors}'
-
-        for owner in owners_list:
-            owner.validate()
-
-        imported_owners = {
-            person_data.email.lower(): import_utils.import_person(person_data)
-            for person_data in owners_list
-        }
-
-        counter = Counter()
-
-        errors: List[Exception] = []  # empty list to holding exceptions
-        for sensor_data in sensors:
-            try:
-                import_utils.validate_sensor(sensor_data)
-                owner = imported_owners[sensor_data.owner.email.lower()]
-                _, created = import_utils.import_sensor(sensor_data, owner)
-                counter.update([created])
-            except Exception as e:
-                errors.append(e)
-
-        # delete sensors from the same owner that are not in the api
-        delete_not_found_sendors(sensors=sensors, person=owners_list[0])
-
-        return f'OK: {api_name} err: {errors}, succ: {counter[True]}'
-        # return f'sensor: {len(sensors)} - owners: {len(owners_list)} - {imported_owners}'
     except Exception as e:
-        return f'ERROR importing data from api {api_name}: {e}'
+        err = f"{e}"
+        return (err,)
+
+
+def migrate_api_data(api_name: str, api_data: dict) -> tuple:
+    """
+    takes the api_name to find the parser, and the api_data to migrate the data with the
+    existing data. The parser will return a generator of SensorData.
+    from the generator, use the import_person_data and import_senso_data.
+    """
+    parser = PARSERS_MAPPER[api_name]
+
+    sensors = list(parser(api_data))
+    owners_list = [sensor.owner for sensor in sensors]
+    # return f'ERROR importing data from api {api_name}: {sensors}'
+
+    for owner in owners_list:
+        owner.validate()
+
+    imported_owners = {
+        person_data.email.lower(): import_utils.import_person(person_data)
+        for person_data in owners_list
+    }
+
+    counter = Counter()
+
+    errors: List[Exception] = []  # empty list to holding exceptions
+    for sensor_data in sensors:
+        try:
+            import_utils.validate_sensor(sensor_data)
+            owner = imported_owners[sensor_data.owner.email.lower()]
+            _, created = import_utils.import_sensor(sensor_data, owner)
+            counter.update([created])
+        except Exception as e:
+            errors.append(e)
+
+    # delete sensors from the same owner that are not in the api
+    delete_not_found_sensors(sensors=sensors, person=owners_list[0])
+
+    return (errors, counter[True])
 
 
 def parse_wifi_sensor_crowd_management(data: dict) -> Generator[SensorData, None, None]:
@@ -81,10 +98,10 @@ def parse_wifi_sensor_crowd_management(data: dict) -> Generator[SensorData, None
     personData = PersonData(
         organisation='Gemeente Amsterdam',
         email='LVMA@amsterdam.nl',
-        telephone='06123456',
-        website='https://acc.sensorenregister.amsterdam.nl',
+        telephone='14020',
+        website='https://www.amsterdam.nl/',
         first_name='verkeers',
-        last_name_affix='v',
+        last_name_affix='',
         last_name='onderzoek'
     )
 
@@ -128,10 +145,10 @@ def parse_camera_brug_en_sluisbediening(data: dict) -> Generator[SensorData, Non
     personData = PersonData(
         organisation='Gemeente Amsterdam',
         email='stedelijkbeheer@amsterdam.nl',
-        telephone='06123456',
-        website='https://acc.sensorenregister.amsterdam.nl',
+        telephone='14020',
+        website='https://www.amsterdam.nl/',
         first_name='stedelijk',
-        last_name_affix='v',
+        last_name_affix='',
         last_name='beheer'
     )
 
@@ -170,10 +187,10 @@ def parse_cctv_camera_verkeersmanagement(data: dict) -> Generator[SensorData, No
     personData = PersonData(
         organisation='Gemeente Amsterdam',
         email='verkeersmanagement@amsterdam.nl',
-        telephone='06123456',
-        website='https://acc.sensorenregister.amsterdam.nl',
+        telephone='14020',
+        website='https://www.amsterdam.nl/',
         first_name='camera',
-        last_name_affix='en',
+        last_name_affix='',
         last_name='verkeersmanagement'
     )
 
@@ -218,10 +235,10 @@ def parse_kentekencamera_reistijd(data: dict) -> Generator[SensorData, None, Non
     personData = PersonData(
         organisation='Gemeente Amsterdam',
         email='kentekencamera@amsterdam.nl',
-        telephone='06123456',
-        website='https://acc.sensorenregister.amsterdam.nl',
+        telephone='14020',
+        website='https://www.amsterdam.nl/',
         first_name='kentekencamera',
-        last_name_affix='en',
+        last_name_affix='',
         last_name='reistijd'
     )
 
@@ -255,7 +272,7 @@ privacyverklaring-parkeren-verkeer-bouw/reistijden-meetsysteem-privacy/',
             )
 
 
-def parse_kkentekencamera_milieuzone(data: dict) -> Generator[SensorData, None, None]:
+def parse_kentekencamera_milieuzone(data: dict) -> Generator[SensorData, None, None]:
     """
     convert the kentekencamera en milieuzone data list of dictionaries into
     SensorData objects and yield it. Yield only the sensors with
@@ -267,10 +284,10 @@ def parse_kkentekencamera_milieuzone(data: dict) -> Generator[SensorData, None, 
     personData = PersonData(
         organisation='Gemeente Amsterdam',
         email='kentekencameramilieuzone@amsterdam.nl',
-        telephone='06123456',
-        website='https://acc.sensorenregister.amsterdam.nl',
+        telephone='14020',
+        website='https://www.amsterdam.nl/',
         first_name='kentekencamera',
-        last_name_affix='en',
+        last_name_affix='',
         last_name='milieuzone'
     )
 
@@ -314,10 +331,10 @@ def parse_ais_masten(data: dict) -> Generator[SensorData, None, None]:
     personData = PersonData(
         organisation='Gemeente Amsterdam',
         email='programmavaren@amsterdam.nl',
-        telephone='06123456',
-        website='https://acc.sensorenregister.amsterdam.nl',
+        telephone='14020',
+        website='https://www.amsterdam.nl/',
         first_name='ais',
-        last_name_affix='en',
+        last_name_affix='',
         last_name='masten'
     )
 
@@ -355,10 +372,10 @@ def parse_verkeersonderzoek_met_cameras(data: dict) -> Generator[SensorData, Non
     personData = PersonData(
         organisation='Gemeente Amsterdam',
         email='verkeersonderzoek@amsterdam.nl',
-        telephone='06123456',
-        website='https://acc.sensorenregister.amsterdam.nl',
+        telephone='14020',
+        website='https://www.amsterdam.nl/',
         first_name='verkeers',
-        last_name_affix='en',
+        last_name_affix='',
         last_name='onderzoek'
     )
 
@@ -369,6 +386,11 @@ def parse_verkeersonderzoek_met_cameras(data: dict) -> Generator[SensorData, Non
             latitude = geometry['coordinates'][0]
             longitude = geometry['coordinates'][1]
             properties = feature['properties']  # properties dict
+
+            # if the privacy_declaration url empty, skip the sensor.
+            if not properties['Privacyverklaring'].strip():
+                continue
+
             yield SensorData(
                 owner=personData,
                 reference=feature['id'],
@@ -376,7 +398,7 @@ def parse_verkeersonderzoek_met_cameras(data: dict) -> Generator[SensorData, Non
                 location=LatLong(latitude=latitude, longitude=longitude),
                 contains_pi_data='Ja',
                 legal_ground='Verkeersmanagement in de rol van wegbeheerder.',
-                privacy_declaration=properties['Privacyverklaring'],
+                privacy_declaration=adjust_url(properties['Privacyverklaring']),
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 datastream='',
                 observation_goal='Tellen van voertuigen.',
@@ -395,10 +417,10 @@ def parse_beweegbare_fysieke_afsluiting(data: dict) -> Generator[SensorData, Non
     personData = PersonData(
         organisation='Gemeente Amsterdam',
         email='beweegbarefysiek@amsterdam.nl',
-        telephone='06123456',
-        website='https://acc.sensorenregister.amsterdam.nl',
+        telephone='14020',
+        website='https://www.amsterdam.nl/',
         first_name='beweegbare',
-        last_name_affix='en',
+        last_name_affix='',
         last_name='afsluiting'
     )
 
@@ -416,7 +438,7 @@ def parse_beweegbare_fysieke_afsluiting(data: dict) -> Generator[SensorData, Non
                 location=LatLong(latitude=latitude, longitude=longitude),
                 contains_pi_data='Ja',
                 legal_ground='Verkeersmanagement in de rol van wegbeheerder.',
-                privacy_declaration='N/A',
+                privacy_declaration='https://nourl.yet',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 datastream='',
                 observation_goal='Verstrekken van selectieve toegang.',
@@ -424,7 +446,7 @@ def parse_beweegbare_fysieke_afsluiting(data: dict) -> Generator[SensorData, Non
             )
 
 
-def delete_not_found_sendors(sensors: List[SensorData], person: PersonData) -> str:
+def delete_not_found_sensors(sensors: List[SensorData], person: PersonData) -> str:
     """takes a list of sensor data. compares their reference with the stored sensors that belong
     to the same owner. If a sensor is not found in the stored sensor, it will delete it.
     returns a string of the total deleted records"""
@@ -439,3 +461,24 @@ def delete_not_found_sendors(sensors: List[SensorData], person: PersonData) -> s
             reference__in=api_sensor_ids).delete()
 
     return f'del: {stoered_sensors} for owner {person.email}'
+
+
+def adjust_url(url: str) -> str:
+    """If the url of the privacy_declaration doesn't start with https, the
+    sensor will not be created. This function will check the provided url if
+    it starts with https://. it will append https:// and return it if not found.
+    """
+
+    return url.strip() if url.startswith('https://') else f"https://{url.strip()}"
+
+
+PARSERS_MAPPER = {
+    'wifi_sensor_crowd_management': parse_wifi_sensor_crowd_management,
+    'camera_brug_en_sluisbediening': parse_camera_brug_en_sluisbediening,
+    'cctv_camera_verkeersmanagement': parse_cctv_camera_verkeersmanagement,
+    'kentekencamera_reistijd': parse_kentekencamera_reistijd,
+    'kentekencamera_milieuzone': parse_kentekencamera_milieuzone,
+    'ais_masten': parse_ais_masten,
+    'verkeersonderzoek_met_cameras': parse_verkeersonderzoek_met_cameras,
+    'beweegbare_fysieke_afsluiting': parse_beweegbare_fysieke_afsluiting,
+}
