@@ -17,8 +17,9 @@ class ImportApiTest(TestCase):
         """
         out = StringIO()
         call_command('import_api', 'something', stdout=out)
-        expected_string = "API 'something' NOT FOUND ERROR"
-        self.assertIn(expected_string, out.getvalue())
+        expected_err = 'unknown api_name something'
+        error = out.getvalue()
+        self.assertIn(expected_err, error)
 
     def test_command_import_api_output_no_args_raise_exception(self):
         """
