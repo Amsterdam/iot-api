@@ -5,7 +5,7 @@ import requests
 from django.conf import settings
 
 from iot import import_utils, models
-from iot.import_utils import LatLong, PersonData, SensorData
+from iot.import_utils import LatLong, ObservationGoal, PersonData, SensorData
 
 API = 'https://maps.amsterdam.nl/open_geodata/geojson_lnglat.php?'
 API_MAPPER = {
@@ -125,11 +125,13 @@ def parse_wifi_sensor_crowd_management(data: dict) -> Generator[SensorData, None
                 type='Feature',
                 location=LatLong(latitude=latitude, longitude=longitude),
                 contains_pi_data='Ja',
-                legal_ground='Verkeersmanagment in de rol van wegbeheerder.',
-                privacy_declaration=properties['Privacyverklaring'],
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 datastream='',
-                observation_goal='Tellen van mensen.',
+                observation_goals=[ObservationGoal(
+                    observation_goal='Tellen van mensen.',
+                    privacy_declaration=properties['Privacyverklaring'],
+                    legal_ground='Verkeersmanagment in de rol van wegbeheerder.'
+                )],
                 active_until='01-01-2050'
             )
 
@@ -167,11 +169,13 @@ def parse_camera_brug_en_sluisbediening(data: dict) -> Generator[SensorData, Non
                 type='Feature',
                 location=LatLong(latitude=latitude, longitude=longitude),
                 contains_pi_data='Ja',
-                legal_ground='Sluisbeheerder in het kader van de woningwet 1991',
-                privacy_declaration=properties['Privacyverklaring'],
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 datastream='',
-                observation_goal='Het bedienen van sluisen en bruggen.',
+                observation_goals=[ObservationGoal(
+                    observation_goal='Het bedienen van sluisen en bruggen.',
+                    privacy_declaration=properties['Privacyverklaring'],
+                    legal_ground='Sluisbeheerder in het kader van de woningwet 1991'
+                )],
                 active_until='01-01-2050'
             )
 
@@ -213,12 +217,14 @@ def parse_cctv_camera_verkeersmanagement(data: dict) -> Generator[SensorData, No
                 type='Feature',
                 location=LatLong(latitude=latitude, longitude=longitude),
                 contains_pi_data='Ja',
-                legal_ground='Verkeersmanagment in de rol van wegbeheerder.',
-                privacy_declaration='https://www.amsterdam.nl/privacy/specifieke/\
-privacyverklaring-parkeren-verkeer-bouw/verkeersmanagement',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 datastream='',
-                observation_goal='Waarnemen van het verkeer.',
+                observation_goals=[ObservationGoal(
+                    observation_goal='Waarnemen van het verkeer.',
+                    privacy_declaration='https://www.amsterdam.nl/privacy/specifieke/\
+privacyverklaring-parkeren-verkeer-bouw/verkeersmanagement',
+                    legal_ground='Verkeersmanagment in de rol van wegbeheerder.'
+                )],
                 active_until='01-01-2050'
             )
 
@@ -262,12 +268,14 @@ def parse_kentekencamera_reistijd(data: dict) -> Generator[SensorData, None, Non
                 type='Feature',
                 location=LatLong(latitude=latitude, longitude=longitude),
                 contains_pi_data='Ja',
-                legal_ground='Verkeersmanagement in de rol van wegbeheerder.',
-                privacy_declaration='https://www.amsterdam.nl/privacy/specifieke/\
-privacyverklaring-parkeren-verkeer-bouw/reistijden-meetsysteem-privacy/',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 datastream='',
-                observation_goal='Het tellen van voertuigen en meten van doorstroming.',
+                observation_goals=[ObservationGoal(
+                    observation_goal='Het tellen van voertuigen en meten van doorstroming.',
+                    privacy_declaration='https://www.amsterdam.nl/privacy/specifieke/\
+privacyverklaring-parkeren-verkeer-bouw/reistijden-meetsysteem-privacy/',
+                    legal_ground='Verkeersmanagement in de rol van wegbeheerder.'
+                )],
                 active_until='01-01-2050'
             )
 
@@ -310,12 +318,14 @@ def parse_kentekencamera_milieuzone(data: dict) -> Generator[SensorData, None, N
                 type='Feature',
                 location=LatLong(latitude=latitude, longitude=longitude),
                 contains_pi_data='Ja',
-                legal_ground='Verkeersbesluiten in de rol van wegbeheerder.',
-                privacy_declaration='https://www.amsterdam.nl/privacy/specifieke/\
-privacyverklaringen-b/milieuzones/',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto', 'Milieu']),
                 datastream='',
-                observation_goal='Handhaving van verkeersbesluiten.',
+                observation_goals=[ObservationGoal(
+                    observation_goal='Handhaving van verkeersbesluiten.',
+                    privacy_declaration='https://www.amsterdam.nl/privacy/specifieke/\
+privacyverklaringen-b/milieuzones/',
+                    legal_ground='Verkeersbesluiten in de rol van wegbeheerder.'
+                )],
                 active_until='01-01-2050'
             )
 
@@ -352,11 +362,13 @@ def parse_ais_masten(data: dict) -> Generator[SensorData, None, None]:
                 type='Feature',
                 location=LatLong(latitude=latitude, longitude=longitude),
                 contains_pi_data='Ja',
-                legal_ground='In de rol van vaarwegbeheerder op basis van de binnenvaartwet.',
-                privacy_declaration=properties['Privacyverklaring'],
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 datastream='',
-                observation_goal='Vaarweg management',
+                observation_goals=[ObservationGoal(
+                    observation_goal='Vaarweg management',
+                    privacy_declaration=properties['Privacyverklaring'],
+                    legal_ground='In de rol van vaarwegbeheerder op basis van de binnenvaartwet.'
+                )],
                 active_until='01-01-2050'
             )
 
@@ -397,11 +409,13 @@ def parse_verkeersonderzoek_met_cameras(data: dict) -> Generator[SensorData, Non
                 type='Feature',
                 location=LatLong(latitude=latitude, longitude=longitude),
                 contains_pi_data='Ja',
-                legal_ground='Verkeersmanagement in de rol van wegbeheerder.',
-                privacy_declaration=adjust_url(properties['Privacyverklaring']),
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 datastream='',
-                observation_goal='Tellen van voertuigen.',
+                observation_goals=[ObservationGoal(
+                    observation_goal='Tellen van voertuigen.',
+                    privacy_declaration=adjust_url(properties['Privacyverklaring']),
+                    legal_ground='Verkeersmanagement in de rol van wegbeheerder.'
+                )],
                 active_until='01-01-2050'
             )
 
@@ -437,11 +451,13 @@ def parse_beweegbare_fysieke_afsluiting(data: dict) -> Generator[SensorData, Non
                 type='Feature',
                 location=LatLong(latitude=latitude, longitude=longitude),
                 contains_pi_data='Ja',
-                legal_ground='Verkeersmanagement in de rol van wegbeheerder.',
-                privacy_declaration='https://nourl.yet',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 datastream='',
-                observation_goal='Verstrekken van selectieve toegang.',
+                observation_goals=[ObservationGoal(
+                    observation_goal='Verstrekken van selectieve toegang.',
+                    privacy_declaration='https://nourl.yet',
+                    legal_ground='Verkeersmanagement in de rol van wegbeheerder.'
+                )],
                 active_until='01-01-2050'
             )
 

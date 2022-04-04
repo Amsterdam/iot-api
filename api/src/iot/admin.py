@@ -15,6 +15,7 @@ from iot.import_utils import import_xlsx
 admin.site.register(models.Type2)
 admin.site.register(models.Theme)
 admin.site.register(models.LegalGround)
+admin.site.register(models.ObservationGoal)
 
 
 LEAFLET_SETTINGS_OVERRIDES = {
@@ -118,3 +119,10 @@ class DeviceInline(LeafletGeoAdminMixin, admin.StackedInline):
 class PersonAdmin(LeafletGeoAdmin):
     search_fields = 'organisation', 'email', 'name'
     inlines = [DeviceInline]
+
+
+class ObservationGoalAdmin(LeafletGeoAdmin):
+    list_display = 'observation_goal', 'privacy_declaration', 'legal_ground'
+    search_fields = 'observation_goal', 'privacy_declaration', 'legal_ground'
+    model = models.ObservationGoal
+#     # inlines = [DeviceInline]

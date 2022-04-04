@@ -139,6 +139,27 @@ class Region(models.Model):
         verbose_name_plural = 'Gebieden'
 
 
+class ObservationGoal(models.Model):
+    # name = models.CharField(max_length=255, verbose_name="Waarvoor meet u dat?")
+    observation_goal = models.CharField(max_length=255, verbose_name="Waarvoor meet u dat?")
+    privacy_declaration = models.URLField(verbose_name="Privacyverklaring", blank=False, null=False)
+    # legal_ground = CITextField(blank=False, null=False, verbose_name="Wettelijke grondslag")
+    legal_ground = models.ForeignKey(
+        LegalGround,
+        on_delete=models.PROTECT,
+        verbose_name="Wettelijke grondslag",
+        null=True,
+        blank=True,
+    )
+
+    def __str__(self):
+        return self.observation_goal
+
+    class Meta:
+        verbose_name = 'ObservationGoal'
+        verbose_name_plural = 'ObservationGoals'
+
+
 class Device2(models.Model):
     """
     The iot device "thing"
@@ -184,17 +205,18 @@ class Device2(models.Model):
     contains_pi_data = models.BooleanField(verbose_name="Worden er persoonsgegevens verwerkt?")
 
     # ObservationGoal
-    observation_goal = models.CharField(max_length=255, verbose_name="Waarvoor meet u dat?")
-    legal_ground = models.ForeignKey(
-        LegalGround,
-        on_delete=models.PROTECT,
-        verbose_name="Wettelijke grondslag",
-        null=True,
-        blank=True,
+    # observation_goal = models.CharField(max_length=255, verbose_name="Waarvoor meet u dat?")
+    observation_goals = models.ManyToManyField(
+        ObservationGoal,
+        verbose_name="ObservationGoal"
     )
-    privacy_declaration = models.URLField(verbose_name="Privacyverklaring", blank=True, null=True)
-
-    # Device
+    # legal_ground = models.ForeignKey(
+    #     LegalGround,
+    #     on_delete=models.PROTECT,
+    #     verbose_name="Wettelijke grondslag",
+    #     null=True,
+    #     blank=True,
+    # )
     active_until = models.DateField(null=True, verbose_name="Tot wanneer is de sensor actief?")
 
     def __str__(self):
