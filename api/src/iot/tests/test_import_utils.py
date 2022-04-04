@@ -101,11 +101,13 @@ class TestParse:
                 type='Optische / camera sensor',
                 location=expected_location,
                 datastream='Aantal schepen dat voorbij vaart',
-                observation_goal='Drukte en geluidsoverlast',
+                observation_goals=[import_utils.ObservationGoal(
+                    observation_goal='Drukte en geluidsoverlast',
+                    privacy_declaration='',
+                    legal_ground=''
+                )],
                 themes='Veiligheid',
                 contains_pi_data='Nee',
-                legal_ground='',
-                privacy_declaration='',
                 active_until='06-07-2021',
             ),
             import_utils.SensorData(
@@ -114,12 +116,14 @@ class TestParse:
                 type='Chemiesensor',
                 location=expected_location,
                 datastream='Of er chemie is tussen mensen',
-                observation_goal='Vind ik gewoon leuk',
+                observation_goals=[import_utils.ObservationGoal(
+                    observation_goal='Vind ik gewoon leuk',
+                    privacy_declaration='',
+                    legal_ground='Bescherming vitale belangen betrokkene(n) of'
+                                 ' van een andere natuurlijke persoon)'
+                )],
                 themes='Veiligheid;Lucht',
                 contains_pi_data='Ja',
-                legal_ground='Bescherming vitale belangen betrokkene(n) of'
-                             ' van een andere natuurlijke persoon)',
-                privacy_declaration='',
                 active_until='01-01-2050',
             ),
         ]
@@ -257,14 +261,16 @@ def sensor_data(person_data):
         type='Chemiesensor',
         location=import_utils.LocationDescription('Somewhere over the rainbow'),
         datastream='water',
-        observation_goal='Nare bedoelingen',
+        observation_goals=[import_utils.ObservationGoal(
+            observation_goal='Nare bedoelingen',
+            privacy_declaration='https://amsterdam.nl/privacy',
+            legal_ground='Publieke taak'
+        )],
         themes=settings.IPROX_SEPARATOR.join([
             'Mobiliteit: auto',
             'Mobiliteit: fiets',
         ]),
         contains_pi_data='Ja',
-        legal_ground='Publieke taak',
-        privacy_declaration='https://amsterdam.nl/privacy',
         active_until='05-05-2050',
     )
 
@@ -283,16 +289,20 @@ class TestImportSensor:
         'active_until': '2050-05-05',
         'contains_pi_data': True,
         'datastream': 'water',
-        'legal_ground': 'Publieke taak',
         'location': None,
         'location_description': "Somewhere over the rainbow",
-        'observation_goal': 'Nare bedoelingen',
+        'observation_goals': [
+            {
+                'observation_goal': 'Nare bedoelingen',
+                'privacy_declaration': 'https://amsterdam.nl/privacy',
+                'legal_ground': 'Publieke taak'
+            }
+        ],
         'owner': {
             'name': 'Piet Er Soon',
             'email': 'p.er.soon@amsterdam.nl',
             'organisation': 'Gemeente Amsterdam',
         },
-        'privacy_declaration': 'https://amsterdam.nl/privacy',
         'regions': [],
         'themes': [
             'Mobiliteit: auto',
@@ -317,11 +327,26 @@ class TestImportSensor:
 
     def test_import_sensor_should_update_values(self, sensor_data):
         # check that a second import of the same sensor updates values
+        # TELL DANIEL ABOUT THIS CHANGE. MANY TO MANY WILL APPEND INTHIS TEST. DO NO FORGET.
         owner = import_utils.import_person(sensor_data.owner)
         import_utils.import_sensor(sensor_data, owner)
-        sensor_data.privacy_declaration = 'rotterdam.nl/privacy'
+        sensor_data.observation_goals[0].privacy_declaration = 'http://rotterdam.nl/privacy'
         import_utils.import_sensor(sensor_data, owner)
-        assert self.actual == [dict(self.expected, privacy_declaration='rotterdam.nl/privacy')]
+        assert self.actual == [
+            dict(self.expected, observation_goals=[
+                {
+                    'observation_goal': 'Nare bedoelingen',
+                    'privacy_declaration': 'https://amsterdam.nl/privacy',
+                    'legal_ground': 'Publieke taak'
+                },
+                {
+                    'observation_goal': 'Nare bedoelingen',
+                    'privacy_declaration': 'http://rotterdam.nl/privacy',
+                    'legal_ground': 'Publieke taak'
+                }
+            ]
+            )
+        ]
 
     def test_import_sensor_should_import_multiple_sensors(self, sensor_data):
         # check that we can import multiple sensors
@@ -377,6 +402,28 @@ class TestImportSensor:
             import_utils.import_sensor(sensor_data, owner)
         location = {"latitude": 52.3676, "longitude": 4.9041}
         assert self.actual == [dict(self.expected, location_description=None, location=location)]
+
+    def test_import_observation_goal(self, sensor_data):
+        # check that we can import an observation_goal
+        owner = import_utils.import_person(sensor_data.owner)
+        sensor_data.observation_goals = [
+            import_utils.ObservationGoal(
+                observation_goal='my_observation_goal',
+                privacy_declaration='my_privacy_declaration',
+                legal_ground='my_legal_ground'
+            )
+        ]
+        import_utils.import_sensor(sensor_data, owner)
+        assert self.actual == self.actual == [
+            dict(self.expected, observation_goals=[
+                {
+                    'observation_goal': 'my_observation_goal',
+                    'privacy_declaration': 'my_privacy_declaration',
+                    'legal_ground': 'my_legal_ground'
+                }
+            ]
+            )
+        ]
 
     @pytest.mark.parametrize("source", ["iprox", "bulk"])
     def test_duplicate_references_should_be_rejected(self, source):
@@ -446,7 +493,7 @@ class TestValidate:
 
     @pytest.mark.parametrize("value", [None, ''])
     def test_invalid_legal_ground(self, sensor_data, value):
-        sensor_data.legal_ground = value
+        sensor_data.observation_goals[0].legal_ground = value
         with pytest.raises(import_utils.InvalidLegalGround):
             import_utils.validate_sensor(sensor_data)
 
@@ -460,7 +507,7 @@ class TestValidate:
     def test_invalid_privacy_declaration(self, sensor_data, value):
         # don't accept empty values when the sensor collects personal data
         sensor_data.contains_pi_data = 'Ja'
-        sensor_data.privacy_declaration = value
+        sensor_data.observation_goals[0].privacy_declaration = value
         with pytest.raises(import_utils.InvalidPrivacyDeclaration):
             import_utils.validate_sensor(sensor_data)
 
@@ -471,14 +518,14 @@ class TestValidate:
     def test_invalid_privacy_declaration_invalid_urls(self, sensor_data, value, contains_pi_data):
         # never accept invalid urls
         sensor_data.contains_pi_data = contains_pi_data
-        sensor_data.privacy_declaration = value
+        sensor_data.observation_goals[0].privacy_declaration = value
         with pytest.raises(import_utils.InvalidPrivacyDeclaration):
             import_utils.validate_sensor(sensor_data)
 
     @pytest.mark.parametrize("value", [None, ''])
     def test_invalid_privacy_declaration_can_be_empty_if_no_pi_data(self, sensor_data, value):
         sensor_data.contains_pi_data = 'Nee'
-        sensor_data.privacy_declaration = value
+        sensor_data.observation_goals[0].privacy_declaration = value
         try:
             import_utils.validate_sensor(sensor_data)
         except import_utils.InvalidPrivacyDeclaration:
