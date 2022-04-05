@@ -249,7 +249,7 @@ class TestImportSensor:
 
 @pytest.mark.django_db
 class TestMigrateApiData:
-    """tests for the migrate_api_data function."""
+    """tests for the convert_api_data function."""
 
     @property
     def actual(self):
@@ -258,23 +258,23 @@ class TestMigrateApiData:
             for device in models.Device2.objects.all()
         ]
 
-    def test_migrate_api_data_brug_en_sluis_only_insert_2(self, migrated_data):
+    def test_convert_api_data_brug_en_sluis_only_insert_2(self, migrated_data):
         """
         provide a dict from the wifi sensor crowd management api and the
         the name of the parser which is the api_name. Expect to have two
         sensors created and a tuple to be returned.
         """
 
-        result = import_utils_apis.migrate_api_data(
+        result = import_utils_apis.convert_api_data(
             api_name='camera_brug_en_sluisbediening',
             api_data=migrated_data
         )
 
         assert type(result) == tuple
-        assert result == ([], 2)
+        assert result == ([], 2, 0)
         assert len(self.actual) == 2
 
-    def test_migrate_api_data_brug_en_sluis_one_insert_one_update(self, cbes_data, migrated_data):
+    def test_convert_api_data_brug_en_sluis_one_insert_one_update(self, cbes_data, migrated_data):
         """
         call the migrate_api function twice with two different lists of sensors.
         The second list will contain the same sensor as in the first list.
@@ -283,13 +283,13 @@ class TestMigrateApiData:
         """
 
         # insert the first list of sensor which should include only one sensor.
-        result_1 = import_utils_apis.migrate_api_data(
+        result_1 = import_utils_apis.convert_api_data(
             api_name='camera_brug_en_sluisbediening',
             api_data=cbes_data
         )
 
         # insert the second list of sensor which should include two sensors.
-        result_2 = import_utils_apis.migrate_api_data(
+        result_2 = import_utils_apis.convert_api_data(
             api_name='camera_brug_en_sluisbediening',
             api_data=migrated_data
         )
@@ -297,12 +297,12 @@ class TestMigrateApiData:
         # get the sensor with referece 2 because it should have been updated.
         sensor_ref_2 = next((sensor for sensor in self.actual if sensor['reference'] == '1'), None)
 
-        assert result_1 == ([], 1)  # confirm the first insert only inserted one record
-        assert result_2 == ([], 1)  # confirm the first insert only inserted one record
+        assert result_1 == ([], 1, 0)  # confirm the first insert only inserted one record
+        assert result_2 == ([], 1, 1)  # confirm the one insert and one update
         assert len(self.actual) == 2
         assert sensor_ref_2['location']['latitude'] == 4.999999
 
-    def test_migrate_api_data_brug_en_sluis_one_update_one_delete(self, cbes_data, migrated_data):
+    def test_convert_api_data_brug_en_sluis_one_update_one_delete(self, cbes_data, migrated_data):
         """
         call the migrate_api function twice with two different lists of sensors.
         The second list will not contain one of the sensors of the first list.
@@ -311,13 +311,13 @@ class TestMigrateApiData:
         """
 
         # insert the first list of sensor which should include two sensor.
-        result_1 = import_utils_apis.migrate_api_data(
+        result_1 = import_utils_apis.convert_api_data(
             api_name='camera_brug_en_sluisbediening',
             api_data=migrated_data
         )
 
         # insert the second list of sensor which should include one sensors.
-        result_2 = import_utils_apis.migrate_api_data(
+        result_2 = import_utils_apis.convert_api_data(
             api_name='camera_brug_en_sluisbediening',
             api_data=cbes_data
         )
@@ -325,7 +325,7 @@ class TestMigrateApiData:
         # get the only sensor that should have been updated.
         sensor = self.actual[0]
 
-        assert result_1 == ([], 2)  # confirm the first insert only inserted two records
-        assert result_2 == ([], 0)  # confirm the first insert only updated so should be 0
+        assert result_1 == ([], 2, 0)  # confirm the first insert only inserted two records
+        assert result_2 == ([], 0, 1)  # confirm the first insert only updated so should be 0
         assert len(self.actual) == 1
         assert sensor['location']['latitude'] == 4.793372
