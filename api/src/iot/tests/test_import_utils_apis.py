@@ -148,7 +148,7 @@ class TestDeleteNotFoundSensor:
         sensors_list = [sensor1, sensor2]
         import_utils_apis.delete_not_found_sensors(
             sensors=sensors_list,
-            person=person
+            email=person.email
         )
 
         assert len(self.actual) == 2
@@ -217,11 +217,12 @@ class TestDeleteNotFoundSensor:
         )
 
         sensors_list = [sensor1, sensor2]
-        import_utils_apis.delete_not_found_sensors(
+        result = import_utils_apis.delete_not_found_sensors(
             sensors=sensors_list,
-            person=unknown_person
+            email=unknown_person.email
         )
 
+        assert result == (0, {})
         assert len(self.actual) == 3
         assert self.actual[0]['reference'] == '100'
         assert self.actual[1]['reference'] == '101'

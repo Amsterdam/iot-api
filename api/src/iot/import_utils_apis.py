@@ -1,5 +1,5 @@
 from collections import Counter
-from typing import Generator, List
+from typing import Dict, Generator, List, Tuple
 
 import requests
 from django.conf import settings
@@ -11,45 +11,40 @@ API = 'https://maps.amsterdam.nl/open_geodata/geojson_lnglat.php?'
 API_MAPPER = {
     'wifi_sensor_crowd_management': f'{API}KAARTLAAG=CROWDSENSOREN&THEMA=cmsa',
     'camera_brug_en_sluisbediening': f'{API}KAARTLAAG=PRIVACY_BRUGSLUIS&THEMA=privacy',
-    # 'cctv_camera_verkeersmanagement': f'{API}KAARTLAAG=VIS&THEMA=vis',
-    # 'kentekencamera_reistijd': f'{API}KAARTLAAG=VIS&THEMA=vis',
-    # 'kentekencamera_milieuzone': f'{API}KAARTLAAG=VIS&THEMA=vis',
-    # 'ais_masten': f'{API}KAARTLAAG=PRIVACY_AISMASTEN&THEMA=privacy',
-    # 'verkeersonderzoek_met_cameras': f'{API}KAARTLAAG=PRIVACY_OVERIG&THEMA=privacy',
-    # 'beweegbare_fysieke_afsluiting': f'{API}KAARTLAAG=VIS_BFA&THEMA=vis',
+    'cctv_camera_verkeersmanagement': f'{API}KAARTLAAG=VIS&THEMA=vis',
+    'kentekencamera_reistijd': f'{API}KAARTLAAG=VIS&THEMA=vis',
+    'kentekencamera_milieuzone': f'{API}KAARTLAAG=VIS&THEMA=vis',
+    'ais_masten': f'{API}KAARTLAAG=PRIVACY_AISMASTEN&THEMA=privacy',
+    'verkeersonderzoek_met_cameras': f'{API}KAARTLAAG=PRIVACY_OVERIG&THEMA=privacy',
+    'beweegbare_fysieke_afsluiting': f'{API}KAARTLAAG=VIS_BFA&THEMA=vis',
 }
 
 
-def import_api_data(api_name: str) -> tuple:
+def import_api_data(api_name: str) -> Tuple[List[Exception], int, int]:
     """
     takes the name of the api as a param, calls the url that belongs to it in the
     API_MAPPER. when the data is fetched from the api, it will convert it to a dict
-    and pass it to the migrate_api_data together with the api_name.
-    A tuple will be returned that will contain the results.
+    and pass it to the convert_api_data together with the api_name.
+    A tuple will be returned that will contain the results. The results will be as follow:
+    (err, inserts, updates)
     """
     try:
-        api_url = API_MAPPER.get(api_name, None)  # get the url that belongs to the api or None.
-        if not api_url:
-            err = f"unknown api_name {api_name}"
-            return (err,)
-
+        api_url = API_MAPPER[api_name]  # get the url that belongs to the api.
         response = requests.get(url=api_url)
 
         # check if response is 200 and content type is json, if not, return
         if response.status_code != 200 or \
                 'application/json' not in response.headers["Content-Type"]:
-            err = f"{response.status_code} - {response.content}"
-            return (err,)
+            raise RuntimeError(f"{response.status_code} - {response.content}")
 
         data = response.json()  # get the content of the response as dict
-        return migrate_api_data(api_name=api_name, api_data=data)
+        return convert_api_data(api_name=api_name, api_data=data)
 
     except Exception as e:
-        err = f"{e}"
-        return (err,)
+        return ([e], 0, 0)
 
 
-def migrate_api_data(api_name: str, api_data: dict) -> tuple:
+def convert_api_data(api_name: str, api_data: dict) -> tuple:
     """
     takes the api_name to find the parser, and the api_data to migrate the data with the
     existing data. The parser will return a generator of SensorData.
@@ -71,7 +66,7 @@ def migrate_api_data(api_name: str, api_data: dict) -> tuple:
 
     counter = Counter()
 
-    errors: List[Exception] = []  # empty list to holding exceptions
+    errors: List[Exception] = []
     for sensor_data in sensors:
         try:
             import_utils.validate_sensor(sensor_data)
@@ -82,9 +77,9 @@ def migrate_api_data(api_name: str, api_data: dict) -> tuple:
             errors.append(e)
 
     # delete sensors from the same owner that are not in the api
-    delete_not_found_sensors(sensors=sensors, person=owners_list[0])
+    delete_not_found_sensors(sensors=sensors, email=owners_list[0].email)
 
-    return (errors, counter[True])
+    return (errors, counter[True], counter[False])
 
 
 def parse_wifi_sensor_crowd_management(data: dict) -> Generator[SensorData, None, None]:
@@ -446,21 +441,22 @@ def parse_beweegbare_fysieke_afsluiting(data: dict) -> Generator[SensorData, Non
             )
 
 
-def delete_not_found_sensors(sensors: List[SensorData], person: PersonData) -> str:
-    """takes a list of sensor data. compares their reference with the stored sensors that belong
-    to the same owner. If a sensor is not found in the stored sensor, it will delete it.
-    returns a string of the total deleted records"""
+def delete_not_found_sensors(sensors: List[SensorData], email: str) -> Tuple[int, Dict[str, int]]:
+    """takes a list of sensor data. with the owner's email. compares their
+    reference with the stored sensors that belong to the same owner (by email).
+    If a sensor is not found in the stored sensor, it will delete it.
+    returns a tuple with the number of deleted records and sensors"""
 
     # get the reference id of the apis sensors list
     api_sensor_ids = {sensor.reference for sensor in sensors}
 
-    # get all sensors from the owner of person.email except the sensors with reference
-    # in [api_sensor_ids]
-    stoered_sensors = models.Device2.objects.filter(
-        owner__email=person.email).exclude(
+    # get all sensors from the owner's.email except the sensors with reference
+    # in [api_sensor_ids] and delete them.
+    deleted_sensors = models.Device2.objects.filter(
+        owner__email=email).exclude(
             reference__in=api_sensor_ids).delete()
 
-    return f'del: {stoered_sensors} for owner {person.email}'
+    return deleted_sensors
 
 
 def adjust_url(url: str) -> str:

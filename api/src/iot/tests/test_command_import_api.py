@@ -13,13 +13,14 @@ class ImportApiTest(TestCase):
 
     def test_command_import_api_output_not_found_api(self):
         """
-        call the import_api command with an unknown api_name and expect the below expected string.
+        call the import_api command with an unknown api_name and expect a tuple
+        converted to a string with the first element is a list of the error.
         """
-        out = StringIO()
-        call_command('import_api', 'something', stdout=out)
-        expected_err = 'unknown api_name something'
-        error = out.getvalue()
-        self.assertIn(expected_err, error)
+        with StringIO() as out:
+            call_command('import_api', 'something', stdout=out)
+            expected_err_contains = 'something'
+            output = out.getvalue()
+            self.assertIn(expected_err_contains, output)
 
     def test_command_import_api_output_no_args_raise_exception(self):
         """
