@@ -735,12 +735,6 @@ def import_sensor(sensor_data: SensorData, owner: models.Person2, action_logger=
     if 'regions' not in location:
         defaults.update(location)
 
-    # LET DANIEL KNOW ABOUT THIS
-    # if defaults['contains_pi_data']:
-    #     defaults['legal_ground'] = action_logger(models.LegalGround.objects.get_or_create(
-    #         name=sensor_data.legal_ground
-    #     ))[0]
-
     # use the sensor_index to give each sensor a unique reference
     device, created = action_logger(models.Device2.objects.update_or_create(
         owner=owner,

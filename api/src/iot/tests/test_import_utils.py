@@ -327,7 +327,7 @@ class TestImportSensor:
 
     def test_import_sensor_should_update_values(self, sensor_data):
         # check that a second import of the same sensor updates values
-        # TELL DANIEL ABOUT THIS CHANGE. MANY TO MANY WILL APPEND INTHIS TEST. DO NO FORGET.
+        # TODO: NEED TO MODIFY, NOT APPEND
         owner = import_utils.import_person(sensor_data.owner)
         import_utils.import_sensor(sensor_data, owner)
         sensor_data.observation_goals[0].privacy_declaration = 'http://rotterdam.nl/privacy'
