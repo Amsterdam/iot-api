@@ -7,7 +7,7 @@ from iot.serializers import Device2Serializer
 
 
 @pytest.fixture
-def wscm_data():  # wifi_sensor_crowd_management
+def api_data():
     return {
         "type": "FeatureCollection",
         "name": "CROWDSENSOREN",
@@ -59,7 +59,7 @@ def wscm_data():  # wifi_sensor_crowd_management
 
 
 @pytest.fixture
-def migrated_data():
+def api_data_2():  # a second list of api data sensors
     return {
         "type": "FeatureCollection",
         "name": "CROWDSENSOREN",
@@ -138,7 +138,7 @@ def sensor_data(person_data):
 
 class TestApiParser:
 
-    def test_parse_wifi_sensor_crowd_management_expected_persondata_sensor(self, wscm_data):
+    def test_parse_wifi_sensor_crowd_management_expected_persondata_sensor(self, api_data):
         """
         provide a dict object with a list of sensoren from the wifi sonso crowd management api.
         The sensors list will contain two sensor with different Soort attribute. Expect
@@ -170,7 +170,7 @@ class TestApiParser:
                 active_until='01-01-2050'
             )
         ]
-        sensor_list = list(import_utils_apis.parse_wifi_sensor_crowd_management(data=wscm_data))
+        sensor_list = list(import_utils_apis.parse_wifi_sensor_crowd_management(data=api_data))
 
         assert len(sensor_list) == 1
 
@@ -258,14 +258,14 @@ class TestImportSensor:
         import_utils.import_sensor(sensor_data, owner)
         assert self.actual[0] == self.expected_2
 
-    def test_import_sensor_from_wifi_sensor_crowd_management(self, wscm_data):
+    def test_import_sensor_from_wifi_sensor_crowd_management(self, api_data):
         """
         provide a dict from the wifi sensor crowd management api and call
         the parser of the wifi_sensor_crowd_management to get a sensor.
         call the import_sensor and expected it to be imported.
         """
         parser = import_utils_apis.parse_wifi_sensor_crowd_management
-        sensor_list = list(parser(wscm_data))
+        sensor_list = list(parser(api_data))
         sensor = sensor_list[0]
         person = sensor.owner
         imported_person = import_utils.import_person(person_data=person)
@@ -276,7 +276,7 @@ class TestImportSensor:
 
 
 @pytest.mark.django_db
-class TestMigrateApiData:
+class TestConvertApiData:
     """tests for the convert_api_data function."""
 
     @property
@@ -286,7 +286,7 @@ class TestMigrateApiData:
             for device in models.Device2.objects.all()
         ]
 
-    def test_convert_api_data_wifi_sensor_only_insert_2(self, migrated_data):
+    def test_convert_api_data_wifi_sensor_only_insert_2(self, api_data_2):
         """
         provide a dict from the wifi sensor crowd management api and the
         the name of the parser which is the api_name. Expect to have two
@@ -295,16 +295,16 @@ class TestMigrateApiData:
 
         result = import_utils_apis.convert_api_data(
             api_name='wifi_sensor_crowd_management',
-            api_data=migrated_data
+            api_data=api_data_2
         )
 
         assert type(result) == tuple
         assert result == ([], 2, 0)
         assert len(self.actual) == 2
 
-    def test_convert_api_data_wifi_sensor_one_insert_one_update(self, wscm_data, migrated_data):
+    def test_convert_api_data_wifi_sensor_one_insert_one_update(self, api_data, api_data_2):
         """
-        call the migrate_api function twice with two different lists of sensors.
+        call the convert_api function twice with two different lists of sensors.
         The second list will contain the same sensor as in the first list.
         Expect to have one sensor being updated and another one inserted.
         A tuple to be returned.
@@ -313,13 +313,13 @@ class TestMigrateApiData:
         # insert the first list of sensor which should include only one sensor.
         result_1 = import_utils_apis.convert_api_data(
             api_name='wifi_sensor_crowd_management',
-            api_data=wscm_data
+            api_data=api_data
         )
 
         # insert the second list of sensor which should include two sensors.
         result_2 = import_utils_apis.convert_api_data(
             api_name='wifi_sensor_crowd_management',
-            api_data=migrated_data
+            api_data=api_data_2
         )
 
         # get the sensor with referece 2 because it should have been updated.
@@ -330,9 +330,9 @@ class TestMigrateApiData:
         assert len(self.actual) == 2
         assert sensor_ref_2['location']['latitude'] == 4.99999
 
-    def test_convert_api_data_wifi_sensor_one_update_one_delete(self, wscm_data, migrated_data):
+    def test_convert_api_data_wifi_sensor_one_update_one_delete(self, api_data, api_data_2):
         """
-        call the migrate_api function twice with two different lists of sensors.
+        call the convert_api function twice with two different lists of sensors.
         The second list will not contain one of the sensors of the first list.
         Expect to have one sensor being updated and another one deleted.
         A tuple to be returned.
@@ -341,13 +341,13 @@ class TestMigrateApiData:
         # insert the first list of sensor which should include two sensor.
         result_1 = import_utils_apis.convert_api_data(
             api_name='wifi_sensor_crowd_management',
-            api_data=migrated_data
+            api_data=api_data_2
         )
 
         # insert the second list of sensor which should include one sensors.
         result_2 = import_utils_apis.convert_api_data(
             api_name='wifi_sensor_crowd_management',
-            api_data=wscm_data
+            api_data=api_data
         )
 
         # get the only sensor that should have been updated.

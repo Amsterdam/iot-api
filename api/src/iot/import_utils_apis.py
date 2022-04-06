@@ -44,17 +44,18 @@ def import_api_data(api_name: str) -> Tuple[List[Exception], int, int]:
         return ([e], 0, 0)
 
 
-def convert_api_data(api_name: str, api_data: dict) -> tuple:
+def convert_api_data(api_name: str, api_data: dict) -> Tuple[List[Exception], int, int]:
     """
-    takes the api_name to find the parser, and the api_data to migrate the data with the
+    takes the api_name to find the parser, and the api_data to convert the data with the
     existing data. The parser will return a generator of SensorData.
     from the generator, use the import_person_data and import_senso_data.
+    It will return a tuple of a list of errors, number of insertions, number of updated
+    records.
     """
     parser = PARSERS_MAPPER[api_name]
 
     sensors = list(parser(api_data))
     owners_list = [sensor.owner for sensor in sensors]
-    # return f'ERROR importing data from api {api_name}: {sensors}'
 
     for owner in owners_list:
         owner.validate()
@@ -90,7 +91,7 @@ def parse_wifi_sensor_crowd_management(data: dict) -> Generator[SensorData, None
     # create the personData from static defined data because the api doesn't provide
     # all the required fields
 
-    personData = PersonData(
+    person_data = PersonData(
         organisation='Gemeente Amsterdam',
         email='LVMA@amsterdam.nl',
         telephone='14020',
@@ -115,7 +116,7 @@ def parse_wifi_sensor_crowd_management(data: dict) -> Generator[SensorData, None
 
             # sensors_list.append(
             yield SensorData(
-                owner=personData,
+                owner=person_data,
                 reference=feature['id'],
                 type='Feature',
                 location=LatLong(latitude=latitude, longitude=longitude),
@@ -137,7 +138,7 @@ def parse_camera_brug_en_sluisbediening(data: dict) -> Generator[SensorData, Non
     # create the personData from static defined data because the api doesn't provide
     # all the required fields
 
-    personData = PersonData(
+    person_data = PersonData(
         organisation='Gemeente Amsterdam',
         email='stedelijkbeheer@amsterdam.nl',
         telephone='14020',
@@ -157,7 +158,7 @@ def parse_camera_brug_en_sluisbediening(data: dict) -> Generator[SensorData, Non
             properties = feature['properties']  # properties dict
 
             yield SensorData(
-                owner=personData,
+                owner=person_data,
                 reference=feature['id'],
                 type='Feature',
                 location=LatLong(latitude=latitude, longitude=longitude),
@@ -179,7 +180,7 @@ def parse_cctv_camera_verkeersmanagement(data: dict) -> Generator[SensorData, No
     # create the personData from static defined data because the api doesn't provide
     # all the required fields
 
-    personData = PersonData(
+    person_data = PersonData(
         organisation='Gemeente Amsterdam',
         email='verkeersmanagement@amsterdam.nl',
         telephone='14020',
@@ -203,7 +204,7 @@ def parse_cctv_camera_verkeersmanagement(data: dict) -> Generator[SensorData, No
             longitude = geometry['coordinates'][1]
 
             yield SensorData(
-                owner=personData,
+                owner=person_data,
                 reference=feature['id'],
                 type='Feature',
                 location=LatLong(latitude=latitude, longitude=longitude),
@@ -227,7 +228,7 @@ def parse_kentekencamera_reistijd(data: dict) -> Generator[SensorData, None, Non
     # create the personData from static defined data because the api doesn't provide
     # all the required fields
 
-    personData = PersonData(
+    person_data = PersonData(
         organisation='Gemeente Amsterdam',
         email='kentekencamera@amsterdam.nl',
         telephone='14020',
@@ -252,7 +253,7 @@ def parse_kentekencamera_reistijd(data: dict) -> Generator[SensorData, None, Non
 
             # sensors_list.append(
             yield SensorData(
-                owner=personData,
+                owner=person_data,
                 reference=feature['id'],
                 type='Feature',
                 location=LatLong(latitude=latitude, longitude=longitude),
@@ -276,7 +277,7 @@ def parse_kentekencamera_milieuzone(data: dict) -> Generator[SensorData, None, N
     # create the personData from static defined data because the api doesn't provide
     # all the required fields
 
-    personData = PersonData(
+    person_data = PersonData(
         organisation='Gemeente Amsterdam',
         email='kentekencameramilieuzone@amsterdam.nl',
         telephone='14020',
@@ -300,7 +301,7 @@ def parse_kentekencamera_milieuzone(data: dict) -> Generator[SensorData, None, N
             longitude = geometry['coordinates'][1]
 
             yield SensorData(
-                owner=personData,
+                owner=person_data,
                 reference=feature['id'],
                 type='Feature',
                 location=LatLong(latitude=latitude, longitude=longitude),
@@ -323,7 +324,7 @@ def parse_ais_masten(data: dict) -> Generator[SensorData, None, None]:
     # create the personData from static defined data because the api doesn't provide
     # all the required fields
 
-    personData = PersonData(
+    person_data = PersonData(
         organisation='Gemeente Amsterdam',
         email='programmavaren@amsterdam.nl',
         telephone='14020',
@@ -342,7 +343,7 @@ def parse_ais_masten(data: dict) -> Generator[SensorData, None, None]:
             properties = feature['properties']  # properties dict
 
             yield SensorData(
-                owner=personData,
+                owner=person_data,
                 reference=feature['id'],
                 type='Feature',
                 location=LatLong(latitude=latitude, longitude=longitude),
@@ -364,7 +365,7 @@ def parse_verkeersonderzoek_met_cameras(data: dict) -> Generator[SensorData, Non
     # create the personData from static defined data because the api doesn't provide
     # all the required fields
 
-    personData = PersonData(
+    person_data = PersonData(
         organisation='Gemeente Amsterdam',
         email='verkeersonderzoek@amsterdam.nl',
         telephone='14020',
@@ -387,7 +388,7 @@ def parse_verkeersonderzoek_met_cameras(data: dict) -> Generator[SensorData, Non
                 continue
 
             yield SensorData(
-                owner=personData,
+                owner=person_data,
                 reference=feature['id'],
                 type='Feature',
                 location=LatLong(latitude=latitude, longitude=longitude),
@@ -409,7 +410,7 @@ def parse_beweegbare_fysieke_afsluiting(data: dict) -> Generator[SensorData, Non
     # create the personData from static defined data because the api doesn't provide
     # all the required fields
 
-    personData = PersonData(
+    person_data = PersonData(
         organisation='Gemeente Amsterdam',
         email='beweegbarefysiek@amsterdam.nl',
         telephone='14020',
@@ -425,9 +426,9 @@ def parse_beweegbare_fysieke_afsluiting(data: dict) -> Generator[SensorData, Non
             geometry = feature['geometry']  # geometry dict
             latitude = geometry['coordinates'][0]
             longitude = geometry['coordinates'][1]
-            # properties = feature['properties']  # properties dict
+
             yield SensorData(
-                owner=personData,
+                owner=person_data,
                 reference=feature['id'],
                 type='Feature',
                 location=LatLong(latitude=latitude, longitude=longitude),

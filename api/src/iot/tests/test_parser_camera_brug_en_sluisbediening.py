@@ -7,7 +7,7 @@ from iot.serializers import Device2Serializer
 
 
 @pytest.fixture
-def cbes_data():  # camera_brug_en_sluisbediening
+def api_data():
     return {
         "type": "FeatureCollection",
         "name": "PRIVACY_BRUGSLUIS",
@@ -35,7 +35,7 @@ def cbes_data():  # camera_brug_en_sluisbediening
 
 
 @pytest.fixture
-def migrated_data():
+def api_data_2():  # a second list of api data sensors
     return {
         "type": "FeatureCollection",
         "name": "PRIVACY_BRUGSLUIS",
@@ -112,7 +112,7 @@ def sensor_data(person_data):
 
 class TestApiParser:
 
-    def test_parse_camera_brug_en_sluisbediening_expected_sensor(self, cbes_data):
+    def test_parse_camera_brug_en_sluisbediening_expected_sensor(self, api_data):
         """
         provide a list of dict object from the wifi sonso camera brug en
         sluisbediening api. The sensors list will contain one sensor.
@@ -144,7 +144,7 @@ class TestApiParser:
                 active_until='01-01-2050'
             )
         ]
-        sensor_list = list(import_utils_apis.parse_camera_brug_en_sluisbediening(data=cbes_data))
+        sensor_list = list(import_utils_apis.parse_camera_brug_en_sluisbediening(data=api_data))
         sensor = sensor_list[0]  # expect the first and only element
         owner = sensor.owner
 
@@ -230,14 +230,14 @@ class TestImportSensor:
         import_utils.import_sensor(sensor_data, owner)
         assert self.actual[0] == self.expected_2
 
-    def test_import_sensor_from_camera_brug_en_sluisbediening(self, cbes_data):
+    def test_import_sensor_from_camera_brug_en_sluisbediening(self, api_data):
         """
         provide a dict from the camera_brug_en_sluisbediening api and call
         the parser of the camera_brug_en_sluisbediening to get a sensor.
         call the import_sensor and expected it to be imported.
         """
         parser = import_utils_apis.parse_camera_brug_en_sluisbediening
-        sensor_list = list(parser(cbes_data))
+        sensor_list = list(parser(api_data))
         sensor = sensor_list[0]
         person = sensor.owner
         imported_person = import_utils.import_person(person_data=person)
@@ -248,7 +248,7 @@ class TestImportSensor:
 
 
 @pytest.mark.django_db
-class TestMigrateApiData:
+class TestConvertApiData:
     """tests for the convert_api_data function."""
 
     @property
@@ -258,7 +258,7 @@ class TestMigrateApiData:
             for device in models.Device2.objects.all()
         ]
 
-    def test_convert_api_data_brug_en_sluis_only_insert_2(self, migrated_data):
+    def test_convert_api_data_brug_en_sluis_only_insert_2(self, api_data_2):
         """
         provide a dict from the wifi sensor crowd management api and the
         the name of the parser which is the api_name. Expect to have two
@@ -267,16 +267,16 @@ class TestMigrateApiData:
 
         result = import_utils_apis.convert_api_data(
             api_name='camera_brug_en_sluisbediening',
-            api_data=migrated_data
+            api_data=api_data_2
         )
 
         assert type(result) == tuple
         assert result == ([], 2, 0)
         assert len(self.actual) == 2
 
-    def test_convert_api_data_brug_en_sluis_one_insert_one_update(self, cbes_data, migrated_data):
+    def test_convert_api_data_brug_en_sluis_one_insert_one_update(self, api_data, api_data_2):
         """
-        call the migrate_api function twice with two different lists of sensors.
+        call the convert_api function twice with two different lists of sensors.
         The second list will contain the same sensor as in the first list.
         Expect to have one sensor being updated and another one inserted.
         A tuple to be returned.
@@ -285,13 +285,13 @@ class TestMigrateApiData:
         # insert the first list of sensor which should include only one sensor.
         result_1 = import_utils_apis.convert_api_data(
             api_name='camera_brug_en_sluisbediening',
-            api_data=cbes_data
+            api_data=api_data
         )
 
         # insert the second list of sensor which should include two sensors.
         result_2 = import_utils_apis.convert_api_data(
             api_name='camera_brug_en_sluisbediening',
-            api_data=migrated_data
+            api_data=api_data_2
         )
 
         # get the sensor with referece 2 because it should have been updated.
@@ -302,9 +302,9 @@ class TestMigrateApiData:
         assert len(self.actual) == 2
         assert sensor_ref_2['location']['latitude'] == 4.999999
 
-    def test_convert_api_data_brug_en_sluis_one_update_one_delete(self, cbes_data, migrated_data):
+    def test_convert_api_data_brug_en_sluis_one_update_one_delete(self, api_data, api_data_2):
         """
-        call the migrate_api function twice with two different lists of sensors.
+        call the convert_api function twice with two different lists of sensors.
         The second list will not contain one of the sensors of the first list.
         Expect to have one sensor being updated and another one deleted.
         A tuple to be returned.
@@ -313,13 +313,13 @@ class TestMigrateApiData:
         # insert the first list of sensor which should include two sensor.
         result_1 = import_utils_apis.convert_api_data(
             api_name='camera_brug_en_sluisbediening',
-            api_data=migrated_data
+            api_data=api_data_2
         )
 
         # insert the second list of sensor which should include one sensors.
         result_2 = import_utils_apis.convert_api_data(
             api_name='camera_brug_en_sluisbediening',
-            api_data=cbes_data
+            api_data=api_data
         )
 
         # get the only sensor that should have been updated.

@@ -7,7 +7,7 @@ from iot.serializers import Device2Serializer
 
 
 @pytest.fixture
-def kcr_data():  # kentekencamera_reistijd
+def api_data():
     return {
         "type": "FeatureCollection",
         "name": "VIS",
@@ -83,7 +83,7 @@ def kcr_data():  # kentekencamera_reistijd
 
 
 @pytest.fixture
-def migrated_data():
+def api_data_2():  # a second list of api data sensors
     return {
         "type": "FeatureCollection",
         "name": "VIS",
@@ -169,7 +169,7 @@ privacyverklaring-parkeren-verkeer-bouw/reistijden-meetsysteem-privacy/",
 
 class TestApiParser:
 
-    def test_parse_kentekencamera_reistijd_expected_person_sensor_with_filter(self, kcr_data):
+    def test_parse_kentekencamera_reistijd_expected_person_sensor_with_filter(self, api_data):
         """
         provide a list of three dictionaries of three sensors. only one
         sensor with the soort Kentekencamera, reistijd (MoCo) should be returned.
@@ -202,7 +202,7 @@ privacyverklaring-parkeren-verkeer-bouw/reistijden-meetsysteem-privacy/",
                 active_until='01-01-2050'
             )
         ]
-        sensor_list = list(import_utils_apis.parse_kentekencamera_reistijd(data=kcr_data))
+        sensor_list = list(import_utils_apis.parse_kentekencamera_reistijd(data=api_data))
         sensor_data = sensor_list[0]
         person_data = sensor_data.owner
 
@@ -290,14 +290,14 @@ privacyverklaring-parkeren-verkeer-bouw/reistijden-meetsysteem-privacy/",
         import_utils.import_sensor(sensor_data, owner)
         assert self.actual[0] == self.expected_2
 
-    def test_import_sensor_from_parse_kentekencamera_reistijd_success(self, kcr_data):
+    def test_import_sensor_from_parse_kentekencamera_reistijd_success(self, api_data):
         """
         provide a dict from the kentekencamera_reistijd api and call
         the parser of the kentekencamera_reistijd to get a sensor.
         call the import_sensor and expected it to be imported.
         """
         parser = import_utils_apis.parse_kentekencamera_reistijd
-        sensor_list = list(parser(kcr_data))
+        sensor_list = list(parser(api_data))
         sensor = sensor_list[0]
         person = sensor.owner
         imported_person = import_utils.import_person(person_data=person)
@@ -308,7 +308,7 @@ privacyverklaring-parkeren-verkeer-bouw/reistijden-meetsysteem-privacy/",
 
 
 @pytest.mark.django_db
-class TestMigrateApiData:
+class TestConvertApiData:
     """tests for the convert_api_data function."""
 
     @property
@@ -318,7 +318,7 @@ class TestMigrateApiData:
             for device in models.Device2.objects.all()
         ]
 
-    def test_convert_api_data_kentekencamera_reistijd_only_insert_2(self, migrated_data):
+    def test_convert_api_data_kentekencamera_reistijd_only_insert_2(self, api_data_2):
         """
         provide a dict from the kenteken sensor crowd management api and the
         the name of the parser which is the api_name. Expect to have two
@@ -327,16 +327,16 @@ class TestMigrateApiData:
 
         result = import_utils_apis.convert_api_data(
             api_name='kentekencamera_reistijd',
-            api_data=migrated_data
+            api_data=api_data_2
         )
 
         assert type(result) == tuple
         assert result == ([], 2, 0)
         assert len(self.actual) == 2
 
-    def test_convert_api_data_kenteken_reistijd_1_insert_1_update(self, kcr_data, migrated_data):
+    def test_convert_api_data_kenteken_reistijd_1_insert_1_update(self, api_data, api_data_2):
         """
-        call the migrate_api function twice with two different lists of sensors.
+        call the convert_api function twice with two different lists of sensors.
         The second list will contain the same sensor as in the first list.
         Expect to have one sensor being updated and another one inserted.
         A tuple to be returned.
@@ -345,13 +345,13 @@ class TestMigrateApiData:
         # insert the first list of sensor which should include only one sensor.
         result_1 = import_utils_apis.convert_api_data(
             api_name='kentekencamera_reistijd',
-            api_data=kcr_data
+            api_data=api_data
         )
 
         # insert the second list of sensor which should include two sensors.
         result_2 = import_utils_apis.convert_api_data(
             api_name='kentekencamera_reistijd',
-            api_data=migrated_data
+            api_data=api_data_2
         )
 
         # get the sensor with referece 2 because it should have been updated.
@@ -362,9 +362,9 @@ class TestMigrateApiData:
         assert len(self.actual) == 2
         assert sensor_ref_2['location']['latitude'] == 4.999999
 
-    def test_convert_api_data_kenteken_reistijd_1_update_1_delete(self, kcr_data, migrated_data):
+    def test_convert_api_data_kenteken_reistijd_1_update_1_delete(self, api_data, api_data_2):
         """
-        call the migrate_api function twice with two different lists of sensors.
+        call the convert_api function twice with two different lists of sensors.
         The second list will not contain one of the sensors of the first list.
         Expect to have one sensor being updated and another one deleted.
         A tuple to be returned.
@@ -373,13 +373,13 @@ class TestMigrateApiData:
         # insert the first list of sensor which should include two sensor.
         result_1 = import_utils_apis.convert_api_data(
             api_name='kentekencamera_reistijd',
-            api_data=migrated_data
+            api_data=api_data_2
         )
 
         # insert the second list of sensor which should include one sensors.
         result_2 = import_utils_apis.convert_api_data(
             api_name='kentekencamera_reistijd',
-            api_data=kcr_data
+            api_data=api_data
         )
 
         # get the only sensor that should have been updated.

@@ -7,7 +7,7 @@ from iot.serializers import Device2Serializer
 
 
 @pytest.fixture
-def vomc_data():  # verkeersonderzoek_met_cameras
+def api_data():
     return {
         "type": "FeatureCollection",
         "name": "PRIVACY_OVERIG",
@@ -34,7 +34,7 @@ privacyverklaringen-b/artikel-3/"
 
 
 @pytest.fixture
-def migrated_data():
+def api_data_2():  # a second list of api data sensors
     return {
         "type": "FeatureCollection",
         "name": "PRIVACY_OVERIG",
@@ -110,7 +110,7 @@ privacyverklaringen-b/artikel-3/",
 
 class TestApiParser:
 
-    def test_parse_verkeersonderzoek_met_cameras_expected_person_sensor(self, vomc_data):
+    def test_parse_verkeersonderzoek_met_cameras_expected_person_sensor(self, api_data):
         """
         provide a list of 1 dictionary object and expect back a sensordata
         and persondata that matches the expected data.
@@ -143,7 +143,7 @@ privacyverklaringen-b/artikel-3/",
             )
         ]
         sensor_list = list(import_utils_apis.parse_verkeersonderzoek_met_cameras(
-            data=vomc_data
+            data=api_data
         ))
         sensor_data = sensor_list[0]
         person_data = sensor_data.owner
@@ -231,14 +231,14 @@ privacyverklaringen-b/artikel-3/',
         import_utils.import_sensor(sensor_data, owner)
         assert self.actual[0] == self.expected_2
 
-    def test_import_sensor_from_parse_verkeersonderzoek_met_cameras_success(self, vomc_data):
+    def test_import_sensor_from_parse_verkeersonderzoek_met_cameras_success(self, api_data):
         """
         provide a dict from the verkeersonderzoek_met_cameras api and call
         the parser of the verkeersonderzoek_met_cameras to get a sensor.
         call the import_sensor and expected it to be imported.
         """
         parser = import_utils_apis.parse_verkeersonderzoek_met_cameras
-        sensor_list = list(parser(vomc_data))
+        sensor_list = list(parser(api_data))
         sensor = sensor_list[0]
         person = sensor.owner
         imported_person = import_utils.import_person(person_data=person)

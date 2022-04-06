@@ -7,7 +7,7 @@ from iot.serializers import Device2Serializer
 
 
 @pytest.fixture
-def bfa_data():  # beweegbare_fysieke_afsluiting
+def api_data():  # data from beweegbare_fysieke_afsluiting api
     return {
         "type": "FeatureCollection",
         "name": "VIS_BFA",
@@ -40,7 +40,7 @@ def bfa_data():  # beweegbare_fysieke_afsluiting
 
 
 @pytest.fixture
-def migrated_data():
+def api_data_2():  # a second list of api data sensors
     return {
         "type": "FeatureCollection",
         "name": "VIS_BFA",
@@ -127,7 +127,7 @@ def sensor_data(person_data):
 
 class TestApiParser:
 
-    def test_parse_beweegbare_fysieke_afsluiting_expected_person_sensor(self, bfa_data):
+    def test_parse_beweegbare_fysieke_afsluiting_expected_person_sensor(self, api_data):
         """
         provide a list of 1 dictionary object and expect back a sensordata
         and persondata that matches the expected data.
@@ -159,7 +159,7 @@ class TestApiParser:
             )
         ]
         sensor_list = list(import_utils_apis.parse_beweegbare_fysieke_afsluiting(
-            data=bfa_data
+            data=api_data
         ))
         sensor_data = sensor_list[0]
         person_data = sensor_data.owner
@@ -245,14 +245,14 @@ class TestImportSensor:
         import_utils.import_sensor(sensor_data, owner)
         assert self.actual[0] == self.expected_2
 
-    def test_import_sensor_from_parse_beweegbare_fysieke_afsluiting_success(self, bfa_data):
+    def test_import_sensor_from_parse_beweegbare_fysieke_afsluiting_success(self, api_data):
         """
         provide a dict from the beweegbare_fysieke_afsluiting api and call
         the parser of the beweegbare_fysieke_afsluiting to get a sensor.
         call the import_sensor and expected it to be imported.
         """
         parser = import_utils_apis.parse_beweegbare_fysieke_afsluiting
-        sensor_list = list(parser(bfa_data))
+        sensor_list = list(parser(api_data))
         sensor = sensor_list[0]
         person = sensor.owner
         imported_person = import_utils.import_person(person_data=person)
@@ -263,7 +263,7 @@ class TestImportSensor:
 
 
 @pytest.mark.django_db
-class TestMigrateApiData:
+class TestConvertApiData:
     """tests for the convert_api_data function."""
 
     @property
@@ -273,7 +273,7 @@ class TestMigrateApiData:
             for device in models.Device2.objects.all()
         ]
 
-    def test_convert_api_data_beweegbare_sensor_only_insert_2(self, migrated_data):
+    def test_convert_api_data_beweegbare_sensor_only_insert_2(self, api_data_2):
         """
         provide a dict from the beweegbare sensor crowd management api and the
         the name of the parser which is the api_name. Expect to have two
@@ -282,16 +282,16 @@ class TestMigrateApiData:
 
         result = import_utils_apis.convert_api_data(
             api_name='beweegbare_fysieke_afsluiting',
-            api_data=migrated_data
+            api_data=api_data_2
         )
 
         assert type(result) == tuple
         assert result == ([], 2, 0)
         assert len(self.actual) == 2
 
-    def test_convert_api_data_beweegbare_sensor_1_insert_1_update(self, bfa_data, migrated_data):
+    def test_convert_api_data_beweegbare_sensor_1_insert_1_update(self, api_data, api_data_2):
         """
-        call the migrate_api function twice with two different lists of sensors.
+        call the convert_api function twice with two different lists of sensors.
         The second list will contain the same sensor as in the first list.
         Expect to have one sensor being updated and another one inserted.
         A tuple to be returned.
@@ -300,13 +300,13 @@ class TestMigrateApiData:
         # insert the first list of sensor which should include only one sensor.
         result_1 = import_utils_apis.convert_api_data(
             api_name='beweegbare_fysieke_afsluiting',
-            api_data=bfa_data
+            api_data=api_data
         )
 
         # insert the second list of sensor which should include two sensors.
         result_2 = import_utils_apis.convert_api_data(
             api_name='beweegbare_fysieke_afsluiting',
-            api_data=migrated_data
+            api_data=api_data_2
         )
 
         # get the sensor with referece 2 because it should have been updated.
@@ -317,9 +317,9 @@ class TestMigrateApiData:
         assert len(self.actual) == 2
         assert sensor_ref_2['location']['latitude'] == 4.999999
 
-    def test_convert_api_data_beweegbare_sensor_1_update_1_delete(self, bfa_data, migrated_data):
+    def test_convert_api_data_beweegbare_sensor_1_update_1_delete(self, api_data, api_data_2):
         """
-        call the migrate_api function twice with two different lists of sensors.
+        call the convert_api function twice with two different lists of sensors.
         The second list will not contain one of the sensors of the first list.
         Expect to have one sensor being updated and another one deleted.
         A tuple to be returned.
@@ -328,13 +328,13 @@ class TestMigrateApiData:
         # insert the first list of sensor which should include two sensor.
         result_1 = import_utils_apis.convert_api_data(
             api_name='beweegbare_fysieke_afsluiting',
-            api_data=migrated_data
+            api_data=api_data_2
         )
 
         # insert the second list of sensor which should include one sensors.
         result_2 = import_utils_apis.convert_api_data(
             api_name='beweegbare_fysieke_afsluiting',
-            api_data=bfa_data
+            api_data=api_data
         )
 
         # get the only sensor that should have been updated.
