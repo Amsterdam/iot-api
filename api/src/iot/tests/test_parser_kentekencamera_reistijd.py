@@ -140,12 +140,12 @@ def api_data_2():  # a second list of api data sensors
 def person_data():
     return PersonData(
         organisation="Gemeente Amsterdam",
-        email="kentekencamera@amsterdam.nl",
+        email="Meldingsplicht.Sensoren@amsterdam.nl",
         telephone="14020",
         website="https://www.amsterdam.nl/",
-        first_name="kentekencamera",
+        first_name="Afdeling",
         last_name_affix="",
-        last_name="reistijd"
+        last_name="verkeersmanagement"
     )
 
 
@@ -178,12 +178,12 @@ class TestApiParser:
         # expected owner
         expected_owner = PersonData(
             organisation="Gemeente Amsterdam",
-            email="kentekencamera@amsterdam.nl",
+            email="Meldingsplicht.Sensoren@amsterdam.nl",
             telephone="14020",
             website="https://www.amsterdam.nl/",
-            first_name="kentekencamera",
+            first_name="Afdeling",
             last_name_affix="",
-            last_name="reistijd"
+            last_name="verkeersmanagement"
         )
         # expected_value is a sensors
         expected = [
@@ -221,10 +221,10 @@ class TestImportPerson:
 
     expected = {
         'organisation': 'Gemeente Amsterdam',
-        'email': 'kentekencamera@amsterdam.nl',
+        'email': 'Meldingsplicht.Sensoren@amsterdam.nl',
         'telephone': '14020',
         'website': 'https://www.amsterdam.nl/',
-        'name': 'kentekencamera reistijd',
+        'name': 'Afdeling verkeersmanagement',
     }
 
     def test_import_person(self, person_data):
@@ -251,8 +251,8 @@ class TestImportSensor:
         'location_description': None,
         'observation_goal': 'Het tellen van voertuigen en meten van doorstroming.',
         'owner': {
-            'name': 'kentekencamera reistijd',
-            'email': 'kentekencamera@amsterdam.nl',
+            'name': 'Afdeling verkeersmanagement',
+            'email': 'Meldingsplicht.Sensoren@amsterdam.nl',
             'organisation': 'Gemeente Amsterdam',
         },
         'privacy_declaration': "https://www.amsterdam.nl/privacy/specifieke/\
@@ -272,8 +272,8 @@ privacyverklaring-parkeren-verkeer-bouw/reistijden-meetsysteem-privacy/",
         'location_description': None,
         'observation_goal': 'Het tellen van voertuigen en meten van doorstroming.',
         'owner': {
-            'name': 'kentekencamera reistijd',
-            'email': 'kentekencamera@amsterdam.nl',
+            'name': 'Afdeling verkeersmanagement',
+            'email': 'Meldingsplicht.Sensoren@amsterdam.nl',
             'organisation': 'Gemeente Amsterdam',
         },
         'privacy_declaration': "https://www.amsterdam.nl/privacy/specifieke/\

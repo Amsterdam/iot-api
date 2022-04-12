@@ -84,9 +84,9 @@ def person_data():
         email="verkeersonderzoek@amsterdam.nl",
         telephone="14020",
         website="https://www.amsterdam.nl/",
-        first_name="verkeers",
+        first_name="Afdeling",
         last_name_affix="",
-        last_name="onderzoek"
+        last_name="kennis en kaders"
     )
 
 
@@ -121,9 +121,9 @@ class TestApiParser:
             email="verkeersonderzoek@amsterdam.nl",
             telephone="14020",
             website="https://www.amsterdam.nl/",
-            first_name="verkeers",
+            first_name="Afdeling",
             last_name_affix="",
-            last_name="onderzoek"
+            last_name="kennis en kaders"
         )
         # expected_value is a sensors
         expected = [
@@ -165,7 +165,7 @@ class TestImportPerson:
         'email': 'verkeersonderzoek@amsterdam.nl',
         'telephone': '14020',
         'website': 'https://www.amsterdam.nl/',
-        'name': 'verkeers onderzoek',
+        'name': 'Afdeling kennis en kaders',
     }
 
     def test_import_person(self, person_data):
@@ -192,7 +192,7 @@ class TestImportSensor:
         'location_description': None,
         'observation_goal': 'Tellen van voertuigen.',
         'owner': {
-            'name': 'verkeers onderzoek',
+            'name': 'Afdeling kennis en kaders',
             'email': 'verkeersonderzoek@amsterdam.nl',
             'organisation': 'Gemeente Amsterdam',
         },
@@ -213,7 +213,7 @@ privacyverklaringen-b/artikel-3/',
         'location_description': None,
         'observation_goal': 'Tellen van voertuigen.',
         'owner': {
-            'name': 'verkeers onderzoek',
+            'name': 'Afdeling kennis en kaders',
             'email': 'verkeersonderzoek@amsterdam.nl',
             'organisation': 'Gemeente Amsterdam',
         },

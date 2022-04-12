@@ -99,12 +99,12 @@ def api_data_2():  # a second list of api data sensors
 def person_data():
     return PersonData(
         organisation="Gemeente Amsterdam",
-        email="beweegbarefysiek@amsterdam.nl",
+        email="Meldingsplicht.Sensoren@amsterdam.nl",
         telephone="14020",
         website="https://www.amsterdam.nl/",
-        first_name="beweegbare",
+        first_name="Afdeling",
         last_name_affix="",
-        last_name="afsluiting"
+        last_name="asset management"
     )
 
 
@@ -135,12 +135,12 @@ class TestApiParser:
         # expected owner
         expected_owner = PersonData(
             organisation="Gemeente Amsterdam",
-            email="beweegbarefysiek@amsterdam.nl",
+            email="Meldingsplicht.Sensoren@amsterdam.nl",
             telephone="14020",
             website="https://www.amsterdam.nl/",
-            first_name="beweegbare",
+            first_name="Afdeling",
             last_name_affix="",
-            last_name="afsluiting"
+            last_name="asset management"
         )
         # expected_value is a sensors
         expected = [
@@ -178,10 +178,10 @@ class TestImportPerson:
 
     expected = {
         'organisation': 'Gemeente Amsterdam',
-        'email': 'beweegbarefysiek@amsterdam.nl',
+        'email': 'Meldingsplicht.Sensoren@amsterdam.nl',
         'telephone': '14020',
         'website': 'https://www.amsterdam.nl/',
-        'name': 'beweegbare afsluiting',
+        'name': 'Afdeling asset management',
     }
 
     def test_import_person(self, person_data):
@@ -208,8 +208,8 @@ class TestImportSensor:
         'location_description': None,
         'observation_goal': 'Verstrekken van selectieve toegang.',
         'owner': {
-            'name': 'beweegbare afsluiting',
-            'email': 'beweegbarefysiek@amsterdam.nl',
+            'name': 'Afdeling asset management',
+            'email': 'Meldingsplicht.Sensoren@amsterdam.nl',
             'organisation': 'Gemeente Amsterdam',
         },
         'privacy_declaration': 'https://nourl.yet',
@@ -228,8 +228,8 @@ class TestImportSensor:
         'location_description': None,
         'observation_goal': 'Verstrekken van selectieve toegang.',
         'owner': {
-            'name': 'beweegbare afsluiting',
-            'email': 'beweegbarefysiek@amsterdam.nl',
+            'name': 'Afdeling asset management',
+            'email': 'Meldingsplicht.Sensoren@amsterdam.nl',
             'organisation': 'Gemeente Amsterdam',
         },
         'privacy_declaration': 'https://nourl.yet',

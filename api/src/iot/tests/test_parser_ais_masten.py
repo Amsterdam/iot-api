@@ -81,12 +81,12 @@ privacyverklaringen-b/vaarwegbeheer/"
 def person_data():
     return PersonData(
         organisation="Gemeente Amsterdam",
-        email="programmavaren@amsterdam.nl",
+        email="Meldingsplicht.Sensoren@amsterdam.nl",
         telephone="14020",
         website="https://www.amsterdam.nl/",
-        first_name="ais",
+        first_name="Programma",
         last_name_affix="",
-        last_name="masten"
+        last_name="varen"
     )
 
 
@@ -118,12 +118,12 @@ class TestApiParser:
         # expected owner
         expected_owner = PersonData(
             organisation="Gemeente Amsterdam",
-            email="programmavaren@amsterdam.nl",
+            email="Meldingsplicht.Sensoren@amsterdam.nl",
             telephone="14020",
             website="https://www.amsterdam.nl/",
-            first_name="ais",
+            first_name="Programma",
             last_name_affix="",
-            last_name="masten"
+            last_name="varen"
         )
         # expected_value is a sensors
         expected = [
@@ -160,10 +160,10 @@ class TestImportPerson:
 
     expected = {
         'organisation': 'Gemeente Amsterdam',
-        'email': 'programmavaren@amsterdam.nl',
+        'email': 'Meldingsplicht.Sensoren@amsterdam.nl',
         'telephone': '14020',
         'website': 'https://www.amsterdam.nl/',
-        'name': 'ais masten',
+        'name': 'Programma varen',
     }
 
     def test_import_person(self, person_data):
@@ -190,8 +190,8 @@ class TestImportSensor:
         'location_description': None,
         'observation_goal': 'Vaarweg management',
         'owner': {
-            'name': 'ais masten',
-            'email': 'programmavaren@amsterdam.nl',
+            'name': 'Programma varen',
+            'email': 'Meldingsplicht.Sensoren@amsterdam.nl',
             'organisation': 'Gemeente Amsterdam',
         },
         'privacy_declaration': 'https://www.amsterdam.nl/privacy/specifieke/\
@@ -211,8 +211,8 @@ privacyverklaringen-b/vaarwegbeheer/',
         'location_description': None,
         'observation_goal': 'Vaarweg management',
         'owner': {
-            'name': 'ais masten',
-            'email': 'programmavaren@amsterdam.nl',
+            'name': 'Programma varen',
+            'email': 'Meldingsplicht.Sensoren@amsterdam.nl',
             'organisation': 'Gemeente Amsterdam',
         },
         'privacy_declaration': 'https://www.amsterdam.nl/privacy/specifieke/\

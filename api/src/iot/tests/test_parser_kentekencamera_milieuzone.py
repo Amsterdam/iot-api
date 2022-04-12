@@ -140,12 +140,12 @@ def api_data_2():  # a second list of api data sensors
 def person_data():
     return PersonData(
         organisation="Gemeente Amsterdam",
-        email="kentekencameramilieuzone@amsterdam.nl",
+        email="Meldingsplicht.Sensoren@amsterdam.nl",
         telephone="14020",
         website="https://www.amsterdam.nl/",
-        first_name="kentekencamera",
+        first_name="Afdeling",
         last_name_affix="",
-        last_name="milieuzone"
+        last_name="stedelijk beheer"
     )
 
 
@@ -178,12 +178,12 @@ class TestApiParser:
         # expected owner
         expected_owner = PersonData(
             organisation="Gemeente Amsterdam",
-            email="kentekencameramilieuzone@amsterdam.nl",
+            email="Meldingsplicht.Sensoren@amsterdam.nl",
             telephone="14020",
             website="https://www.amsterdam.nl/",
-            first_name="kentekencamera",
+            first_name="Afdeling",
             last_name_affix="",
-            last_name="milieuzone"
+            last_name="stedelijk beheer"
         )
         # expected_value is a sensors
         expected = [
@@ -221,10 +221,10 @@ class TestImportPerson:
 
     expected = {
         'organisation': 'Gemeente Amsterdam',
-        'email': 'kentekencameramilieuzone@amsterdam.nl',
+        'email': 'Meldingsplicht.Sensoren@amsterdam.nl',
         'telephone': '14020',
         'website': 'https://www.amsterdam.nl/',
-        'name': 'kentekencamera milieuzone',
+        'name': 'Afdeling stedelijk beheer',
     }
 
     def test_import_person(self, person_data):
@@ -251,8 +251,8 @@ class TestImportSensor:
         'location_description': None,
         'observation_goal': 'Handhaving van verkeersbesluiten.',
         'owner': {
-            'name': 'kentekencamera milieuzone',
-            'email': 'kentekencameramilieuzone@amsterdam.nl',
+            'name': 'Afdeling stedelijk beheer',
+            'email': 'Meldingsplicht.Sensoren@amsterdam.nl',
             'organisation': 'Gemeente Amsterdam',
         },
         'privacy_declaration': 'https://www.amsterdam.nl/privacy/specifieke/\
@@ -272,8 +272,8 @@ privacyverklaringen-b/milieuzones/',
         'location_description': None,
         'observation_goal': 'Handhaving van verkeersbesluiten.',
         'owner': {
-            'name': 'kentekencamera milieuzone',
-            'email': 'kentekencameramilieuzone@amsterdam.nl',
+            'name': 'Afdeling stedelijk beheer',
+            'email': 'Meldingsplicht.Sensoren@amsterdam.nl',
             'organisation': 'Gemeente Amsterdam',
         },
         'privacy_declaration': 'https://www.amsterdam.nl/privacy/specifieke/\

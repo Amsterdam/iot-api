@@ -84,12 +84,12 @@ def api_data_2():  # a second list of api data sensors
 def person_data():
     return PersonData(
         organisation="Gemeente Amsterdam",
-        email="stedelijkbeheer@amsterdam.nl",
+        email="Meldingsplicht.Sensoren@amsterdam.nl",
         telephone="14020",
         website="https://www.amsterdam.nl/",
-        first_name="stedelijk",
+        first_name="Afdeling",
         last_name_affix="",
-        last_name="beheer"
+        last_name="stedelijkbeheer"
     )
 
 
@@ -121,12 +121,12 @@ class TestApiParser:
         # expected owner
         expected_owner = PersonData(
             organisation="Gemeente Amsterdam",
-            email="stedelijkbeheer@amsterdam.nl",
+            email="Meldingsplicht.Sensoren@amsterdam.nl",
             telephone="14020",
             website="https://www.amsterdam.nl/",
-            first_name="stedelijk",
+            first_name="Afdeling",
             last_name_affix="",
-            last_name="beheer"
+            last_name="stedelijkbeheer"
         )
         # expected_value is a sensors
         expected = [
@@ -163,10 +163,10 @@ class TestImportPerson:
 
     expected = {
         'organisation': 'Gemeente Amsterdam',
-        'email': 'stedelijkbeheer@amsterdam.nl',
+        'email': 'Meldingsplicht.Sensoren@amsterdam.nl',
         'telephone': '14020',
         'website': 'https://www.amsterdam.nl/',
-        'name': 'stedelijk beheer',
+        'name': 'Afdeling stedelijkbeheer',
     }
 
     def test_import_person(self, person_data):
@@ -193,8 +193,8 @@ class TestImportSensor:
         'location_description': None,
         'observation_goal': 'Het bedienen van sluisen en bruggen.',
         'owner': {
-            'name': 'stedelijk beheer',
-            'email': 'stedelijkbeheer@amsterdam.nl',
+            'name': 'Afdeling stedelijkbeheer',
+            'email': 'Meldingsplicht.Sensoren@amsterdam.nl',
             'organisation': 'Gemeente Amsterdam',
         },
         'privacy_declaration': 'https://www.amsterdam.nl/privacy/privacylink/',
@@ -213,8 +213,8 @@ class TestImportSensor:
         'location_description': None,
         'observation_goal': 'Het bedienen van sluisen en bruggen.',
         'owner': {
-            'name': 'stedelijk beheer',
-            'email': 'stedelijkbeheer@amsterdam.nl',
+            'name': 'Afdeling stedelijkbeheer',
+            'email': 'Meldingsplicht.Sensoren@amsterdam.nl',
             'organisation': 'Gemeente Amsterdam',
         },
         'privacy_declaration': 'https://www.amsterdam.nl/privacy/privacylink/',

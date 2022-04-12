@@ -10,6 +10,7 @@ from iot.import_utils import LatLong, PersonData, SensorData
 API = 'https://maps.amsterdam.nl/open_geodata/geojson_lnglat.php?'
 API_MAPPER = {
     'wifi_sensor_crowd_management': f'{API}KAARTLAAG=CROWDSENSOREN&THEMA=cmsa',
+    'sensor_crowd_management': f'{API}KAARTLAAG=CROWDSENSOREN&THEMA=cmsa',
     'camera_brug_en_sluisbediening': f'{API}KAARTLAAG=PRIVACY_BRUGSLUIS&THEMA=privacy',
     'cctv_camera_verkeersmanagement': f'{API}KAARTLAAG=VIS&THEMA=vis',
     'kentekencamera_reistijd': f'{API}KAARTLAAG=VIS&THEMA=vis',
@@ -96,9 +97,9 @@ def parse_wifi_sensor_crowd_management(data: dict) -> Generator[SensorData, None
         email='LVMA@amsterdam.nl',
         telephone='14020',
         website='https://www.amsterdam.nl/',
-        first_name='verkeers',
+        first_name='Afdeling',
         last_name_affix='',
-        last_name='onderzoek'
+        last_name='verkeersmanagment'
     )
 
     # sensors_list = []
@@ -130,6 +131,53 @@ def parse_wifi_sensor_crowd_management(data: dict) -> Generator[SensorData, None
             )
 
 
+def parse_sensor_crowd_management(data: dict) -> Generator[SensorData, None, None]:
+    """
+    convert the crowd management data list of dictionaries into SensorData objects and
+    yield it. Yield only the sensors with Soort == WiFi sensor.
+    """
+    # create the personData from static defined data because the api doesn't provide
+    # all the required fields
+
+    person_data = PersonData(
+        organisation='Gemeente Amsterdam',
+        email='LVMA@amsterdam.nl',
+        telephone='14020',
+        website='https://www.amsterdam.nl/',
+        first_name='Afdeling',
+        last_name_affix='',
+        last_name='verkeersmanagment'
+    )
+
+    # sensors_list = []
+    features = data['features']  # list of sensors i think for now
+    if features:
+        for feature in features:
+            properties = feature['properties']  # properties dict
+
+            # filter only the sonsor with the WiFi sensor soort.
+            if properties['Soort'] not in ['Telcamera', 'Corona CMSA', '3D sensor']:
+                continue
+            geometry = feature['geometry']  # geometry dict
+            latitude = geometry['coordinates'][0]
+            longitude = geometry['coordinates'][1]
+
+            # sensors_list.append(
+            yield SensorData(
+                owner=person_data,
+                reference=feature['id'],
+                type='Feature',
+                location=LatLong(latitude=latitude, longitude=longitude),
+                contains_pi_data='Ja',
+                legal_ground='Verkeersmanagment in de rol van wegbeheerder.',
+                privacy_declaration=properties['Privacyverklaring'],
+                themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
+                datastream='',
+                observation_goal='Tellen van mensen.',
+                active_until='01-01-2050'
+            )
+
+
 def parse_camera_brug_en_sluisbediening(data: dict) -> Generator[SensorData, None, None]:
     """
     convert the camera brug en sluisbediening data list of dictionaries into SensorData objects and
@@ -140,12 +188,12 @@ def parse_camera_brug_en_sluisbediening(data: dict) -> Generator[SensorData, Non
 
     person_data = PersonData(
         organisation='Gemeente Amsterdam',
-        email='stedelijkbeheer@amsterdam.nl',
+        email='Meldingsplicht.Sensoren@amsterdam.nl',
         telephone='14020',
         website='https://www.amsterdam.nl/',
-        first_name='stedelijk',
+        first_name='Afdeling',
         last_name_affix='',
-        last_name='beheer'
+        last_name='stedelijkbeheer'
     )
 
     # sensors_list = []
@@ -182,10 +230,10 @@ def parse_cctv_camera_verkeersmanagement(data: dict) -> Generator[SensorData, No
 
     person_data = PersonData(
         organisation='Gemeente Amsterdam',
-        email='verkeersmanagement@amsterdam.nl',
+        email='Meldingsplicht.Sensoren@amsterdam.nl',
         telephone='14020',
         website='https://www.amsterdam.nl/',
-        first_name='camera',
+        first_name='Afdeling',
         last_name_affix='',
         last_name='verkeersmanagement'
     )
@@ -230,12 +278,12 @@ def parse_kentekencamera_reistijd(data: dict) -> Generator[SensorData, None, Non
 
     person_data = PersonData(
         organisation='Gemeente Amsterdam',
-        email='kentekencamera@amsterdam.nl',
+        email='Meldingsplicht.Sensoren@amsterdam.nl',
         telephone='14020',
         website='https://www.amsterdam.nl/',
-        first_name='kentekencamera',
+        first_name='Afdeling',
         last_name_affix='',
-        last_name='reistijd'
+        last_name='verkeersmanagement'
     )
 
     features = data['features']  # list of sensors i think for now
@@ -279,12 +327,12 @@ def parse_kentekencamera_milieuzone(data: dict) -> Generator[SensorData, None, N
 
     person_data = PersonData(
         organisation='Gemeente Amsterdam',
-        email='kentekencameramilieuzone@amsterdam.nl',
+        email='Meldingsplicht.Sensoren@amsterdam.nl',
         telephone='14020',
         website='https://www.amsterdam.nl/',
-        first_name='kentekencamera',
+        first_name='Afdeling',
         last_name_affix='',
-        last_name='milieuzone'
+        last_name='stedelijk beheer'
     )
 
     features = data['features']  # list of sensors i think for now
@@ -326,12 +374,12 @@ def parse_ais_masten(data: dict) -> Generator[SensorData, None, None]:
 
     person_data = PersonData(
         organisation='Gemeente Amsterdam',
-        email='programmavaren@amsterdam.nl',
+        email='Meldingsplicht.Sensoren@amsterdam.nl',
         telephone='14020',
         website='https://www.amsterdam.nl/',
-        first_name='ais',
+        first_name='Programma',
         last_name_affix='',
-        last_name='masten'
+        last_name='varen'
     )
 
     features = data['features']  # list of sensors i think for now
@@ -370,9 +418,9 @@ def parse_verkeersonderzoek_met_cameras(data: dict) -> Generator[SensorData, Non
         email='verkeersonderzoek@amsterdam.nl',
         telephone='14020',
         website='https://www.amsterdam.nl/',
-        first_name='verkeers',
+        first_name='Afdeling',
         last_name_affix='',
-        last_name='onderzoek'
+        last_name='kennis en kaders'
     )
 
     features = data['features']  # list of sensors i think for now
@@ -412,12 +460,12 @@ def parse_beweegbare_fysieke_afsluiting(data: dict) -> Generator[SensorData, Non
 
     person_data = PersonData(
         organisation='Gemeente Amsterdam',
-        email='beweegbarefysiek@amsterdam.nl',
+        email='Meldingsplicht.Sensoren@amsterdam.nl',
         telephone='14020',
         website='https://www.amsterdam.nl/',
-        first_name='beweegbare',
+        first_name='Afdeling',
         last_name_affix='',
-        last_name='afsluiting'
+        last_name='asset management'
     )
 
     features = data['features']  # list of sensors i think for now
@@ -471,6 +519,7 @@ def adjust_url(url: str) -> str:
 
 PARSERS_MAPPER = {
     'wifi_sensor_crowd_management': parse_wifi_sensor_crowd_management,
+    'sensor_crowd_management': parse_sensor_crowd_management,
     'camera_brug_en_sluisbediening': parse_camera_brug_en_sluisbediening,
     'cctv_camera_verkeersmanagement': parse_cctv_camera_verkeersmanagement,
     'kentekencamera_reistijd': parse_kentekencamera_reistijd,

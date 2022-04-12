@@ -140,10 +140,10 @@ def api_data_2():  # a second list of api data sensors
 def person_data():
     return PersonData(
         organisation="Gemeente Amsterdam",
-        email="verkeersmanagement@amsterdam.nl",
+        email="Meldingsplicht.Sensoren@amsterdam.nl",
         telephone="14020",
         website="https://www.amsterdam.nl/",
-        first_name="camera",
+        first_name="Afdeling",
         last_name_affix="",
         last_name="verkeersmanagement"
     )
@@ -178,10 +178,10 @@ class TestApiParser:
         # expected owner
         expected_owner = PersonData(
             organisation="Gemeente Amsterdam",
-            email="verkeersmanagement@amsterdam.nl",
+            email="Meldingsplicht.Sensoren@amsterdam.nl",
             telephone="14020",
             website="https://www.amsterdam.nl/",
-            first_name="camera",
+            first_name="Afdeling",
             last_name_affix="",
             last_name="verkeersmanagement"
         )
@@ -221,10 +221,10 @@ class TestImportPerson:
 
     expected = {
         'organisation': 'Gemeente Amsterdam',
-        'email': 'verkeersmanagement@amsterdam.nl',
+        'email': 'Meldingsplicht.Sensoren@amsterdam.nl',
         'telephone': '14020',
         'website': 'https://www.amsterdam.nl/',
-        'name': 'camera verkeersmanagement',
+        'name': 'Afdeling verkeersmanagement',
     }
 
     def test_import_person(self, person_data):
@@ -251,8 +251,8 @@ class TestImportSensor:
         'location_description': None,
         'observation_goal': 'Waarnemen van het verkeer.',
         'owner': {
-            'name': 'camera verkeersmanagement',
-            'email': 'verkeersmanagement@amsterdam.nl',
+            'name': 'Afdeling verkeersmanagement',
+            'email': 'Meldingsplicht.Sensoren@amsterdam.nl',
             'organisation': 'Gemeente Amsterdam',
         },
         'privacy_declaration': "https://www.amsterdam.nl/privacy/\
@@ -272,8 +272,8 @@ specifieke/privacyverklaring-parkeren-verkeer-bouw/verkeersmanagement",
         'location_description': None,
         'observation_goal': 'Waarnemen van het verkeer.',
         'owner': {
-            'name': 'camera verkeersmanagement',
-            'email': 'verkeersmanagement@amsterdam.nl',
+            'name': 'Afdeling verkeersmanagement',
+            'email': 'Meldingsplicht.Sensoren@amsterdam.nl',
             'organisation': 'Gemeente Amsterdam',
         },
         'privacy_declaration': "https://www.amsterdam.nl/privacy/\
