@@ -10,6 +10,7 @@ class Command(BaseCommand):
     for that api. it can also take a list of apis and all will be execute. The current
     available apis are:
     wifi_sensor_crowd_management
+    sensor_crowd_management
     camera_brug_en_sluisbediening
     cctv_camera_verkeersmanagement
     kentekencamera_reistijd
@@ -21,17 +22,13 @@ class Command(BaseCommand):
     help = 'Imports Sensors data from APIs.To exeucting it: python manage.py import_api api1 api2'
 
     def add_arguments(self, parser):
-        parser.add_argument('api_name', nargs='+', type=str, help='provide the api_name')
+        parser.add_argument('api_name', nargs='*', type=str, help='provide the api_name')
 
     def handle(self, *args, **options):
         """
         has to be implemented. It will call the function that needs to
-        be executed.
+        be executed with an optional list of api_name as args.
         """
+        result = import_utils_apis.import_api_data(api_names=options['api_name'])
 
-        result_list = []  # empty list to save the apis results
-        for api_name in options['api_name']:
-            result = import_utils_apis.import_api_data(api_name=api_name)
-            result_list.append(result)  # append the import response as a tuple
-
-        self.stdout.write(self.style.SUCCESS(f'{result_list}'))
+        self.stdout.write(self.style.SUCCESS(f'{result}'))

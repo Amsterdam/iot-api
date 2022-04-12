@@ -120,7 +120,7 @@ def sensor_data(person_data):
         themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
         contains_pi_data='Ja',
         legal_ground='Verkeersmanagement in de rol van wegbeheerder.',
-        privacy_declaration="https://nourl.yet",
+        privacy_declaration="https://www.amsterdam.nl/privacy/privacyverklaring/",
         active_until='01-01-2050'
     )
 
@@ -154,7 +154,7 @@ class TestApiParser:
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 contains_pi_data='Ja',
                 legal_ground='Verkeersmanagement in de rol van wegbeheerder.',
-                privacy_declaration="https://nourl.yet",
+                privacy_declaration="https://www.amsterdam.nl/privacy/privacyverklaring/",
                 active_until='01-01-2050'
             )
         ]
@@ -212,7 +212,7 @@ class TestImportSensor:
             'email': 'Meldingsplicht.Sensoren@amsterdam.nl',
             'organisation': 'Gemeente Amsterdam',
         },
-        'privacy_declaration': 'https://nourl.yet',
+        'privacy_declaration': 'https://www.amsterdam.nl/privacy/privacyverklaring/',
         'regions': [],
         'themes': ['Mobiliteit: auto'],
         'type': 'Overig',  # needs to be checked why not Feature
@@ -232,7 +232,7 @@ class TestImportSensor:
             'email': 'Meldingsplicht.Sensoren@amsterdam.nl',
             'organisation': 'Gemeente Amsterdam',
         },
-        'privacy_declaration': 'https://nourl.yet',
+        'privacy_declaration': 'https://www.amsterdam.nl/privacy/privacyverklaring/',
         'regions': [],
         'themes': ['Mobiliteit: auto'],
         'type': 'Overig',  # needs to be checked why not Feature

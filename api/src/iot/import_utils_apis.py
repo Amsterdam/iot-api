@@ -21,28 +21,38 @@ API_MAPPER = {
 }
 
 
-def import_api_data(api_name: str) -> Tuple[List[Exception], int, int]:
+def import_api_data(api_names: list = None) -> List[Tuple[List[Exception], int, int]]:
     """
-    takes the name of the api as a param, calls the url that belongs to it in the
+    takes a list of the name(s) of the api as a param, calls the url that belongs to it in the
     API_MAPPER. when the data is fetched from the api, it will convert it to a dict
     and pass it to the convert_api_data together with the api_name.
-    A tuple will be returned that will contain the results. The results will be as follow:
-    (err, inserts, updates)
+    A tuple will be returned that will contain the results. The results will be a list of tuples
+    for each api as follow: (err, inserts, updates)
     """
     try:
-        api_url = API_MAPPER[api_name]  # get the url that belongs to the api.
-        response = requests.get(url=api_url)
+        # if the list api_names is an empty list, copy the list of all the api_names (keys) 
+        # from the API_MAPPER dict so the api_names will contain a list of all the api_name 
+        # from the API_MAPPER dictionary, else use the app_names list with the provided 
+        # app_names list.
+        if not api_names: 
+            api_names = API_MAPPER.keys()
 
-        # check if response is 200 and content type is json, if not, return
-        if response.status_code != 200 or \
-                'application/json' not in response.headers["Content-Type"]:
-            raise RuntimeError(f"{response.status_code} - {response.content}")
+        output_list = []
+        for api_name in api_names:
+            api_url = API_MAPPER[api_name]  # get the url that belongs to the api.
 
-        data = response.json()  # get the content of the response as dict
-        return convert_api_data(api_name=api_name, api_data=data)
+            response = requests.get(url=api_url)
+            # check if response is 200 and content type is json, if not, return
+            if response.status_code != 200 or \
+                    'application/json' not in response.headers["Content-Type"]:
+                raise RuntimeError(f"{response.status_code} - {response.content}")
+
+            data = response.json()  # get the content of the response as dict
+            output_list.append(convert_api_data(api_name=api_name, api_data=data))
+        return output_list
 
     except Exception as e:
-        return ([e], 0, 0)
+        return [([e], 0, 0)]
 
 
 def convert_api_data(api_name: str, api_data: dict) -> Tuple[List[Exception], int, int]:
@@ -482,7 +492,7 @@ def parse_beweegbare_fysieke_afsluiting(data: dict) -> Generator[SensorData, Non
                 location=LatLong(latitude=latitude, longitude=longitude),
                 contains_pi_data='Ja',
                 legal_ground='Verkeersmanagement in de rol van wegbeheerder.',
-                privacy_declaration='https://nourl.yet',
+                privacy_declaration='https://www.amsterdam.nl/privacy/privacyverklaring/',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 datastream='',
                 observation_goal='Verstrekken van selectieve toegang.',
