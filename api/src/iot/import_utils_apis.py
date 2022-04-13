@@ -21,7 +21,7 @@ API_MAPPER = {
 }
 
 
-def import_api_data(api_names: list = None) -> List[Tuple[List[Exception], int, int]]:
+def import_api_data(api_names: List[str] = None) -> List[Tuple[List[Exception], int, int]]:
     """
     takes a list of the name(s) of the api as a param, calls the url that belongs to it in the
     API_MAPPER. when the data is fetched from the api, it will convert it to a dict
@@ -30,11 +30,11 @@ def import_api_data(api_names: list = None) -> List[Tuple[List[Exception], int, 
     for each api as follow: (err, inserts, updates)
     """
     try:
-        # if the list api_names is an empty list, copy the list of all the api_names (keys) 
-        # from the API_MAPPER dict so the api_names will contain a list of all the api_name 
-        # from the API_MAPPER dictionary, else use the app_names list with the provided 
+        # if the list api_names is an empty list, copy the list of all the api_names (keys)
+        # from the API_MAPPER dict so the api_names will contain a list of all the api_name
+        # from the API_MAPPER dictionary, else use the app_names list with the provided
         # app_names list.
-        if not api_names: 
+        if not api_names:
             api_names = API_MAPPER.keys()
 
         output_list = []
