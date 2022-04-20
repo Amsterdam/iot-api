@@ -259,7 +259,7 @@ class TestImportSensor:
 specifieke/privacyverklaring-parkeren-verkeer-bouw/verkeersmanagement",
         'regions': [],
         'themes': ['Mobiliteit: auto'],
-        'type': 'Overig',  # needs to be checked why not Feature
+        'type': 'Overig',
         'reference': '5',
     }
 
@@ -280,7 +280,7 @@ specifieke/privacyverklaring-parkeren-verkeer-bouw/verkeersmanagement",
 specifieke/privacyverklaring-parkeren-verkeer-bouw/verkeersmanagement",
         'regions': [],
         'themes': ['Mobiliteit: auto'],
-        'type': 'Overig',  # needs to be checked why not Feature
+        'type': 'Overig',
         'reference': '6',
     }
 

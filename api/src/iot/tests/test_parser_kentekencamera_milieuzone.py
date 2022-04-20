@@ -259,7 +259,7 @@ class TestImportSensor:
 privacyverklaringen-b/milieuzones/',
         'regions': [],
         'themes': ['Mobiliteit: auto', 'Overig'],
-        'type': 'Overig',  # needs to be checked why not Feature
+        'type': 'Overig',
         'reference': '8',
     }
 
@@ -280,7 +280,7 @@ privacyverklaringen-b/milieuzones/',
 privacyverklaringen-b/milieuzones/',
         'regions': [],
         'themes': ['Mobiliteit: auto', 'Overig'],
-        'type': 'Overig',  # needs to be checked why not Feature
+        'type': 'Overig',
         'reference': '10',
     }
 

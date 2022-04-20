@@ -200,7 +200,7 @@ class TestImportSensor:
         'privacy_declaration': 'https://www.amsterdam.nl/privacy/privacylink/',
         'regions': [],
         'themes': ['Mobiliteit: auto'],
-        'type': 'Overig',  # needs to be checked why not Feature
+        'type': 'Overig',
         'reference': '1',
     }
 
@@ -220,7 +220,7 @@ class TestImportSensor:
         'privacy_declaration': 'https://www.amsterdam.nl/privacy/privacylink/',
         'regions': [],
         'themes': ['Mobiliteit: auto'],
-        'type': 'Overig',  # needs to be checked why not Feature
+        'type': 'Overig',
         'reference': '2',
     }
 

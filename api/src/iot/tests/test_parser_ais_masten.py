@@ -198,7 +198,7 @@ class TestImportSensor:
 privacyverklaringen-b/vaarwegbeheer/',
         'regions': [],
         'themes': ['Mobiliteit: auto'],
-        'type': 'Overig',  # needs to be checked why not Feature
+        'type': 'Overig',
         'reference': '9',
     }
 
@@ -219,7 +219,7 @@ privacyverklaringen-b/vaarwegbeheer/',
 privacyverklaringen-b/vaarwegbeheer/',
         'regions': [],
         'themes': ['Mobiliteit: auto'],
-        'type': 'Overig',  # needs to be checked why not Feature
+        'type': 'Overig',
         'reference': '10',
     }
 

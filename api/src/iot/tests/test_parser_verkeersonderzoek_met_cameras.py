@@ -200,7 +200,7 @@ class TestImportSensor:
 privacyverklaringen-b/artikel-3/',
         'regions': [],
         'themes': ['Mobiliteit: auto'],
-        'type': 'Overig',  # needs to be checked why not Feature
+        'type': 'Overig',
         'reference': '10',
     }
 
@@ -221,7 +221,7 @@ privacyverklaringen-b/artikel-3/',
 privacyverklaringen-b/artikel-3/',
         'regions': [],
         'themes': ['Mobiliteit: auto'],
-        'type': 'Overig',  # needs to be checked why not Feature
+        'type': 'Overig',
         'reference': '11',
     }
 

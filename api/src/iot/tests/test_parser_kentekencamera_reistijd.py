@@ -259,7 +259,7 @@ class TestImportSensor:
 privacyverklaring-parkeren-verkeer-bouw/reistijden-meetsysteem-privacy/",
         'regions': [],
         'themes': ['Mobiliteit: auto'],
-        'type': 'Overig',  # needs to be checked why not Feature
+        'type': 'Overig',
         'reference': '7',
     }
 
@@ -280,7 +280,7 @@ privacyverklaring-parkeren-verkeer-bouw/reistijden-meetsysteem-privacy/",
 privacyverklaring-parkeren-verkeer-bouw/reistijden-meetsysteem-privacy/",
         'regions': [],
         'themes': ['Mobiliteit: auto'],
-        'type': 'Overig',  # needs to be checked why not Feature
+        'type': 'Overig',
         'reference': '8',
     }
 

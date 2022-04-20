@@ -129,7 +129,7 @@ def parse_wifi_sensor_crowd_management(data: dict) -> Generator[SensorData, None
             yield SensorData(
                 owner=person_data,
                 reference=feature['id'],
-                type='Feature',
+                type=feature['type'],
                 location=LatLong(latitude=latitude, longitude=longitude),
                 contains_pi_data='Ja',
                 legal_ground='Verkeersmanagment in de rol van wegbeheerder.',
@@ -176,7 +176,7 @@ def parse_sensor_crowd_management(data: dict) -> Generator[SensorData, None, Non
             yield SensorData(
                 owner=person_data,
                 reference=feature['id'],
-                type='Feature',
+                type=feature['type'],
                 location=LatLong(latitude=latitude, longitude=longitude),
                 contains_pi_data='Ja',
                 legal_ground='Verkeersmanagment in de rol van wegbeheerder.',
@@ -218,7 +218,7 @@ def parse_camera_brug_en_sluisbediening(data: dict) -> Generator[SensorData, Non
             yield SensorData(
                 owner=person_data,
                 reference=feature['id'],
-                type='Feature',
+                type=feature['type'],
                 location=LatLong(latitude=latitude, longitude=longitude),
                 contains_pi_data='Ja',
                 legal_ground='Sluisbeheerder in het kader van de woningwet 1991',
@@ -264,7 +264,7 @@ def parse_cctv_camera_verkeersmanagement(data: dict) -> Generator[SensorData, No
             yield SensorData(
                 owner=person_data,
                 reference=feature['id'],
-                type='Feature',
+                type=feature['type'],
                 location=LatLong(latitude=latitude, longitude=longitude),
                 contains_pi_data='Ja',
                 legal_ground='Verkeersmanagment in de rol van wegbeheerder.',
@@ -313,7 +313,7 @@ def parse_kentekencamera_reistijd(data: dict) -> Generator[SensorData, None, Non
             yield SensorData(
                 owner=person_data,
                 reference=feature['id'],
-                type='Feature',
+                type=feature['type'],
                 location=LatLong(latitude=latitude, longitude=longitude),
                 contains_pi_data='Ja',
                 legal_ground='Verkeersmanagement in de rol van wegbeheerder.',
@@ -361,7 +361,7 @@ def parse_kentekencamera_milieuzone(data: dict) -> Generator[SensorData, None, N
             yield SensorData(
                 owner=person_data,
                 reference=feature['id'],
-                type='Feature',
+                type=feature['type'],
                 location=LatLong(latitude=latitude, longitude=longitude),
                 contains_pi_data='Ja',
                 legal_ground='Verkeersbesluiten in de rol van wegbeheerder.',
@@ -403,7 +403,7 @@ def parse_ais_masten(data: dict) -> Generator[SensorData, None, None]:
             yield SensorData(
                 owner=person_data,
                 reference=feature['id'],
-                type='Feature',
+                type=feature['type'],
                 location=LatLong(latitude=latitude, longitude=longitude),
                 contains_pi_data='Ja',
                 legal_ground='In de rol van vaarwegbeheerder op basis van de binnenvaartwet.',
@@ -448,7 +448,7 @@ def parse_verkeersonderzoek_met_cameras(data: dict) -> Generator[SensorData, Non
             yield SensorData(
                 owner=person_data,
                 reference=feature['id'],
-                type='Feature',
+                type=feature['type'],
                 location=LatLong(latitude=latitude, longitude=longitude),
                 contains_pi_data='Ja',
                 legal_ground='Verkeersmanagement in de rol van wegbeheerder.',
@@ -488,7 +488,7 @@ def parse_beweegbare_fysieke_afsluiting(data: dict) -> Generator[SensorData, Non
             yield SensorData(
                 owner=person_data,
                 reference=feature['id'],
-                type='Feature',
+                type=feature['type'],
                 location=LatLong(latitude=latitude, longitude=longitude),
                 contains_pi_data='Ja',
                 legal_ground='Verkeersmanagement in de rol van wegbeheerder.',

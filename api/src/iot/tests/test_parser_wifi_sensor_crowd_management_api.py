@@ -35,7 +35,7 @@ def api_data():
             },
             {
                 "id": 2,
-                "type": "Feature",
+                "type": "Temperatuursensor",
                 "geometry":
                 {
                     "type": "Point",
@@ -66,7 +66,7 @@ def api_data_2():  # a second list of api data sensors
         "features": [
             {
                 "id": 2,
-                "type": "Feature",
+                "type": "Temperatuursensor",
                 "geometry": {
                     "type": "Point",
                     "coordinates": [
@@ -124,7 +124,7 @@ def sensor_data(person_data):
     return SensorData(
         owner=person_data,
         reference=3,
-        type="Feature",
+        type="Temperatuursensor",
         location=LatLong(latitude=4.901852, longitude=52.3794284),
         datastream='',
         observation_goal='Tellen van mensen.',
@@ -159,7 +159,7 @@ class TestApiParser:
             SensorData(
                 owner=expected_owner,
                 reference=2,
-                type="Feature",
+                type="Temperatuursensor",
                 location=LatLong(latitude=4.901852, longitude=52.3794284),
                 datastream='',
                 observation_goal='Tellen van mensen.',
@@ -228,7 +228,7 @@ class TestImportSensor:
         'privacy_declaration': 'https://www.amsterdam.nl/foo/',
         'regions': [],
         'themes': ['Mobiliteit: auto'],
-        'type': 'Overig',  # needs to be checked why not Feature
+        'type': 'Temperatuursensor',
         'reference': '2',
     }
 
@@ -248,7 +248,7 @@ class TestImportSensor:
         'privacy_declaration': 'https://www.amsterdam.nl/foo/',
         'regions': [],
         'themes': ['Mobiliteit: auto'],
-        'type': 'Overig',  # needs to be checked why not Feature
+        'type': 'Temperatuursensor',
         'reference': '3',
     }
 
