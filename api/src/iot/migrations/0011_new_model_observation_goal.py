@@ -20,6 +20,26 @@ def make_many_observationgoals(apps, schema_editor):
         device2.observation_goals.add(result)
 
 
+def reverse_many_observationgoals(apps, schema_editor):
+    """
+    Reverse the data from the ObservationGoals to Device2.
+    """
+    Device2 = apps.get_model('iot', 'Device2')
+
+    for device2 in Device2.objects.all():
+        observation_goals = device2.observation_goals.values_list(
+            'observation_goal',
+            'privacy_declaration',
+            'legal_ground_id'
+        )
+        # because the list of observation_goals has one element when the change took place, 
+        # I use the first element (index 0) only from it.
+        device2.observation_goal = observation_goals[0][0]
+        device2.privacy_declaration = observation_goals[0][1]
+        device2.legal_ground_id = observation_goals[0][2]
+        device2.save()
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -46,7 +66,8 @@ class Migration(migrations.Migration):
             field=models.ManyToManyField(to='iot.ObservationGoal', verbose_name='ObservationGoal'),
         ),
         migrations.RunPython(
-            make_many_observationgoals
+            make_many_observationgoals, 
+            reverse_code=reverse_many_observationgoals
         ),
         migrations.RemoveField(
             model_name='device2',
