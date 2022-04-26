@@ -19,7 +19,7 @@ pytest-django
 pytest-env
 pytest-factoryboy
 pytest-cov
-pytest-flake8
+pytest-flake8<1.1  # 1.1 drops python 3.6 support
 pytest-faker
 pytest-isort
 responses
