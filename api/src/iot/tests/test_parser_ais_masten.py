@@ -94,9 +94,9 @@ def person_data():
 def sensor_data(person_data):
     return SensorData(
         owner=person_data,
-        reference=10,
-        type="Feature",
-        location=LatLong(latitude=4.899393, longitude=52.4001061),
+        reference='ais_masten_10',
+        type="Optische / camera sensor",
+        location=LatLong(latitude=52.4001061, longitude=4.899393),
         datastream='',
         observation_goal='Vaarweg management',
         themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
@@ -129,9 +129,9 @@ class TestApiParser:
         expected = [
             SensorData(
                 owner=expected_owner,
-                reference=9,
-                type="Feature",
-                location=LatLong(latitude=4.899393, longitude=52.4001061),
+                reference='ais_masten_9',
+                type="Optische / camera sensor",
+                location=LatLong(latitude=52.4001061, longitude=4.899393),
                 datastream='',
                 observation_goal='Vaarweg management',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
@@ -186,7 +186,7 @@ class TestImportSensor:
         'contains_pi_data': True,
         'datastream': '',
         'legal_ground': 'In de rol van vaarwegbeheerder op basis van de binnenvaartwet.',
-        'location': {'latitude': 4.899393, 'longitude': 52.4001061},
+        'location': {'latitude': 52.4001061, 'longitude': 4.899393},
         'location_description': None,
         'observation_goal': 'Vaarweg management',
         'owner': {
@@ -198,8 +198,8 @@ class TestImportSensor:
 privacyverklaringen-b/vaarwegbeheer/',
         'regions': [],
         'themes': ['Mobiliteit: auto'],
-        'type': 'Overig',
-        'reference': '9',
+        'type': 'Optische / camera sensor',
+        'reference': 'ais_masten_9',
     }
 
     expected_2 = {
@@ -207,7 +207,7 @@ privacyverklaringen-b/vaarwegbeheer/',
         'contains_pi_data': True,
         'datastream': '',
         'legal_ground': 'In de rol van vaarwegbeheerder op basis van de binnenvaartwet.',
-        'location': {'latitude': 4.899393, 'longitude': 52.4001061},
+        'location': {'latitude': 52.4001061, 'longitude': 4.899393},
         'location_description': None,
         'observation_goal': 'Vaarweg management',
         'owner': {
@@ -219,8 +219,8 @@ privacyverklaringen-b/vaarwegbeheer/',
 privacyverklaringen-b/vaarwegbeheer/',
         'regions': [],
         'themes': ['Mobiliteit: auto'],
-        'type': 'Overig',
-        'reference': '10',
+        'type': 'Optische / camera sensor',
+        'reference': 'ais_masten_10',
     }
 
     def test_import_sensor(self, sensor_data):
@@ -293,13 +293,14 @@ class TestConverteApiData:
             api_data=api_data_2
         )
 
-        # get the sensor with referece 2 because it should have been updated.
-        sensor_ref_2 = next((sensor for sensor in self.actual if sensor['reference'] == '9'), None)
+        # get the sensor with referece ais_masten_9 because it should have been updated.
+        sensor_ref_2 = next((sensor for sensor in self.actual if
+                             sensor['reference'] == 'ais_masten_9'), None)
 
         assert result_1 == ([], 1, 0)  # confirm the first insert only inserted one record
         assert result_2 == ([], 1, 1)  # confirm one insert and one update
         assert len(self.actual) == 2
-        assert sensor_ref_2['location']['latitude'] == 4.999999
+        assert sensor_ref_2['location']['longitude'] == 4.999999
 
     def test_convert_api_data_ais_masten_one_update_one_delete(self, api_data, api_data_2):
         """
@@ -327,4 +328,4 @@ class TestConverteApiData:
         assert result_1 == ([], 2, 0)  # confirm the first insert only inserted two records
         assert result_2 == ([], 0, 1)  # confirm one update only
         assert len(self.actual) == 1
-        assert sensor['location']['latitude'] == 4.899393
+        assert sensor['location']['longitude'] == 4.899393

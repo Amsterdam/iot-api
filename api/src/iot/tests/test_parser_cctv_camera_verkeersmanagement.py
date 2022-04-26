@@ -153,9 +153,9 @@ def person_data():
 def sensor_data(person_data):
     return SensorData(
         owner=person_data,
-        reference=6,
-        type="Feature",
-        location=LatLong(latitude=4.895862, longitude=52.381543),
+        reference='cctv_camera_verkeersmanagement_6',
+        type="Optische / camera sensor",
+        location=LatLong(latitude=52.381543, longitude=4.895862),
         datastream='',
         observation_goal='Waarnemen van het verkeer.',
         themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
@@ -189,9 +189,9 @@ class TestApiParser:
         expected = [
             SensorData(
                 owner=expected_owner,
-                reference=5,
-                type="Feature",
-                location=LatLong(latitude=4.895862, longitude=52.381543),
+                reference='cctv_camera_verkeersmanagement_5',
+                type="Optische / camera sensor",
+                location=LatLong(latitude=52.381543, longitude=4.895862),
                 datastream='',
                 observation_goal='Waarnemen van het verkeer.',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
@@ -247,7 +247,7 @@ class TestImportSensor:
         'contains_pi_data': True,
         'datastream': '',
         'legal_ground': 'Verkeersmanagment in de rol van wegbeheerder.',
-        'location': {'latitude': 4.895862, 'longitude': 52.381543},
+        'location': {'latitude': 52.381543, 'longitude': 4.895862},
         'location_description': None,
         'observation_goal': 'Waarnemen van het verkeer.',
         'owner': {
@@ -259,8 +259,8 @@ class TestImportSensor:
 specifieke/privacyverklaring-parkeren-verkeer-bouw/verkeersmanagement",
         'regions': [],
         'themes': ['Mobiliteit: auto'],
-        'type': 'Overig',
-        'reference': '5',
+        'type': 'Optische / camera sensor',
+        'reference': 'cctv_camera_verkeersmanagement_5',
     }
 
     expected_2 = {
@@ -268,7 +268,7 @@ specifieke/privacyverklaring-parkeren-verkeer-bouw/verkeersmanagement",
         'contains_pi_data': True,
         'datastream': '',
         'legal_ground': 'Verkeersmanagment in de rol van wegbeheerder.',
-        'location': {'latitude': 4.895862, 'longitude': 52.381543},
+        'location': {'latitude': 52.381543, 'longitude': 4.895862},
         'location_description': None,
         'observation_goal': 'Waarnemen van het verkeer.',
         'owner': {
@@ -280,8 +280,8 @@ specifieke/privacyverklaring-parkeren-verkeer-bouw/verkeersmanagement",
 specifieke/privacyverklaring-parkeren-verkeer-bouw/verkeersmanagement",
         'regions': [],
         'themes': ['Mobiliteit: auto'],
-        'type': 'Overig',
-        'reference': '6',
+        'type': 'Optische / camera sensor',
+        'reference': 'cctv_camera_verkeersmanagement_6',
     }
 
     def test_import_sensor(self, sensor_data):
@@ -355,12 +355,13 @@ class TestConverteApiData:
         )
 
         # get the sensor with referece 2 because it should have been updated.
-        sensor_ref_2 = next((sensor for sensor in self.actual if sensor['reference'] == '5'), None)
+        sensor_ref_2 = next((sensor for sensor in self.actual if
+                             sensor['reference'] == 'cctv_camera_verkeersmanagement_5'), None)
 
         assert result_1 == ([], 1, 0)  # confirm the first insert only inserted one record
         assert result_2 == ([], 1, 1)  # confirm only inserted and updated one record
         assert len(self.actual) == 2
-        assert sensor_ref_2['location']['latitude'] == 4.999999
+        assert sensor_ref_2['location']['latitude'] == 52.381543
 
     def test_convert_api_data_cctvcv_one_update_one_delete(self, api_data, api_data_2):
         """
@@ -388,4 +389,4 @@ class TestConverteApiData:
         assert result_1 == ([], 2, 0)  # confirm the first insert only inserted two records
         assert result_2 == ([], 0, 1)  # confirm only 1 updated record
         assert len(self.actual) == 1
-        assert sensor['location']['latitude'] == 4.895862
+        assert sensor['location']['latitude'] == 52.381543

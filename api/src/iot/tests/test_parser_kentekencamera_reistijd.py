@@ -153,9 +153,9 @@ def person_data():
 def sensor_data(person_data):
     return SensorData(
         owner=person_data,
-        reference=8,
-        type="Feature",
-        location=LatLong(latitude=4.88154200, longitude=52.3851890),
+        reference='kentekencamera_reistijd_8',
+        type="Optische / camera sensor",
+        location=LatLong(latitude=52.3851890, longitude=4.88154200),
         datastream='',
         observation_goal='Het tellen van voertuigen en meten van doorstroming.',
         themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
@@ -189,9 +189,9 @@ class TestApiParser:
         expected = [
             SensorData(
                 owner=expected_owner,
-                reference=7,
-                type="Feature",
-                location=LatLong(latitude=4.88154200, longitude=52.3851890),
+                reference='kentekencamera_reistijd_7',
+                type="Optische / camera sensor",
+                location=LatLong(latitude=52.3851890, longitude=4.88154200),
                 datastream='',
                 observation_goal='Het tellen van voertuigen en meten van doorstroming.',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
@@ -247,7 +247,7 @@ class TestImportSensor:
         'contains_pi_data': True,
         'datastream': '',
         'legal_ground': 'Verkeersmanagement in de rol van wegbeheerder.',
-        'location': {'latitude': 4.8815420, 'longitude': 52.3851890},
+        'location': {'latitude': 52.3851890, 'longitude': 4.8815420},
         'location_description': None,
         'observation_goal': 'Het tellen van voertuigen en meten van doorstroming.',
         'owner': {
@@ -259,8 +259,8 @@ class TestImportSensor:
 privacyverklaring-parkeren-verkeer-bouw/reistijden-meetsysteem-privacy/",
         'regions': [],
         'themes': ['Mobiliteit: auto'],
-        'type': 'Overig',
-        'reference': '7',
+        'type': 'Optische / camera sensor',
+        'reference': 'kentekencamera_reistijd_7',
     }
 
     expected_2 = {
@@ -268,7 +268,7 @@ privacyverklaring-parkeren-verkeer-bouw/reistijden-meetsysteem-privacy/",
         'contains_pi_data': True,
         'datastream': '',
         'legal_ground': 'Verkeersmanagement in de rol van wegbeheerder.',
-        'location': {'latitude': 4.8815420, 'longitude': 52.3851890},
+        'location': {'latitude': 52.3851890, 'longitude': 4.8815420},
         'location_description': None,
         'observation_goal': 'Het tellen van voertuigen en meten van doorstroming.',
         'owner': {
@@ -280,8 +280,8 @@ privacyverklaring-parkeren-verkeer-bouw/reistijden-meetsysteem-privacy/",
 privacyverklaring-parkeren-verkeer-bouw/reistijden-meetsysteem-privacy/",
         'regions': [],
         'themes': ['Mobiliteit: auto'],
-        'type': 'Overig',
-        'reference': '8',
+        'type': 'Optische / camera sensor',
+        'reference': 'kentekencamera_reistijd_8',
     }
 
     def test_import_sensor(self, sensor_data):
@@ -354,13 +354,14 @@ class TestConvertApiData:
             api_data=api_data_2
         )
 
-        # get the sensor with referece 2 because it should have been updated.
-        sensor_ref_2 = next((sensor for sensor in self.actual if sensor['reference'] == '7'), None)
+        # get the sensor with referece 7 because it should have been updated.
+        sensor_ref_2 = next((sensor for sensor in self.actual if
+                             sensor['reference'] == 'kentekencamera_reistijd_7'), None)
 
         assert result_1 == ([], 1, 0)  # confirm the first insert only inserted one record
         assert result_2 == ([], 1, 1)  # confirm the one insert and one update
         assert len(self.actual) == 2
-        assert sensor_ref_2['location']['latitude'] == 4.999999
+        assert sensor_ref_2['location']['longitude'] == 4.999999
 
     def test_convert_api_data_kenteken_reistijd_1_update_1_delete(self, api_data, api_data_2):
         """
@@ -388,4 +389,4 @@ class TestConvertApiData:
         assert result_1 == ([], 2, 0)  # confirm the first insert only inserted two records
         assert result_2 == ([], 0, 1)  # confirm there is only one update
         assert len(self.actual) == 1
-        assert sensor['location']['latitude'] == 4.881542
+        assert sensor['location']['longitude'] == 4.881542

@@ -168,9 +168,9 @@ def sensor_data(person_data):
     """ a crow management sensor fixture"""
     return SensorData(
         owner=person_data,
-        reference=47,
-        type="Feature",
-        location=LatLong(latitude=4.901852, longitude=52.3794284),
+        reference='sensor_crowd_management_47',
+        type="Optische / camera sensor",
+        location=LatLong(latitude=52.3794284, longitude=4.901852),
         datastream='',
         observation_goal='Tellen van mensen.',
         themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
@@ -203,9 +203,9 @@ class TestApiParser:
         expected_sensors = [
             SensorData(
                 owner=expected_owner,
-                reference=41,
-                type="Feature",
-                location=LatLong(latitude=4.901852, longitude=52.3794284),
+                reference='sensor_crowd_management_41',
+                type="Optische / camera sensor",
+                location=LatLong(latitude=52.3794284, longitude=4.901852),
                 datastream='',
                 observation_goal='Tellen van mensen.',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
@@ -216,9 +216,9 @@ class TestApiParser:
             ),
             SensorData(
                 owner=expected_owner,
-                reference=42,
-                type="Feature",
-                location=LatLong(latitude=4.901859, longitude=52.3794289),
+                reference='sensor_crowd_management_42',
+                type="Optische / camera sensor",
+                location=LatLong(latitude=52.3794289, longitude=4.901859),
                 datastream='',
                 observation_goal='Tellen van mensen.',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
@@ -229,9 +229,9 @@ class TestApiParser:
             ),
             SensorData(
                 owner=expected_owner,
-                reference=43,
-                type="Feature",
-                location=LatLong(latitude=4.901858, longitude=52.3794287),
+                reference='sensor_crowd_management_43',
+                type="Optische / camera sensor",
+                location=LatLong(latitude=52.3794287, longitude=4.901858),
                 datastream='',
                 observation_goal='Tellen van mensen.',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
@@ -299,12 +299,13 @@ class TestConvertApiData:
         )
 
         # get the sensor with referece 41 because it should have been updated.
-        sensor_ref_2 = next((sensor for sensor in self.actual if sensor['reference'] == '41'), None)
+        sensor_ref_2 = next((sensor for sensor in self.actual if
+                             sensor['reference'] == 'sensor_crowd_management_41'), None)
 
         assert result_1 == ([], 3, 0)  # confirm the first insert only inserted one record
         assert result_2 == ([], 1, 1)  # confirm the update is there too with an insert
         assert len(self.actual) == 2
-        assert sensor_ref_2['location']['latitude'] == 4.99999
+        assert sensor_ref_2['location']['longitude'] == 4.99999
 
     def test_convert_api_data_sensor_one_update_one_delete(self, api_data, api_data_2):
         """
@@ -332,4 +333,4 @@ class TestConvertApiData:
         assert result_1 == ([], 2, 0)  # confirm the first insert only inserted two records
         assert result_2 == ([], 2, 1)  # confirm thar there is an update only
         assert len(self.actual) == 3
-        assert sensor['location']['latitude'] == 4.901852
+        assert sensor['location']['longitude'] == 4.901852

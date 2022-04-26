@@ -83,7 +83,7 @@ def sensor_data_delete():
 class TestDeleteNotFoundSensor:
     """
     tests the delete sensor function. make sure it only deletes sensors that belong to the same
-    owner and do not exist.
+    source and do not exist.
     """
 
     @property
@@ -94,9 +94,11 @@ class TestDeleteNotFoundSensor:
         ]
 
     def test_delete_one_sensor_from_three_sensors(self, sensor_data_delete):
-        """provide three sensors to be created for the wifi sensor crowd management. after that provide
-        only two same sensors to the delete_sensor function from the same owner. expect to have only
-        two sensors remaining and one deleted."""
+        """
+        provide three sensors to be created for the wifi sensor crowd management.
+        after that provide only two same sensors to the delete_sensor function from the
+        same source. expect to have only two sensors remaining and one deleted.
+        """
         parser = import_utils_apis.parse_wifi_sensor_crowd_management
         sensor_list = list(parser(sensor_data_delete))
         for sensor in sensor_list:
@@ -119,8 +121,8 @@ class TestDeleteNotFoundSensor:
 
         sensor1 = SensorData(
             owner=person,
-            reference=100,
-            type="Feature",
+            reference='wifi_sensor_crowd_management_100',
+            type="Aanwezigheid of nabijheidsensor",
             location=LatLong(latitude=4.901852, longitude=52.3794284),
             datastream='',
             observation_goal='Tellen van mensen.',
@@ -133,8 +135,8 @@ class TestDeleteNotFoundSensor:
 
         sensor2 = SensorData(
             owner=person,
-            reference=101,
-            type="Feature",
+            reference='wifi_sensor_crowd_management_101',
+            type="Aanwezigheid of nabijheidsensor",
             location=LatLong(latitude=4.901853, longitude=52.3794284),
             datastream='',
             observation_goal='Tellen van mensen.',
@@ -148,18 +150,18 @@ class TestDeleteNotFoundSensor:
         sensors_list = [sensor1, sensor2]
         import_utils_apis.delete_not_found_sensors(
             sensors=sensors_list,
-            email=person.email
+            source='wifi_sensor_crowd_management'
         )
 
         assert len(self.actual) == 2
-        assert self.actual[0]['reference'] == '100'
-        assert self.actual[1]['reference'] == '101'
+        assert self.actual[0]['reference'] == 'wifi_sensor_crowd_management_100'
+        assert self.actual[1]['reference'] == 'wifi_sensor_crowd_management_101'
         assert self.actual[0]['owner']['email'] == 'LVMA@amsterdam.nl'
 
-    def test_delete_no_sensor_different_owner(self, sensor_data_delete):
+    def test_delete_no_sensor_different_source(self, sensor_data_delete):
         """provide three sensors to be created for the wifi sensor crowd management. after that provide
-        only two same sensors to the delete_sensor function from the a different owner.
-        expect to have no sensor deleted."""
+        only two same sensors to the delete_sensor function from the a different source.
+        expect to have no sensor deleted from the wifi_sensor_crowd_management. """
         parser = import_utils_apis.parse_wifi_sensor_crowd_management
         sensor_list = list(parser(sensor_data_delete))
         for sensor in sensor_list:
@@ -178,20 +180,11 @@ class TestDeleteNotFoundSensor:
             last_name_affix="",
             last_name="onderzoek"
         )
-        unknown_person = PersonData(
-            organisation="Gemeente Amsterdam",
-            email="someone@foo.nl",
-            telephone="14020",
-            website="https://www.amsterdam.nl/",
-            first_name="verkeers",
-            last_name_affix="",
-            last_name="onderzoek"
-        )
         # list of sensor objects for the delete function
         sensor1 = SensorData(
             owner=person,
-            reference=100,
-            type="Feature",
+            reference='sensor_crowd_management_100',
+            type="Aanwezigheid of nabijheidsensor",
             location=LatLong(latitude=4.901852, longitude=52.3794284),
             datastream='',
             observation_goal='Tellen van mensen.',
@@ -204,8 +197,8 @@ class TestDeleteNotFoundSensor:
 
         sensor2 = SensorData(
             owner=person,
-            reference=101,
-            type="Feature",
+            reference='sensor_crowd_management_101',
+            type="Aanwezigheid of nabijheidsensor",
             location=LatLong(latitude=4.901853, longitude=52.3794284),
             datastream='',
             observation_goal='Tellen van mensen.',
@@ -219,14 +212,14 @@ class TestDeleteNotFoundSensor:
         sensors_list = [sensor1, sensor2]
         result = import_utils_apis.delete_not_found_sensors(
             sensors=sensors_list,
-            email=unknown_person.email
+            source='sensor_crowd_management'
         )
 
         assert result == (0, {})
         assert len(self.actual) == 3
-        assert self.actual[0]['reference'] == '100'
-        assert self.actual[1]['reference'] == '101'
-        assert self.actual[2]['reference'] == '102'
+        assert self.actual[0]['reference'] == 'wifi_sensor_crowd_management_100'
+        assert self.actual[1]['reference'] == 'wifi_sensor_crowd_management_101'
+        assert self.actual[2]['reference'] == 'wifi_sensor_crowd_management_102'
         assert self.actual[0]['owner']['email'] == 'LVMA@amsterdam.nl'
 
 

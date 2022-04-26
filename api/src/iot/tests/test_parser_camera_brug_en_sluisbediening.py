@@ -97,9 +97,9 @@ def person_data():
 def sensor_data(person_data):
     return SensorData(
         owner=person_data,
-        reference=2,
-        type="Feature",
-        location=LatLong(latitude=4.793372, longitude=52.343909),
+        reference='camera_brug_en_sluisbediening_2',
+        type="Optische / camera sensor",
+        location=LatLong(latitude=52.343909, longitude=4.793372),
         datastream='',
         observation_goal='Het bedienen van sluisen en bruggen.',
         themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
@@ -132,9 +132,9 @@ class TestApiParser:
         expected = [
             SensorData(
                 owner=expected_owner,
-                reference=1,
-                type="Feature",
-                location=LatLong(latitude=4.793372, longitude=52.343909),
+                reference='camera_brug_en_sluisbediening_1',
+                type="Optische / camera sensor",
+                location=LatLong(latitude=52.343909, longitude=4.793372),
                 datastream='',
                 observation_goal='Het bedienen van sluisen en bruggen.',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
@@ -189,7 +189,7 @@ class TestImportSensor:
         'contains_pi_data': True,
         'datastream': '',
         'legal_ground': 'Sluisbeheerder in het kader van de woningwet 1991',
-        'location': {'latitude': 4.793372, 'longitude': 52.343909},
+        'location': {'latitude': 52.343909, 'longitude': 4.793372},
         'location_description': None,
         'observation_goal': 'Het bedienen van sluisen en bruggen.',
         'owner': {
@@ -200,8 +200,8 @@ class TestImportSensor:
         'privacy_declaration': 'https://www.amsterdam.nl/privacy/privacylink/',
         'regions': [],
         'themes': ['Mobiliteit: auto'],
-        'type': 'Overig',
-        'reference': '1',
+        'type': 'Optische / camera sensor',
+        'reference': 'camera_brug_en_sluisbediening_1',
     }
 
     expected_2 = {
@@ -209,7 +209,7 @@ class TestImportSensor:
         'contains_pi_data': True,
         'datastream': '',
         'legal_ground': 'Sluisbeheerder in het kader van de woningwet 1991',
-        'location': {'latitude': 4.793372, 'longitude': 52.343909},
+        'location': {'latitude': 52.343909, 'longitude': 4.793372},
         'location_description': None,
         'observation_goal': 'Het bedienen van sluisen en bruggen.',
         'owner': {
@@ -220,8 +220,8 @@ class TestImportSensor:
         'privacy_declaration': 'https://www.amsterdam.nl/privacy/privacylink/',
         'regions': [],
         'themes': ['Mobiliteit: auto'],
-        'type': 'Overig',
-        'reference': '2',
+        'type': 'Optische / camera sensor',
+        'reference': 'camera_brug_en_sluisbediening_2',
     }
 
     def test_import_sensor(self, sensor_data):
@@ -295,12 +295,13 @@ class TestConvertApiData:
         )
 
         # get the sensor with referece 2 because it should have been updated.
-        sensor_ref_2 = next((sensor for sensor in self.actual if sensor['reference'] == '1'), None)
+        sensor_ref_2 = next((sensor for sensor in self.actual if
+                             sensor['reference'] == 'camera_brug_en_sluisbediening_1'), None)
 
         assert result_1 == ([], 1, 0)  # confirm the first insert only inserted one record
         assert result_2 == ([], 1, 1)  # confirm the one insert and one update
         assert len(self.actual) == 2
-        assert sensor_ref_2['location']['latitude'] == 4.999999
+        assert sensor_ref_2['location']['latitude'] == 52.343909
 
     def test_convert_api_data_brug_en_sluis_one_update_one_delete(self, api_data, api_data_2):
         """
@@ -328,4 +329,4 @@ class TestConvertApiData:
         assert result_1 == ([], 2, 0)  # confirm the first insert only inserted two records
         assert result_2 == ([], 0, 1)  # confirm the first insert only updated so should be 0
         assert len(self.actual) == 1
-        assert sensor['location']['latitude'] == 4.793372
+        assert sensor['location']['latitude'] == 52.343909

@@ -35,7 +35,7 @@ def api_data():
             },
             {
                 "id": 2,
-                "type": "Temperatuursensor",
+                "type": "Feuture",
                 "geometry":
                 {
                     "type": "Point",
@@ -66,7 +66,7 @@ def api_data_2():  # a second list of api data sensors
         "features": [
             {
                 "id": 2,
-                "type": "Temperatuursensor",
+                "type": "Feuture",
                 "geometry": {
                     "type": "Point",
                     "coordinates": [
@@ -123,9 +123,9 @@ def person_data():
 def sensor_data(person_data):
     return SensorData(
         owner=person_data,
-        reference=3,
-        type="Temperatuursensor",
-        location=LatLong(latitude=4.901852, longitude=52.3794284),
+        reference='wifi_sensor_crowd_management_3',
+        type="Aanwezigheid of nabijheidsensor",
+        location=LatLong(latitude=52.3794284, longitude=4.901852),
         datastream='',
         observation_goal='Tellen van mensen.',
         themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
@@ -158,9 +158,9 @@ class TestApiParser:
         expected = [
             SensorData(
                 owner=expected_owner,
-                reference=2,
-                type="Temperatuursensor",
-                location=LatLong(latitude=4.901852, longitude=52.3794284),
+                reference='wifi_sensor_crowd_management_2',
+                type="Aanwezigheid of nabijheidsensor",
+                location=LatLong(latitude=52.3794284, longitude=4.901852),
                 datastream='',
                 observation_goal='Tellen van mensen.',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
@@ -217,7 +217,7 @@ class TestImportSensor:
         'contains_pi_data': True,
         'datastream': '',
         'legal_ground': 'Verkeersmanagment in de rol van wegbeheerder.',
-        'location': {'latitude': 4.901852, 'longitude': 52.3794284},
+        'location': {'latitude': 52.3794284, 'longitude': 4.901852},
         'location_description': None,
         'observation_goal': 'Tellen van mensen.',
         'owner': {
@@ -228,8 +228,8 @@ class TestImportSensor:
         'privacy_declaration': 'https://www.amsterdam.nl/foo/',
         'regions': [],
         'themes': ['Mobiliteit: auto'],
-        'type': 'Temperatuursensor',
-        'reference': '2',
+        'type': 'Aanwezigheid of nabijheidsensor',
+        'reference': 'wifi_sensor_crowd_management_2',
     }
 
     expected_2 = {
@@ -237,7 +237,7 @@ class TestImportSensor:
         'contains_pi_data': True,
         'datastream': '',
         'legal_ground': 'Verkeersmanagment in de rol van wegbeheerder.',
-        'location': {'latitude': 4.901852, 'longitude': 52.3794284},
+        'location': {'latitude': 52.3794284, 'longitude': 4.901852},
         'location_description': None,
         'observation_goal': 'Tellen van mensen.',
         'owner': {
@@ -248,8 +248,8 @@ class TestImportSensor:
         'privacy_declaration': 'https://www.amsterdam.nl/foo/',
         'regions': [],
         'themes': ['Mobiliteit: auto'],
-        'type': 'Temperatuursensor',
-        'reference': '3',
+        'type': 'Aanwezigheid of nabijheidsensor',
+        'reference': 'wifi_sensor_crowd_management_3',
     }
 
     def test_import_sensor(self, sensor_data):
@@ -323,12 +323,13 @@ class TestConvertApiData:
         )
 
         # get the sensor with referece 2 because it should have been updated.
-        sensor_ref_2 = next((sensor for sensor in self.actual if sensor['reference'] == '2'), None)
+        sensor_ref_2 = next((sensor for sensor in self.actual if
+                             sensor['reference'] == 'wifi_sensor_crowd_management_2'), None)
 
         assert result_1 == ([], 1, 0)  # confirm the first insert only inserted one record
         assert result_2 == ([], 1, 1)  # confirm the update is there too with an insert
         assert len(self.actual) == 2
-        assert sensor_ref_2['location']['latitude'] == 4.99999
+        assert sensor_ref_2['location']['longitude'] == 4.99999
 
     def test_convert_api_data_wifi_sensor_one_update_one_delete(self, api_data, api_data_2):
         """
@@ -356,4 +357,4 @@ class TestConvertApiData:
         assert result_1 == ([], 2, 0)  # confirm the first insert only inserted two records
         assert result_2 == ([], 0, 1)  # confirm thar there is an update only
         assert len(self.actual) == 1
-        assert sensor['location']['latitude'] == 4.901852
+        assert sensor['location']['longitude'] == 4.901852

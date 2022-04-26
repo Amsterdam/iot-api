@@ -153,9 +153,9 @@ def person_data():
 def sensor_data(person_data):
     return SensorData(
         owner=person_data,
-        reference=10,
-        type="Feature",
-        location=LatLong(latitude=4.8924874, longitude=52.3398382),
+        reference='kentekencamera_milieuzone_10',
+        type="Optische / camera sensor",
+        location=LatLong(latitude=52.3398382, longitude=4.8924874),
         datastream='',
         observation_goal='Handhaving van verkeersbesluiten.',
         themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto', 'Milieu']),
@@ -189,9 +189,9 @@ class TestApiParser:
         expected = [
             SensorData(
                 owner=expected_owner,
-                reference=8,
-                type="Feature",
-                location=LatLong(latitude=4.8924874, longitude=52.3398382),
+                reference='kentekencamera_milieuzone_8',
+                type="Optische / camera sensor",
+                location=LatLong(latitude=52.3398382, longitude=4.8924874),
                 datastream='',
                 observation_goal='Handhaving van verkeersbesluiten.',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto', 'Milieu']),
@@ -247,7 +247,7 @@ class TestImportSensor:
         'contains_pi_data': True,
         'datastream': '',
         'legal_ground': 'Verkeersbesluiten in de rol van wegbeheerder.',
-        'location': {'latitude': 4.8924874, 'longitude': 52.3398382},
+        'location': {'latitude': 52.3398382, 'longitude': 4.8924874},
         'location_description': None,
         'observation_goal': 'Handhaving van verkeersbesluiten.',
         'owner': {
@@ -259,8 +259,8 @@ class TestImportSensor:
 privacyverklaringen-b/milieuzones/',
         'regions': [],
         'themes': ['Mobiliteit: auto', 'Overig'],
-        'type': 'Overig',
-        'reference': '8',
+        'type': 'Optische / camera sensor',
+        'reference': 'kentekencamera_milieuzone_8',
     }
 
     expected_2 = {
@@ -268,7 +268,7 @@ privacyverklaringen-b/milieuzones/',
         'contains_pi_data': True,
         'datastream': '',
         'legal_ground': 'Verkeersbesluiten in de rol van wegbeheerder.',
-        'location': {'latitude': 4.8924874, 'longitude': 52.3398382},
+        'location': {'latitude': 52.3398382, 'longitude': 4.8924874},
         'location_description': None,
         'observation_goal': 'Handhaving van verkeersbesluiten.',
         'owner': {
@@ -280,8 +280,8 @@ privacyverklaringen-b/milieuzones/',
 privacyverklaringen-b/milieuzones/',
         'regions': [],
         'themes': ['Mobiliteit: auto', 'Overig'],
-        'type': 'Overig',
-        'reference': '10',
+        'type': 'Optische / camera sensor',
+        'reference': 'kentekencamera_milieuzone_10',
     }
 
     def test_import_sensor(self, sensor_data):
@@ -355,12 +355,13 @@ class TestConvertApiData:
         )
 
         # get the sensor with referece 2 because it should have been updated.
-        sensor_ref_2 = next((sensor for sensor in self.actual if sensor['reference'] == '8'), None)
+        sensor_ref_2 = next((sensor for sensor in self.actual if
+                             sensor['reference'] == 'kentekencamera_milieuzone_8'), None)
 
         assert result_1 == ([], 1, 0)  # confirm the first insert only inserted one record
         assert result_2 == ([], 1, 1)  # confirm inserted and updated one record
         assert len(self.actual) == 2
-        assert sensor_ref_2['location']['latitude'] == 4.999999
+        assert sensor_ref_2['location']['longitude'] == 4.999999
 
     def test_convert_api_data_kenteken_milieuzone_1_update_1_delete(self, api_data, api_data_2):
         """
@@ -388,4 +389,4 @@ class TestConvertApiData:
         assert result_1 == ([], 2, 0)  # confirm the first insert only inserted two records
         assert result_2 == ([], 0, 1)  # confirm one updated record
         assert len(self.actual) == 1
-        assert sensor['location']['latitude'] == 4.8924874
+        assert sensor['location']['longitude'] == 4.8924874

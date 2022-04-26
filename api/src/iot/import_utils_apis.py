@@ -89,7 +89,7 @@ def convert_api_data(api_name: str, api_data: dict) -> Tuple[List[Exception], in
             errors.append(e)
 
     # delete sensors from the same owner that are not in the api
-    delete_not_found_sensors(sensors=sensors, email=owners_list[0].email)
+    delete_not_found_sensors(sensors=sensors, source=api_name)
 
     return (errors, counter[True], counter[False])
 
@@ -122,14 +122,14 @@ def parse_wifi_sensor_crowd_management(data: dict) -> Generator[SensorData, None
             if properties['Soort'] != 'WiFi sensor':
                 continue
             geometry = feature['geometry']  # geometry dict
-            latitude = geometry['coordinates'][0]
-            longitude = geometry['coordinates'][1]
+            latitude = geometry['coordinates'][1]
+            longitude = geometry['coordinates'][0]
 
             # sensors_list.append(
             yield SensorData(
                 owner=person_data,
-                reference=feature['id'],
-                type=feature['type'],
+                reference=f"wifi_sensor_crowd_management_{feature['id']}",
+                type='Aanwezigheid of nabijheidsensor',
                 location=LatLong(latitude=latitude, longitude=longitude),
                 contains_pi_data='Ja',
                 legal_ground='Verkeersmanagment in de rol van wegbeheerder.',
@@ -169,14 +169,14 @@ def parse_sensor_crowd_management(data: dict) -> Generator[SensorData, None, Non
             if properties['Soort'] not in ['Telcamera', 'Corona CMSA', '3D sensor']:
                 continue
             geometry = feature['geometry']  # geometry dict
-            latitude = geometry['coordinates'][0]
-            longitude = geometry['coordinates'][1]
+            latitude = geometry['coordinates'][1]
+            longitude = geometry['coordinates'][0]
 
             # sensors_list.append(
             yield SensorData(
                 owner=person_data,
-                reference=feature['id'],
-                type=feature['type'],
+                reference=f"sensor_crowd_management_{feature['id']}",
+                type='Optische / camera sensor',
                 location=LatLong(latitude=latitude, longitude=longitude),
                 contains_pi_data='Ja',
                 legal_ground='Verkeersmanagment in de rol van wegbeheerder.',
@@ -211,14 +211,14 @@ def parse_camera_brug_en_sluisbediening(data: dict) -> Generator[SensorData, Non
     if features:
         for feature in features:
             geometry = feature['geometry']  # geometry dict
-            latitude = geometry['coordinates'][0]
-            longitude = geometry['coordinates'][1]
+            latitude = geometry['coordinates'][1]
+            longitude = geometry['coordinates'][0]
             properties = feature['properties']  # properties dict
 
             yield SensorData(
                 owner=person_data,
-                reference=feature['id'],
-                type=feature['type'],
+                reference=f"camera_brug_en_sluisbediening_{feature['id']}",
+                type='Optische / camera sensor',
                 location=LatLong(latitude=latitude, longitude=longitude),
                 contains_pi_data='Ja',
                 legal_ground='Sluisbeheerder in het kader van de woningwet 1991',
@@ -258,13 +258,13 @@ def parse_cctv_camera_verkeersmanagement(data: dict) -> Generator[SensorData, No
                 continue
 
             geometry = feature['geometry']  # geometry dict
-            latitude = geometry['coordinates'][0]
-            longitude = geometry['coordinates'][1]
+            latitude = geometry['coordinates'][1]
+            longitude = geometry['coordinates'][0]
 
             yield SensorData(
                 owner=person_data,
-                reference=feature['id'],
-                type=feature['type'],
+                reference=f"cctv_camera_verkeersmanagement_{feature['id']}",
+                type='Optische / camera sensor',
                 location=LatLong(latitude=latitude, longitude=longitude),
                 contains_pi_data='Ja',
                 legal_ground='Verkeersmanagment in de rol van wegbeheerder.',
@@ -306,14 +306,14 @@ def parse_kentekencamera_reistijd(data: dict) -> Generator[SensorData, None, Non
                 continue
 
             geometry = feature['geometry']  # geometry dict
-            latitude = geometry['coordinates'][0]
-            longitude = geometry['coordinates'][1]
+            latitude = geometry['coordinates'][1]
+            longitude = geometry['coordinates'][0]
 
             # sensors_list.append(
             yield SensorData(
                 owner=person_data,
-                reference=feature['id'],
-                type=feature['type'],
+                reference=f"kentekencamera_reistijd_{feature['id']}",
+                type='Optische / camera sensor',
                 location=LatLong(latitude=latitude, longitude=longitude),
                 contains_pi_data='Ja',
                 legal_ground='Verkeersmanagement in de rol van wegbeheerder.',
@@ -355,13 +355,13 @@ def parse_kentekencamera_milieuzone(data: dict) -> Generator[SensorData, None, N
                 continue
 
             geometry = feature['geometry']  # geometry dict
-            latitude = geometry['coordinates'][0]
-            longitude = geometry['coordinates'][1]
+            latitude = geometry['coordinates'][1]
+            longitude = geometry['coordinates'][0]
 
             yield SensorData(
                 owner=person_data,
-                reference=feature['id'],
-                type=feature['type'],
+                reference=f"kentekencamera_milieuzone_{feature['id']}",
+                type='Optische / camera sensor',
                 location=LatLong(latitude=latitude, longitude=longitude),
                 contains_pi_data='Ja',
                 legal_ground='Verkeersbesluiten in de rol van wegbeheerder.',
@@ -396,14 +396,14 @@ def parse_ais_masten(data: dict) -> Generator[SensorData, None, None]:
     if features:
         for feature in features:
             geometry = feature['geometry']  # geometry dict
-            latitude = geometry['coordinates'][0]
-            longitude = geometry['coordinates'][1]
+            latitude = geometry['coordinates'][1]
+            longitude = geometry['coordinates'][0]
             properties = feature['properties']  # properties dict
 
             yield SensorData(
                 owner=person_data,
-                reference=feature['id'],
-                type=feature['type'],
+                reference=f"ais_masten_{feature['id']}",
+                type='Optische / camera sensor',
                 location=LatLong(latitude=latitude, longitude=longitude),
                 contains_pi_data='Ja',
                 legal_ground='In de rol van vaarwegbeheerder op basis van de binnenvaartwet.',
@@ -437,8 +437,8 @@ def parse_verkeersonderzoek_met_cameras(data: dict) -> Generator[SensorData, Non
     if features:
         for feature in features:
             geometry = feature['geometry']  # geometry dict
-            latitude = geometry['coordinates'][0]
-            longitude = geometry['coordinates'][1]
+            latitude = geometry['coordinates'][1]
+            longitude = geometry['coordinates'][0]
             properties = feature['properties']  # properties dict
 
             # if the privacy_declaration url empty, skip the sensor.
@@ -447,8 +447,8 @@ def parse_verkeersonderzoek_met_cameras(data: dict) -> Generator[SensorData, Non
 
             yield SensorData(
                 owner=person_data,
-                reference=feature['id'],
-                type=feature['type'],
+                reference=f"verkeersonderzoek_met_cameras_{feature['id']}",
+                type='Optische / camera sensor',
                 location=LatLong(latitude=latitude, longitude=longitude),
                 contains_pi_data='Ja',
                 legal_ground='Verkeersmanagement in de rol van wegbeheerder.',
@@ -482,13 +482,13 @@ def parse_beweegbare_fysieke_afsluiting(data: dict) -> Generator[SensorData, Non
     if features:
         for feature in features:
             geometry = feature['geometry']  # geometry dict
-            latitude = geometry['coordinates'][0]
-            longitude = geometry['coordinates'][1]
+            latitude = geometry['coordinates'][1]
+            longitude = geometry['coordinates'][0]
 
             yield SensorData(
                 owner=person_data,
-                reference=feature['id'],
-                type=feature['type'],
+                reference=f"beweegbare_fysieke_afsluiting_{feature['id']}",
+                type='Optische / camera sensor',
                 location=LatLong(latitude=latitude, longitude=longitude),
                 contains_pi_data='Ja',
                 legal_ground='Verkeersmanagement in de rol van wegbeheerder.',
@@ -500,19 +500,19 @@ def parse_beweegbare_fysieke_afsluiting(data: dict) -> Generator[SensorData, Non
             )
 
 
-def delete_not_found_sensors(sensors: List[SensorData], email: str) -> Tuple[int, Dict[str, int]]:
-    """takes a list of sensor data. with the owner's email. compares their
-    reference with the stored sensors that belong to the same owner (by email).
+def delete_not_found_sensors(sensors: List[SensorData], source: str) -> Tuple[int, Dict[str, int]]:
+    """takes a list of sensor data. with the source. compares their
+    reference with the stored sensors that belong to the same owner (by source).
     If a sensor is not found in the stored sensor, it will delete it.
     returns a tuple with the number of deleted records and sensors"""
 
     # get the reference id of the apis sensors list
     api_sensor_ids = {sensor.reference for sensor in sensors}
 
-    # get all sensors from the owner's.email except the sensors with reference
+    # get all sensors that start with the source except the sensors with reference
     # in [api_sensor_ids] and delete them.
     deleted_sensors = models.Device2.objects.filter(
-        owner__email=email).exclude(
+        reference__startswith=source).exclude(
             reference__in=api_sensor_ids).delete()
 
     return deleted_sensors

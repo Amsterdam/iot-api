@@ -94,9 +94,9 @@ def person_data():
 def sensor_data(person_data):
     return SensorData(
         owner=person_data,
-        reference=11,
-        type="Feature",
-        location=LatLong(latitude=4.9021014, longitude=52.3689078),
+        reference='verkeersonderzoek_met_cameras_11',
+        type="Optische / camera sensor",
+        location=LatLong(latitude=52.3689078, longitude=4.9021014),
         datastream='',
         observation_goal='Tellen van voertuigen.',
         themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
@@ -129,9 +129,9 @@ class TestApiParser:
         expected = [
             SensorData(
                 owner=expected_owner,
-                reference=10,
-                type="Feature",
-                location=LatLong(latitude=4.9021014, longitude=52.3689078),
+                reference='verkeersonderzoek_met_cameras_10',
+                type="Optische / camera sensor",
+                location=LatLong(latitude=52.3689078, longitude=4.9021014),
                 datastream='',
                 observation_goal='Tellen van voertuigen.',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
@@ -188,7 +188,7 @@ class TestImportSensor:
         'contains_pi_data': True,
         'datastream': '',
         'legal_ground': 'Verkeersmanagement in de rol van wegbeheerder.',
-        'location': {'latitude': 4.9021014, 'longitude': 52.3689078},
+        'location': {'latitude': 52.3689078, 'longitude': 4.9021014},
         'location_description': None,
         'observation_goal': 'Tellen van voertuigen.',
         'owner': {
@@ -200,8 +200,8 @@ class TestImportSensor:
 privacyverklaringen-b/artikel-3/',
         'regions': [],
         'themes': ['Mobiliteit: auto'],
-        'type': 'Overig',
-        'reference': '10',
+        'type': 'Optische / camera sensor',
+        'reference': 'verkeersonderzoek_met_cameras_10',
     }
 
     expected_2 = {
@@ -209,7 +209,7 @@ privacyverklaringen-b/artikel-3/',
         'contains_pi_data': True,
         'datastream': '',
         'legal_ground': 'Verkeersmanagement in de rol van wegbeheerder.',
-        'location': {'latitude': 4.9021014, 'longitude': 52.3689078},
+        'location': {'latitude': 52.3689078, 'longitude': 4.9021014},
         'location_description': None,
         'observation_goal': 'Tellen van voertuigen.',
         'owner': {
@@ -221,8 +221,8 @@ privacyverklaringen-b/artikel-3/',
 privacyverklaringen-b/artikel-3/',
         'regions': [],
         'themes': ['Mobiliteit: auto'],
-        'type': 'Overig',
-        'reference': '11',
+        'type': 'Optische / camera sensor',
+        'reference': 'verkeersonderzoek_met_cameras_11',
     }
 
     def test_import_sensor(self, sensor_data):
