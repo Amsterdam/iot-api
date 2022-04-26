@@ -276,7 +276,7 @@ class TestImportSensor:
     def actual(self):
         return [
             Device2Serializer(device).data
-            for device in models.Device2.objects.all()
+            for device in models.Device2.objects.all().order_by('id')
         ]
 
     expected = {
