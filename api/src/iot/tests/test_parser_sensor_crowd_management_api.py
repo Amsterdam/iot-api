@@ -2,7 +2,7 @@ import pytest
 from django.conf import settings
 
 from iot import import_utils_apis, models
-from iot.import_utils import LatLong, PersonData, SensorData
+from iot.import_utils import LatLong, ObservationGoal, PersonData, SensorData
 from iot.serializers import Device2Serializer
 
 
@@ -172,11 +172,13 @@ def sensor_data(person_data):
         type="Optische / camera sensor",
         location=LatLong(latitude=52.3794284, longitude=4.901852),
         datastream='',
-        observation_goal='Tellen van mensen.',
+        observation_goals=[ObservationGoal(
+            observation_goal='Tellen van mensen.',
+            legal_ground='Verkeersmanagment in de rol van wegbeheerder.',
+            privacy_declaration="https://www.amsterdam.nl/foo/",
+        )],
         themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
         contains_pi_data='Ja',
-        legal_ground='Verkeersmanagment in de rol van wegbeheerder.',
-        privacy_declaration="https://www.amsterdam.nl/foo/",
         active_until='01-01-2050'
     )
 
@@ -207,11 +209,13 @@ class TestApiParser:
                 type="Optische / camera sensor",
                 location=LatLong(latitude=52.3794284, longitude=4.901852),
                 datastream='',
-                observation_goal='Tellen van mensen.',
+                observation_goals=[ObservationGoal(
+                    observation_goal='Tellen van mensen.',
+                    legal_ground='Verkeersmanagment in de rol van wegbeheerder.',
+                    privacy_declaration="https://www.amsterdam.nl/foo/",
+                )],
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 contains_pi_data='Ja',
-                legal_ground='Verkeersmanagment in de rol van wegbeheerder.',
-                privacy_declaration="https://www.amsterdam.nl/foo/",
                 active_until='01-01-2050'
             ),
             SensorData(
@@ -220,11 +224,13 @@ class TestApiParser:
                 type="Optische / camera sensor",
                 location=LatLong(latitude=52.3794289, longitude=4.901859),
                 datastream='',
-                observation_goal='Tellen van mensen.',
+                observation_goals=[ObservationGoal(
+                    observation_goal='Tellen van mensen.',
+                    legal_ground='Verkeersmanagment in de rol van wegbeheerder.',
+                    privacy_declaration="https://www.amsterdam.nl/foo/",
+                )],
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 contains_pi_data='Ja',
-                legal_ground='Verkeersmanagment in de rol van wegbeheerder.',
-                privacy_declaration="https://www.amsterdam.nl/foo/",
                 active_until='01-01-2050'
             ),
             SensorData(
@@ -233,11 +239,13 @@ class TestApiParser:
                 type="Optische / camera sensor",
                 location=LatLong(latitude=52.3794287, longitude=4.901858),
                 datastream='',
-                observation_goal='Tellen van mensen.',
+                observation_goals=[ObservationGoal(
+                    observation_goal='Tellen van mensen.',
+                    legal_ground='Verkeersmanagment in de rol van wegbeheerder.',
+                    privacy_declaration="https://www.amsterdam.nl/foo/",
+                )],
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 contains_pi_data='Ja',
-                legal_ground='Verkeersmanagment in de rol van wegbeheerder.',
-                privacy_declaration="https://www.amsterdam.nl/foo/",
                 active_until='01-01-2050'
             )
         ]

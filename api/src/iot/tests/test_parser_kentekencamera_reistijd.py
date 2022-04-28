@@ -2,7 +2,7 @@ import pytest
 from django.conf import settings
 
 from iot import import_utils, import_utils_apis, models
-from iot.import_utils import LatLong, PersonData, SensorData
+from iot.import_utils import LatLong, ObservationGoal, PersonData, SensorData
 from iot.serializers import Device2Serializer
 
 
@@ -157,12 +157,14 @@ def sensor_data(person_data):
         type="Optische / camera sensor",
         location=LatLong(latitude=52.3851890, longitude=4.88154200),
         datastream='',
-        observation_goal='Het tellen van voertuigen en meten van doorstroming.',
+        observation_goals=[ObservationGoal(
+            observation_goal='Het tellen van voertuigen en meten van doorstroming.',
+            legal_ground='Verkeersmanagement in de rol van wegbeheerder.',
+            privacy_declaration="https://www.amsterdam.nl/privacy/specifieke/\
+privacyverklaring-parkeren-verkeer-bouw/reistijden-meetsysteem-privacy/",
+        )],
         themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
         contains_pi_data='Ja',
-        legal_ground='Verkeersmanagement in de rol van wegbeheerder.',
-        privacy_declaration="https://www.amsterdam.nl/privacy/specifieke/\
-privacyverklaring-parkeren-verkeer-bouw/reistijden-meetsysteem-privacy/",
         active_until='01-01-2050'
     )
 
@@ -193,12 +195,14 @@ class TestApiParser:
                 type="Optische / camera sensor",
                 location=LatLong(latitude=52.3851890, longitude=4.88154200),
                 datastream='',
-                observation_goal='Het tellen van voertuigen en meten van doorstroming.',
+                observation_goals=[ObservationGoal(
+                    observation_goal='Het tellen van voertuigen en meten van doorstroming.',
+                    legal_ground='Verkeersmanagement in de rol van wegbeheerder.',
+                    privacy_declaration="https://www.amsterdam.nl/privacy/specifieke/\
+privacyverklaring-parkeren-verkeer-bouw/reistijden-meetsysteem-privacy/",
+                )],
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 contains_pi_data='Ja',
-                legal_ground='Verkeersmanagement in de rol van wegbeheerder.',
-                privacy_declaration="https://www.amsterdam.nl/privacy/specifieke/\
-privacyverklaring-parkeren-verkeer-bouw/reistijden-meetsysteem-privacy/",
                 active_until='01-01-2050'
             )
         ]
@@ -246,17 +250,23 @@ class TestImportSensor:
         'active_until': '2050-01-01',
         'contains_pi_data': True,
         'datastream': '',
-        'legal_ground': 'Verkeersmanagement in de rol van wegbeheerder.',
         'location': {'latitude': 52.3851890, 'longitude': 4.8815420},
         'location_description': None,
-        'observation_goal': 'Het tellen van voertuigen en meten van doorstroming.',
+        'observation_goals': [
+            {
+                'observation_goal': 'Het tellen van voertuigen en meten van doorstroming.',
+                'legal_ground': 'Verkeersmanagement in de rol van wegbeheerder.',
+                'privacy_declaration': "https://www.amsterdam.nl/privacy/specifieke/\
+privacyverklaring-parkeren-verkeer-bouw/reistijden-meetsysteem-privacy/",
+            }
+        ],
+
         'owner': {
             'name': 'Afdeling verkeersmanagement',
             'email': 'Meldingsplicht.Sensoren@amsterdam.nl',
             'organisation': 'Gemeente Amsterdam',
         },
-        'privacy_declaration': "https://www.amsterdam.nl/privacy/specifieke/\
-privacyverklaring-parkeren-verkeer-bouw/reistijden-meetsysteem-privacy/",
+
         'regions': [],
         'themes': ['Mobiliteit: auto'],
         'type': 'Optische / camera sensor',
@@ -267,17 +277,21 @@ privacyverklaring-parkeren-verkeer-bouw/reistijden-meetsysteem-privacy/",
         'active_until': '2050-01-01',
         'contains_pi_data': True,
         'datastream': '',
-        'legal_ground': 'Verkeersmanagement in de rol van wegbeheerder.',
         'location': {'latitude': 52.3851890, 'longitude': 4.8815420},
         'location_description': None,
-        'observation_goal': 'Het tellen van voertuigen en meten van doorstroming.',
+        'observation_goals': [
+            {
+                'legal_ground': 'Verkeersmanagement in de rol van wegbeheerder.',
+                'observation_goal': 'Het tellen van voertuigen en meten van doorstroming.',
+                'privacy_declaration': "https://www.amsterdam.nl/privacy/specifieke/\
+privacyverklaring-parkeren-verkeer-bouw/reistijden-meetsysteem-privacy/",
+            }
+        ],
         'owner': {
             'name': 'Afdeling verkeersmanagement',
             'email': 'Meldingsplicht.Sensoren@amsterdam.nl',
             'organisation': 'Gemeente Amsterdam',
         },
-        'privacy_declaration': "https://www.amsterdam.nl/privacy/specifieke/\
-privacyverklaring-parkeren-verkeer-bouw/reistijden-meetsysteem-privacy/",
         'regions': [],
         'themes': ['Mobiliteit: auto'],
         'type': 'Optische / camera sensor',

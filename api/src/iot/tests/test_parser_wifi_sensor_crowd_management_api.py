@@ -2,7 +2,7 @@ import pytest
 from django.conf import settings
 
 from iot import import_utils, import_utils_apis, models
-from iot.import_utils import LatLong, PersonData, SensorData
+from iot.import_utils import LatLong, ObservationGoal, PersonData, SensorData
 from iot.serializers import Device2Serializer
 
 
@@ -127,11 +127,13 @@ def sensor_data(person_data):
         type="Aanwezigheid of nabijheidsensor",
         location=LatLong(latitude=52.3794284, longitude=4.901852),
         datastream='',
-        observation_goal='Tellen van mensen.',
+        observation_goals=[ObservationGoal(
+            observation_goal='Tellen van mensen.',
+            privacy_declaration='https://www.amsterdam.nl/foo/',
+            legal_ground='Verkeersmanagment in de rol van wegbeheerder.'
+        )],
         themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
         contains_pi_data='Ja',
-        legal_ground='Verkeersmanagment in de rol van wegbeheerder.',
-        privacy_declaration="https://www.amsterdam.nl/foo/",
         active_until='01-01-2050'
     )
 
@@ -162,11 +164,13 @@ class TestApiParser:
                 type="Aanwezigheid of nabijheidsensor",
                 location=LatLong(latitude=52.3794284, longitude=4.901852),
                 datastream='',
-                observation_goal='Tellen van mensen.',
+                observation_goals=[ObservationGoal(
+                    observation_goal='Tellen van mensen.',
+                    legal_ground='Verkeersmanagment in de rol van wegbeheerder.',
+                    privacy_declaration="https://www.amsterdam.nl/foo/",
+                )],
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 contains_pi_data='Ja',
-                legal_ground='Verkeersmanagment in de rol van wegbeheerder.',
-                privacy_declaration="https://www.amsterdam.nl/foo/",
                 active_until='01-01-2050'
             )
         ]
@@ -216,16 +220,20 @@ class TestImportSensor:
         'active_until': '2050-01-01',
         'contains_pi_data': True,
         'datastream': '',
-        'legal_ground': 'Verkeersmanagment in de rol van wegbeheerder.',
         'location': {'latitude': 52.3794284, 'longitude': 4.901852},
         'location_description': None,
-        'observation_goal': 'Tellen van mensen.',
+        'observation_goals': [
+            {
+                'observation_goal': 'Tellen van mensen.',
+                'privacy_declaration': 'https://www.amsterdam.nl/foo/',
+                'legal_ground': 'Verkeersmanagment in de rol van wegbeheerder.'
+            }
+        ],
         'owner': {
             'name': 'Afdeling verkeersmanagment',
             'email': 'LVMA@amsterdam.nl',
             'organisation': 'Gemeente Amsterdam',
         },
-        'privacy_declaration': 'https://www.amsterdam.nl/foo/',
         'regions': [],
         'themes': ['Mobiliteit: auto'],
         'type': 'Aanwezigheid of nabijheidsensor',
@@ -236,16 +244,20 @@ class TestImportSensor:
         'active_until': '2050-01-01',
         'contains_pi_data': True,
         'datastream': '',
-        'legal_ground': 'Verkeersmanagment in de rol van wegbeheerder.',
         'location': {'latitude': 52.3794284, 'longitude': 4.901852},
         'location_description': None,
-        'observation_goal': 'Tellen van mensen.',
+        'observation_goals': [
+            {
+                'observation_goal': 'Tellen van mensen.',
+                'privacy_declaration': 'https://www.amsterdam.nl/foo/',
+                'legal_ground': 'Verkeersmanagment in de rol van wegbeheerder.'
+            }
+        ],
         'owner': {
             'name': 'Afdeling verkeersmanagment',
             'email': 'LVMA@amsterdam.nl',
             'organisation': 'Gemeente Amsterdam',
         },
-        'privacy_declaration': 'https://www.amsterdam.nl/foo/',
         'regions': [],
         'themes': ['Mobiliteit: auto'],
         'type': 'Aanwezigheid of nabijheidsensor',

@@ -2,7 +2,7 @@ import pytest
 from django.conf import settings
 
 from iot import import_utils, import_utils_apis, models
-from iot.import_utils import LatLong, PersonData, SensorData
+from iot.import_utils import LatLong, ObservationGoal, PersonData, SensorData
 from iot.serializers import Device2Serializer
 
 
@@ -125,11 +125,13 @@ class TestDeleteNotFoundSensor:
             type="Aanwezigheid of nabijheidsensor",
             location=LatLong(latitude=4.901852, longitude=52.3794284),
             datastream='',
-            observation_goal='Tellen van mensen.',
+            observation_goals=[ObservationGoal(
+                observation_goal='Tellen van mensen.',
+                privacy_declaration='https://www.amsterdam.nl/foo/',
+                legal_ground='Verkeersmanagment in de rol van wegbeheerder.'
+            )],
             themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
             contains_pi_data='Ja',
-            legal_ground='Verkeersmanagment in de rol van wegbeheerder.',
-            privacy_declaration="https://www.amsterdam.nl/foo/",
             active_until='01-01-2050'
         )
 
@@ -139,11 +141,13 @@ class TestDeleteNotFoundSensor:
             type="Aanwezigheid of nabijheidsensor",
             location=LatLong(latitude=4.901853, longitude=52.3794284),
             datastream='',
-            observation_goal='Tellen van mensen.',
+            observation_goals=[ObservationGoal(
+                observation_goal='Tellen van mensen.',
+                privacy_declaration='https://www.amsterdam.nl/foo/',
+                legal_ground='Verkeersmanagment in de rol van wegbeheerder.'
+            )],
             themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
             contains_pi_data='Ja',
-            legal_ground='Verkeersmanagment in de rol van wegbeheerder.',
-            privacy_declaration="https://www.amsterdam.nl/foo/",
             active_until='01-01-2050'
         )
 
@@ -187,11 +191,13 @@ class TestDeleteNotFoundSensor:
             type="Aanwezigheid of nabijheidsensor",
             location=LatLong(latitude=4.901852, longitude=52.3794284),
             datastream='',
-            observation_goal='Tellen van mensen.',
+            observation_goals=[ObservationGoal(
+                observation_goal='Tellen van mensen.',
+                privacy_declaration='https://www.amsterdam.nl/foo/',
+                legal_ground='Verkeersmanagment in de rol van wegbeheerder.'
+            )],
             themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
             contains_pi_data='Ja',
-            legal_ground='Verkeersmanagment in de rol van wegbeheerder.',
-            privacy_declaration="https://www.amsterdam.nl/foo/",
             active_until='01-01-2050'
         )
 
@@ -201,11 +207,13 @@ class TestDeleteNotFoundSensor:
             type="Aanwezigheid of nabijheidsensor",
             location=LatLong(latitude=4.901853, longitude=52.3794284),
             datastream='',
-            observation_goal='Tellen van mensen.',
+            observation_goals=[ObservationGoal(
+                observation_goal='Tellen van mensen.',
+                privacy_declaration='https://www.amsterdam.nl/foo/',
+                legal_ground='Verkeersmanagment in de rol van wegbeheerder.'
+            )],
             themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
             contains_pi_data='Ja',
-            legal_ground='Verkeersmanagment in de rol van wegbeheerder.',
-            privacy_declaration="https://www.amsterdam.nl/foo/",
             active_until='01-01-2050'
         )
 
