@@ -45,8 +45,6 @@ class Device2Factory(factory.django.DjangoModelFactory):
         for observation_goal, privacy_declaration, legal_ground in sample_model(ObservationGoal, 0):
             self.observation_goal.add(observation_goal, privacy_declaration, legal_ground)
 
-    # legal_ground = factory.LazyFunction(lambda: sample_model(LegalGround)[0])
-    # privacy_declaration = fake.url(['https'])
     active_until = fake.date()
 
     class Meta:

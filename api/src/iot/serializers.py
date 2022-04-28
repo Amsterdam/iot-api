@@ -216,7 +216,6 @@ class Device2Serializer(HALSerializer):
     type = serializers.SerializerMethodField()
     regions = serializers.StringRelatedField(many=True)
     themes = serializers.SerializerMethodField()
-    # legal_ground = serializers.StringRelatedField()
     owner = Person2Serializer()
     location = serializers.SerializerMethodField()
     observation_goals = ObservationGoalSerializer(many=True)
@@ -233,7 +232,6 @@ class Device2Serializer(HALSerializer):
             'themes',
             'contains_pi_data',
             'observation_goals',
-            # 'legal_ground',
             'active_until',
             'reference',
         ]

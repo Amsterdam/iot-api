@@ -112,20 +112,18 @@ def parse_wifi_sensor_crowd_management(data: dict) -> Generator[SensorData, None
         last_name='verkeersmanagment'
     )
 
-    # sensors_list = []
     features = data['features']  # list of sensors i think for now
     if features:
         for feature in features:
             properties = feature['properties']  # properties dict
 
-            # filter only the sonsor with the WiFi sensor soort.
+            # exclude any sensor with no WiFi sensor soort.
             if properties['Soort'] != 'WiFi sensor':
                 continue
             geometry = feature['geometry']  # geometry dict
             latitude = geometry['coordinates'][1]
             longitude = geometry['coordinates'][0]
 
-            # sensors_list.append(
             yield SensorData(
                 owner=person_data,
                 reference=f"wifi_sensor_crowd_management_{feature['id']}",
@@ -137,7 +135,7 @@ def parse_wifi_sensor_crowd_management(data: dict) -> Generator[SensorData, None
                 observation_goals=[ObservationGoal(
                     observation_goal='Tellen van mensen.',
                     legal_ground='Verkeersmanagment in de rol van wegbeheerder.',
-                    privacy_declaration=properties['Privacyverklaring'],
+                    privacy_declaration=adjust_url(properties['Privacyverklaring']),
                 )],
                 active_until='01-01-2050'
             )
@@ -161,20 +159,18 @@ def parse_sensor_crowd_management(data: dict) -> Generator[SensorData, None, Non
         last_name='verkeersmanagment'
     )
 
-    # sensors_list = []
     features = data['features']  # list of sensors i think for now
     if features:
         for feature in features:
             properties = feature['properties']  # properties dict
 
-            # filter only the sonsor with the WiFi sensor soort.
+            # filter only the sonsor Telcamera, Corona CMSA, 3D sensor soort.
             if properties['Soort'] not in ['Telcamera', 'Corona CMSA', '3D sensor']:
                 continue
             geometry = feature['geometry']  # geometry dict
             latitude = geometry['coordinates'][1]
             longitude = geometry['coordinates'][0]
 
-            # sensors_list.append(
             yield SensorData(
                 owner=person_data,
                 reference=f"sensor_crowd_management_{feature['id']}",
@@ -185,7 +181,7 @@ def parse_sensor_crowd_management(data: dict) -> Generator[SensorData, None, Non
                 datastream='',
                 observation_goals=[ObservationGoal(
                     observation_goal='Tellen van mensen.',
-                    privacy_declaration=properties['Privacyverklaring'],
+                    privacy_declaration=adjust_url(properties['Privacyverklaring']),
                     legal_ground='Verkeersmanagment in de rol van wegbeheerder.'
                 )],
                 active_until='01-01-2050'
@@ -210,7 +206,6 @@ def parse_camera_brug_en_sluisbediening(data: dict) -> Generator[SensorData, Non
         last_name='stedelijkbeheer'
     )
 
-    # sensors_list = []
     features = data['features']  # list of sensors i think for now
     if features:
         for feature in features:
@@ -229,7 +224,7 @@ def parse_camera_brug_en_sluisbediening(data: dict) -> Generator[SensorData, Non
                 datastream='',
                 observation_goals=[ObservationGoal(
                     observation_goal='Het bedienen van sluisen en bruggen.',
-                    privacy_declaration=properties['Privacyverklaring'],
+                    privacy_declaration=adjust_url(properties['Privacyverklaring']),
                     legal_ground='Sluisbeheerder in het kader van de woningwet 1991'
                 )],
                 active_until='01-01-2050'
@@ -317,7 +312,6 @@ def parse_kentekencamera_reistijd(data: dict) -> Generator[SensorData, None, Non
             latitude = geometry['coordinates'][1]
             longitude = geometry['coordinates'][0]
 
-            # sensors_list.append(
             yield SensorData(
                 owner=person_data,
                 reference=f"kentekencamera_reistijd_{feature['id']}",
@@ -422,7 +416,7 @@ def parse_ais_masten(data: dict) -> Generator[SensorData, None, None]:
                 datastream='',
                 observation_goals=[ObservationGoal(
                     observation_goal='Vaarweg management',
-                    privacy_declaration=properties['Privacyverklaring'],
+                    privacy_declaration=adjust_url(properties['Privacyverklaring']),
                     legal_ground='In de rol van vaarwegbeheerder op basis van de binnenvaartwet.'
                 )],
                 active_until='01-01-2050'
