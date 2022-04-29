@@ -25,7 +25,7 @@ def convert_api_data(api_name: str, api_data: dict) -> Tuple[List[Exception], in
     takes the api_name to find the parser, and the api_data to convert the data with the
     existing data. The parser will return a generator of SensorData.
     from the generator, use the import_person_data and import_senso_data.
-    It will return a dict for each api_name with errors, number of insertions, number of updated
+    It will return a tuple of a list of errors, number of insertions, number of updated
     records.
     """
     parser = PARSERS_MAPPER[api_name]
