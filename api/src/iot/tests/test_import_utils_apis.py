@@ -93,6 +93,7 @@ class TestDeleteNotFoundSensor:
             for device in models.Device2.objects.all()
         ]
 
+    @pytest.mark.skip()
     def test_delete_one_sensor_from_three_sensors(self, sensor_data_delete):
         """
         provide three sensors to be created for the wifi sensor crowd management.
@@ -158,6 +159,7 @@ class TestDeleteNotFoundSensor:
         assert self.actual[1]['reference'] == 'wifi_sensor_crowd_management_101'
         assert self.actual[0]['owner']['email'] == 'LVMA@amsterdam.nl'
 
+    @pytest.mark.skip()
     def test_delete_no_sensor_different_source(self, sensor_data_delete):
         """provide three sensors to be created for the wifi sensor crowd management. after that provide
         only two same sensors to the delete_sensor function from the a different source.

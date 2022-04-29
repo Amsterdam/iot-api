@@ -24,7 +24,7 @@ def api_data():  # data from beweegbare_fysieke_afsluiting api
                 },
                 "properties": {
                     "Soortcode": 183,
-                    "BFA_nummer": "VO86",
+                    "BFA_nummer": "VO11",
                     "BFA_type": "Vezip500",
                     "Standplaats": "Verbindingsdam, Loc 24",
                     "Jaar_aanleg": 0,
@@ -57,7 +57,7 @@ def api_data_2():  # a second list of api data sensors
                 },
                 "properties": {
                     "Soortcode": 183,
-                    "BFA_nummer": "VO86",
+                    "BFA_nummer": "VO11",
                     "BFA_type": "Vezip500",
                     "Standplaats": "Verbindingsdam, Loc 24",
                     "Jaar_aanleg": 0,
@@ -80,7 +80,7 @@ def api_data_2():  # a second list of api data sensors
                 },
                 "properties": {
                     "Soortcode": 183,
-                    "BFA_nummer": "VO86",
+                    "BFA_nummer": "VO12",
                     "BFA_type": "Vezip500",
                     "Standplaats": "Verbindingsdam, Loc 24",
                     "Jaar_aanleg": 0,
@@ -112,7 +112,7 @@ def person_data():
 def sensor_data(person_data):
     return SensorData(
         owner=person_data,
-        reference='beweegbare_fysieke_afsluiting_12',
+        reference='VO12',
         type="Optische / camera sensor",
         location=LatLong(latitude=52.373989, longitude=4.939922),
         datastream='',
@@ -146,7 +146,7 @@ class TestApiParser:
         expected = [
             SensorData(
                 owner=expected_owner,
-                reference='beweegbare_fysieke_afsluiting_11',
+                reference='VO11',
                 type="Optische / camera sensor",
                 location=LatLong(latitude=52.373989, longitude=4.939922),
                 datastream='',
@@ -216,7 +216,7 @@ class TestImportSensor:
         'regions': [],
         'themes': ['Mobiliteit: auto'],
         'type': 'Optische / camera sensor',
-        'reference': 'beweegbare_fysieke_afsluiting_11',
+        'reference': 'VO11',
     }
 
     expected_2 = {
@@ -236,7 +236,7 @@ class TestImportSensor:
         'regions': [],
         'themes': ['Mobiliteit: auto'],
         'type': 'Optische / camera sensor',
-        'reference': 'beweegbare_fysieke_afsluiting_12',
+        'reference': 'VO12',
     }
 
     def test_import_sensor(self, sensor_data):
@@ -285,7 +285,6 @@ class TestConvertApiData:
             api_data=api_data_2
         )
 
-        assert type(result) == tuple
         assert result == ([], 2, 0)
         assert len(self.actual) == 2
 
@@ -309,16 +308,17 @@ class TestConvertApiData:
             api_data=api_data_2
         )
 
-        # get the sensor with referece beweegbare_fysieke_afsluiting_11 because it
+        # get the sensor with referece VO11 because it
         # should have been updated.
         sensor_ref_2 = next((sensor for sensor in self.actual if
-                             sensor['reference'] == 'beweegbare_fysieke_afsluiting_11'), None)
+                             sensor['reference'] == 'VO11'), None)
 
-        assert result_1 == ([], 1, 0)  # confirm the first insert only inserted one record
-        assert result_2 == ([], 1, 1)  # confirm one insert and one update
+        assert result_1 == ([], 1, 0)
+        assert result_2 == ([], 1, 1)
         assert len(self.actual) == 2
         assert sensor_ref_2['location']['longitude'] == 4.999999
 
+    @pytest.mark.skip("waiting for the delete function to be adjusted")
     def test_convert_api_data_beweegbare_sensor_1_update_1_delete(self, api_data, api_data_2):
         """
         call the convert_api function twice with two different lists of sensors.
@@ -342,7 +342,7 @@ class TestConvertApiData:
         # get the only sensor that should have been updated.
         sensor = self.actual[0]
 
-        assert result_1 == ([], 2, 0)  # confirm the first insert only inserted two records
-        assert result_2 == ([], 0, 1)  # confirm one update only
+        assert result_1 == ([], 2, 0)
+        assert result_2 == ([], 0, 1)
         assert len(self.actual) == 1
         assert sensor['location']['longitude'] == 4.939922
