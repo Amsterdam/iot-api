@@ -298,7 +298,7 @@ class TestConvertApiData:
             api_data=api_data_2
         )
 
-        assert result == {'wifi_sensor_crowd_management': 'inserted 2, updated 0, errors 0'}
+        assert result == ([], 2, 0)
         assert len(self.actual) == 2
 
     def test_convert_api_data_wifi_sensor_one_insert_one_update(self, api_data, api_data_2):
@@ -325,8 +325,8 @@ class TestConvertApiData:
         sensor_ref_2 = next((sensor for sensor in self.actual if
                              sensor['reference'] == 'GABW-03'), None)
 
-        assert result_1 == {'wifi_sensor_crowd_management': 'inserted 1, updated 0, errors 0'}
-        assert result_2 == {'wifi_sensor_crowd_management': 'inserted 1, updated 1, errors 0'}
+        assert result_1 == ([], 1, 0)
+        assert result_2 == ([], 1, 1)
         assert len(self.actual) == 2
         assert sensor_ref_2['location']['longitude'] == 4.99999
 
@@ -354,7 +354,7 @@ class TestConvertApiData:
         # get the only sensor that should have been updated.
         sensor = self.actual[0]
 
-        assert result_1 == {'wifi_sensor_crowd_management': 'inserted 2, updated 0, errors 0'}
-        assert result_2 == {'wifi_sensor_crowd_management': 'inserted 0, updated 1, errors 0'}
+        assert result_1 == ([], 2, 0)
+        assert result_2 == ([], 0, 1)
         assert len(self.actual) == 2
         assert sensor['location']['longitude'] == 4.901852

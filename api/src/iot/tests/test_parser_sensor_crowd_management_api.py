@@ -274,7 +274,7 @@ class TestConvertApiData:
             api_data=api_data_2
         )
 
-        assert result == {'sensor_crowd_management': 'inserted 2, updated 0, errors 0'}
+        assert result == ([], 2, 0)
         assert len(self.actual) == 2
 
     def test_convert_api_data_sensor_3_inserts_1_update(self, api_data, api_data_2):
@@ -301,8 +301,8 @@ class TestConvertApiData:
         sensor_ref_2 = next((sensor for sensor in self.actual if
                              sensor['reference'] == 'GABW-03'), None)
 
-        assert result_1 == {'sensor_crowd_management': 'inserted 3, updated 0, errors 0'}
-        assert result_2 == {'sensor_crowd_management': 'inserted 1, updated 1, errors 0'}
+        assert result_1 == ([], 3, 0)
+        assert result_2 == ([], 1, 1)
         assert len(self.actual) == 4
         assert sensor_ref_2['location']['longitude'] == 4.99999
 

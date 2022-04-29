@@ -1,7 +1,6 @@
 from collections import Counter
 from typing import Dict, Generator, List, Tuple
 
-import requests
 from django.conf import settings
 
 from iot import import_utils, models
@@ -21,41 +20,7 @@ API_MAPPER = {
 }
 
 
-def import_api_data(api_names: List[str] = None) -> List[dict]:
-    """
-    takes a list of the name(s) of the api as a param, calls the url that belongs to it in the
-    API_MAPPER. when the data is fetched from the api, it will convert it to a dict
-    and pass it to the convert_api_data together with the api_name.
-    A tuple will be returned that will contain the results. The results will be a list dict
-    for each api's result of inserts, updates and errors.
-    """
-    try:
-        # if the list api_names is an empty list, copy the list of all the api_names (keys)
-        # from the API_MAPPER dict so the api_names will contain a list of all the api_name
-        # from the API_MAPPER dictionary, else use the app_names list with the provided
-        # app_names list.
-        if not api_names:
-            api_names = API_MAPPER.keys()
-
-        output_list = []
-        for api_name in api_names:
-            api_url = API_MAPPER[api_name]  # get the url that belongs to the api.
-
-            response = requests.get(url=api_url)
-            # check if response is 200 and content type is json, if not, return
-            if response.status_code != 200 or \
-                    'application/json' not in response.headers["Content-Type"]:
-                raise RuntimeError(f"{response.status_code} - {response.content}")
-
-            data = response.json()  # get the content of the response as dict
-            output_list.append(convert_api_data(api_name=api_name, api_data=data))
-        return output_list
-
-    except Exception as e:
-        return [{'error': e}]
-
-
-def convert_api_data(api_name: str, api_data: dict) -> Dict:
+def convert_api_data(api_name: str, api_data: dict) -> Tuple[List[Exception], int, int]:
     """
     takes the api_name to find the parser, and the api_data to convert the data with the
     existing data. The parser will return a generator of SensorData.
@@ -92,7 +57,7 @@ def convert_api_data(api_name: str, api_data: dict) -> Dict:
     # delete sensors from the same owner that are not in the api
     # delete_not_found_sensors(sensors=sensors, source=api_name)
 
-    return {api_name: f'inserted {counter[True]}, updated {counter[False]}, errors {len(errors)}'}
+    return (errors, counter[True], counter[False])
 
 
 def parse_wifi_sensor_crowd_management(data: dict) -> Generator[SensorData, None, None]:

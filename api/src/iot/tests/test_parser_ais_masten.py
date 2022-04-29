@@ -269,7 +269,7 @@ class TestConverteApiData:
             api_data=api_data_2
         )
 
-        assert result == {'ais_masten': 'inserted 2, updated 0, errors 0'}
+        assert result == ([], 2, 0)
         assert len(self.actual) == 2
 
     def test_convert_api_data_ais_masten_one_insert_one_update(self, api_data, api_data_2):
@@ -296,8 +296,8 @@ class TestConverteApiData:
         sensor_ref_2 = next((sensor for sensor in self.actual if
                              sensor['reference'] == 'Floating office'), None)
 
-        assert result_1 == {'ais_masten': 'inserted 1, updated 0, errors 0'}
-        assert result_2 == {'ais_masten': 'inserted 1, updated 1, errors 0'}
+        assert result_1 == ([], 1, 0)
+        assert result_2 == ([], 1, 1)
         assert len(self.actual) == 2
         assert sensor_ref_2['location']['longitude'] == 4.999999
 
@@ -325,7 +325,7 @@ class TestConverteApiData:
         # get the only sensor that should have been updated.
         sensor = self.actual[0]
 
-        assert result_1 == {'ais_masten': 'inserted 2, updated 0, errors 0'}
-        assert result_2 == {'ais_masten': 'inserted 0, updated 1, errors 0'}
+        assert result_1 == ([], 2, 0)
+        assert result_2 == ([], 0, 1)
         assert len(self.actual) == 1
         assert sensor['location']['longitude'] == 4.899393

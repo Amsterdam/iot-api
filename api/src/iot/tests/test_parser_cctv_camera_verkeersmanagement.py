@@ -330,7 +330,7 @@ class TestConverteApiData:
             api_data=api_data_2
         )
 
-        assert result == {'cctv_camera_verkeersmanagement': 'inserted 2, updated 0, errors 0'}
+        assert result == ([], 2, 0)
         assert len(self.actual) == 2
 
     def test_convert_api_data_cctvcv_one_insert_one_update(self, api_data, api_data_2):
@@ -357,8 +357,8 @@ class TestConverteApiData:
         sensor_ref_2 = next((sensor for sensor in self.actual if
                              sensor['reference'] == 'TV-117-5'), None)
 
-        assert result_1 == {'cctv_camera_verkeersmanagement': 'inserted 1, updated 0, errors 0'}
-        assert result_2 == {'cctv_camera_verkeersmanagement': 'inserted 1, updated 1, errors 0'}
+        assert result_1 == ([], 1, 0)
+        assert result_2 == ([], 1, 1)
         assert len(self.actual) == 2
         assert sensor_ref_2['location']['latitude'] == 52.381543
 
@@ -386,7 +386,7 @@ class TestConverteApiData:
         # get the only sensor that should have been updated.
         sensor = self.actual[0]
 
-        assert result_1 == {'cctv_camera_verkeersmanagement': 'inserted 2, updated 0, errors 0'}
-        assert result_2 == {'cctv_camera_verkeersmanagement': 'inserted 0, updated 1, errors 0'}
+        assert result_1 == ([], 2, 0)
+        assert result_2 == ([], 1, 0)
         assert len(self.actual) == 1
         assert sensor['location']['latitude'] == 52.381543
