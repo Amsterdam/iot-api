@@ -21,13 +21,13 @@ API_MAPPER = {
 }
 
 
-def import_api_data(api_names: List[str] = None) -> List[Tuple[List[Exception], int, int]]:
+def import_api_data(api_names: List[str] = None) -> List[dict]:
     """
     takes a list of the name(s) of the api as a param, calls the url that belongs to it in the
     API_MAPPER. when the data is fetched from the api, it will convert it to a dict
     and pass it to the convert_api_data together with the api_name.
-    A tuple will be returned that will contain the results. The results will be a list of tuples
-    for each api as follow: (err, inserts, updates)
+    A tuple will be returned that will contain the results. The results will be a list dict
+    for each api's result of inserts, updates and errors.
     """
     try:
         # if the list api_names is an empty list, copy the list of all the api_names (keys)
@@ -52,15 +52,15 @@ def import_api_data(api_names: List[str] = None) -> List[Tuple[List[Exception], 
         return output_list
 
     except Exception as e:
-        return [([e], 0, 0)]
+        return [{'error': e}]
 
 
-def convert_api_data(api_name: str, api_data: dict) -> Tuple[List[Exception], int, int]:
+def convert_api_data(api_name: str, api_data: dict) -> Dict:
     """
     takes the api_name to find the parser, and the api_data to convert the data with the
     existing data. The parser will return a generator of SensorData.
     from the generator, use the import_person_data and import_senso_data.
-    It will return a tuple of a list of errors, number of insertions, number of updated
+    It will return a dict for each api_name with errors, number of insertions, number of updated
     records.
     """
     parser = PARSERS_MAPPER[api_name]
@@ -88,10 +88,11 @@ def convert_api_data(api_name: str, api_data: dict) -> Tuple[List[Exception], in
         except Exception as e:
             errors.append(e)
 
+    # TODO: need to create something unique for each sensor source
     # delete sensors from the same owner that are not in the api
-    delete_not_found_sensors(sensors=sensors, source=api_name)
+    # delete_not_found_sensors(sensors=sensors, source=api_name)
 
-    return (errors, counter[True], counter[False])
+    return {api_name: f'inserted {counter[True]}, updated {counter[False]}, errors {len(errors)}'}
 
 
 def parse_wifi_sensor_crowd_management(data: dict) -> Generator[SensorData, None, None]:
@@ -112,7 +113,6 @@ def parse_wifi_sensor_crowd_management(data: dict) -> Generator[SensorData, None
         last_name='verkeersmanagment'
     )
 
-    # sensors_list = []
     features = data['features']  # list of sensors i think for now
     if features:
         for feature in features:
@@ -125,10 +125,9 @@ def parse_wifi_sensor_crowd_management(data: dict) -> Generator[SensorData, None
             latitude = geometry['coordinates'][1]
             longitude = geometry['coordinates'][0]
 
-            # sensors_list.append(
             yield SensorData(
                 owner=person_data,
-                reference=f"wifi_sensor_crowd_management_{feature['id']}",
+                reference=properties['Objectnummer'],
                 type='Aanwezigheid of nabijheidsensor',
                 location=LatLong(latitude=latitude, longitude=longitude),
                 contains_pi_data='Ja',
@@ -175,7 +174,7 @@ def parse_sensor_crowd_management(data: dict) -> Generator[SensorData, None, Non
             # sensors_list.append(
             yield SensorData(
                 owner=person_data,
-                reference=f"sensor_crowd_management_{feature['id']}",
+                reference=properties['Objectnummer'],
                 type='Optische / camera sensor',
                 location=LatLong(latitude=latitude, longitude=longitude),
                 contains_pi_data='Ja',
@@ -217,7 +216,7 @@ def parse_camera_brug_en_sluisbediening(data: dict) -> Generator[SensorData, Non
 
             yield SensorData(
                 owner=person_data,
-                reference=f"camera_brug_en_sluisbediening_{feature['id']}",
+                reference=properties['BrugSluisNummer'],
                 type='Optische / camera sensor',
                 location=LatLong(latitude=latitude, longitude=longitude),
                 contains_pi_data='Ja',
@@ -263,7 +262,7 @@ def parse_cctv_camera_verkeersmanagement(data: dict) -> Generator[SensorData, No
 
             yield SensorData(
                 owner=person_data,
-                reference=f"cctv_camera_verkeersmanagement_{feature['id']}",
+                reference=properties['Objectnummer_Amsterdam'],
                 type='Optische / camera sensor',
                 location=LatLong(latitude=latitude, longitude=longitude),
                 contains_pi_data='Ja',
@@ -312,7 +311,7 @@ def parse_kentekencamera_reistijd(data: dict) -> Generator[SensorData, None, Non
             # sensors_list.append(
             yield SensorData(
                 owner=person_data,
-                reference=f"kentekencamera_reistijd_{feature['id']}",
+                reference=properties['Objectnummer_Amsterdam'],
                 type='Optische / camera sensor',
                 location=LatLong(latitude=latitude, longitude=longitude),
                 contains_pi_data='Ja',
@@ -360,7 +359,7 @@ def parse_kentekencamera_milieuzone(data: dict) -> Generator[SensorData, None, N
 
             yield SensorData(
                 owner=person_data,
-                reference=f"kentekencamera_milieuzone_{feature['id']}",
+                reference=properties['Objectnummer_Amsterdam'],
                 type='Optische / camera sensor',
                 location=LatLong(latitude=latitude, longitude=longitude),
                 contains_pi_data='Ja',
@@ -402,7 +401,7 @@ def parse_ais_masten(data: dict) -> Generator[SensorData, None, None]:
 
             yield SensorData(
                 owner=person_data,
-                reference=f"ais_masten_{feature['id']}",
+                reference=properties['Locatienaam'],
                 type='Optische / camera sensor',
                 location=LatLong(latitude=latitude, longitude=longitude),
                 contains_pi_data='Ja',
@@ -484,10 +483,11 @@ def parse_beweegbare_fysieke_afsluiting(data: dict) -> Generator[SensorData, Non
             geometry = feature['geometry']  # geometry dict
             latitude = geometry['coordinates'][1]
             longitude = geometry['coordinates'][0]
+            properties = feature['properties']  # properties dict
 
             yield SensorData(
                 owner=person_data,
-                reference=f"beweegbare_fysieke_afsluiting_{feature['id']}",
+                reference=properties['BFA_nummer'],
                 type='Optische / camera sensor',
                 location=LatLong(latitude=latitude, longitude=longitude),
                 contains_pi_data='Ja',
@@ -500,6 +500,7 @@ def parse_beweegbare_fysieke_afsluiting(data: dict) -> Generator[SensorData, Non
             )
 
 
+# TODO: need to be adjusted with a unique value per source.
 def delete_not_found_sensors(sensors: List[SensorData], source: str) -> Tuple[int, Dict[str, int]]:
     """takes a list of sensor data. with the source. compares their
     reference with the stored sensors that belong to the same owner (by source).
