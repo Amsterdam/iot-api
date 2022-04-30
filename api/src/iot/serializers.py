@@ -3,7 +3,7 @@ from drf_extra_fields.geo_fields import PointField
 from rest_framework import serializers
 
 from .constants import CATEGORY_CHOICE_ABBREVIATIONS, CATEGORY_CHOICES
-from .models import Device, Device2, Person, Person2, Type
+from .models import Device, Device2, ObservationGoal, Person, Person2, Type
 from .tasks import send_iot_request
 
 
@@ -203,13 +203,22 @@ class Person2Serializer(HALSerializer):
         fields = ['name', 'email', 'organisation']
 
 
+class ObservationGoalSerializer(HALSerializer):
+
+    legal_ground = serializers.StringRelatedField()
+
+    class Meta:
+        model = ObservationGoal
+        fields = ['observation_goal', 'privacy_declaration', 'legal_ground']
+
+
 class Device2Serializer(HALSerializer):
     type = serializers.SerializerMethodField()
     regions = serializers.StringRelatedField(many=True)
     themes = serializers.SerializerMethodField()
-    legal_ground = serializers.StringRelatedField()
     owner = Person2Serializer()
     location = serializers.SerializerMethodField()
+    observation_goals = ObservationGoalSerializer(many=True)
 
     class Meta:
         model = Device2
@@ -222,9 +231,7 @@ class Device2Serializer(HALSerializer):
             'datastream',
             'themes',
             'contains_pi_data',
-            'observation_goal',
-            'legal_ground',
-            'privacy_declaration',
+            'observation_goals',
             'active_until',
             'reference',
         ]

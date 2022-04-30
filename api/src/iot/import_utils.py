@@ -134,6 +134,13 @@ class PersonData:
 
 
 @dataclasses.dataclass
+class ObservationGoal:
+    observation_goal: str
+    privacy_declaration: str
+    legal_ground: str
+
+
+@dataclasses.dataclass
 class LatLong:
     latitude: Union[float, str]
     longitude: Union[float, str]
@@ -163,11 +170,10 @@ class SensorData:
     type: str
     location: Union[LatLong, PostcodeHouseNumber, LocationDescription, Regions]
     datastream: str
-    observation_goal: str
+    observation_goals: ObservationGoal
     themes: str
     contains_pi_data: Literal['Ja', 'Nee']
-    legal_ground: str
-    privacy_declaration: str
+    # legal_ground: str
     active_until: Union[datetime.date, str]
 
 
@@ -354,11 +360,13 @@ def parse_iprox_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
                 type=row["Kies soort / type sensor", sensor_index],
                 location=location,
                 datastream=row["Wat meet de sensor?", sensor_index],
-                observation_goal=row["Waarvoor meet u dat?", sensor_index],
+                observation_goals=[ObservationGoal(
+                    observation_goal=row["Waarvoor meet u dat?", sensor_index],
+                    privacy_declaration=row["Privacyverklaring", sensor_index],
+                    legal_ground=row["Wettelijke grondslag", sensor_index]
+                )],
                 themes=row["Kies een of meerdere thema's", sensor_index],
                 contains_pi_data=row["Worden er persoonsgegevens verwerkt?", sensor_index],
-                legal_ground=row["Wettelijke grondslag", sensor_index],
-                privacy_declaration=row["Privacyverklaring", sensor_index],
                 active_until=row["Wanneer wordt de sensor verwijderd?", sensor_index],
             )
 
@@ -460,7 +468,11 @@ def parse_bulk_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
                 row["Longitude"],
             ),
             datastream=row["Wat meet de sensor?"],
-            observation_goal=row["Waarvoor meet u dat?"],
+            observation_goals=[ObservationGoal(
+                observation_goal=row["Waarvoor meet u dat?"],
+                privacy_declaration=row["Privacyverklaring"],
+                legal_ground=row["Wettelijke grondslag"]
+            )],
             themes=settings.IPROX_SEPARATOR.join(filter(None, [
                 row["Thema 1"],
                 row["Thema 2 (niet verplicht)"],
@@ -472,8 +484,6 @@ def parse_bulk_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
                 row["Thema 8 (niet verplicht)"],
             ])),
             contains_pi_data=row["Worden er persoonsgegevens verwerkt?"],
-            legal_ground=row["Wettelijke grondslag"],
-            privacy_declaration=row["Privacyverklaring"],
             active_until=row["Wanneer wordt de sensor verwijderd?"],
         )
         for row in (Values(BULK_SENSOR_FIELDS, row) for row in rows)
@@ -598,19 +608,21 @@ def validate_active_until(sensor_data):
 
 
 def validate_privacy_declaration(sensor_data):
-    if (sensor_data.privacy_declaration or '').strip():
-        try:
-            URLValidator()(sensor_data.privacy_declaration)
-        except Exception as e:
-            raise InvalidPrivacyDeclaration(sensor_data) from e
-    elif sensor_data.contains_pi_data == 'Ja':
-        raise InvalidPrivacyDeclaration(sensor_data)
+    for observation_goal in sensor_data.observation_goals:
+        if (observation_goal.privacy_declaration or '').strip():
+            try:
+                URLValidator()(observation_goal.privacy_declaration)
+            except Exception as e:
+                raise InvalidPrivacyDeclaration(sensor_data) from e
+        elif sensor_data.contains_pi_data == 'Ja':
+            raise InvalidPrivacyDeclaration(sensor_data)
 
 
 def validate_legal_ground(sensor_data):
     if sensor_data.contains_pi_data == 'Ja':
-        if sensor_data.legal_ground in (None, ''):
-            raise InvalidLegalGround(sensor_data)
+        for observation_goal in sensor_data.observation_goals:
+            if observation_goal.legal_ground in (None, ''):
+                raise InvalidLegalGround(sensor_data)
 
 
 def validate_contains_pi_data(sensor_data):
@@ -714,21 +726,14 @@ def import_sensor(sensor_data: SensorData, owner: models.Person2, action_logger=
     defaults = {
         'type': action_logger(models.Type2.objects.get_or_create(name=sensor_data.type))[0],
         'datastream': sensor_data.datastream,
-        'observation_goal': sensor_data.observation_goal,
         'contains_pi_data': sensor_data.contains_pi_data == 'Ja',
         'active_until': parse_date(sensor_data.active_until),
         'owner': owner,
-        'privacy_declaration': sensor_data.privacy_declaration,
     }
 
     location = get_location(sensor_data)
     if 'regions' not in location:
         defaults.update(location)
-
-    if defaults['contains_pi_data']:
-        defaults['legal_ground'] = action_logger(models.LegalGround.objects.get_or_create(
-            name=sensor_data.legal_ground
-        ))[0]
 
     # use the sensor_index to give each sensor a unique reference
     device, created = action_logger(models.Device2.objects.update_or_create(
@@ -745,6 +750,15 @@ def import_sensor(sensor_data: SensorData, owner: models.Person2, action_logger=
     for theme_name in sensor_data.themes.split(settings.IPROX_SEPARATOR):
         theme = models.Theme.objects.get_or_create(name=theme_name)[0]
         device.themes.add(theme)
+
+    for observation_goal in sensor_data.observation_goals:
+        import_result = models.ObservationGoal.objects.get_or_create(
+            observation_goal=observation_goal.observation_goal,
+            privacy_declaration=observation_goal.privacy_declaration,
+            legal_ground=action_logger(
+                models.LegalGround.objects.get_or_create(
+                    name=observation_goal.legal_ground))[0])[0]
+        device.observation_goals.add(import_result)
 
     return device, created
 

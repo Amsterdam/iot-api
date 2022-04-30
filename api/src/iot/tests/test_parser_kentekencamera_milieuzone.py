@@ -2,7 +2,7 @@ import pytest
 from django.conf import settings
 
 from iot import import_utils, import_utils_apis, models
-from iot.import_utils import LatLong, PersonData, SensorData
+from iot.import_utils import LatLong, ObservationGoal, PersonData, SensorData
 from iot.serializers import Device2Serializer
 
 
@@ -157,12 +157,14 @@ def sensor_data(person_data):
         type="Optische / camera sensor",
         location=LatLong(latitude=52.3398382, longitude=4.8924874),
         datastream='',
-        observation_goal='Handhaving van verkeersbesluiten.',
+        observation_goals=[ObservationGoal(
+            observation_goal='Handhaving van verkeersbesluiten.',
+            legal_ground='Verkeersbesluiten in de rol van wegbeheerder.',
+            privacy_declaration="https://www.amsterdam.nl/privacy/specifieke/\
+privacyverklaringen-b/milieuzones/",
+        )],
         themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto', 'Milieu']),
         contains_pi_data='Ja',
-        legal_ground='Verkeersbesluiten in de rol van wegbeheerder.',
-        privacy_declaration="https://www.amsterdam.nl/privacy/specifieke/\
-privacyverklaringen-b/milieuzones/",
         active_until='01-01-2050'
     )
 
@@ -193,12 +195,14 @@ class TestApiParser:
                 type="Optische / camera sensor",
                 location=LatLong(latitude=52.3398382, longitude=4.8924874),
                 datastream='',
-                observation_goal='Handhaving van verkeersbesluiten.',
+                observation_goals=[ObservationGoal(
+                    observation_goal='Handhaving van verkeersbesluiten.',
+                    legal_ground='Verkeersbesluiten in de rol van wegbeheerder.',
+                    privacy_declaration="https://www.amsterdam.nl/privacy/specifieke/\
+privacyverklaringen-b/milieuzones/",
+                )],
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto', 'Milieu']),
                 contains_pi_data='Ja',
-                legal_ground='Verkeersbesluiten in de rol van wegbeheerder.',
-                privacy_declaration="https://www.amsterdam.nl/privacy/specifieke/\
-privacyverklaringen-b/milieuzones/",
                 active_until='01-01-2050'
             )
         ]
@@ -246,17 +250,21 @@ class TestImportSensor:
         'active_until': '2050-01-01',
         'contains_pi_data': True,
         'datastream': '',
-        'legal_ground': 'Verkeersbesluiten in de rol van wegbeheerder.',
         'location': {'latitude': 52.3398382, 'longitude': 4.8924874},
         'location_description': None,
-        'observation_goal': 'Handhaving van verkeersbesluiten.',
+        'observation_goals': [
+            {
+                'observation_goal': 'Handhaving van verkeersbesluiten.',
+                'privacy_declaration': 'https://www.amsterdam.nl/privacy/specifieke/\
+privacyverklaringen-b/milieuzones/',
+                'legal_ground': 'Verkeersbesluiten in de rol van wegbeheerder.'
+            }
+        ],
         'owner': {
             'name': 'Afdeling stedelijk beheer',
             'email': 'Meldingsplicht.Sensoren@amsterdam.nl',
             'organisation': 'Gemeente Amsterdam',
         },
-        'privacy_declaration': 'https://www.amsterdam.nl/privacy/specifieke/\
-privacyverklaringen-b/milieuzones/',
         'regions': [],
         'themes': ['Mobiliteit: auto', 'Overig'],
         'type': 'Optische / camera sensor',
@@ -267,17 +275,21 @@ privacyverklaringen-b/milieuzones/',
         'active_until': '2050-01-01',
         'contains_pi_data': True,
         'datastream': '',
-        'legal_ground': 'Verkeersbesluiten in de rol van wegbeheerder.',
         'location': {'latitude': 52.3398382, 'longitude': 4.8924874},
         'location_description': None,
-        'observation_goal': 'Handhaving van verkeersbesluiten.',
+        'observation_goals': [
+            {
+                'observation_goal': 'Handhaving van verkeersbesluiten.',
+                'legal_ground': 'Verkeersbesluiten in de rol van wegbeheerder.',
+                'privacy_declaration': 'https://www.amsterdam.nl/privacy/specifieke/\
+privacyverklaringen-b/milieuzones/',
+            }
+        ],
         'owner': {
             'name': 'Afdeling stedelijk beheer',
             'email': 'Meldingsplicht.Sensoren@amsterdam.nl',
             'organisation': 'Gemeente Amsterdam',
         },
-        'privacy_declaration': 'https://www.amsterdam.nl/privacy/specifieke/\
-privacyverklaringen-b/milieuzones/',
         'regions': [],
         'themes': ['Mobiliteit: auto', 'Overig'],
         'type': 'Optische / camera sensor',
