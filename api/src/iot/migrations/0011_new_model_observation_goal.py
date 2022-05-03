@@ -51,7 +51,7 @@ class Migration(migrations.Migration):
             name='ObservationGoal',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('observation_goal', models.CharField(max_length=255, verbose_name='Waarvoor meet u dat?')),
+                ('observation_goal', models.CharField(blank=True, null=True, max_length=255, verbose_name='Waarvoor meet u dat?')),
                 ('privacy_declaration', models.URLField(blank=True, null=True, verbose_name='Privacyverklaring')),
                 ('legal_ground', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to='iot.legalground', verbose_name='Wettelijke grondslag')),
             ],

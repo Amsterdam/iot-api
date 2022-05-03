@@ -140,8 +140,13 @@ class Region(models.Model):
 
 
 class ObservationGoal(models.Model):
-    observation_goal = models.CharField(max_length=255, verbose_name="Waarvoor meet u dat?")
-    privacy_declaration = models.URLField(verbose_name="Privacyverklaring", blank=False, null=False)
+    observation_goal = models.CharField(
+        max_length=255,
+        verbose_name="Waarvoor meet u dat?",
+        blank=True,
+        null=True
+    )
+    privacy_declaration = models.URLField(verbose_name="Privacyverklaring", blank=True, null=True)
     legal_ground = models.ForeignKey(
         LegalGround,
         on_delete=models.PROTECT,

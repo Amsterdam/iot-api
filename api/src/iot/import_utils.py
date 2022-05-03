@@ -170,7 +170,7 @@ class SensorData:
     type: str
     location: Union[LatLong, PostcodeHouseNumber, LocationDescription, Regions]
     datastream: str
-    observation_goals: ObservationGoal
+    observation_goals: List[ObservationGoal]
     themes: str
     contains_pi_data: Literal['Ja', 'Nee']
     # legal_ground: str
@@ -608,14 +608,21 @@ def validate_active_until(sensor_data):
 
 
 def validate_privacy_declaration(sensor_data):
+    # store the valid privacy_declarations
+    privacy_declarations_list = []
     for observation_goal in sensor_data.observation_goals:
         if (observation_goal.privacy_declaration or '').strip():
             try:
                 URLValidator()(observation_goal.privacy_declaration)
             except Exception as e:
                 raise InvalidPrivacyDeclaration(sensor_data) from e
-        elif sensor_data.contains_pi_data == 'Ja':
-            raise InvalidPrivacyDeclaration(sensor_data)
+        privacy_declarations_list.append(observation_goal.privacy_declaration)
+
+    # if the contains_pi_data is True and none of the privacy_delcarations is valid,
+    # raise the InvalidPrivacyDeclaration exception.
+    # This could move to be a seperate validator function also.
+    if sensor_data.contains_pi_data == 'Ja' and not any(privacy_declarations_list):
+        raise InvalidPrivacyDeclaration(sensor_data)
 
 
 def validate_legal_ground(sensor_data):
@@ -752,12 +759,16 @@ def import_sensor(sensor_data: SensorData, owner: models.Person2, action_logger=
         device.themes.add(theme)
 
     for observation_goal in sensor_data.observation_goals:
-        import_result = models.ObservationGoal.objects.get_or_create(
+
+        # only create a legal_ground if it's not empty string and valid, otherwise make it None.
+        legal_ground = None if not observation_goal.legal_ground else \
+            action_logger(models.LegalGround.objects.get_or_create(
+                name=observation_goal.legal_ground)[0])
+
+        import_result = action_logger(models.ObservationGoal.objects.get_or_create(
             observation_goal=observation_goal.observation_goal,
             privacy_declaration=observation_goal.privacy_declaration,
-            legal_ground=action_logger(
-                models.LegalGround.objects.get_or_create(
-                    name=observation_goal.legal_ground))[0])[0]
+            legal_ground=legal_ground)[0])
         device.observation_goals.add(import_result)
 
     return device, created
