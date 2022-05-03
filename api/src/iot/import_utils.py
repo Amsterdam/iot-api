@@ -611,12 +611,14 @@ def validate_privacy_declaration(sensor_data):
     # store the valid privacy_declarations
     privacy_declarations_list = []
     for observation_goal in sensor_data.observation_goals:
-        if (observation_goal.privacy_declaration or '').strip():
+        privacy_declaration = (observation_goal.privacy_declaration or '').strip()
+        if privacy_declaration:
             try:
-                URLValidator()(observation_goal.privacy_declaration)
+                URLValidator()(privacy_declaration)
             except Exception as e:
                 raise InvalidPrivacyDeclaration(sensor_data) from e
-        privacy_declarations_list.append(observation_goal.privacy_declaration)
+        # append the privacy_declarations into the list
+        privacy_declarations_list.append(privacy_declaration)
 
     # if the contains_pi_data is True and none of the privacy_delcarations is valid,
     # raise the InvalidPrivacyDeclaration exception.
