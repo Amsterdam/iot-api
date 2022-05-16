@@ -2,7 +2,7 @@ import pytest
 from django.conf import settings
 
 from iot import import_utils, import_utils_apis, models
-from iot.import_utils import LatLong, PersonData, SensorData
+from iot.import_utils import LatLong, ObservationGoal, PersonData, SensorData
 from iot.serializers import Device2Serializer
 
 
@@ -101,11 +101,13 @@ def sensor_data(person_data):
         type="Optische / camera sensor",
         location=LatLong(latitude=52.343909, longitude=4.793372),
         datastream='',
-        observation_goal='Het bedienen van sluisen en bruggen.',
+        observation_goals=[ObservationGoal(
+            observation_goal='Het bedienen van sluisen en bruggen.',
+            legal_ground='Sluisbeheerder in het kader van de woningwet 1991',
+            privacy_declaration="https://www.amsterdam.nl/privacy/privacylink/",
+        )],
         themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
         contains_pi_data='Ja',
-        legal_ground='Sluisbeheerder in het kader van de woningwet 1991',
-        privacy_declaration="https://www.amsterdam.nl/privacy/privacylink/",
         active_until='01-01-2050'
     )
 
@@ -136,11 +138,13 @@ class TestApiParser:
                 type="Optische / camera sensor",
                 location=LatLong(latitude=52.343909, longitude=4.793372),
                 datastream='',
-                observation_goal='Het bedienen van sluisen en bruggen.',
+                observation_goals=[ObservationGoal(
+                    observation_goal='Het bedienen van sluisen en bruggen.',
+                    legal_ground='Sluisbeheerder in het kader van de woningwet 1991',
+                    privacy_declaration="https://www.amsterdam.nl/privacy/privacylink/",
+                )],
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 contains_pi_data='Ja',
-                legal_ground='Sluisbeheerder in het kader van de woningwet 1991',
-                privacy_declaration="https://www.amsterdam.nl/privacy/privacylink/",
                 active_until='01-01-2050'
             )
         ]
@@ -188,16 +192,20 @@ class TestImportSensor:
         'active_until': '2050-01-01',
         'contains_pi_data': True,
         'datastream': '',
-        'legal_ground': 'Sluisbeheerder in het kader van de woningwet 1991',
         'location': {'latitude': 52.343909, 'longitude': 4.793372},
         'location_description': None,
-        'observation_goal': 'Het bedienen van sluisen en bruggen.',
+        'observation_goals': [
+            {
+                'observation_goal': 'Het bedienen van sluisen en bruggen.',
+                'legal_ground': 'Sluisbeheerder in het kader van de woningwet 1991',
+                'privacy_declaration': 'https://www.amsterdam.nl/privacy/privacylink/',
+            }
+        ],
         'owner': {
             'name': 'Afdeling stedelijkbeheer',
             'email': 'Meldingsplicht.Sensoren@amsterdam.nl',
             'organisation': 'Gemeente Amsterdam',
         },
-        'privacy_declaration': 'https://www.amsterdam.nl/privacy/privacylink/',
         'regions': [],
         'themes': ['Mobiliteit: auto'],
         'type': 'Optische / camera sensor',
@@ -208,16 +216,20 @@ class TestImportSensor:
         'active_until': '2050-01-01',
         'contains_pi_data': True,
         'datastream': '',
-        'legal_ground': 'Sluisbeheerder in het kader van de woningwet 1991',
         'location': {'latitude': 52.343909, 'longitude': 4.793372},
         'location_description': None,
-        'observation_goal': 'Het bedienen van sluisen en bruggen.',
+        'observation_goals': [
+            {
+                'observation_goal': 'Het bedienen van sluisen en bruggen.',
+                'legal_ground': 'Sluisbeheerder in het kader van de woningwet 1991',
+                'privacy_declaration': 'https://www.amsterdam.nl/privacy/privacylink/',
+            }
+        ],
         'owner': {
             'name': 'Afdeling stedelijkbeheer',
             'email': 'Meldingsplicht.Sensoren@amsterdam.nl',
             'organisation': 'Gemeente Amsterdam',
         },
-        'privacy_declaration': 'https://www.amsterdam.nl/privacy/privacylink/',
         'regions': [],
         'themes': ['Mobiliteit: auto'],
         'type': 'Optische / camera sensor',

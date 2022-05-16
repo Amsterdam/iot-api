@@ -4,7 +4,7 @@ import factory
 import faker
 from django.contrib.gis.geos import Point
 
-from .models import Device2, LegalGround, Person2, Theme, Type2
+from .models import Device2, ObservationGoal, Person2, Theme, Type2
 
 fake = faker.Faker()
 
@@ -40,9 +40,11 @@ class Device2Factory(factory.django.DjangoModelFactory):
 
     contains_pi_data = fake.boolean()
 
-    observation_goal = fake.text(255)
-    legal_ground = factory.LazyFunction(lambda: sample_model(LegalGround)[0])
-    privacy_declaration = fake.url(['https'])
+    @factory.post_generation
+    def observation_goals(self, *args, **kwargs):
+        for observation_goal, privacy_declaration, legal_ground in sample_model(ObservationGoal, 0):
+            self.observation_goal.add(observation_goal, privacy_declaration, legal_ground)
+
     active_until = fake.date()
 
     class Meta:

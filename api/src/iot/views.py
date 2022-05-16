@@ -36,8 +36,8 @@ class DevicesViewSet(DatapuntViewSet):
     """
     queryset = (
         Device2.objects.all()
-        .select_related('type', 'owner', 'legal_ground',)
-        .prefetch_related('themes', 'regions')
+        .select_related('type', 'owner')
+        .prefetch_related('themes', 'regions', "observation_goals")
         .order_by('id')
     )
     serializer_class = Device2Serializer

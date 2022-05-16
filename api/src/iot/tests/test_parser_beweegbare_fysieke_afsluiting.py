@@ -2,7 +2,7 @@ import pytest
 from django.conf import settings
 
 from iot import import_utils, import_utils_apis, models
-from iot.import_utils import LatLong, PersonData, SensorData
+from iot.import_utils import LatLong, ObservationGoal, PersonData, SensorData
 from iot.serializers import Device2Serializer
 
 
@@ -116,11 +116,13 @@ def sensor_data(person_data):
         type="Optische / camera sensor",
         location=LatLong(latitude=52.373989, longitude=4.939922),
         datastream='',
-        observation_goal='Verstrekken van selectieve toegang.',
+        observation_goals=[ObservationGoal(
+            observation_goal='Verstrekken van selectieve toegang.',
+            legal_ground='Verkeersmanagement in de rol van wegbeheerder.',
+            privacy_declaration="https://www.amsterdam.nl/privacy/privacyverklaring/",
+        )],
         themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
         contains_pi_data='Ja',
-        legal_ground='Verkeersmanagement in de rol van wegbeheerder.',
-        privacy_declaration="https://www.amsterdam.nl/privacy/privacyverklaring/",
         active_until='01-01-2050'
     )
 
@@ -150,11 +152,13 @@ class TestApiParser:
                 type="Optische / camera sensor",
                 location=LatLong(latitude=52.373989, longitude=4.939922),
                 datastream='',
-                observation_goal='Verstrekken van selectieve toegang.',
+                observation_goals=[ObservationGoal(
+                    observation_goal='Verstrekken van selectieve toegang.',
+                    legal_ground='Verkeersmanagement in de rol van wegbeheerder.',
+                    privacy_declaration="https://www.amsterdam.nl/privacy/privacyverklaring/",
+                )],
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 contains_pi_data='Ja',
-                legal_ground='Verkeersmanagement in de rol van wegbeheerder.',
-                privacy_declaration="https://www.amsterdam.nl/privacy/privacyverklaring/",
                 active_until='01-01-2050'
             )
         ]
@@ -203,16 +207,20 @@ class TestImportSensor:
         'active_until': '2050-01-01',
         'contains_pi_data': True,
         'datastream': '',
-        'legal_ground': 'Verkeersmanagement in de rol van wegbeheerder.',
         'location': {'latitude': 52.373989, 'longitude': 4.939922},
         'location_description': None,
-        'observation_goal': 'Verstrekken van selectieve toegang.',
+        'observation_goals': [
+            {
+                'observation_goal': 'Verstrekken van selectieve toegang.',
+                'legal_ground': 'Verkeersmanagement in de rol van wegbeheerder.',
+                'privacy_declaration': 'https://www.amsterdam.nl/privacy/privacyverklaring/',
+            }
+        ],
         'owner': {
             'name': 'Afdeling asset management',
             'email': 'Meldingsplicht.Sensoren@amsterdam.nl',
             'organisation': 'Gemeente Amsterdam',
         },
-        'privacy_declaration': 'https://www.amsterdam.nl/privacy/privacyverklaring/',
         'regions': [],
         'themes': ['Mobiliteit: auto'],
         'type': 'Optische / camera sensor',
@@ -223,16 +231,21 @@ class TestImportSensor:
         'active_until': '2050-01-01',
         'contains_pi_data': True,
         'datastream': '',
-        'legal_ground': 'Verkeersmanagement in de rol van wegbeheerder.',
         'location': {'latitude': 52.373989, 'longitude': 4.939922},
         'location_description': None,
-        'observation_goal': 'Verstrekken van selectieve toegang.',
+        'observation_goals': [
+            {
+                'observation_goal': 'Verstrekken van selectieve toegang.',
+                'legal_ground': 'Verkeersmanagement in de rol van wegbeheerder.',
+                'privacy_declaration': 'https://www.amsterdam.nl/privacy/privacyverklaring/',
+            }
+        ],
+
         'owner': {
             'name': 'Afdeling asset management',
             'email': 'Meldingsplicht.Sensoren@amsterdam.nl',
             'organisation': 'Gemeente Amsterdam',
         },
-        'privacy_declaration': 'https://www.amsterdam.nl/privacy/privacyverklaring/',
         'regions': [],
         'themes': ['Mobiliteit: auto'],
         'type': 'Optische / camera sensor',
