@@ -2,7 +2,8 @@ import pytest
 from django.conf import settings
 
 from iot import import_utils_apis, models
-from iot.import_utils import LatLong, ObservationGoal, PersonData, SensorData
+from iot.import_utils import (LatLong, Location, ObservationGoal, PersonData,
+                              SensorData)
 from iot.serializers import Device2Serializer
 
 
@@ -170,7 +171,12 @@ def sensor_data(person_data):
         owner=person_data,
         reference='GABW-06',
         type="Optische / camera sensor",
-        location=LatLong(latitude=52.3794284, longitude=4.901852),
+        location=Location(
+            lat_long=LatLong(latitude=52.3794284, longitude=4.901852),
+            postcode_house_number=None,
+            description=None,
+            region=None
+        ),
         datastream='',
         observation_goals=[ObservationGoal(
             observation_goal='Tellen van mensen.',
@@ -207,7 +213,12 @@ class TestApiParser:
                 owner=expected_owner,
                 reference='GABW-03',
                 type="Optische / camera sensor",
-                location=LatLong(latitude=52.3794284, longitude=4.901852),
+                location=Location(
+                    lat_long=LatLong(latitude=52.3794284, longitude=4.901852),
+                    postcode_house_number=None,
+                    description=None,
+                    region=None
+                ),
                 datastream='',
                 observation_goals=[ObservationGoal(
                     observation_goal='Tellen van mensen.',
@@ -222,7 +233,12 @@ class TestApiParser:
                 owner=expected_owner,
                 reference='GABW-04',
                 type="Optische / camera sensor",
-                location=LatLong(latitude=52.3794289, longitude=4.901859),
+                location=Location(
+                    lat_long=LatLong(latitude=52.3794289, longitude=4.901859),
+                    postcode_house_number=None,
+                    description=None,
+                    region=None
+                ),
                 datastream='',
                 observation_goals=[ObservationGoal(
                     observation_goal='Tellen van mensen.',
@@ -237,7 +253,12 @@ class TestApiParser:
                 owner=expected_owner,
                 reference='GABW-05',
                 type="Optische / camera sensor",
-                location=LatLong(latitude=52.3794287, longitude=4.901858),
+                location=Location(
+                    lat_long=LatLong(latitude=52.3794287, longitude=4.901858),
+                    postcode_house_number=None,
+                    description=None,
+                    region=None
+                ),
                 datastream='',
                 observation_goals=[ObservationGoal(
                     observation_goal='Tellen van mensen.',

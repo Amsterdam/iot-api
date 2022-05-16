@@ -2,7 +2,8 @@ import pytest
 from django.conf import settings
 
 from iot import import_utils, import_utils_apis, models
-from iot.import_utils import LatLong, ObservationGoal, PersonData, SensorData
+from iot.import_utils import (LatLong, Location, ObservationGoal, PersonData,
+                              SensorData)
 from iot.serializers import Device2Serializer
 
 
@@ -96,7 +97,12 @@ def sensor_data(person_data):
         owner=person_data,
         reference='verkeersonderzoek_met_cameras_11',
         type="Optische / camera sensor",
-        location=LatLong(latitude=52.3689078, longitude=4.9021014),
+        location=Location(
+            lat_long=LatLong(latitude=52.3689078, longitude=4.9021014),
+            postcode_house_number=None,
+            description=None,
+            region=None
+        ),
         datastream='',
         observation_goals=[ObservationGoal(
             observation_goal='Tellen van voertuigen.',
@@ -133,7 +139,12 @@ class TestApiParser:
                 owner=expected_owner,
                 reference='verkeersonderzoek_met_cameras_10',
                 type="Optische / camera sensor",
-                location=LatLong(latitude=52.3689078, longitude=4.9021014),
+                location=Location(
+                    lat_long=LatLong(latitude=52.3689078, longitude=4.9021014),
+                    postcode_house_number=None,
+                    description=None,
+                    region=None
+                ),
                 datastream='',
                 observation_goals=[ObservationGoal(
                     observation_goal='Tellen van voertuigen.',

@@ -4,7 +4,7 @@ import datetime
 import re
 from collections import Counter
 from itertools import islice, zip_longest
-from typing import Generator, List, Union
+from typing import Dict, Generator, List, Optional, Union
 
 import requests
 from django.conf import settings
@@ -164,16 +164,24 @@ class Regions:
 
 
 @dataclasses.dataclass
+class Location:
+    lat_long: Optional[LatLong]
+    postcode_house_number: Optional[PostcodeHouseNumber]
+    description: Optional[LocationDescription]
+    region: Optional[Regions]
+
+
+@dataclasses.dataclass
 class SensorData:
     owner: PersonData
     reference: str
     type: str
-    location: Union[LatLong, PostcodeHouseNumber, LocationDescription, Regions]
+    # location: Union[LatLong, PostcodeHouseNumber, LocationDescription, Regions]
+    location: Location
     datastream: str
     observation_goals: List[ObservationGoal]
     themes: str
     contains_pi_data: Literal['Ja', 'Nee']
-    # legal_ground: str
     active_until: Union[datetime.date, str]
 
 
@@ -335,24 +343,32 @@ def parse_iprox_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
         reference = row['Referentienummer']
 
         for sensor_index in range(settings.IPROX_NUM_SENSORS):
-
             if row['Locatie sensor'] == 'Vast':
                 if row['Hebt u een postcode en huisnummer?'] == 'Ja':
                     # sensor_index + 1 since there is already a Postcode, Huisnummer and
                     # Toevoeging in the contact details :(
-                    location = PostcodeHouseNumber(
+                    location_postcode = PostcodeHouseNumber(
                         row["Postcode", sensor_index + 1],
                         row["Huisnummer", sensor_index + 1],
                         row["Toevoeging", sensor_index + 1],
                     )
                 else:
-                    location = LocationDescription(
-                        row['Omschrijving van de locatie van de sensor', sensor_index],
-                    )
-            else:
-                location = Regions(
-                    row['In welk gebied bevindt zich de mobiele sensor?', sensor_index]
-                )
+                    location_postcode = None
+
+            location_description = LocationDescription(
+                row['Omschrijving van de locatie van de sensor', sensor_index],
+            ) if row['Omschrijving van de locatie van de sensor', sensor_index] else None
+
+            region = Regions(
+                row['In welk gebied bevindt zich de mobiele sensor?', sensor_index]
+            ) if row['In welk gebied bevindt zich de mobiele sensor?', sensor_index] else None
+
+            location = Location(
+                postcode_house_number=location_postcode,
+                description=location_description,
+                region=region,
+                lat_long=None
+            )
 
             yield SensorData(
                 owner=owner,
@@ -463,9 +479,14 @@ def parse_bulk_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
             owner=owner,
             reference=row["Referentie"],
             type=row["Kies soort / type sensor"],
-            location=LatLong(
-                row["Latitude"],
-                row["Longitude"],
+            location=Location(
+                lat_long=LatLong(
+                    row["Latitude"],
+                    row["Longitude"]
+                ),
+                postcode_house_number=None,
+                description=None,
+                region=None
             ),
             datastream=row["Wat meet de sensor?"],
             observation_goals=[ObservationGoal(
@@ -491,23 +512,30 @@ def parse_bulk_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
     )
 
 
-def get_location(sensor_data: SensorData):
+def get_location(sensor_data: SensorData) -> Dict:
     """
     Get the specific django field and value which should be filled for the
-    location data that was provided.
+    location data that was provided. It will return a dict of one or multiple locations.
     """
-    if isinstance(sensor_data.location, Regions):
-        return {'regions': sensor_data.location.regions}
-    elif isinstance(sensor_data.location, LatLong):
-        return {'location': Point(sensor_data.location.longitude, sensor_data.location.latitude)}
-    elif isinstance(sensor_data.location, LocationDescription):
-        return {'location_description': sensor_data.location.description}
-    elif isinstance(sensor_data.location, PostcodeHouseNumber):
-        location = get_center_coordinates(
-            sensor_data.location.postcode,
-            sensor_data.location.house_number,
+    locations = {}  # empty dict to hold the locations.
+    if isinstance(sensor_data.location.region, Regions):
+        locations['regions'] = sensor_data.location.region.regions
+    if isinstance(sensor_data.location.lat_long, LatLong):
+        locations['location'] = Point(
+            sensor_data.location.lat_long.longitude,
+            sensor_data.location.lat_long.latitude
         )
-        return {'location': location}
+    if isinstance(sensor_data.location.description, LocationDescription):
+        locations['location_description'] = sensor_data.location.description.description
+    if isinstance(sensor_data.location.postcode_house_number, PostcodeHouseNumber):
+        location = get_center_coordinates(
+            sensor_data.location.postcode_house_number.postcode,
+            sensor_data.location.postcode_house_number.house_number,
+        )
+        locations['location'] = location
+    # if the locations dict is empty, raise an exception otherwise return it.
+    if locations:
+        return locations
     else:
         raise TypeError(f'Onbekend locatie type {type(sensor_data.location)}')
 
@@ -652,41 +680,41 @@ def validate_themes(sensor_data):
 
 
 def validate_regions(sensor_data):
-    regions = (sensor_data.location.regions or '').strip()
+    regions = (sensor_data.location.region.regions or '').strip()
     if not regions:
         raise InvalidRegions(sensor_data)
 
 
 def validate_location(sensor_data):
-    if isinstance(sensor_data.location, Regions):
+    if isinstance(sensor_data.location.region, Regions):
         validate_regions(sensor_data)
-    elif isinstance(sensor_data.location, LatLong):
+    elif isinstance(sensor_data.location.lat_long, LatLong):
         validate_latitude_longitude(sensor_data)
-    elif isinstance(sensor_data.location, PostcodeHouseNumber):
+    elif isinstance(sensor_data.location.postcode_house_number, PostcodeHouseNumber):
         validate_postcode_house_number(sensor_data)
-    elif isinstance(sensor_data.location, LocationDescription):
+    elif isinstance(sensor_data.location.description, LocationDescription):
         validate_location_description(sensor_data)
 
 
 def validate_location_description(sensor_data):
-    if not sensor_data.location.description:
+    if not sensor_data.location.description.description:
         raise InvalidLocationDescription(sensor_data)
 
 
 def validate_postcode_house_number(sensor_data):
     postcode_regex = r'\d\d\d\d ?[a-zA-Z][a-zA-Z]'
-    if not sensor_data.location.postcode or \
-            not re.match(postcode_regex, sensor_data.location.postcode):
+    if not sensor_data.location.postcode_house_number.postcode or \
+            not re.match(postcode_regex, sensor_data.location.postcode_house_number.postcode):
         raise InvalidPostcode(sensor_data)
 
 
 def validate_latitude_longitude(sensor_data):
     try:
-        float(sensor_data.location.latitude)
+        float(sensor_data.location.lat_long.latitude)
     except Exception as e:
         raise InvalidLatitude(sensor_data) from e
     try:
-        float(sensor_data.location.longitude)
+        float(sensor_data.location.lat_long.longitude)
     except Exception as e:
         raise InvalidLongitude(sensor_data) from e
 
@@ -732,6 +760,7 @@ def import_sensor(sensor_data: SensorData, owner: models.Person2, action_logger=
     """
     Import sensor data parsed from an iprox or bulk registration excel file.
     """
+
     defaults = {
         'type': action_logger(models.Type2.objects.get_or_create(name=sensor_data.type))[0],
         'datastream': sensor_data.datastream,
@@ -739,10 +768,12 @@ def import_sensor(sensor_data: SensorData, owner: models.Person2, action_logger=
         'active_until': parse_date(sensor_data.active_until),
         'owner': owner,
     }
-
     location = get_location(sensor_data)
-    if 'regions' not in location:
-        defaults.update(location)
+    # update the defaults with only the location and location_description. This will
+    # allow the locations + regions if set to be added to the device.
+    defaults.update(
+        {k: v for k, v in location.items() if k in ['location', 'location_description']}
+    )
 
     # use the sensor_index to give each sensor a unique reference
     device, created = action_logger(models.Device2.objects.update_or_create(
@@ -765,12 +796,12 @@ def import_sensor(sensor_data: SensorData, owner: models.Person2, action_logger=
         # only create a legal_ground if it's not empty string and valid, otherwise make it None.
         legal_ground = None if not observation_goal.legal_ground else \
             action_logger(models.LegalGround.objects.get_or_create(
-                name=observation_goal.legal_ground)[0])
+                name=observation_goal.legal_ground))[0]
 
         import_result = action_logger(models.ObservationGoal.objects.get_or_create(
             observation_goal=observation_goal.observation_goal,
             privacy_declaration=observation_goal.privacy_declaration,
-            legal_ground=legal_ground)[0])
+            legal_ground=legal_ground))[0]
         device.observation_goals.add(import_result)
 
     return device, created

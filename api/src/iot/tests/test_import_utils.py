@@ -58,19 +58,34 @@ class TestParse:
         (
             'iprox_single',
             import_utils.parse_iprox_xlsx,
-            import_utils.PostcodeHouseNumber('1011 PN', '3', 'III'),
+            import_utils.Location(
+                lat_long=None,
+                postcode_house_number=import_utils.PostcodeHouseNumber('1011 PN', '3', 'III'),
+                description=None,
+                region=None
+            ),
             ['7079-2296.0', '7079-2296.1'],
         ),
         (
             'iprox_multiple',
             import_utils.parse_iprox_xlsx,
-            import_utils.PostcodeHouseNumber('1011 PN', '3', 'III'),
+            import_utils.Location(
+                lat_long=None,
+                postcode_house_number=import_utils.PostcodeHouseNumber('1011 PN', '3', 'III'),
+                description=None,
+                region=None
+            ),
             ['7079-2296.0', '7079-2297.0'],
         ),
         (
             'bulk',
             import_utils.parse_bulk_xlsx,
-            import_utils.LatLong('52.3676', '4.9041'),
+            import_utils.Location(
+                lat_long=import_utils.LatLong('52.3676', '4.9041'),
+                postcode_house_number=None,
+                description=None,
+                region=None
+            ),
             ['7079-2296', '7079-2297'],
         ),
     ])
@@ -259,7 +274,12 @@ def sensor_data(person_data):
         owner=person_data,
         reference='1234',
         type='Chemiesensor',
-        location=import_utils.LocationDescription('Somewhere over the rainbow'),
+        location=import_utils.Location(
+            lat_long=None,
+            postcode_house_number=None,
+            description=import_utils.LocationDescription('Somewhere over the rainbow'),
+            region=None
+        ),
         datastream='water',
         observation_goals=[import_utils.ObservationGoal(
             observation_goal='Nare bedoelingen',
@@ -327,7 +347,6 @@ class TestImportSensor:
 
     def test_import_sensor_should_update_values(self, sensor_data):
         # check that a second import of the same sensor updates values
-        # TODO: NEED TO MODIFY, NOT APPEND
         owner = import_utils.import_person(sensor_data.owner)
         import_utils.import_sensor(sensor_data, owner)
         sensor_data.observation_goals[0].privacy_declaration = 'http://rotterdam.nl/privacy'
@@ -359,10 +378,16 @@ class TestImportSensor:
     def test_import_sensor_location(self, sensor_data):
         # check that the location is imported correctly
         owner = import_utils.import_person(sensor_data.owner)
-        sensor_data.location = import_utils.LatLong(latitude=52.3676, longitude=4.9041)
+        sensor_data.location.lat_long = import_utils.LatLong(latitude=52.3676, longitude=4.9041)
         import_utils.import_sensor(sensor_data, owner)
         location = {"latitude": 52.3676, "longitude": 4.9041}
-        assert self.actual == [dict(self.expected, location_description=None, location=location)]
+        assert self.actual == [
+            dict(
+                self.expected,
+                location_description='Somewhere over the rainbow',
+                location=location
+            )
+        ]
 
     def test_import_sensor_other_type(self, sensor_data):
         # check that we can import a "other" sensor type
@@ -379,29 +404,45 @@ class TestImportSensor:
         assert self.actual == [dict(self.expected, themes=["Overig"])]
 
     def test_import_sensor_regions(self, sensor_data):
-        # check that we can import as "mobile" sensor
+        # check that we can import as "mobile" sensor + the location_description is there
         owner = import_utils.import_person(sensor_data.owner)
         regions = ["Centrum", "Oost"]
-        sensor_data.location = import_utils.Regions(settings.IPROX_SEPARATOR.join(regions))
+        sensor_data.location.region = import_utils.Regions(settings.IPROX_SEPARATOR.join(regions))
         import_utils.import_sensor(sensor_data, owner)
-        expected = dict(self.expected, location_description=None, regions=regions)
+        expected = dict(
+            self.expected,
+            location_description='Somewhere over the rainbow',
+            regions=regions
+        )
         assert self.actual == [expected]
 
     def test_import_sensor_other_region(self, sensor_data):
-        # check that we can import a "other" region
+        # check that we can import a "other" region and location_description is there.
         owner = import_utils.import_person(sensor_data.owner)
-        sensor_data.location = import_utils.Regions("Diemen")
+        sensor_data.location.region = import_utils.Regions("Diemen")
         import_utils.import_sensor(sensor_data, owner)
-        assert self.actual == [dict(self.expected, location_description=None, regions=["Diemen"])]
+        assert self.actual == [
+            dict(
+                self.expected,
+                location_description='Somewhere over the rainbow',
+                regions=["Diemen"]
+            )
+        ]
 
     def test_import_postcode_house_number(self, sensor_data):
         # check that we can import a location based on postcode and house number
         owner = import_utils.import_person(sensor_data.owner)
-        sensor_data.location = import_utils.PostcodeHouseNumber("1111AA", 1)
+        sensor_data.location.postcode_house_number = import_utils.PostcodeHouseNumber("1111AA", 1)
         with patch('iot.import_utils.get_center_coordinates', lambda *_: Point(4.9041, 52.3676)):
             import_utils.import_sensor(sensor_data, owner)
         location = {"latitude": 52.3676, "longitude": 4.9041}
-        assert self.actual == [dict(self.expected, location_description=None, location=location)]
+        assert self.actual == [
+            dict(
+                self.expected,
+                location_description='Somewhere over the rainbow',
+                location=location
+            )
+        ]
 
     def test_import_observation_goal(self, sensor_data):
         # check that we can import an observation_goal
@@ -457,31 +498,31 @@ class TestValidate:
 
     @pytest.mark.parametrize("value", [None, '', ' ', '  '])
     def test_invalid_regions(self, sensor_data, value):
-        sensor_data.location = import_utils.Regions(value)
+        sensor_data.location.region = import_utils.Regions(value)
         with pytest.raises(import_utils.InvalidRegions):
             import_utils.validate_sensor(sensor_data)
 
     @pytest.mark.parametrize("value", [None, '', 'onzin'])
     def test_invalid_latitude(self, sensor_data, value):
-        sensor_data.location = import_utils.LatLong(value, 4)
+        sensor_data.location.lat_long = import_utils.LatLong(value, 4)
         with pytest.raises(import_utils.InvalidLatitude):
             import_utils.validate_sensor(sensor_data)
 
     @pytest.mark.parametrize("value", [None, '', 'onzin'])
     def test_invalid_longitude(self, sensor_data, value):
-        sensor_data.location = import_utils.LatLong(52, value)
+        sensor_data.location.lat_long = import_utils.LatLong(52, value)
         with pytest.raises(import_utils.InvalidLongitude):
             import_utils.validate_sensor(sensor_data)
 
     @pytest.mark.parametrize("value", [None, '', 'onzin', '1111', 'XX'])
     def test_invalid_postcode(self, sensor_data, value):
-        sensor_data.location = import_utils.PostcodeHouseNumber(value, 1)
+        sensor_data.location.postcode_house_number = import_utils.PostcodeHouseNumber(value, 1)
         with pytest.raises(import_utils.InvalidPostcode):
             import_utils.validate_sensor(sensor_data)
 
     @pytest.mark.parametrize("value", [None, ''])
     def test_invalid_location_description(self, sensor_data, value):
-        sensor_data.location = import_utils.LocationDescription(value)
+        sensor_data.location.description = import_utils.LocationDescription(value)
         with pytest.raises(import_utils.InvalidLocationDescription):
             import_utils.validate_sensor(sensor_data)
 

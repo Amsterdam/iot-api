@@ -4,7 +4,8 @@ from typing import Dict, Generator, List, Tuple
 from django.conf import settings
 
 from iot import import_utils, models
-from iot.import_utils import LatLong, ObservationGoal, PersonData, SensorData
+from iot.import_utils import (LatLong, Location, ObservationGoal, PersonData,
+                              SensorData)
 
 API = 'https://maps.amsterdam.nl/open_geodata/geojson_lnglat.php?'
 API_ANPR = 'https://service.vorin-amsterdam.nl/camera-geo_2/camera/geo'
@@ -97,7 +98,12 @@ def parse_wifi_sensor_crowd_management(data: dict) -> Generator[SensorData, None
                 owner=person_data,
                 reference=properties['Objectnummer'],
                 type='Aanwezigheid of nabijheidsensor',
-                location=LatLong(latitude=latitude, longitude=longitude),
+                location=Location(
+                    lat_long=LatLong(latitude=latitude, longitude=longitude),
+                    postcode_house_number=None,
+                    description=None,
+                    region=None
+                ),
                 contains_pi_data='Ja',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 datastream='',
@@ -144,7 +150,12 @@ def parse_sensor_crowd_management(data: dict) -> Generator[SensorData, None, Non
                 owner=person_data,
                 reference=properties['Objectnummer'],
                 type='Optische / camera sensor',
-                location=LatLong(latitude=latitude, longitude=longitude),
+                location=Location(
+                    lat_long=LatLong(latitude=latitude, longitude=longitude),
+                    postcode_house_number=None,
+                    description=None,
+                    region=None
+                ),
                 contains_pi_data='Ja',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 datastream='',
@@ -187,7 +198,12 @@ def parse_camera_brug_en_sluisbediening(data: dict) -> Generator[SensorData, Non
                 owner=person_data,
                 reference=properties['BrugSluisNummer'],
                 type='Optische / camera sensor',
-                location=LatLong(latitude=latitude, longitude=longitude),
+                location=Location(
+                    lat_long=LatLong(latitude=latitude, longitude=longitude),
+                    postcode_house_number=None,
+                    description=None,
+                    region=None
+                ),
                 contains_pi_data='Ja',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 datastream='',
@@ -235,7 +251,12 @@ def parse_cctv_camera_verkeersmanagement(data: dict) -> Generator[SensorData, No
                 owner=person_data,
                 reference=properties['Objectnummer_Amsterdam'],
                 type='Optische / camera sensor',
-                location=LatLong(latitude=latitude, longitude=longitude),
+                location=Location(
+                    lat_long=LatLong(latitude=latitude, longitude=longitude),
+                    postcode_house_number=None,
+                    description=None,
+                    region=None
+                ),
                 contains_pi_data='Ja',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 datastream='',
@@ -285,7 +306,12 @@ def parse_kentekencamera_reistijd(data: dict) -> Generator[SensorData, None, Non
                 owner=person_data,
                 reference=properties['Objectnummer_Amsterdam'],
                 type='Optische / camera sensor',
-                location=LatLong(latitude=latitude, longitude=longitude),
+                location=Location(
+                    lat_long=LatLong(latitude=latitude, longitude=longitude),
+                    postcode_house_number=None,
+                    description=None,
+                    region=None
+                ),
                 contains_pi_data='Ja',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 datastream='',
@@ -335,7 +361,12 @@ def parse_kentekencamera_milieuzone(data: dict) -> Generator[SensorData, None, N
                 owner=person_data,
                 reference=properties['Objectnummer_Amsterdam'],
                 type='Optische / camera sensor',
-                location=LatLong(latitude=latitude, longitude=longitude),
+                location=Location(
+                    lat_long=LatLong(latitude=latitude, longitude=longitude),
+                    postcode_house_number=None,
+                    description=None,
+                    region=None
+                ),
                 contains_pi_data='Ja',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto', 'Milieu']),
                 datastream='',
@@ -379,7 +410,12 @@ def parse_ais_masten(data: dict) -> Generator[SensorData, None, None]:
                 owner=person_data,
                 reference=properties['Locatienaam'],
                 type='Optische / camera sensor',
-                location=LatLong(latitude=latitude, longitude=longitude),
+                location=Location(
+                    lat_long=LatLong(latitude=latitude, longitude=longitude),
+                    postcode_house_number=None,
+                    description=None,
+                    region=None
+                ),
                 contains_pi_data='Ja',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 datastream='',
@@ -426,7 +462,12 @@ def parse_verkeersonderzoek_met_cameras(data: dict) -> Generator[SensorData, Non
                 owner=person_data,
                 reference=f"verkeersonderzoek_met_cameras_{feature['id']}",
                 type='Optische / camera sensor',
-                location=LatLong(latitude=latitude, longitude=longitude),
+                location=Location(
+                    lat_long=LatLong(latitude=latitude, longitude=longitude),
+                    postcode_house_number=None,
+                    description=None,
+                    region=None
+                ),
                 contains_pi_data='Ja',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 datastream='',
@@ -469,7 +510,12 @@ def parse_beweegbare_fysieke_afsluiting(data: dict) -> Generator[SensorData, Non
                 owner=person_data,
                 reference=properties['BFA_nummer'],
                 type='Optische / camera sensor',
-                location=LatLong(latitude=latitude, longitude=longitude),
+                location=Location(
+                    lat_long=LatLong(latitude=latitude, longitude=longitude),
+                    postcode_house_number=None,
+                    description=None,
+                    region=None
+                ),
                 contains_pi_data='Ja',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 datastream='',
@@ -513,7 +559,12 @@ def parse_anpr(data: dict) -> Generator[SensorData, None, None]:
                 owner=person_data,
                 reference=properties['id'],
                 type='Optische / camera sensor',
-                location=LatLong(latitude=latitude, longitude=longitude),
+                location=Location(
+                    lat_long=LatLong(latitude=latitude, longitude=longitude),
+                    postcode_house_number=None,
+                    description=None,
+                    region=None
+                ),
                 contains_pi_data='Nee',  # api has no contains_pi_data
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 datastream='',
