@@ -19,6 +19,7 @@ class Command(BaseCommand):
     ais_masten
     verkeersonderzoek_met_cameras
     beweegbare_fysieke_afsluiting
+    anpr
     """
     help = 'Imports Sensors data from APIs.To exeucting it: python manage.py import_api api1 api2'
 

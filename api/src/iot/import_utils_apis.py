@@ -7,6 +7,8 @@ from iot import import_utils, models
 from iot.import_utils import LatLong, ObservationGoal, PersonData, SensorData
 
 API = 'https://maps.amsterdam.nl/open_geodata/geojson_lnglat.php?'
+API_ANPR = 'https://service.vorin-amsterdam.nl/camera-geo_2/camera/geo'
+
 API_MAPPER = {
     'wifi_sensor_crowd_management': f'{API}KAARTLAAG=CROWDSENSOREN&THEMA=cmsa',
     'sensor_crowd_management': f'{API}KAARTLAAG=CROWDSENSOREN&THEMA=cmsa',
@@ -17,6 +19,7 @@ API_MAPPER = {
     'ais_masten': f'{API}KAARTLAAG=PRIVACY_AISMASTEN&THEMA=privacy',
     'verkeersonderzoek_met_cameras': f'{API}KAARTLAAG=PRIVACY_OVERIG&THEMA=privacy',
     'beweegbare_fysieke_afsluiting': f'{API}KAARTLAAG=VIS_BFA&THEMA=vis',
+    'anpr': f'{API_ANPR}'
 }
 
 
@@ -479,6 +482,50 @@ def parse_beweegbare_fysieke_afsluiting(data: dict) -> Generator[SensorData, Non
             )
 
 
+def parse_anpr(data: dict) -> Generator[SensorData, None, None]:
+    """
+    convert the anpr data dict into PersonData en
+    SensorData objects and yield it.
+    """
+    # create the personData from static defined data because the api doesn't provide
+    # all the required fields
+
+    person_data = PersonData(
+        organisation='Gemeente Amsterdam',
+        email='Meldingsplicht.Sensoren@amsterdam.nl',
+        telephone='14020',
+        website='https://www.amsterdam.nl/',
+        first_name='Afdeling',
+        last_name_affix='',
+        last_name='anpr management'
+    )
+
+    features = data['features']  # list of sensors i think for now
+    if features:
+        for feature in features:
+            geometry = feature['geometry']  # geometry dict
+            latitude = geometry['coordinates'][1]
+            longitude = geometry['coordinates'][0]
+            properties = feature['properties']  # properties dict
+            goals = properties['doel']  # a list of goals
+
+            yield SensorData(
+                owner=person_data,
+                reference=properties['id'],
+                type='Optische / camera sensor',
+                location=LatLong(latitude=latitude, longitude=longitude),
+                contains_pi_data='Nee',  # api has no contains_pi_data
+                themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
+                datastream='',
+                observation_goals=[ObservationGoal(
+                    observation_goal=goal,
+                    privacy_declaration='https://www.amsterdam.nl/privacy/privacyverklaring/',
+                    legal_ground=None  # can be None because api has no contains_pi_data
+                ) for goal in goals],
+                active_until='01-01-2050'
+            )
+
+
 # TODO: need to be adjusted with a unique value per source.
 def delete_not_found_sensors(sensors: List[SensorData], source: str) -> Tuple[int, Dict[str, int]]:
     """takes a list of sensor data. with the source. compares their
@@ -517,4 +564,5 @@ PARSERS_MAPPER = {
     'ais_masten': parse_ais_masten,
     'verkeersonderzoek_met_cameras': parse_verkeersonderzoek_met_cameras,
     'beweegbare_fysieke_afsluiting': parse_beweegbare_fysieke_afsluiting,
+    'anpr': parse_anpr,
 }
