@@ -167,8 +167,8 @@ class Regions:
 class Location:
     lat_long: Optional[LatLong]
     postcode_house_number: Optional[PostcodeHouseNumber]
-    description: Optional[LocationDescription]
-    region: Optional[Regions]
+    description: str
+    regions: str
 
 
 @dataclasses.dataclass
@@ -176,7 +176,6 @@ class SensorData:
     owner: PersonData
     reference: str
     type: str
-    # location: Union[LatLong, PostcodeHouseNumber, LocationDescription, Regions]
     location: Location
     datastream: str
     observation_goals: List[ObservationGoal]
@@ -355,18 +354,20 @@ def parse_iprox_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
                 else:
                     location_postcode = None
 
-            location_description = LocationDescription(
-                row['Omschrijving van de locatie van de sensor', sensor_index],
-            ) if row['Omschrijving van de locatie van de sensor', sensor_index] else None
+            location_description = row.get(
+                ('Omschrijving van de locatie van de sensor', sensor_index),
+                default=''
+            )
 
-            region = Regions(
-                row['In welk gebied bevindt zich de mobiele sensor?', sensor_index]
-            ) if row['In welk gebied bevindt zich de mobiele sensor?', sensor_index] else None
+            regions = row.get(
+                ('In welk gebied bevindt zich de mobiele sensor?', sensor_index),
+                default=''
+            )
 
             location = Location(
                 postcode_house_number=location_postcode,
                 description=location_description,
-                region=region,
+                regions=regions,
                 lat_long=None
             )
 
@@ -485,8 +486,9 @@ def parse_bulk_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
                     row["Longitude"]
                 ),
                 postcode_house_number=None,
-                description=None,
-                region=None
+                description='',
+                regions=row.get(
+                    ('In welk gebied bevindt zich de mobiele sensor?'), default='')
             ),
             datastream=row["Wat meet de sensor?"],
             observation_goals=[ObservationGoal(
@@ -518,14 +520,14 @@ def get_location(sensor_data: SensorData) -> Dict:
     location data that was provided. It will return a dict of one or multiple locations.
     """
     locations = {}  # empty dict to hold the locations.
-    if isinstance(sensor_data.location.region, Regions):
-        locations['regions'] = sensor_data.location.region.regions
+    if sensor_data.location.regions:
+        locations['regions'] = sensor_data.location.regions.regions
     if isinstance(sensor_data.location.lat_long, LatLong):
         locations['location'] = Point(
             sensor_data.location.lat_long.longitude,
             sensor_data.location.lat_long.latitude
         )
-    if isinstance(sensor_data.location.description, LocationDescription):
+    if sensor_data.location.description:
         locations['location_description'] = sensor_data.location.description.description
     if isinstance(sensor_data.location.postcode_house_number, PostcodeHouseNumber):
         location = get_center_coordinates(
@@ -679,26 +681,11 @@ def validate_themes(sensor_data):
         raise InvalidThemes(sensor_data)
 
 
-def validate_regions(sensor_data):
-    regions = (sensor_data.location.region.regions or '').strip()
-    if not regions:
-        raise InvalidRegions(sensor_data)
-
-
 def validate_location(sensor_data):
-    if isinstance(sensor_data.location.region, Regions):
-        validate_regions(sensor_data)
-    elif isinstance(sensor_data.location.lat_long, LatLong):
+    if isinstance(sensor_data.location.lat_long, LatLong):
         validate_latitude_longitude(sensor_data)
     elif isinstance(sensor_data.location.postcode_house_number, PostcodeHouseNumber):
         validate_postcode_house_number(sensor_data)
-    elif isinstance(sensor_data.location.description, LocationDescription):
-        validate_location_description(sensor_data)
-
-
-def validate_location_description(sensor_data):
-    if not sensor_data.location.description.description:
-        raise InvalidLocationDescription(sensor_data)
 
 
 def validate_postcode_house_number(sensor_data):
