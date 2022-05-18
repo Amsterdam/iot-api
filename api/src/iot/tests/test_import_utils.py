@@ -84,7 +84,7 @@ class TestParse:
                 lat_long=import_utils.LatLong('52.3676', '4.9041'),
                 postcode_house_number=None,
                 description='',
-                regions='AB;AC',
+                regions=import_utils.Regions(regions='AB;AC'),
             ),
             ['7079-2296', '7079-2297'],
         ),
@@ -407,7 +407,7 @@ class TestImportSensor:
         # check that we can import as "mobile" sensor + the location_description is there
         owner = import_utils.import_person(sensor_data.owner)
         regions = ["Centrum", "Oost"]
-        sensor_data.location.regions = import_utils.Regions(settings.IPROX_SEPARATOR.join(regions))
+        sensor_data.location.regions = import_utils.Regions(regions="Centrum;Oost")
         import_utils.import_sensor(sensor_data, owner)
         expected = dict(
             self.expected,

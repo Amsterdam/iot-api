@@ -488,8 +488,10 @@ def parse_bulk_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
                 ),
                 postcode_house_number=None,
                 description='',
-                regions=row.get(
-                    ('In welk gebied bevindt zich de mobiele sensor?'), default='')
+                regions=Regions(
+                    regions=row.get(
+                        ('In welk gebied bevindt zich de mobiele sensor?'), default='')
+                )
             ),
             datastream=row["Wat meet de sensor?"],
             observation_goals=[ObservationGoal(
@@ -772,7 +774,7 @@ def import_sensor(sensor_data: SensorData, owner: models.Person2, action_logger=
 
     if 'regions' in location:
         for region_name in location['regions'].split(settings.IPROX_SEPARATOR):
-            region, _ = action_logger(models.Region.objects.get_or_create(name=region_name))
+            region = action_logger(models.Region.objects.get_or_create(name=region_name))[0]
             device.regions.add(region)
 
     for theme_name in sensor_data.themes.split(settings.IPROX_SEPARATOR):
