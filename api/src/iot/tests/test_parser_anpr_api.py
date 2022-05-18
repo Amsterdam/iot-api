@@ -2,7 +2,8 @@ import pytest
 from django.conf import settings
 
 from iot import import_utils, import_utils_apis, models
-from iot.import_utils import LatLong, ObservationGoal, PersonData, SensorData
+from iot.import_utils import (LatLong, Location, ObservationGoal, PersonData,
+                              SensorData)
 from iot.serializers import Device2Serializer
 
 
@@ -112,7 +113,12 @@ def sensor_data(person_data):
         owner=person_data,
         reference="ANPR-00004-V",
         type="Optische / camera sensor",
-        location=LatLong(latitude=52.3794284, longitude=4.901852),
+        location=Location(
+            lat_long=LatLong(latitude=52.3794284, longitude=4.901852),
+            postcode_house_number=None,
+            description='',
+            regions=''
+        ),
         datastream="",
         observation_goals=[ObservationGoal(
             observation_goal="verkeershandhaving_snorfietsrijbaan",
@@ -149,7 +155,12 @@ class TestApiParser:
                 owner=expected_owner,
                 reference="ANPR-00001-V",
                 type="Optische / camera sensor",
-                location=LatLong(latitude=52.389397, longitude=4.918723),
+                location=Location(
+                    lat_long=LatLong(latitude=52.389397, longitude=4.918723),
+                    postcode_house_number=None,
+                    description='',
+                    regions=''
+                ),
                 datastream='',
                 observation_goals=[
                     ObservationGoal(
@@ -171,7 +182,12 @@ class TestApiParser:
                 owner=expected_owner,
                 reference="ANPR-00002-V",
                 type="Optische / camera sensor",
-                location=LatLong(latitude=52.34528, longitude=4.915874),
+                location=Location(
+                    lat_long=LatLong(latitude=52.34528, longitude=4.915874),
+                    postcode_house_number=None,
+                    description='',
+                    regions=''
+                ),
                 datastream='',
                 observation_goals=[
                     ObservationGoal(
