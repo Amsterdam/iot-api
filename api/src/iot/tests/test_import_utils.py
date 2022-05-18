@@ -84,7 +84,7 @@ class TestParse:
                 lat_long=import_utils.LatLong('52.3676', '4.9041'),
                 postcode_house_number=None,
                 description='',
-                regions=''
+                regions='AB;AC',
             ),
             ['7079-2296', '7079-2297'],
         ),
