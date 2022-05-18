@@ -3,7 +3,8 @@ from drf_extra_fields.geo_fields import PointField
 from rest_framework import serializers
 
 from .constants import CATEGORY_CHOICE_ABBREVIATIONS, CATEGORY_CHOICES
-from .models import Device, Device2, ObservationGoal, Person, Person2, Type
+from .models import (Device, Device2, ObservationGoal, Person, Person2,
+                     Project, Type)
 from .tasks import send_iot_request
 
 
@@ -212,6 +213,21 @@ class ObservationGoalSerializer(HALSerializer):
         fields = ['observation_goal', 'privacy_declaration', 'legal_ground']
 
 
+class ProjectSerializer(HALSerializer):
+
+    # converts the string list to a list.
+    path = serializers.ListField(child=serializers.StringRelatedField())
+
+    class Meta:
+        model = Project
+        fields = ['path']
+
+    def to_representation(self, instance):
+        """print only the list values without the whole object of Project"""
+        representation = super().to_representation(instance)
+        return representation['path']
+
+
 class Device2Serializer(HALSerializer):
     type = serializers.SerializerMethodField()
     regions = serializers.StringRelatedField(many=True)
@@ -219,6 +235,7 @@ class Device2Serializer(HALSerializer):
     owner = Person2Serializer()
     location = serializers.SerializerMethodField()
     observation_goals = ObservationGoalSerializer(many=True)
+    project_paths = ProjectSerializer(many=True, source='projects')
 
     class Meta:
         model = Device2
@@ -232,6 +249,7 @@ class Device2Serializer(HALSerializer):
             'themes',
             'contains_pi_data',
             'observation_goals',
+            'project_paths',
             'active_until',
             'reference',
         ]

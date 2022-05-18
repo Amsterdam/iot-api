@@ -4,7 +4,7 @@ import factory
 import faker
 from django.contrib.gis.geos import Point
 
-from .models import Device2, ObservationGoal, Person2, Theme, Type2
+from .models import Device2, ObservationGoal, Person2, Project, Theme, Type2
 
 fake = faker.Faker()
 
@@ -44,6 +44,11 @@ class Device2Factory(factory.django.DjangoModelFactory):
     def observation_goals(self, *args, **kwargs):
         for observation_goal, privacy_declaration, legal_ground in sample_model(ObservationGoal, 0):
             self.observation_goal.add(observation_goal, privacy_declaration, legal_ground)
+
+    @factory.post_generation
+    def projects(self, *args, **kwargs):
+        for path in sample_model(Project, 0):
+            self.projects.add(path)
 
     active_until = fake.date()
 

@@ -114,7 +114,8 @@ def sensor_data(person_data):
         )],
         themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
         contains_pi_data='Ja',
-        active_until='01-01-2050'
+        active_until='01-01-2050',
+        projects=[]
     )
 
 
@@ -156,7 +157,8 @@ class TestApiParser:
                 )],
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 contains_pi_data='Ja',
-                active_until='01-01-2050'
+                active_until='01-01-2050',
+                projects=[]
             )
         ]
         sensor_list = list(import_utils_apis.parse_camera_brug_en_sluisbediening(data=api_data))
@@ -221,6 +223,7 @@ class TestImportSensor:
         'themes': ['Mobiliteit: auto'],
         'type': 'Optische / camera sensor',
         'reference': 'SLU0101',
+        'project_paths': []
     }
 
     expected_2 = {
@@ -245,6 +248,7 @@ class TestImportSensor:
         'themes': ['Mobiliteit: auto'],
         'type': 'Optische / camera sensor',
         'reference': 'SLU0102',
+        'project_paths': []
     }
 
     def test_import_sensor(self, sensor_data):

@@ -124,6 +124,7 @@ class TestParse:
                 themes='Veiligheid',
                 contains_pi_data='Nee',
                 active_until='06-07-2021',
+                projects=[]
             ),
             import_utils.SensorData(
                 reference=expected_references[1],
@@ -140,6 +141,7 @@ class TestParse:
                 themes='Veiligheid;Lucht',
                 contains_pi_data='Ja',
                 active_until='01-01-2050',
+                projects=[]
             ),
         ]
 
@@ -292,6 +294,14 @@ def sensor_data(person_data):
         ]),
         contains_pi_data='Ja',
         active_until='05-05-2050',
+        projects=[
+            import_utils.Project(
+                path=['Gemeente Amsterdam', 'Verkeers'],
+            ),
+            import_utils.Project(
+                path=['Gemeente Amsterdam', 'Digitale Gracht']
+            ),
+        ],
     )
 
 
@@ -330,6 +340,10 @@ class TestImportSensor:
         ],
         'type': 'Chemiesensor',
         'reference': '1234',
+        'project_paths': [
+            ['Gemeente Amsterdam', 'Verkeers'],
+            ['Gemeente Amsterdam', 'Digitale Gracht']
+        ],
     }
 
     def test_import_sensor(self, sensor_data):

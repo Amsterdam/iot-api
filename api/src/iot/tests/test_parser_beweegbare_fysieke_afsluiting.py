@@ -129,7 +129,8 @@ def sensor_data(person_data):
         )],
         themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
         contains_pi_data='Ja',
-        active_until='01-01-2050'
+        active_until='01-01-2050',
+        projects=[]
     )
 
 
@@ -170,7 +171,8 @@ class TestApiParser:
                 )],
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 contains_pi_data='Ja',
-                active_until='01-01-2050'
+                active_until='01-01-2050',
+                projects=[]
             )
         ]
         sensor_list = list(import_utils_apis.parse_beweegbare_fysieke_afsluiting(
@@ -236,6 +238,7 @@ class TestImportSensor:
         'themes': ['Mobiliteit: auto'],
         'type': 'Optische / camera sensor',
         'reference': 'VO11',
+        'project_paths': []
     }
 
     expected_2 = {
@@ -261,6 +264,7 @@ class TestImportSensor:
         'themes': ['Mobiliteit: auto'],
         'type': 'Optische / camera sensor',
         'reference': 'VO12',
+        'project_paths': []
     }
 
     def test_import_sensor(self, sensor_data):
