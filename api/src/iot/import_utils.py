@@ -416,6 +416,7 @@ BULK_SENSOR_FIELDS = [
     'Kies soort / type sensor',
     'Latitude',
     'Longitude',
+    'In welk gebied bevindt zich de mobiele sensor?',
     'Wat meet de sensor?',
     'Waarvoor meet u dat?',
     'Thema 1',
