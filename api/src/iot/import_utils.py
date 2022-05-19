@@ -342,6 +342,9 @@ def parse_iprox_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
         reference = row['Referentienummer']
 
         for sensor_index in range(settings.IPROX_NUM_SENSORS):
+
+            location_postcode = None
+
             if row['Locatie sensor'] == 'Vast':
                 if row['Hebt u een postcode en huisnummer?'] == 'Ja':
                     # sensor_index + 1 since there is already a Postcode, Huisnummer and
@@ -351,8 +354,6 @@ def parse_iprox_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
                         row["Huisnummer", sensor_index + 1],
                         row["Toevoeging", sensor_index + 1],
                     )
-                else:
-                    location_postcode = None
 
             location_description = row.get(
                 ('Omschrijving van de locatie van de sensor', sensor_index),
