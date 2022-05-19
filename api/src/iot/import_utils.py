@@ -342,6 +342,9 @@ def parse_iprox_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
         reference = row['Referentienummer']
 
         for sensor_index in range(settings.IPROX_NUM_SENSORS):
+
+            location_postcode = None
+
             if row['Locatie sensor'] == 'Vast':
                 if row['Hebt u een postcode en huisnummer?'] == 'Ja':
                     # sensor_index + 1 since there is already a Postcode, Huisnummer and
@@ -351,8 +354,6 @@ def parse_iprox_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
                         row["Huisnummer", sensor_index + 1],
                         row["Toevoeging", sensor_index + 1],
                     )
-                else:
-                    location_postcode = None
 
             location_description = row.get(
                 ('Omschrijving van de locatie van de sensor', sensor_index),
@@ -488,8 +489,10 @@ def parse_bulk_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
                 ),
                 postcode_house_number=None,
                 description='',
-                regions=row.get(
-                    ('In welk gebied bevindt zich de mobiele sensor?'), default='')
+                regions=Regions(
+                    regions=row.get(
+                        ('In welk gebied bevindt zich de mobiele sensor?'), default='')
+                )
             ),
             datastream=row["Wat meet de sensor?"],
             observation_goals=[ObservationGoal(
@@ -772,7 +775,7 @@ def import_sensor(sensor_data: SensorData, owner: models.Person2, action_logger=
 
     if 'regions' in location:
         for region_name in location['regions'].split(settings.IPROX_SEPARATOR):
-            region, _ = action_logger(models.Region.objects.get_or_create(name=region_name))
+            region = action_logger(models.Region.objects.get_or_create(name=region_name))[0]
             device.regions.add(region)
 
     for theme_name in sensor_data.themes.split(settings.IPROX_SEPARATOR):
