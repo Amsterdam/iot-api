@@ -16,6 +16,7 @@ admin.site.register(models.Type2)
 admin.site.register(models.Theme)
 admin.site.register(models.LegalGround)
 admin.site.register(models.ObservationGoal)
+admin.site.register(models.Project)
 
 
 LEAFLET_SETTINGS_OVERRIDES = {
@@ -125,4 +126,9 @@ class ObservationGoalAdmin(LeafletGeoAdmin):
     list_display = 'observation_goal', 'privacy_declaration', 'legal_ground'
     search_fields = 'observation_goal', 'privacy_declaration', 'legal_ground'
     model = models.ObservationGoal
-#     # inlines = [DeviceInline]
+
+
+class ProjectAdmin(LeafletGeoAdmin):
+    list_display = 'path'
+    search_fields = 'path'
+    model = models.Project

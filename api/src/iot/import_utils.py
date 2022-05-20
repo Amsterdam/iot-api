@@ -172,6 +172,11 @@ class Location:
 
 
 @dataclasses.dataclass
+class Project:
+    path: List[str]
+
+
+@dataclasses.dataclass
 class SensorData:
     owner: PersonData
     reference: str
@@ -182,6 +187,7 @@ class SensorData:
     themes: str
     contains_pi_data: Literal['Ja', 'Nee']
     active_until: Union[datetime.date, str]
+    projects: List[Project]
 
 
 IPROX_REGISTRATION_FIELDS = [
@@ -386,6 +392,7 @@ def parse_iprox_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
                 themes=row["Kies een of meerdere thema's", sensor_index],
                 contains_pi_data=row["Worden er persoonsgegevens verwerkt?", sensor_index],
                 active_until=row["Wanneer wordt de sensor verwijderd?", sensor_index],
+                projects=[]
             )
 
             if row["Wilt u nog een sensor melden?", sensor_index] != 'Ja':
@@ -512,6 +519,7 @@ def parse_bulk_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
             ])),
             contains_pi_data=row["Worden er persoonsgegevens verwerkt?"],
             active_until=row["Wanneer wordt de sensor verwijderd?"],
+            projects=[]
         )
         for row in (Values(BULK_SENSOR_FIELDS, row) for row in rows)
         if (row['Referentie'] or '').strip()  # Ignore any rows with an empty reference
@@ -794,6 +802,11 @@ def import_sensor(sensor_data: SensorData, owner: models.Person2, action_logger=
             privacy_declaration=observation_goal.privacy_declaration,
             legal_ground=legal_ground))[0]
         device.observation_goals.add(import_result)
+
+    for project in sensor_data.projects:
+        project_paths = action_logger(models.Project.objects.get_or_create(
+            path=project.path))[0]
+        device.projects.add(project_paths)
 
     return device, created
 
