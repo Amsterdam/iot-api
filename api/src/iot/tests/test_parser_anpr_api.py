@@ -117,7 +117,7 @@ def sensor_data(person_data):
             lat_long=LatLong(latitude=52.3794284, longitude=4.901852),
             postcode_house_number=None,
             description='',
-            regions=''
+            regions=import_utils.Regions(regions=''),
         ),
         datastream="",
         observation_goals=[ObservationGoal(
@@ -159,7 +159,7 @@ class TestApiParser:
                     lat_long=LatLong(latitude=52.389397, longitude=4.918723),
                     postcode_house_number=None,
                     description='',
-                    regions=''
+                    regions=import_utils.Regions(regions=''),
                 ),
                 datastream='',
                 observation_goals=[
@@ -186,7 +186,7 @@ class TestApiParser:
                     lat_long=LatLong(latitude=52.34528, longitude=4.915874),
                     postcode_house_number=None,
                     description='',
-                    regions=''
+                    regions=import_utils.Regions(regions=''),
                 ),
                 datastream='',
                 observation_goals=[

@@ -62,7 +62,7 @@ class TestParse:
                 lat_long=None,
                 postcode_house_number=import_utils.PostcodeHouseNumber('1011 PN', '3', 'III'),
                 description='',
-                regions=''
+                regions=import_utils.Regions(regions='')
             ),
             ['7079-2296.0', '7079-2296.1'],
         ),
@@ -73,7 +73,7 @@ class TestParse:
                 lat_long=None,
                 postcode_house_number=import_utils.PostcodeHouseNumber('1011 PN', '3', 'III'),
                 description='',
-                regions=''
+                regions=import_utils.Regions(regions='')
             ),
             ['7079-2296.0', '7079-2297.0'],
         ),
@@ -278,7 +278,7 @@ def sensor_data(person_data):
             lat_long=None,
             postcode_house_number=None,
             description=import_utils.LocationDescription('Somewhere over the rainbow'),
-            regions=''
+            regions=import_utils.Regions(regions=''),
         ),
         datastream='water',
         observation_goals=[import_utils.ObservationGoal(

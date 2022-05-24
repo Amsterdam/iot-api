@@ -360,9 +360,11 @@ def parse_iprox_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
                 default=''
             )
 
-            regions = row.get(
-                ('In welk gebied bevindt zich de mobiele sensor?', sensor_index),
-                default=''
+            regions = Regions(
+                row.get(
+                    ('In welk gebied bevindt zich de mobiele sensor?', sensor_index),
+                    default=''
+                )
             )
 
             location = Location(
@@ -524,8 +526,9 @@ def get_location(sensor_data: SensorData) -> Dict:
     location data that was provided. It will return a dict of one or multiple locations.
     """
     locations = {}  # empty dict to hold the locations.
-    if sensor_data.location.regions:
+    if sensor_data.location.regions.regions:
         locations['regions'] = sensor_data.location.regions.regions
+        print(f"LOCATION => {sensor_data.location.regions.regions}")
     if isinstance(sensor_data.location.lat_long, LatLong):
         locations['location'] = Point(
             sensor_data.location.lat_long.longitude,
