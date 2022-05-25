@@ -172,7 +172,7 @@ privacyverklaring-parkeren-verkeer-bouw/reistijden-meetsysteem-privacy/",
         themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
         contains_pi_data='Ja',
         active_until='01-01-2050',
-        projects=[]
+        projects=['']
     )
 
 
@@ -216,7 +216,7 @@ privacyverklaring-parkeren-verkeer-bouw/reistijden-meetsysteem-privacy/",
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 contains_pi_data='Ja',
                 active_until='01-01-2050',
-                projects=[]
+                projects=['']
             )
         ]
         sensor_list = list(import_utils_apis.parse_kentekencamera_reistijd(data=api_data))

@@ -8,7 +8,8 @@ def make_many_projects(apps, schema_editor):
     """
     Adds the Device2 Owner's organisation object in device2.projects. So by
     default all the projects will have a default path which is the organisation name
-    of the device's owner. 
+    of the device's owner. No reverse function is needed for this one as no data will
+    be lost or modified.
     """
     Device2 = apps.get_model('iot', 'Device2')
     Project = apps.get_model('iot', 'Project')

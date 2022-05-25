@@ -113,7 +113,7 @@ def parse_wifi_sensor_crowd_management(data: dict) -> Generator[SensorData, None
                     privacy_declaration=adjust_url(properties['Privacyverklaring']),
                 )],
                 active_until='01-01-2050',
-                projects=[]
+                projects=['']
             )
 
 
@@ -166,7 +166,7 @@ def parse_sensor_crowd_management(data: dict) -> Generator[SensorData, None, Non
                     legal_ground='Verkeersmanagment in de rol van wegbeheerder.'
                 )],
                 active_until='01-01-2050',
-                projects=[]
+                projects=['']
             )
 
 
@@ -215,7 +215,7 @@ def parse_camera_brug_en_sluisbediening(data: dict) -> Generator[SensorData, Non
                     legal_ground='Sluisbeheerder in het kader van de woningwet 1991'
                 )],
                 active_until='01-01-2050',
-                projects=[]
+                projects=['']
             )
 
 
@@ -270,7 +270,7 @@ privacyverklaring-parkeren-verkeer-bouw/verkeersmanagement',
                     legal_ground='Verkeersmanagment in de rol van wegbeheerder.'
                 )],
                 active_until='01-01-2050',
-                projects=[]
+                projects=['']
             )
 
 
@@ -326,7 +326,7 @@ privacyverklaring-parkeren-verkeer-bouw/reistijden-meetsysteem-privacy/',
                     legal_ground='Verkeersmanagement in de rol van wegbeheerder.'
                 )],
                 active_until='01-01-2050',
-                projects=[]
+                projects=['']
             )
 
 
@@ -382,7 +382,7 @@ privacyverklaringen-b/milieuzones/',
                     legal_ground='Verkeersbesluiten in de rol van wegbeheerder.'
                 )],
                 active_until='01-01-2050',
-                projects=[]
+                projects=['']
             )
 
 
@@ -431,7 +431,7 @@ def parse_ais_masten(data: dict) -> Generator[SensorData, None, None]:
                     legal_ground='In de rol van vaarwegbeheerder op basis van de binnenvaartwet.'
                 )],
                 active_until='01-01-2050',
-                projects=[]
+                projects=['']
             )
 
 
@@ -484,7 +484,7 @@ def parse_verkeersonderzoek_met_cameras(data: dict) -> Generator[SensorData, Non
                     legal_ground='Verkeersmanagement in de rol van wegbeheerder.'
                 )],
                 active_until='01-01-2050',
-                projects=[]
+                projects=['']
             )
 
 
@@ -533,7 +533,7 @@ def parse_beweegbare_fysieke_afsluiting(data: dict) -> Generator[SensorData, Non
                     legal_ground='Verkeersmanagement in de rol van wegbeheerder.'
                 )],
                 active_until='01-01-2050',
-                projects=[]
+                projects=['']
             )
 
 
@@ -583,7 +583,7 @@ def parse_anpr(data: dict) -> Generator[SensorData, None, None]:
                     legal_ground=None  # can be None because api has no contains_pi_data
                 ) for goal in goals],
                 active_until='01-01-2050',
-                projects=[]
+                projects=['']
             )
 
 

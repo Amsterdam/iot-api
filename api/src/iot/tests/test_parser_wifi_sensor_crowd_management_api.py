@@ -141,7 +141,7 @@ def sensor_data(person_data):
         themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
         contains_pi_data='Ja',
         active_until='01-01-2050',
-        projects=[]
+        projects=['']
     )
 
 
@@ -184,7 +184,7 @@ class TestApiParser:
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 contains_pi_data='Ja',
                 active_until='01-01-2050',
-                projects=[]
+                projects=['']
             )
         ]
         sensor_list = list(import_utils_apis.parse_wifi_sensor_crowd_management(data=api_data))

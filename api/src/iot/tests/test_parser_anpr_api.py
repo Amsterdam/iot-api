@@ -128,7 +128,7 @@ def sensor_data(person_data):
         themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
         contains_pi_data='Nee',
         active_until='01-01-2050',
-        projects=[]
+        projects=['']
     )
 
 
@@ -178,7 +178,7 @@ class TestApiParser:
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 contains_pi_data='Nee',
                 active_until='01-01-2050',
-                projects=[]
+                projects=['']
             ),
             SensorData(
                 owner=expected_owner,
@@ -206,7 +206,7 @@ class TestApiParser:
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 contains_pi_data='Nee',
                 active_until='01-01-2050',
-                projects=[]
+                projects=['']
             )
         ]
         sensors_list = list(import_utils_apis.parse_anpr(data=api_data))
