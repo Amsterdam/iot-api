@@ -62,7 +62,7 @@ class TestParse:
                 lat_long=None,
                 postcode_house_number=import_utils.PostcodeHouseNumber('1011 PN', '3', 'III'),
                 description='',
-                regions=import_utils.Regions(regions='')
+                regions=''
             ),
             ['7079-2296.0', '7079-2296.1'],
         ),
@@ -73,7 +73,7 @@ class TestParse:
                 lat_long=None,
                 postcode_house_number=import_utils.PostcodeHouseNumber('1011 PN', '3', 'III'),
                 description='',
-                regions=import_utils.Regions(regions='')
+                regions=''
             ),
             ['7079-2296.0', '7079-2297.0'],
         ),
@@ -84,7 +84,7 @@ class TestParse:
                 lat_long=import_utils.LatLong('52.3676', '4.9041'),
                 postcode_house_number=None,
                 description='',
-                regions=import_utils.Regions(regions='AB;AC'),
+                regions='AB;AC',
             ),
             ['7079-2296', '7079-2297'],
         ),
@@ -278,7 +278,7 @@ def sensor_data(person_data):
             lat_long=None,
             postcode_house_number=None,
             description=import_utils.LocationDescription('Somewhere over the rainbow'),
-            regions=import_utils.Regions(regions=''),
+            regions='',
         ),
         datastream='water',
         observation_goals=[import_utils.ObservationGoal(
@@ -407,7 +407,7 @@ class TestImportSensor:
         # check that we can import as "mobile" sensor + the location_description is there
         owner = import_utils.import_person(sensor_data.owner)
         regions = ["Centrum", "Oost"]
-        sensor_data.location.regions = import_utils.Regions(regions="Centrum;Oost")
+        sensor_data.location.regions = "Centrum;Oost"
         import_utils.import_sensor(sensor_data, owner)
         expected = dict(
             self.expected,
@@ -419,7 +419,7 @@ class TestImportSensor:
     def test_import_sensor_other_region(self, sensor_data):
         # check that we can import a "other" region and location_description is there.
         owner = import_utils.import_person(sensor_data.owner)
-        sensor_data.location.regions = import_utils.Regions("Diemen")
+        sensor_data.location.regions = "Diemen"
         import_utils.import_sensor(sensor_data, owner)
         assert self.actual == [
             dict(

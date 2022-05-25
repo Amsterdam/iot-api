@@ -119,7 +119,7 @@ def sensor_data(person_data):
             lat_long=LatLong(latitude=52.373989, longitude=4.939922),
             postcode_house_number=None,
             description='',
-            regions=import_utils.Regions(regions=''),
+            regions=''
         ),
         datastream='',
         observation_goals=[ObservationGoal(
@@ -160,7 +160,7 @@ class TestApiParser:
                     lat_long=LatLong(latitude=52.373989, longitude=4.939922),
                     postcode_house_number=None,
                     description='',
-                    regions=import_utils.Regions(regions=''),
+                    regions=''
                 ),
                 datastream='',
                 observation_goals=[ObservationGoal(
