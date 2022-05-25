@@ -102,7 +102,7 @@ def parse_wifi_sensor_crowd_management(data: dict) -> Generator[SensorData, None
                     lat_long=LatLong(latitude=latitude, longitude=longitude),
                     postcode_house_number=None,
                     description='',
-                    regions=''
+                    regions='',
                 ),
                 contains_pi_data='Ja',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
@@ -155,7 +155,7 @@ def parse_sensor_crowd_management(data: dict) -> Generator[SensorData, None, Non
                     lat_long=LatLong(latitude=latitude, longitude=longitude),
                     postcode_house_number=None,
                     description='',
-                    regions=''
+                    regions='',
                 ),
                 contains_pi_data='Ja',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
@@ -204,7 +204,7 @@ def parse_camera_brug_en_sluisbediening(data: dict) -> Generator[SensorData, Non
                     lat_long=LatLong(latitude=latitude, longitude=longitude),
                     postcode_house_number=None,
                     description='',
-                    regions=''
+                    regions='',
                 ),
                 contains_pi_data='Ja',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
@@ -258,7 +258,7 @@ def parse_cctv_camera_verkeersmanagement(data: dict) -> Generator[SensorData, No
                     lat_long=LatLong(latitude=latitude, longitude=longitude),
                     postcode_house_number=None,
                     description='',
-                    regions=''
+                    regions='',
                 ),
                 contains_pi_data='Ja',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
@@ -314,7 +314,7 @@ def parse_kentekencamera_reistijd(data: dict) -> Generator[SensorData, None, Non
                     lat_long=LatLong(latitude=latitude, longitude=longitude),
                     postcode_house_number=None,
                     description='',
-                    regions=''
+                    regions='',
                 ),
                 contains_pi_data='Ja',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
@@ -370,7 +370,7 @@ def parse_kentekencamera_milieuzone(data: dict) -> Generator[SensorData, None, N
                     lat_long=LatLong(latitude=latitude, longitude=longitude),
                     postcode_house_number=None,
                     description='',
-                    regions=''
+                    regions='',
                 ),
                 contains_pi_data='Ja',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto', 'Milieu']),
@@ -420,7 +420,7 @@ def parse_ais_masten(data: dict) -> Generator[SensorData, None, None]:
                     lat_long=LatLong(latitude=latitude, longitude=longitude),
                     postcode_house_number=None,
                     description='',
-                    regions=''
+                    regions='',
                 ),
                 contains_pi_data='Ja',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
@@ -473,7 +473,7 @@ def parse_verkeersonderzoek_met_cameras(data: dict) -> Generator[SensorData, Non
                     lat_long=LatLong(latitude=latitude, longitude=longitude),
                     postcode_house_number=None,
                     description='',
-                    regions=''
+                    regions='',
                 ),
                 contains_pi_data='Ja',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
@@ -522,7 +522,7 @@ def parse_beweegbare_fysieke_afsluiting(data: dict) -> Generator[SensorData, Non
                     lat_long=LatLong(latitude=latitude, longitude=longitude),
                     postcode_house_number=None,
                     description='',
-                    regions=''
+                    regions='',
                 ),
                 contains_pi_data='Ja',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
@@ -572,7 +572,7 @@ def parse_anpr(data: dict) -> Generator[SensorData, None, None]:
                     lat_long=LatLong(latitude=latitude, longitude=longitude),
                     postcode_house_number=None,
                     description='',
-                    regions=''
+                    regions='',
                 ),
                 contains_pi_data='Nee',  # api has no contains_pi_data
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
