@@ -277,7 +277,7 @@ def sensor_data(person_data):
         location=import_utils.Location(
             lat_long=None,
             postcode_house_number=None,
-            description=import_utils.LocationDescription('Somewhere over the rainbow'),
+            description='Somewhere over the rainbow',
             regions='',
         ),
         datastream='water',
