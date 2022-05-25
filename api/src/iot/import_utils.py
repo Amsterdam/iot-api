@@ -154,16 +154,6 @@ class PostcodeHouseNumber:
 
 
 @dataclasses.dataclass
-class LocationDescription:
-    description: str
-
-
-@dataclasses.dataclass
-class Regions:
-    regions: str
-
-
-@dataclasses.dataclass
 class Location:
     lat_long: Optional[LatLong]
     postcode_house_number: Optional[PostcodeHouseNumber]
@@ -356,14 +346,10 @@ def parse_iprox_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
                     )
 
             location_description = row.get(
-                ('Omschrijving van de locatie van de sensor', sensor_index),
-                default=''
-            )
+                'Omschrijving van de locatie van de sensor', sensor_index
+            ) or ''
 
-            regions = row.get(
-                ('In welk gebied bevindt zich de mobiele sensor?', sensor_index),
-                default=''
-            )
+            regions = row.get('In welk gebied bevindt zich de mobiele sensor?', sensor_index) or ''
 
             location = Location(
                 postcode_house_number=location_postcode,
@@ -489,10 +475,7 @@ def parse_bulk_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
                 ),
                 postcode_house_number=None,
                 description='',
-                regions=Regions(
-                    regions=row.get(
-                        ('In welk gebied bevindt zich de mobiele sensor?'), default='')
-                )
+                regions=row.get('In welk gebied bevindt zich de mobiele sensor?') or ''
             ),
             datastream=row["Wat meet de sensor?"],
             observation_goals=[ObservationGoal(
@@ -525,14 +508,14 @@ def get_location(sensor_data: SensorData) -> Dict:
     """
     locations = {}  # empty dict to hold the locations.
     if sensor_data.location.regions:
-        locations['regions'] = sensor_data.location.regions.regions
+        locations['regions'] = sensor_data.location.regions
     if isinstance(sensor_data.location.lat_long, LatLong):
         locations['location'] = Point(
             sensor_data.location.lat_long.longitude,
             sensor_data.location.lat_long.latitude
         )
     if sensor_data.location.description:
-        locations['location_description'] = sensor_data.location.description.description
+        locations['location_description'] = sensor_data.location.description
     if isinstance(sensor_data.location.postcode_house_number, PostcodeHouseNumber):
         location = get_center_coordinates(
             sensor_data.location.postcode_house_number.postcode,
