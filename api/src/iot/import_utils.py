@@ -373,7 +373,7 @@ def parse_iprox_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
                 themes=row["Kies een of meerdere thema's", sensor_index],
                 contains_pi_data=row["Worden er persoonsgegevens verwerkt?", sensor_index],
                 active_until=row["Wanneer wordt de sensor verwijderd?", sensor_index],
-                projects=['']  # not required for the iprox
+                projects=[''],  # not required for the iprox
             )
 
             if row["Wilt u nog een sensor melden?", sensor_index] != 'Ja':
@@ -786,7 +786,6 @@ def import_sensor(sensor_data: SensorData, owner: models.Person2, action_logger=
         # only import the projects if the list is not empty
         if project:
             path = project.split(settings.IPROX_SEPARATOR)
-            print(f"PATH => {path}")
             # because it's a list of string, convert every string to a list because it's an
             # arrayfield that will take a list of string for each path.
             project_paths = action_logger(models.Project.objects.get_or_create(
