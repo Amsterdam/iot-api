@@ -1,7 +1,8 @@
 import typing
 
 from django.contrib.gis.db import models as gis_models
-from django.contrib.postgres.fields import CIEmailField, CITextField
+from django.contrib.postgres.fields import (ArrayField, CIEmailField,
+                                            CITextField)
 from django.db import models
 
 from .constants import FREQUENCY_CHOICES
@@ -163,6 +164,26 @@ class ObservationGoal(models.Model):
         verbose_name_plural = 'ObservationGoals'
 
 
+class Project(models.Model):
+    """represents a list of paths to the projects that belong to a device."""
+
+    path = ArrayField(
+        models.CharField(
+            max_length=255,
+            verbose_name="Organisation name",
+            blank=False,
+            null=False
+        )
+    )
+
+    def __str__(self):
+        return f'{self.path}'
+
+    class Meta:
+        verbose_name = 'Project'
+        verbose_name_plural = 'Projects'
+
+
 class Device2(models.Model):
     """
     The iot device "thing"
@@ -212,6 +233,9 @@ class Device2(models.Model):
         ObservationGoal,
         verbose_name="ObservationGoal"
     )
+
+    projects = models.ManyToManyField(Project, verbose_name="Projects")
+
     active_until = models.DateField(null=True, verbose_name="Tot wanneer is de sensor actief?")
 
     def __str__(self):

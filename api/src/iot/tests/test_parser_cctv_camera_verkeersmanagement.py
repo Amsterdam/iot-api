@@ -171,7 +171,8 @@ specifieke/privacyverklaring-parkeren-verkeer-bouw/verkeersmanagement",
         )],
         themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
         contains_pi_data='Ja',
-        active_until='01-01-2050'
+        active_until='01-01-2050',
+        projects=['']
     )
 
 
@@ -214,7 +215,8 @@ specifieke/privacyverklaring-parkeren-verkeer-bouw/verkeersmanagement",
                 )],
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 contains_pi_data='Ja',
-                active_until='01-01-2050'
+                active_until='01-01-2050',
+                projects=['']
             )
         ]
         sensor_list = list(import_utils_apis.parse_cctv_camera_verkeersmanagement(data=api_data))
@@ -280,6 +282,7 @@ specifieke/privacyverklaring-parkeren-verkeer-bouw/verkeersmanagement",
         'themes': ['Mobiliteit: auto'],
         'type': 'Optische / camera sensor',
         'reference': 'TV-117-5',
+        'project_paths': []
     }
 
     expected_2 = {
@@ -305,6 +308,7 @@ specifieke/privacyverklaring-parkeren-verkeer-bouw/verkeersmanagement",
         'themes': ['Mobiliteit: auto'],
         'type': 'Optische / camera sensor',
         'reference': 'TV-117-6',
+        'project_paths': []
     }
 
     def test_import_sensor(self, sensor_data):

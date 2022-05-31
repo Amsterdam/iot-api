@@ -54,7 +54,8 @@ def dict_to_workbook(value):
 
 class TestParse:
 
-    @pytest.mark.parametrize("dir, parser, expected_location, expected_references", [
+    @pytest.mark.parametrize("dir, parser, expected_location, expected_references,\
+                             expected_project", [
         (
             'iprox_single',
             import_utils.parse_iprox_xlsx,
@@ -65,6 +66,7 @@ class TestParse:
                 regions=''
             ),
             ['7079-2296.0', '7079-2296.1'],
+            [''],
         ),
         (
             'iprox_multiple',
@@ -76,6 +78,7 @@ class TestParse:
                 regions=''
             ),
             ['7079-2296.0', '7079-2297.0'],
+            [''],
         ),
         (
             'bulk',
@@ -87,9 +90,11 @@ class TestParse:
                 regions='AB;AC',
             ),
             ['7079-2296', '7079-2297'],
+            ['Verkeershandhaving;Gemeente Amsterdam']
         ),
     ])
-    def test_parse_sensor_data(self, dir, parser, expected_location, expected_references):
+    def test_parse_sensor_data(self, dir, parser, expected_location, expected_references,
+                               expected_project):
         """
         Each of the source files contains the same sensors, just in a different
         format, so we call the various parse functions and verify that
@@ -124,6 +129,7 @@ class TestParse:
                 themes='Veiligheid',
                 contains_pi_data='Nee',
                 active_until='06-07-2021',
+                projects=expected_project
             ),
             import_utils.SensorData(
                 reference=expected_references[1],
@@ -140,6 +146,7 @@ class TestParse:
                 themes='Veiligheid;Lucht',
                 contains_pi_data='Ja',
                 active_until='01-01-2050',
+                projects=['']
             ),
         ]
 
@@ -292,6 +299,10 @@ def sensor_data(person_data):
         ]),
         contains_pi_data='Ja',
         active_until='05-05-2050',
+        projects=[
+            'Gemeente Amsterdam;Verkeers',
+            'Noord Amsterdam;Zuid Amsterdam'
+        ],
     )
 
 
@@ -330,6 +341,10 @@ class TestImportSensor:
         ],
         'type': 'Chemiesensor',
         'reference': '1234',
+        'project_paths': [
+            ['Gemeente Amsterdam', 'Verkeers'],
+            ['Noord Amsterdam', 'Zuid Amsterdam']
+        ],
     }
 
     def test_import_sensor(self, sensor_data):

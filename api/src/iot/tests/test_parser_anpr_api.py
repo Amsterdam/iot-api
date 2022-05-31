@@ -127,7 +127,8 @@ def sensor_data(person_data):
         )],
         themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
         contains_pi_data='Nee',
-        active_until='01-01-2050'
+        active_until='01-01-2050',
+        projects=['']
     )
 
 
@@ -176,7 +177,8 @@ class TestApiParser:
                 ],
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 contains_pi_data='Nee',
-                active_until='01-01-2050'
+                active_until='01-01-2050',
+                projects=['']
             ),
             SensorData(
                 owner=expected_owner,
@@ -203,7 +205,8 @@ class TestApiParser:
                 ],
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 contains_pi_data='Nee',
-                active_until='01-01-2050'
+                active_until='01-01-2050',
+                projects=['']
             )
         ]
         sensors_list = list(import_utils_apis.parse_anpr(data=api_data))
@@ -274,6 +277,7 @@ class TestImportSensor:
         'themes': ['Mobiliteit: auto'],
         'type': 'Optische / camera sensor',
         'reference': 'ANPR-00001-V',
+        'project_paths': []
     }
 
     expected_2 = {
@@ -298,6 +302,7 @@ class TestImportSensor:
         'themes': ['Mobiliteit: auto'],
         'type': 'Optische / camera sensor',
         'reference': 'ANPR-00004-V',
+        'project_paths': []
     }
 
     expected_3 = {
@@ -327,6 +332,7 @@ class TestImportSensor:
         'themes': ['Mobiliteit: auto'],
         'type': 'Optische / camera sensor',
         'reference': 'ANPR-00002-V',
+        'project_paths': []
     }
 
     def test_import_sensor(self, sensor_data):

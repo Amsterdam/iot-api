@@ -227,7 +227,8 @@ class TestApiParser:
                 )],
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 contains_pi_data='Ja',
-                active_until='01-01-2050'
+                active_until='01-01-2050',
+                projects=['']
             ),
             SensorData(
                 owner=expected_owner,
@@ -247,7 +248,8 @@ class TestApiParser:
                 )],
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 contains_pi_data='Ja',
-                active_until='01-01-2050'
+                active_until='01-01-2050',
+                projects=['']
             ),
             SensorData(
                 owner=expected_owner,
@@ -267,7 +269,8 @@ class TestApiParser:
                 )],
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 contains_pi_data='Ja',
-                active_until='01-01-2050'
+                active_until='01-01-2050',
+                projects=['']
             )
         ]
         sensor_list = list(import_utils_apis.parse_sensor_crowd_management(data=api_data))

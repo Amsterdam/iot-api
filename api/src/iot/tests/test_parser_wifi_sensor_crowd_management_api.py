@@ -140,7 +140,8 @@ def sensor_data(person_data):
         )],
         themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
         contains_pi_data='Ja',
-        active_until='01-01-2050'
+        active_until='01-01-2050',
+        projects=['']
     )
 
 
@@ -182,7 +183,8 @@ class TestApiParser:
                 )],
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 contains_pi_data='Ja',
-                active_until='01-01-2050'
+                active_until='01-01-2050',
+                projects=['']
             )
         ]
         sensor_list = list(import_utils_apis.parse_wifi_sensor_crowd_management(data=api_data))
@@ -249,6 +251,7 @@ class TestImportSensor:
         'themes': ['Mobiliteit: auto'],
         'type': 'Aanwezigheid of nabijheidsensor',
         'reference': 'GABW-03',
+        'project_paths': []
     }
 
     expected_2 = {
@@ -273,6 +276,7 @@ class TestImportSensor:
         'themes': ['Mobiliteit: auto'],
         'type': 'Aanwezigheid of nabijheidsensor',
         'reference': 'GABW-05',
+        'project_paths': []
     }
 
     def test_import_sensor(self, sensor_data):

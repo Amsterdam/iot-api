@@ -171,7 +171,8 @@ privacyverklaring-parkeren-verkeer-bouw/reistijden-meetsysteem-privacy/",
         )],
         themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
         contains_pi_data='Ja',
-        active_until='01-01-2050'
+        active_until='01-01-2050',
+        projects=['']
     )
 
 
@@ -214,7 +215,8 @@ privacyverklaring-parkeren-verkeer-bouw/reistijden-meetsysteem-privacy/",
                 )],
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 contains_pi_data='Ja',
-                active_until='01-01-2050'
+                active_until='01-01-2050',
+                projects=['']
             )
         ]
         sensor_list = list(import_utils_apis.parse_kentekencamera_reistijd(data=api_data))
@@ -282,6 +284,7 @@ privacyverklaring-parkeren-verkeer-bouw/reistijden-meetsysteem-privacy/",
         'themes': ['Mobiliteit: auto'],
         'type': 'Optische / camera sensor',
         'reference': 'ANPR-03047',
+        'project_paths': []
     }
 
     expected_2 = {
@@ -307,6 +310,7 @@ privacyverklaring-parkeren-verkeer-bouw/reistijden-meetsysteem-privacy/",
         'themes': ['Mobiliteit: auto'],
         'type': 'Optische / camera sensor',
         'reference': 'ANPR-03048',
+        'project_paths': []
     }
 
     def test_import_sensor(self, sensor_data):

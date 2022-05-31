@@ -172,6 +172,7 @@ class SensorData:
     themes: str
     contains_pi_data: Literal['Ja', 'Nee']
     active_until: Union[datetime.date, str]
+    projects: List[str]
 
 
 IPROX_REGISTRATION_FIELDS = [
@@ -372,6 +373,7 @@ def parse_iprox_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
                 themes=row["Kies een of meerdere thema's", sensor_index],
                 contains_pi_data=row["Worden er persoonsgegevens verwerkt?", sensor_index],
                 active_until=row["Wanneer wordt de sensor verwijderd?", sensor_index],
+                projects=[''],  # not required for the iprox
             )
 
             if row["Wilt u nog een sensor melden?", sensor_index] != 'Ja':
@@ -419,6 +421,7 @@ BULK_SENSOR_FIELDS = [
     'Privacyverklaring',
     'Wanneer wordt de sensor verwijderd?',
     'Opmerking (niet verplicht)',
+    'Project',
 ]
 
 
@@ -495,6 +498,7 @@ def parse_bulk_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
             ])),
             contains_pi_data=row["Worden er persoonsgegevens verwerkt?"],
             active_until=row["Wanneer wordt de sensor verwijderd?"],
+            projects=[row.get('Project') or '']
         )
         for row in (Values(BULK_SENSOR_FIELDS, row) for row in rows)
         if (row['Referentie'] or '').strip()  # Ignore any rows with an empty reference
@@ -777,6 +781,16 @@ def import_sensor(sensor_data: SensorData, owner: models.Person2, action_logger=
             privacy_declaration=observation_goal.privacy_declaration,
             legal_ground=legal_ground))[0]
         device.observation_goals.add(import_result)
+
+    for project in sensor_data.projects:
+        # only import the projects if the list is not empty
+        if project:
+            path = project.split(settings.IPROX_SEPARATOR)
+            # because it's a list of string, convert every string to a list because it's an
+            # arrayfield that will take a list of string for each path.
+            project_paths = action_logger(models.Project.objects.get_or_create(
+                path=path))[0]
+            device.projects.add(project_paths)
 
     return device, created
 
