@@ -18,7 +18,7 @@ celery==5.1.2
     # via
     #   -r api/requirements.in
     #   django-celery-email
-certifi==2021.10.8
+certifi==2022.6.15
     # via requests
 cffi==1.15.0
     # via cryptography
@@ -43,7 +43,7 @@ coreschema==0.0.4
     # via
     #   coreapi
     #   drf-yasg
-cryptography==36.0.2
+cryptography==37.0.2
     # via
     #   josepy
     #   mozilla-django-oidc
@@ -83,7 +83,7 @@ django-extra-fields==3.0.2
     # via -r api/requirements.in
 django-filter==21.1
     # via -r api/requirements.in
-django-leaflet==0.28.2
+django-leaflet==0.28.3
     # via -r api/requirements.in
 django-multiselectfield==0.1.12
     # via -r api/requirements.in
@@ -100,7 +100,7 @@ djangorestframework-csv==2.1.1
     # via
     #   -r api/requirements.in
     #   drf-amsterdam
-djangorestframework-gis==0.18
+djangorestframework-gis==1.0
     # via -r api/requirements.in
 djangorestframework-xml==2.0.0
     # via
@@ -141,17 +141,17 @@ jsonschema==3.2.0
     # via swagger-spec-validator
 kombu==5.1.0
     # via celery
-markdown==3.3.6
+markdown==3.3.7
     # via -r api/requirements.in
 markupsafe==2.0.1
     # via jinja2
 mozilla-django-oidc==1.2.4
     # via datapunt-keycloak-oidc
-openpyxl==3.0.9
+openpyxl==3.0.10
     # via -r api/requirements.in
 packaging==21.3
     # via drf-yasg
-prompt-toolkit==3.0.29
+prompt-toolkit==3.0.30
     # via click-repl
 psycopg2-binary==2.9.3
     # via -r api/requirements.in
@@ -163,7 +163,7 @@ pygments==2.12.0
     # via -r api/requirements.in
 pyopenssl==22.0.0
     # via josepy
-pyparsing==3.0.8
+pyparsing==3.0.9
     # via packaging
 pyrsistent==0.18.0
     # via jsonschema

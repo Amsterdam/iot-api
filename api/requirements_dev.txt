@@ -29,7 +29,7 @@ celery==5.1.2
     # via
     #   -r api/./requirements.txt
     #   django-celery-email
-certifi==2021.10.8
+certifi==2022.6.15
     # via
     #   -r api/./requirements.txt
     #   requests
@@ -73,7 +73,7 @@ coreschema==0.0.4
     #   drf-yasg
 coverage[toml]==6.2
     # via pytest-cov
-cryptography==36.0.2
+cryptography==37.0.2
     # via
     #   -r api/./requirements.txt
     #   josepy
@@ -123,7 +123,7 @@ django-extra-fields==3.0.2
     # via -r api/./requirements.txt
 django-filter==21.1
     # via -r api/./requirements.txt
-django-leaflet==0.28.2
+django-leaflet==0.28.3
     # via -r api/./requirements.txt
 django-multiselectfield==0.1.12
     # via -r api/./requirements.txt
@@ -140,7 +140,7 @@ djangorestframework-csv==2.1.1
     # via
     #   -r api/./requirements.txt
     #   drf-amsterdam
-djangorestframework-gis==0.18
+djangorestframework-gis==1.0
     # via -r api/./requirements.txt
 djangorestframework-xml==2.0.0
     # via
@@ -162,7 +162,7 @@ factory-boy==3.2.1
     # via
     #   -r api/requirements_dev.in
     #   pytest-factoryboy
-faker==13.4.0
+faker==13.14.0
     # via
     #   -r api/requirements_dev.in
     #   factory-boy
@@ -231,7 +231,7 @@ kombu==5.1.0
     # via
     #   -r api/./requirements.txt
     #   celery
-markdown==3.3.6
+markdown==3.3.7
     # via -r api/./requirements.txt
 markupsafe==2.0.1
     # via
@@ -243,7 +243,7 @@ mozilla-django-oidc==1.2.4
     # via
     #   -r api/./requirements.txt
     #   datapunt-keycloak-oidc
-openpyxl==3.0.9
+openpyxl==3.0.10
     # via -r api/./requirements.txt
 packaging==21.3
     # via
@@ -261,7 +261,7 @@ pluggy==1.0.0
     # via
     #   pytest
     #   tox
-prompt-toolkit==3.0.29
+prompt-toolkit==3.0.30
     # via
     #   -r api/./requirements.txt
     #   click-repl
@@ -287,7 +287,7 @@ pyopenssl==22.0.0
     # via
     #   -r api/./requirements.txt
     #   josepy
-pyparsing==3.0.8
+pyparsing==3.0.9
     # via
     #   -r api/./requirements.txt
     #   packaging
@@ -418,7 +418,7 @@ vine==5.0.0
     #   amqp
     #   celery
     #   kombu
-virtualenv==20.14.1
+virtualenv==20.15.0
     # via tox
 wcwidth==0.2.5
     # via
