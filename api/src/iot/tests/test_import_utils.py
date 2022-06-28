@@ -213,6 +213,11 @@ class TestParse:
         workbook = csv_to_workbook(Path(__file__).parent / 'data' / dir)
         assert len(list(parser(workbook))) == 1
 
+    def test_iprox_five_sensors(self):
+        # verify that is possible to import the max number of sensors
+        workbook = csv_to_workbook(Path(__file__).parent / 'data' / 'iprox_five_sensors')
+        assert len(list(import_utils.parse_iprox_xlsx(workbook))) == 5
+
 
 @pytest.fixture
 def person_data():
@@ -491,6 +496,7 @@ class TestImportSensor:
             DuplicateReferenceError('7079-2296.1', 2),
         ]
         assert errors == expected
+
 
 
 @pytest.mark.django_db
