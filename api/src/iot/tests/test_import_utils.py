@@ -662,6 +662,15 @@ class TestGetCenterCoordinates:
         actual = import_utils.get_center_coordinates('1382 AE', 1)
         assert tuple(actual) == (5.042682700063272, 52.30925075920674)
 
+    @pytest.mark.parametrize("postcode", ['1016ht', '1016 ht', '1016 HT', '1016HT'])
+    def test_postcode_should_be_normalized(self, postcode):
+        """
+        Check that the postcode is correctly normalized, if a postcode
+        is given in lowercase it will not match the API.
+        """
+        actual = import_utils.get_center_coordinates(postcode, 579)
+        assert tuple(actual) == (4.882909214312223, 52.36816000657591)
+
 
 class TestGetCenterCoordinatesInvalidResponses:
 
