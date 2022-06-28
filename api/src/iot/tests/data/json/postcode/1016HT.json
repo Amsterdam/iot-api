@@ -1,0 +1,120 @@
+{
+  "_links": {
+    "self": {
+      "href": "https://api.data.amsterdam.nl/atlas/search/postcode/?format=json&q=1016HT&page=1"
+    },
+    "next": {
+      "href": null
+    },
+    "prev": {
+      "href": null
+    }
+  },
+  "count_hits": 1,
+  "count": 1,
+  "results": [
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/openbareruimte/0363300000004580/?format=json"
+        }
+      },
+      "type": "openbare_ruimte",
+      "dataset": "bag_v11_gebied",
+      "subtype": "weg",
+      "subtype_id": "0363300000004580",
+      "naam": "Prinsengracht",
+      "naam_nen": "Prinsengracht",
+      "naam_no_ws": "Prinsengracht",
+      "postcode": [
+        "1015DT",
+        "1017JJ",
+        "1015DV",
+        "1017JE",
+        "1017KN",
+        "1015EA",
+        "1017KS",
+        "1016HZ",
+        "1015DL",
+        "1016HB",
+        "1016GX",
+        "1016HC",
+        "1015DN",
+        "1015DP",
+        "1017LB",
+        "1015DS",
+        "1016HT",
+        "1016HH",
+        "1017KG",
+        "1016GV",
+        "1017JG",
+        "1017KW",
+        "1017KD",
+        "1015DW",
+        "1017JW",
+        "1016JC",
+        "1016GW",
+        "1016GZ",
+        "1017LE",
+        "1016HE",
+        "1016HX",
+        "1016HA",
+        "1017LA",
+        "1016JB",
+        "1017JM",
+        "1017KM",
+        "1016JA",
+        "1017KE",
+        "1017JN",
+        "1017KK",
+        "1017KH",
+        "1016HS",
+        "1017KA",
+        "1016HP",
+        "1015DX",
+        "1016HD",
+        "1016HJ",
+        "1017LG",
+        "1015DK",
+        "1015DM",
+        "1016HN",
+        "1017JX",
+        "1017KJ",
+        "1016HK",
+        "1017LC",
+        "1017JL",
+        "1017JH",
+        "1016HL",
+        "1017JT",
+        "1017KT",
+        "1017LH",
+        "1017KV",
+        "1017KP",
+        "1016HW",
+        "1015DZ",
+        "1017KC",
+        "1016HR",
+        "1017KX",
+        "1017KB",
+        "1017JK",
+        "1017KZ",
+        "1017LD",
+        "1016HV",
+        "1017JV",
+        "1016HG",
+        "1015EB",
+        "1015DR",
+        "1017JZ",
+        "1017KR",
+        "1017KL",
+        "1016HM"
+      ],
+      "_display": "Prinsengracht",
+      "centroid": [
+        4.887670884856072,
+        52.36838186547471
+      ],
+      "landelijk_id": "0363300000004580"
+    }
+  ]
+}

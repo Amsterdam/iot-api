@@ -1,0 +1,107 @@
+{
+  "_links": {
+    "self": {
+      "href": "https://api.data.amsterdam.nl/atlas/search/adres/?format=json&q=prinsengracht%20579&page=1"
+    },
+    "next": {
+      "href": null
+    },
+    "prev": {
+      "href": null
+    }
+  },
+  "count_hits": 3,
+  "count": 3,
+  "results": [
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000785061/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Prinsengracht 579-1",
+      "postcode": "1016HT",
+      "straatnaam": "Prinsengracht",
+      "straatnaam_no_ws": "Prinsengracht",
+      "huisnummer": 579,
+      "toevoeging": "579 1",
+      "bag_huisletter": "",
+      "bag_toevoeging": "1",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000244431",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000785061",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.882909214312223,
+        52.36816000657591
+      ],
+      "subtype_id": "0363010000785061",
+      "_display": "Prinsengracht 579-1"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000785062/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Prinsengracht 579-2",
+      "postcode": "1016HT",
+      "straatnaam": "Prinsengracht",
+      "straatnaam_no_ws": "Prinsengracht",
+      "huisnummer": 579,
+      "toevoeging": "579 2",
+      "bag_huisletter": "",
+      "bag_toevoeging": "2",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000244432",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000785062",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.882909214312223,
+        52.36816000657591
+      ],
+      "subtype_id": "0363010000785062",
+      "_display": "Prinsengracht 579-2"
+    },
+    {
+      "_links": {
+        "self": {
+          "href": "https://api.data.amsterdam.nl/bag/v1.1/verblijfsobject/0363010000785060/?format=json"
+        }
+      },
+      "type": "verblijfsobject",
+      "dataset": "v11_nummeraanduiding",
+      "adres": "Prinsengracht 579-H",
+      "postcode": "1016HT",
+      "straatnaam": "Prinsengracht",
+      "straatnaam_no_ws": "Prinsengracht",
+      "huisnummer": 579,
+      "toevoeging": "579 H",
+      "bag_huisletter": "",
+      "bag_toevoeging": "H",
+      "woonplaats": "Amsterdam",
+      "type_adres": "Hoofdadres",
+      "status": "Naamgeving uitgegeven",
+      "landelijk_id": "0363200000244430",
+      "vbo_status": "Verblijfsobject in gebruik",
+      "adresseerbaar_object_id": "0363010000785060",
+      "subtype": "verblijfsobject",
+      "centroid": [
+        4.882909214312223,
+        52.36816000657591
+      ],
+      "subtype_id": "0363010000785060",
+      "_display": "Prinsengracht 579-H"
+    }
+  ]
+}

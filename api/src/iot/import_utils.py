@@ -30,8 +30,12 @@ class PostcodeSearchException(ValueError):
         return f"Ongeldige postcode ({self.postcode}) / huisnummer ({self.house_number})"
 
 
+def normalize_postcode(postcode: str) -> str:
+    return postcode.replace(' ', '').upper()
+
+
 def get_postcode_url(postcode: str) -> str:
-    normalized = postcode.replace(' ', '')
+    normalized = normalize_postcode(postcode)
     return f'{settings.ATLAS_POSTCODE_SEARCH}/?q={normalized}'
 
 
@@ -63,7 +67,7 @@ def get_center_coordinates(postcode: str, house_number: Union[int, str]) -> Poin
         # be that this number does not exist on the street. The search is fuzzy
         # so we will most likely get a result, but it might not be the result we
         # want
-        postcode_normalized = postcode.replace(' ', '')
+        postcode_normalized = normalize_postcode(postcode)
         for result in data['results']:
 
             if 'centroid' not in result:
