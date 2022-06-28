@@ -376,7 +376,7 @@ def parse_iprox_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
                 projects=[''],  # not required for the iprox
             )
 
-            if row["Wilt u nog een sensor melden?", sensor_index] != 'Ja':
+            if row.get(("Wilt u nog een sensor melden?", sensor_index), 'Nee') != 'Ja':
                 break
 
 
