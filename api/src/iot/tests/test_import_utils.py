@@ -498,7 +498,6 @@ class TestImportSensor:
         assert errors == expected
 
 
-
 @pytest.mark.django_db
 class TestValidate:
     """
