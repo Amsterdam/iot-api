@@ -66,16 +66,17 @@ class Person2(models.Model):
         max_length=255,
         verbose_name="Naam (Voornaam [Tussenvoegsel] Achternaam)",
     )
-    email = CIEmailField(unique=True, verbose_name="E-mail")
+    email = CIEmailField(verbose_name="E-mail")
     telephone = models.CharField(max_length=15, verbose_name="Telefoon")
 
     # LegalEntity
     organisation = models.CharField(max_length=255, verbose_name="Naam organisatie/bedrijf")
-    website = models.URLField(verbose_name="Website", blank=True, null=True)
+    website = models.TextField(verbose_name="Website", blank=True, null=True)
 
     class Meta:
         verbose_name = 'Eigenaar'
         verbose_name_plural = 'Eigenaren'
+        unique_together = [['email', 'organisation']]
 
     def __str__(self):
         return f'{self.email} ({self.name})'

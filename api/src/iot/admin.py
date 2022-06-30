@@ -4,7 +4,7 @@ from django.contrib.admin.models import ADDITION, CHANGE, LogEntry
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import redirect, render
-from django.urls import path
+from django.urls import path, reverse
 from django.utils.safestring import mark_safe
 from leaflet.admin import LeafletGeoAdmin, LeafletGeoAdminMixin
 from openpyxl import load_workbook
@@ -36,7 +36,7 @@ def import_xlsx_view(request, message_user, redirect_to):
         file = request.FILES["selecteer_bestand"]
         num_created = 0
         num_updated = 0
-
+        imported_sensors = []
         try:
             workbook = load_workbook(file)
 
@@ -53,11 +53,35 @@ def import_xlsx_view(request, message_user, redirect_to):
                 )
                 return result
 
-            errors, num_created, num_updated = import_xlsx(workbook, action_logger)
+            (
+                errors,
+                imported_sensors,
+                num_created,
+                num_updated,
+            ) = import_xlsx(workbook, action_logger)
+
         except Exception as e:
             errors = [e]
 
         send_messages_to_user(request, message_user, num_created, num_updated, errors)
+
+        # warn about any sensors that do not have a lat/long, these sensors
+        # will be imported in the registry, however it won't be possible to
+        # show them on the map
+        def change_url(s):
+            return reverse(f'admin:{s._meta.app_label}_{s._meta.model_name}_change', args=(s.pk,))
+
+        sensors_with_no_location = [
+            f'<a href="{change_url(s)}">{s.reference}</a>'
+            for s in imported_sensors
+            if s.location is None
+        ]
+
+        if sensors_with_no_location:
+            message = "De volgende sensoren hebben geen lat/long, en " \
+                      "kunnen dus niet op de kaart getoond worden: <br>"
+            message += '<br>'.join(sensors_with_no_location)
+            message_user(request, mark_safe(message), messages.WARNING)
 
         return redirect(redirect_to)
     else:

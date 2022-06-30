@@ -55,7 +55,7 @@ def dict_to_workbook(value):
 class TestParse:
 
     @pytest.mark.parametrize("dir, parser, expected_location, expected_references,\
-                             expected_project", [
+                             expected_project, expected_row_numbers", [
         (
             'iprox_single',
             import_utils.parse_iprox_xlsx,
@@ -67,6 +67,7 @@ class TestParse:
             ),
             ['7079-2296.0', '7079-2296.1'],
             [''],
+            [1, 1],
         ),
         (
             'iprox_multiple',
@@ -79,6 +80,7 @@ class TestParse:
             ),
             ['7079-2296.0', '7079-2297.0'],
             [''],
+            [1, 2],
         ),
         (
             'bulk',
@@ -90,11 +92,12 @@ class TestParse:
                 regions='AB;AC',
             ),
             ['7079-2296', '7079-2297'],
-            ['Verkeershandhaving;Gemeente Amsterdam']
+            ['Verkeershandhaving;Gemeente Amsterdam'],
+            [1, 2],
         ),
     ])
     def test_parse_sensor_data(self, dir, parser, expected_location, expected_references,
-                               expected_project):
+                               expected_project, expected_row_numbers):
         """
         Each of the source files contains the same sensors, just in a different
         format, so we call the various parse functions and verify that
@@ -129,7 +132,8 @@ class TestParse:
                 themes='Veiligheid',
                 contains_pi_data='Nee',
                 active_until='06-07-2021',
-                projects=expected_project
+                projects=expected_project,
+                row_number=expected_row_numbers[0],
             ),
             import_utils.SensorData(
                 reference=expected_references[1],
@@ -146,7 +150,8 @@ class TestParse:
                 themes='Veiligheid;Lucht',
                 contains_pi_data='Ja',
                 active_until='01-01-2050',
-                projects=['']
+                projects=[''],
+                row_number=expected_row_numbers[1],
             ),
         ]
 
