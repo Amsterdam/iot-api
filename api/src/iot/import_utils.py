@@ -177,6 +177,7 @@ class SensorData:
     contains_pi_data: Literal['Ja', 'Nee']
     active_until: Union[datetime.date, str]
     projects: List[str]
+    row_number: Optional[int] = None
 
 
 IPROX_REGISTRATION_FIELDS = [
@@ -317,7 +318,7 @@ def parse_iprox_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
     if fields != IPROX_FIELDS:
         raise InvalidIproxFields(fields)
 
-    for row in (Values(IPROX_FIELDS, row) for row in rows):
+    for row_number, row in enumerate(Values(IPROX_FIELDS, row) for row in rows):
 
         # Don't process an empty row in the excel file
         referentienummer = row.get('Referentienummer') or ''
@@ -378,6 +379,7 @@ def parse_iprox_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
                 contains_pi_data=row["Worden er persoonsgegevens verwerkt?", sensor_index],
                 active_until=row["Wanneer wordt de sensor verwijderd?", sensor_index],
                 projects=[''],  # not required for the iprox
+                row_number=row_number + 1,
             )
 
             if row.get(("Wilt u nog een sensor melden?", sensor_index), 'Nee') != 'Ja':
@@ -502,9 +504,10 @@ def parse_bulk_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
             ])),
             contains_pi_data=row["Worden er persoonsgegevens verwerkt?"],
             active_until=row["Wanneer wordt de sensor verwijderd?"],
-            projects=[row.get('Project') or '']
+            projects=[row.get('Project') or ''],
+            row_number=row_number + 1,
         )
-        for row in (Values(BULK_SENSOR_FIELDS, row) for row in rows)
+        for row_number, row in enumerate(Values(BULK_SENSOR_FIELDS, row) for row in rows)
         if (row['Referentie'] or '').strip()  # Ignore any rows with an empty reference
     )
 
@@ -545,7 +548,8 @@ class SensorValidationError(ValueError):
 
     def __str__(self):
         return f"Foutieve data voor sensor met referentie {self.sensor_data.reference} " \
-               f" {self.source}={getattr(self.sensor_data, self.target)}"
+               f" (rij {self.sensor_data.row_number}) {self.source}=" \
+               f"{getattr(self.sensor_data, self.target)}"
 
 
 class InvalidSensorType(SensorValidationError):
@@ -830,13 +834,16 @@ def import_xlsx(workbook, action_logger=lambda x: x):
     if errors:
         return errors, 0, 0
 
-    people = [s.owner for s in sensors]
-    for person in people:
-        person.validate()
+    for sensor in sensors:
+        try:
+            sensor.owner.validate()
+        except Exception as e:
+            raise Exception(f"Foutieve persoon data voor {sensor.reference}"
+                            f" (rij {sensor.row_number}): {e}") from e
 
     imported_owners = {
         person_data.email.lower(): import_person(person_data, action_logger)
-        for person_data in people
+        for person_data in [s.owner for s in sensors]
     }
 
     counter = Counter()
