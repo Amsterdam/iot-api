@@ -71,7 +71,7 @@ class Person2(models.Model):
 
     # LegalEntity
     organisation = models.CharField(max_length=255, verbose_name="Naam organisatie/bedrijf")
-    website = models.URLField(verbose_name="Website", blank=True, null=True)
+    website = models.TextField(verbose_name="Website", blank=True, null=True)
 
     class Meta:
         verbose_name = 'Eigenaar'
