@@ -6,11 +6,11 @@ from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import redirect, render
 from django.urls import path, reverse
 from django.utils.safestring import mark_safe
+from iot.import_utils import import_xlsx
 from leaflet.admin import LeafletGeoAdmin, LeafletGeoAdminMixin
 from openpyxl import load_workbook
 
 from iot import models
-from iot.import_utils import import_xlsx
 
 admin.site.register(models.Type2)
 admin.site.register(models.Theme)
@@ -72,7 +72,7 @@ def import_xlsx_view(request, message_user, redirect_to):
             return reverse(f'admin:{s._meta.app_label}_{s._meta.model_name}_change', args=(s.pk,))
 
         sensors_with_no_location = [
-            f'<a href="{change_url(s)}">{s.reference}</a>'
+            f'<a target="_blank" href="{change_url(s)}">{s.reference}</a>'
             for s in imported_sensors
             if s.location is None
         ]
@@ -119,10 +119,13 @@ def send_messages_to_user(request, message_user, num_created, num_updated, error
 class DeviceAdmin(LeafletGeoAdmin):
 
     change_list_template = "devices_change_list.html"
-    list_display = 'reference', 'owner', 'type'
+    list_display = 'reference', 'owner', 'type', 'location',
     filter_horizontal = 'themes',
     settings_overrides = LEAFLET_SETTINGS_OVERRIDES
     search_fields = 'reference', 'owner__organisation', 'owner__email', 'owner__name'
+    list_filter = (
+        ('location', admin.EmptyFieldListFilter),
+    )
 
     def get_urls(self):
         _meta = self.model._meta

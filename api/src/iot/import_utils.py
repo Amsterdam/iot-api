@@ -846,8 +846,8 @@ def import_xlsx(workbook, action_logger=lambda x: x):
         try:
             validate_sensor(sensor_data)
             owner = imported_owners[sensor_data.owner.email.lower()]
-            imported_sensor, created = import_sensor(sensor_data, owner, action_logger)
-            imported_sensors.append(imported_sensors)
+            sensor, created = import_sensor(sensor_data, owner, action_logger)
+            imported_sensors.append(sensor)
             counter.update([created])
         except Exception as e:
             errors.append(e)
