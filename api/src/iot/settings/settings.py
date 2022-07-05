@@ -104,6 +104,7 @@ MIDDLEWARE = (
 
 DEBUG_MIDDLEWARE = (
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'pyinstrument.middleware.ProfilerMiddleware',
 )
 
 if DEBUG:
