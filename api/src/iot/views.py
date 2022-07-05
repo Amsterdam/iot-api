@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from datapunt_api.rest import DatapuntViewSet
-from django.contrib.postgres.aggregates import ArrayAgg, JSONBAgg
+from django.contrib.postgres.aggregates import JSONBAgg
 from django.db.models.expressions import F, Func
 from django.db.models.functions import JSONObject
 from django.utils import timezone
@@ -45,7 +45,7 @@ class DevicesViewSet(DatapuntViewSet):
     # one query, this gives a nice 90% speedup.
     queryset = (
         Device2.objects.all()
-        .annotate(_themes=ArrayAgg('themes__name'))
+        .annotate(_themes=JSONBAgg('themes__name'))
         .annotate(_observation_goals=JSONBAgg('observation_goals__observation_goal'))
         .annotate(_project_paths=JSONBAgg('projects__path'))
         .annotate(_regions=JSONBAgg('regions__name'))
