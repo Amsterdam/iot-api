@@ -2,8 +2,7 @@ import pytest
 from django.conf import settings
 
 from iot import import_utils, import_utils_apis, models
-from iot.import_utils import (LatLong, Location, ObservationGoal, PersonData,
-                              SensorData)
+from iot.import_utils import LatLong, Location, ObservationGoal, PersonData, SensorData
 from iot.serializers import Device2Serializer
 
 
@@ -16,46 +15,30 @@ def api_data():
             {
                 "id": 13,
                 "type": "Feature",
-                "geometry":
-                {
-                    "type": "Point",
-                    "coordinates": [
-                        4.901853,
-                        52.3794285
-                    ]
-                },
-                "properties":
-                {
+                "geometry": {"type": "Point", "coordinates": [4.901853, 52.3794285]},
+                "properties": {
                     "Objectnummer": "GABW-01",
                     "Soort": "Not WiFi sensor",
                     "Voeding": "Vaste spanning",
                     "Rotatie": 0,
                     "Actief": "Ja",
-                    "Privacyverklaring": "https://www.amsterdam.nl/foo/"
-                }
+                    "Privacyverklaring": "https://www.amsterdam.nl/foo/",
+                },
             },
             {
                 "id": 2,
                 "type": "Feuture",
-                "geometry":
-                {
-                    "type": "Point",
-                    "coordinates": [
-                        4.901852,
-                        52.3794284
-                    ]
-                },
-                "properties":
-                {
+                "geometry": {"type": "Point", "coordinates": [4.901852, 52.3794284]},
+                "properties": {
                     "Objectnummer": "GABW-03",
                     "Soort": "WiFi sensor",
                     "Voeding": "Vaste spanning",
                     "Rotatie": 0,
                     "Actief": "Ja",
-                    "Privacyverklaring": "https://www.amsterdam.nl/foo/"
-                }
+                    "Privacyverklaring": "https://www.amsterdam.nl/foo/",
+                },
             },
-        ]
+        ],
     }
 
 
@@ -68,42 +51,30 @@ def api_data_2():  # a second list of api data sensors
             {
                 "id": 2,
                 "type": "Feuture",
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [
-                        4.99999,
-                        52.3794284
-                    ]
-                },
+                "geometry": {"type": "Point", "coordinates": [4.99999, 52.3794284]},
                 "properties": {
                     "Objectnummer": "GABW-03",
                     "Soort": "WiFi sensor",
                     "Voeding": "Vaste spanning",
                     "Rotatie": 0,
                     "Actief": "Ja",
-                    "Privacyverklaring": "https://www.amsterdam.nl/bar/"
-                }
+                    "Privacyverklaring": "https://www.amsterdam.nl/bar/",
+                },
             },
             {
                 "id": 27,
                 "type": "Feature",
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [
-                        4.9013573,
-                        52.3794903
-                    ]
-                },
+                "geometry": {"type": "Point", "coordinates": [4.9013573, 52.3794903]},
                 "properties": {
                     "Objectnummer": "GABW-04",
                     "Soort": "WiFi sensor",
                     "Voeding": "Vaste spanning",
                     "Rotatie": 0,
                     "Actief": "Ja",
-                    "Privacyverklaring": "https://www.amsterdam.nl/foobar/"
-                }
-            }
-        ]
+                    "Privacyverklaring": "https://www.amsterdam.nl/foobar/",
+                },
+            },
+        ],
     }
 
 
@@ -116,7 +87,7 @@ def person_data():
         website="https://www.amsterdam.nl/",
         first_name="Afdeling",
         last_name_affix="",
-        last_name="verkeersmanagment"
+        last_name="verkeersmanagment",
     )
 
 
@@ -130,24 +101,27 @@ def sensor_data(person_data):
             lat_long=LatLong(latitude=52.3794284, longitude=4.901852),
             postcode_house_number=None,
             description='',
-            regions=''
+            regions='',
         ),
         datastream='',
-        observation_goals=[ObservationGoal(
-            observation_goal='Tellen van mensen.',
-            privacy_declaration='https://www.amsterdam.nl/foo/',
-            legal_ground='Verkeersmanagment in de rol van wegbeheerder.'
-        )],
+        observation_goals=[
+            ObservationGoal(
+                observation_goal='Tellen van mensen.',
+                privacy_declaration='https://www.amsterdam.nl/foo/',
+                legal_ground='Verkeersmanagment in de rol van wegbeheerder.',
+            )
+        ],
         themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
         contains_pi_data='Ja',
         active_until='01-01-2050',
-        projects=['']
+        projects=[''],
     )
 
 
 class TestApiParser:
-
-    def test_parse_wifi_sensor_crowd_management_expected_persondata_sensor(self, api_data):
+    def test_parse_wifi_sensor_crowd_management_expected_persondata_sensor(
+        self, api_data
+    ):
         """
         provide a dict object with a list of sensoren from the wifi sonso crowd management api.
         The sensors list will contain two sensor with different Soort attribute. Expect
@@ -161,7 +135,7 @@ class TestApiParser:
             website="https://www.amsterdam.nl/",
             first_name="Afdeling",
             last_name_affix="",
-            last_name="verkeersmanagment"
+            last_name="verkeersmanagment",
         )
         # expected_value is a sensors
         expected = [
@@ -173,21 +147,25 @@ class TestApiParser:
                     lat_long=LatLong(latitude=52.3794284, longitude=4.901852),
                     postcode_house_number=None,
                     description='',
-                    regions=''
+                    regions='',
                 ),
                 datastream='',
-                observation_goals=[ObservationGoal(
-                    observation_goal='Tellen van mensen.',
-                    legal_ground='Verkeersmanagment in de rol van wegbeheerder.',
-                    privacy_declaration="https://www.amsterdam.nl/foo/",
-                )],
+                observation_goals=[
+                    ObservationGoal(
+                        observation_goal='Tellen van mensen.',
+                        legal_ground='Verkeersmanagment in de rol van wegbeheerder.',
+                        privacy_declaration="https://www.amsterdam.nl/foo/",
+                    )
+                ],
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 contains_pi_data='Ja',
                 active_until='01-01-2050',
-                projects=['']
+                projects=[''],
             )
         ]
-        sensor_list = list(import_utils_apis.parse_wifi_sensor_crowd_management(data=api_data))
+        sensor_list = list(
+            import_utils_apis.parse_wifi_sensor_crowd_management(data=api_data)
+        )
 
         assert len(sensor_list) == 1
 
@@ -200,7 +178,6 @@ class TestApiParser:
 
 @pytest.mark.django_db
 class TestImportPerson:
-
     @property
     def actual(self):
         fields = 'organisation', 'email', 'telephone', 'website', 'name'
@@ -221,12 +198,10 @@ class TestImportPerson:
 
 @pytest.mark.django_db
 class TestImportSensor:
-
     @property
     def actual(self):
         return [
-            Device2Serializer(device).data
-            for device in models.Device2.objects.all()
+            Device2Serializer(device).data for device in models.Device2.objects.all()
         ]
 
     expected_1 = {
@@ -239,7 +214,7 @@ class TestImportSensor:
             {
                 'observation_goal': 'Tellen van mensen.',
                 'privacy_declaration': 'https://www.amsterdam.nl/foo/',
-                'legal_ground': 'Verkeersmanagment in de rol van wegbeheerder.'
+                'legal_ground': 'Verkeersmanagment in de rol van wegbeheerder.',
             }
         ],
         'owner': {
@@ -251,7 +226,7 @@ class TestImportSensor:
         'themes': ['Mobiliteit: auto'],
         'type': 'Aanwezigheid of nabijheidsensor',
         'reference': 'GABW-03',
-        'project_paths': []
+        'project_paths': [],
     }
 
     expected_2 = {
@@ -264,7 +239,7 @@ class TestImportSensor:
             {
                 'observation_goal': 'Tellen van mensen.',
                 'privacy_declaration': 'https://www.amsterdam.nl/foo/',
-                'legal_ground': 'Verkeersmanagment in de rol van wegbeheerder.'
+                'legal_ground': 'Verkeersmanagment in de rol van wegbeheerder.',
             }
         ],
         'owner': {
@@ -276,7 +251,7 @@ class TestImportSensor:
         'themes': ['Mobiliteit: auto'],
         'type': 'Aanwezigheid of nabijheidsensor',
         'reference': 'GABW-05',
-        'project_paths': []
+        'project_paths': [],
     }
 
     def test_import_sensor(self, sensor_data):
@@ -298,7 +273,9 @@ class TestImportSensor:
         imported_person = import_utils.import_person(person_data=person)
         result = import_utils.import_sensor(sensor, imported_person)
 
-        assert type(result[0]) == models.Device2  # expet a device2 object to be returned
+        assert (
+            type(result[0]) == models.Device2
+        )  # expet a device2 object to be returned
         assert self.actual[0] == self.expected_1
 
 
@@ -309,8 +286,7 @@ class TestConvertApiData:
     @property
     def actual(self):
         return [
-            Device2Serializer(device).data
-            for device in models.Device2.objects.all()
+            Device2Serializer(device).data for device in models.Device2.objects.all()
         ]
 
     def test_convert_api_data_wifi_sensor_only_insert_2(self, api_data_2):
@@ -321,14 +297,15 @@ class TestConvertApiData:
         """
 
         result = import_utils_apis.convert_api_data(
-            api_name='wifi_sensor_crowd_management',
-            api_data=api_data_2
+            api_name='wifi_sensor_crowd_management', api_data=api_data_2
         )
 
         assert result == ([], 2, 0)
         assert len(self.actual) == 2
 
-    def test_convert_api_data_wifi_sensor_one_insert_one_update(self, api_data, api_data_2):
+    def test_convert_api_data_wifi_sensor_one_insert_one_update(
+        self, api_data, api_data_2
+    ):
         """
         call the convert_api function twice with two different lists of sensors.
         The second list will contain the same sensor as in the first list.
@@ -338,19 +315,18 @@ class TestConvertApiData:
 
         # insert the first list of sensor which should include only one sensor.
         result_1 = import_utils_apis.convert_api_data(
-            api_name='wifi_sensor_crowd_management',
-            api_data=api_data
+            api_name='wifi_sensor_crowd_management', api_data=api_data
         )
 
         # insert the second list of sensor which should include two sensors.
         result_2 = import_utils_apis.convert_api_data(
-            api_name='wifi_sensor_crowd_management',
-            api_data=api_data_2
+            api_name='wifi_sensor_crowd_management', api_data=api_data_2
         )
 
         # get the sensor with referece 2 because it should have been updated.
-        sensor_ref_2 = next((sensor for sensor in self.actual if
-                             sensor['reference'] == 'GABW-03'), None)
+        sensor_ref_2 = next(
+            (sensor for sensor in self.actual if sensor['reference'] == 'GABW-03'), None
+        )
 
         assert result_1 == ([], 1, 0)
         assert result_2 == ([], 1, 1)
@@ -358,7 +334,9 @@ class TestConvertApiData:
         assert sensor_ref_2['location']['longitude'] == 4.99999
 
     @pytest.mark.skip()
-    def test_convert_api_data_wifi_sensor_one_update_one_delete(self, api_data, api_data_2):
+    def test_convert_api_data_wifi_sensor_one_update_one_delete(
+        self, api_data, api_data_2
+    ):
         """
         call the convert_api function twice with two different lists of sensors.
         The second list will not contain one of the sensors of the first list.
@@ -368,14 +346,12 @@ class TestConvertApiData:
 
         # insert the first list of sensor which should include two sensor.
         result_1 = import_utils_apis.convert_api_data(
-            api_name='wifi_sensor_crowd_management',
-            api_data=api_data_2
+            api_name='wifi_sensor_crowd_management', api_data=api_data_2
         )
 
         # insert the second list of sensor which should include one sensors.
         result_2 = import_utils_apis.convert_api_data(
-            api_name='wifi_sensor_crowd_management',
-            api_data=api_data
+            api_name='wifi_sensor_crowd_management', api_data=api_data
         )
 
         # get the only sensor that should have been updated.

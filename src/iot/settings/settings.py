@@ -1,22 +1,26 @@
 import os
+from distutils.util import strtobool
 
 from keycloak_oidc.default_settings import *
 
-from .settings_databases import (OVERRIDE_HOST_ENV_VAR, OVERRIDE_PORT_ENV_VAR,
-                                 LocationKey, get_database_key,
-                                 get_docker_host)
+from .settings_databases import (
+    OVERRIDE_HOST_ENV_VAR,
+    OVERRIDE_PORT_ENV_VAR,
+    LocationKey,
+    get_database_key,
+    get_docker_host,
+)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Django settings
 INSECURE_SECRET_KEY = 'insecure'
 SECRET_KEY = os.getenv('SECRET_KEY', INSECURE_SECRET_KEY)
-DEBUG = SECRET_KEY == INSECURE_SECRET_KEY
+DEBUG = bool(strtobool(os.getenv('DEBUG', "false")))
 
 ALLOWED_HOSTS = [
     'api.data.amsterdam.nl',
     'acc.api.data.amsterdam.nl',
-
     # Currently this is needed because the deployment process checks the health endpoint with a
     # request to localhost:port.
     'localhost',
@@ -29,10 +33,6 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 DATAPUNT_API_URL = os.getenv('DATAPUNT_API_URL', 'https://api.data.amsterdam.nl/')
 
-KEYCLOAK_SLIMMEAPPARATEN_WRITE_PERMISSION_NAME = "slim_app_w"
-
-AMSTERDAM_PRIVACY_MAP_EMAIL_ADDRESS = os.environ.get('AMSTERDAM_PRIVACY_MAP_EMAIL_ADDRESS')
-
 # Django security settings
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
@@ -41,13 +41,28 @@ X_FRAME_OPTIONS = 'DENY'
 ## KEYCLOAK ##
 # External identity provider settings (Keycloak)
 LOGIN_REDIRECT_URL = "/iothings/admin/"
+
+OIDC_DEFAULT_URL = (
+    'https://iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect/'
+)
+
 OIDC_RP_CLIENT_ID = os.environ['OIDC_RP_CLIENT_ID']
 OIDC_RP_CLIENT_SECRET = os.environ['OIDC_RP_CLIENT_SECRET']
-OIDC_OP_AUTHORIZATION_ENDPOINT = os.environ['OIDC_OP_AUTHORIZATION_ENDPOINT']
-OIDC_OP_TOKEN_ENDPOINT = os.environ['OIDC_OP_TOKEN_ENDPOINT']
-OIDC_OP_USER_ENDPOINT = os.environ['OIDC_OP_USER_ENDPOINT']
-OIDC_OP_JWKS_ENDPOINT = os.environ['OIDC_OP_JWKS_ENDPOINT']
-OIDC_OP_LOGOUT_ENDPOINT = LOGOUT_REDIRECT_URL = os.environ['OIDC_OP_LOGOUT_ENDPOINT']
+OIDC_OP_AUTHORIZATION_ENDPOINT = os.environ.get(
+    'OIDC_OP_AUTHORIZATION_ENDPOINT', f'{OIDC_DEFAULT_URL}/auth'
+)
+OIDC_OP_TOKEN_ENDPOINT = os.environ.get(
+    'OIDC_OP_TOKEN_ENDPOINT', f'{OIDC_DEFAULT_URL}/token'
+)
+OIDC_OP_USER_ENDPOINT = os.environ.get(
+    'OIDC_OP_USER_ENDPOINT', f'{OIDC_DEFAULT_URL}/userinfo'
+)
+OIDC_OP_JWKS_ENDPOINT = os.environ.get(
+    'OIDC_OP_JWKS_ENDPOINT', f'{OIDC_DEFAULT_URL}/certs'
+)
+OIDC_OP_LOGOUT_ENDPOINT = LOGOUT_REDIRECT_URL = os.environ.get(
+    'OIDC_OP_LOGOUT_ENDPOINT', f'{OIDC_DEFAULT_URL}/logout'
+)
 LOGIN_REDIRECT_URL_FAILURE = '/iothings/static/403.html'
 
 # APP CONFIGURATION
@@ -65,29 +80,19 @@ DJANGO_APPS = (
 THIRD_PARTY_APPS = (
     'django_extensions',
     'django_filters',
-
-    'djcelery_email',
-
     'datapunt_api',
-
     'drf_yasg',
     'raven.contrib.django.raven_compat',
-
     'rest_framework',
     'rest_framework_gis',
-
     'keycloak_oidc',  # load after django.contrib.auth!
-    'leaflet'
+    'leaflet',
 )
 
-DEBUG_APPS = (
-    'debug_toolbar',
-)
+DEBUG_APPS = ('debug_toolbar',)
 
 # Apps specific for this project go here.
-LOCAL_APPS = (
-    'iot',
-)
+LOCAL_APPS = ('iot',)
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
@@ -127,7 +132,7 @@ if DEBUG:
     ]
 
 AUTHENTICATION_BACKENDS = [
-   'iot.auth.OIDCAuthenticationBackend',
+    'iot.auth.OIDCAuthenticationBackend',
 ]
 
 SENSOR_REGISTER_ADMIN_ROLE_NAME = os.environ.get('SENSOR_REGISTER_ADMIN_ROLE_NAME', 'x')
@@ -178,9 +183,7 @@ DATABASE_OPTIONS = {
         'PORT': os.getenv(OVERRIDE_PORT_ENV_VAR, '5432'),
     },
 }
-DATABASES = {
-    'default': DATABASE_OPTIONS[get_database_key()]
-}
+DATABASES = {'default': DATABASE_OPTIONS[get_database_key()]}
 
 # Internationalization
 LANGUAGE_CODE = 'nl-NL'
@@ -230,9 +233,7 @@ LOGGING = {
         'handlers': ['console', 'sentry'],
     },
     'formatters': {
-        'console': {
-            'format': '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-        }
+        'console': {'format': '%(asctime)s - %(name)s - %(levelname)s - %(message)s'}
     },
     'handlers': {
         'console': {
@@ -243,7 +244,7 @@ LOGGING = {
         'sentry': {
             'level': 'WARNING',
             'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
-        }
+        },
     },
     'loggers': {
         'iot': {
@@ -266,7 +267,6 @@ LOGGING = {
             'handlers': ['console'],
             'propagate': False,
         },
-
         # Debug all batch jobs
         'doc': {
             'level': 'INFO',
@@ -308,7 +308,6 @@ LOGGING = {
             'handlers': ['console'],
             'propagate': False,
         },
-
         # Log all unhandled exceptions
         'django.request': {
             'level': 'ERROR',
@@ -329,9 +328,7 @@ REST_FRAMEWORK = dict(
         # 'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ),
-    DEFAULT_PAGINATION_CLASS=(
-        'datapunt_api.pagination.HALPagination',
-    ),
+    DEFAULT_PAGINATION_CLASS=('datapunt_api.pagination.HALPagination',),
     DEFAULT_RENDERER_CLASSES=(
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
@@ -345,14 +342,11 @@ REST_FRAMEWORK = dict(
     DEFAULT_THROTTLE_CLASSES=(
         # Currently no default throttle class
     ),
-    DEFAULT_THROTTLE_RATES={
-        'nouser': '60/hour'
-    },
+    DEFAULT_THROTTLE_RATES={'nouser': '60/hour'},
 )
 
 
 # Mail
-# EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'djcelery_email.backends.CeleryEmailBackend')
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = os.getenv('EMAIL_HOST')
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
@@ -362,29 +356,6 @@ EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', False)
 if not EMAIL_USE_TLS:
     EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL', True)
 
-EMAIL = 'registerslimmeapparaten@amsterdam.nl'
-NOREPLY = 'no-reply@amsterdam.nl'
-
-# This should be set to 'django.core.mail.backends.smtp.EmailBackend' for acc/prod
-CELERY_EMAIL_BACKEND = os.getenv('CELERY_EMAIL_BACKEND',
-                                 'django.core.mail.backends.smtp.EmailBackend')
-
-
-# Celery settings
-RABBITMQ_USER = os.getenv('RABBITMQ_USER', 'iothings')
-RABBITMQ_PASSWORD = os.getenv('RABBITMQ_PASSWORD', 'insecure')
-RABBITMQ_VHOST = os.getenv('RABBITMQ_VHOST', 'vhost')
-RABBITMQ_HOST = os.getenv('RABBITMQ_HOST', 'localhost')
-
-CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL',
-                              f'amqp://{RABBITMQ_USER}:{RABBITMQ_PASSWORD}'
-                              f'@{RABBITMQ_HOST}/{RABBITMQ_VHOST}')
-
-CELERY_EMAIL_TASK_CONFIG = {
-    'queue': 'email',
-    'ignore_result': True,
-    'rate_limit': '50/m',  # * CELERY_EMAIL_CHUNK_SIZE (default: 10)
-}
 
 ATLAS_POSTCODE_SEARCH = 'https://api.data.amsterdam.nl/atlas/search/postcode'
 ATLAS_ADDRESS_SEARCH = 'https://api.data.amsterdam.nl/atlas/search/adres'

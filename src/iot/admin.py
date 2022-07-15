@@ -47,7 +47,9 @@ def import_xlsx_view(request, message_user, redirect_to):
                     user_id=request.user.pk,
                     object_id=instance.pk,
                     object_repr=str(instance),
-                    content_type_id=ContentType.objects.get_for_model(type(instance)).pk,
+                    content_type_id=ContentType.objects.get_for_model(
+                        type(instance)
+                    ).pk,
                     action_flag=ADDITION if created else CHANGE,
                     change_message=f'{action} door het importeren van "{file.name}"',
                 )
@@ -69,7 +71,9 @@ def import_xlsx_view(request, message_user, redirect_to):
         # will be imported in the registry, however it won't be possible to
         # show them on the map
         def change_url(s):
-            return reverse(f'admin:{s._meta.app_label}_{s._meta.model_name}_change', args=(s.pk,))
+            return reverse(
+                f'admin:{s._meta.app_label}_{s._meta.model_name}_change', args=(s.pk,)
+            )
 
         sensors_with_no_location = [
             f'<a target="_blank" href="{change_url(s)}">{s.reference}</a>'
@@ -78,8 +82,10 @@ def import_xlsx_view(request, message_user, redirect_to):
         ]
 
         if sensors_with_no_location:
-            message = "De volgende sensoren hebben geen lat/long, en " \
-                      "kunnen dus niet op de kaart getoond worden: <br>"
+            message = (
+                "De volgende sensoren hebben geen lat/long, en "
+                "kunnen dus niet op de kaart getoond worden: <br>"
+            )
             message += '<br>'.join(sensors_with_no_location)
             message_user(request, mark_safe(message), messages.WARNING)
 
@@ -112,20 +118,25 @@ def send_messages_to_user(request, message_user, num_created, num_updated, error
 
         if hide:
             plural = 'en' if len(hide) > 1 else ''
-            message_user(request, f'+ nog {len(hide)} fout{plural}', level=messages.ERROR)
+            message_user(
+                request, f'+ nog {len(hide)} fout{plural}', level=messages.ERROR
+            )
 
 
 @admin.register(models.Device2)
 class DeviceAdmin(LeafletGeoAdmin):
 
     change_list_template = "devices_change_list.html"
-    list_display = 'reference', 'owner', 'type', 'location',
-    filter_horizontal = 'themes',
+    list_display = (
+        'reference',
+        'owner',
+        'type',
+        'location',
+    )
+    filter_horizontal = ('themes',)
     settings_overrides = LEAFLET_SETTINGS_OVERRIDES
     search_fields = 'reference', 'owner__organisation', 'owner__email', 'owner__name'
-    list_filter = (
-        ('location', admin.EmptyFieldListFilter),
-    )
+    list_filter = (('location', admin.EmptyFieldListFilter),)
 
     def get_urls(self):
         _meta = self.model._meta

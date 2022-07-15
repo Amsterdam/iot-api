@@ -1,97 +1,61 @@
 version: '3.5'
-services:
 
+x-app: &base-app
+  build:
+    context: .
+    target: app
+  depends_on:
+    - database
+  volumes:
+    - ./src:/app/src
+    - ./tests:/app/tests
+    - ./deploy:/app/deploy
+  entrypoint: /app/deploy/wait-for-it.sh database:5432 --
+
+volumes:
+  db_data:
+  db_wal:
+
+services:
   database:
     image: amsterdam/postgres11
-    ports:
-      - "5432:5432"
     environment:
       POSTGRES_DB: iothings
       POSTGRES_USER: iothings
       POSTGRES_PASSWORD: insecure
+      PGDATA: /data
+      POSTGRES_INITDB_WALDIR: /wal
     volumes:
-      - ~/.ssh/datapunt.key:/root/.ssh/datapunt.key
-      - ./backups:/tmp/backups
+      - db_data:/data
+      - db_wal:/wal
 
-  rabbit:
-    image: rabbitmq:3
-    ports:
-      - "5672:5672"
+  app:
+    <<: *base-app
+    build:
+      context: .
+      target: app
+      args:
+        - BUILD_DATE
+        - BUILD_REVISION
+        - BUILD_VERSION
+    image: docker-registry.data.amsterdam.nl/datapunt/iot-api:${VERSION:-latest}
+    command: /app/deploy/docker-run.sh
     environment:
-      - RABBITMQ_ERLANG_COOKIE='RaViNgRaBbId64'
-      - RABBITMQ_DEFAULT_USER=iothings
-      - RABBITMQ_DEFAULT_PASS=insecure
-      - RABBITMQ_DEFAULT_VHOST=vhost
+      DEBUG: "false"
 
-  api:
-    build: ./api
-    ports:
-      - "8001:8001"
-    links:
-      - database
-      - rabbit
+  dev:
+    <<: *base-app
+    build:
+      context: .
+      target: dev
+    command: python manage.py runserver 0.0.0.0:8001
     environment:
-      - SECRET_KEY=insecure
-      - DB_NAME=iothings
-      - DB_PASSWORD=insecure
-      - DJANGO_SETTINGS_MODULE=iot.settings.settings
-      - UWSGI_HTTP=0.0.0.0:8001
-      - UWSGI_MASTER=1
-      - UWSGI_STATIC_INDEX=index.html
-      - UWSGI_STATIC_MAP=/iot/static=/static
-      - UWSGI_CALLABLE=application
-      - UWSGI_VACUUM=1
-      - UWSGI_STATIC_EXPIRES=/* 3600
-      - UWSGI_OFFLOAD_THREADS=1
-      - UWSGI_HARAKIRI=15
-      - UWSGI_DIE_ON_TERM=1
-      - UWSGI_MODULE=iot.wsgi:application
-      - RABBITMQ_USER=iothings
-      - RABBITMQ_PASSWORD=insecure
-      - RABBITMQ_VHOST=vhost
-      - RABBITMQ_HOST=localhost
-      - OIDC_RP_CLIENT_ID=x
-      - OIDC_RP_CLIENT_SECRET=x
-      - AMSTERDAM_PRIVACY_MAP_EMAIL_ADDRESS=a@b.c
-      - OIDC_OP_AUTHORIZATION_ENDPOINT=https://iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect/auth
-      - OIDC_OP_TOKEN_ENDPOINT=https://iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect/token
-      - OIDC_OP_USER_ENDPOINT=https://iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect/userinfo
-      - OIDC_OP_JWKS_ENDPOINT=https://iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect/certs
-      - OIDC_OP_LOGOUT_ENDPOINT=https://iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect/logout
-    volumes:
-      - ./api/src:/app
-      - ./api/deploy:/deploy
-    command: >
-      bash -c '
-      python manage.py makemigrations &&
-      python manage.py migrate &&
-      python manage.py runserver 0.0.0.0:8001'
+      DEBUG: "true"
 
-  celery:
-    build: ./api
-    links:
-      - database
-      - rabbit
-      - api
+  test:
+    <<: *base-app
+    build:
+      context: .
+      target: tests
     environment:
-      - SECRET_KEY=insecure
-      - DB_NAME=iothings
-      - DB_PASSWORD=insecure
-      - DJANGO_SETTINGS_MODULE=iot.settings.settings
-      - RABBITMQ_USER=iothings
-      - RABBITMQ_PASSWORD=insecure
-      - RABBITMQ_VHOST=vhost
-      - RABBITMQ_HOST=rabbit
-      - OIDC_RP_CLIENT_ID=x
-      - OIDC_RP_CLIENT_SECRET=x
-      - AMSTERDAM_PRIVACY_MAP_EMAIL_ADDRESS=a@b.c
-      - OIDC_OP_AUTHORIZATION_ENDPOINT=https://iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect/auth
-      - OIDC_OP_TOKEN_ENDPOINT=https://iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect/token
-      - OIDC_OP_USER_ENDPOINT=https://iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect/userinfo
-      - OIDC_OP_JWKS_ENDPOINT=https://iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect/certs
-      - OIDC_OP_LOGOUT_ENDPOINT=https://iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect/logout
-    volumes:
-      - ./api/src:/app
-      - ./api/deploy:/deploy
-    command: celery -A iot worker -l info
-
+      DEBUG: "true"

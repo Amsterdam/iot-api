@@ -2,8 +2,7 @@ import pytest
 from django.conf import settings
 
 from iot import import_utils, import_utils_apis, models
-from iot.import_utils import (LatLong, Location, ObservationGoal, PersonData,
-                              SensorData)
+from iot.import_utils import LatLong, Location, ObservationGoal, PersonData, SensorData
 from iot.serializers import Device2Serializer
 
 
@@ -16,21 +15,15 @@ def api_data():
             {
                 "id": 10,
                 "type": "Feature",
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [
-                        4.9021014,
-                        52.3689078
-                    ]
-                },
+                "geometry": {"type": "Point", "coordinates": [4.9021014, 52.3689078]},
                 "properties": {
                     "Soort": "Touringcaronderzoek",
                     "Omschrijving": "Verkeersonderzoek",
                     "Privacyverklaring": "www.amsterdam.nl/privacy/specifieke/\
-privacyverklaringen-b/artikel-3/"
-                }
+privacyverklaringen-b/artikel-3/",
+                },
             }
-        ]
+        ],
     }
 
 
@@ -43,38 +36,26 @@ def api_data_2():  # a second list of api data sensors
             {
                 "id": 10,
                 "type": "Feature",
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [
-                        4.999999,
-                        52.3689078
-                    ]
-                },
+                "geometry": {"type": "Point", "coordinates": [4.999999, 52.3689078]},
                 "properties": {
                     "Soort": "Touringcaronderzoek",
                     "Omschrijving": "Verkeersonderzoek",
                     "Privacyverklaring": "www.amsterdam.nl/privacy/specifieke/\
-privacyverklaringen-b/artikel-3/"
-                }
+privacyverklaringen-b/artikel-3/",
+                },
             },
             {
                 "id": 11,
                 "type": "Feature",
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [
-                        4.9021014,
-                        52.3689078
-                    ]
-                },
+                "geometry": {"type": "Point", "coordinates": [4.9021014, 52.3689078]},
                 "properties": {
                     "Soort": "Touringcaronderzoek",
                     "Omschrijving": "Verkeersonderzoek",
                     "Privacyverklaring": "www.amsterdam.nl/privacy/specifieke/\
-privacyverklaringen-b/artikel-3/"
-                }
-            }
-        ]
+privacyverklaringen-b/artikel-3/",
+                },
+            },
+        ],
     }
 
 
@@ -87,7 +68,7 @@ def person_data():
         website="https://www.amsterdam.nl/",
         first_name="Afdeling",
         last_name_affix="",
-        last_name="kennis en kaders"
+        last_name="kennis en kaders",
     )
 
 
@@ -101,24 +82,25 @@ def sensor_data(person_data):
             lat_long=LatLong(latitude=52.3689078, longitude=4.9021014),
             postcode_house_number=None,
             description='',
-            regions=''
+            regions='',
         ),
         datastream='',
-        observation_goals=[ObservationGoal(
-            observation_goal='Tellen van voertuigen.',
-            legal_ground='Verkeersmanagement in de rol van wegbeheerder.',
-            privacy_declaration="https://www.amsterdam.nl/privacy/specifieke/\
+        observation_goals=[
+            ObservationGoal(
+                observation_goal='Tellen van voertuigen.',
+                legal_ground='Verkeersmanagement in de rol van wegbeheerder.',
+                privacy_declaration="https://www.amsterdam.nl/privacy/specifieke/\
 privacyverklaringen-b/artikel-3/",
-        )],
+            )
+        ],
         themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
         contains_pi_data='Ja',
         active_until='01-01-2050',
-        projects=['']
+        projects=[''],
     )
 
 
 class TestApiParser:
-
     def test_parse_verkeersonderzoek_met_cameras_expected_person_sensor(self, api_data):
         """
         provide a list of 1 dictionary object and expect back a sensordata
@@ -132,7 +114,7 @@ class TestApiParser:
             website="https://www.amsterdam.nl/",
             first_name="Afdeling",
             last_name_affix="",
-            last_name="kennis en kaders"
+            last_name="kennis en kaders",
         )
         # expected_value is a sensors
         expected = [
@@ -144,25 +126,26 @@ class TestApiParser:
                     lat_long=LatLong(latitude=52.3689078, longitude=4.9021014),
                     postcode_house_number=None,
                     description='',
-                    regions=''
+                    regions='',
                 ),
                 datastream='',
-                observation_goals=[ObservationGoal(
-                    observation_goal='Tellen van voertuigen.',
-                    legal_ground='Verkeersmanagement in de rol van wegbeheerder.',
-                    privacy_declaration="https://www.amsterdam.nl/privacy/specifieke/\
+                observation_goals=[
+                    ObservationGoal(
+                        observation_goal='Tellen van voertuigen.',
+                        legal_ground='Verkeersmanagement in de rol van wegbeheerder.',
+                        privacy_declaration="https://www.amsterdam.nl/privacy/specifieke/\
 privacyverklaringen-b/artikel-3/",
-                )],
-
+                    )
+                ],
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 contains_pi_data='Ja',
                 active_until='01-01-2050',
-                projects=['']
+                projects=[''],
             )
         ]
-        sensor_list = list(import_utils_apis.parse_verkeersonderzoek_met_cameras(
-            data=api_data
-        ))
+        sensor_list = list(
+            import_utils_apis.parse_verkeersonderzoek_met_cameras(data=api_data)
+        )
         sensor_data = sensor_list[0]
         person_data = sensor_data.owner
 
@@ -172,7 +155,6 @@ privacyverklaringen-b/artikel-3/",
 
 @pytest.mark.django_db
 class TestImportPerson:
-
     @property
     def actual(self):
         fields = 'organisation', 'email', 'telephone', 'website', 'name'
@@ -193,12 +175,10 @@ class TestImportPerson:
 
 @pytest.mark.django_db
 class TestImportSensor:
-
     @property
     def actual(self):
         return [
-            Device2Serializer(device).data
-            for device in models.Device2.objects.all()
+            Device2Serializer(device).data for device in models.Device2.objects.all()
         ]
 
     expected_1 = {
@@ -224,7 +204,7 @@ privacyverklaringen-b/artikel-3/',
         'themes': ['Mobiliteit: auto'],
         'type': 'Optische / camera sensor',
         'reference': 'verkeersonderzoek_met_cameras_10',
-        'project_paths': []
+        'project_paths': [],
     }
 
     expected_2 = {
@@ -250,7 +230,7 @@ privacyverklaringen-b/artikel-3/',
         'themes': ['Mobiliteit: auto'],
         'type': 'Optische / camera sensor',
         'reference': 'verkeersonderzoek_met_cameras_11',
-        'project_paths': []
+        'project_paths': [],
     }
 
     def test_import_sensor(self, sensor_data):
@@ -259,7 +239,9 @@ privacyverklaringen-b/artikel-3/',
         import_utils.import_sensor(sensor_data, owner)
         assert self.actual[0] == self.expected_2
 
-    def test_import_sensor_from_parse_verkeersonderzoek_met_cameras_success(self, api_data):
+    def test_import_sensor_from_parse_verkeersonderzoek_met_cameras_success(
+        self, api_data
+    ):
         """
         provide a dict from the verkeersonderzoek_met_cameras api and call
         the parser of the verkeersonderzoek_met_cameras to get a sensor.
@@ -272,5 +254,7 @@ privacyverklaringen-b/artikel-3/',
         imported_person = import_utils.import_person(person_data=person)
         result = import_utils.import_sensor(sensor, imported_person)
 
-        assert type(result[0]) == models.Device2  # expet a device2 object to be returned
+        assert (
+            type(result[0]) == models.Device2
+        )  # expet a device2 object to be returned
         assert self.actual[0] == self.expected_1

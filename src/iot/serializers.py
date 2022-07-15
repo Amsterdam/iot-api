@@ -5,9 +5,7 @@ from rest_framework.fields import DateField, JSONField
 from rest_framework.serializers import Serializer
 
 from .constants import CATEGORY_CHOICE_ABBREVIATIONS, CATEGORY_CHOICES
-from .models import (Device, Device2, ObservationGoal, Person, Person2,
-                     Project, Type)
-from .tasks import send_iot_request
+from .models import Device, Device2, ObservationGoal, Person, Person2, Project, Type
 
 
 class TypeSerializer(HALSerializer):
@@ -33,7 +31,9 @@ class ChoicesField(serializers.CharField):
 class PersonSerializer(HALSerializer):
     name = serializers.CharField(required=True, allow_blank=False, max_length=255)
     email = serializers.EmailField()
-    organisation = serializers.CharField(required=False, allow_blank=True, max_length=250)
+    organisation = serializers.CharField(
+        required=False, allow_blank=True, max_length=250
+    )
 
     class Meta:
         model = Person
@@ -70,7 +70,7 @@ class DeviceSerializer(HALSerializer):
             'geometrie',
             'organisation',
             'owner',
-            'contact'
+            'contact',
         )
 
     def get_organisation(self, obj):
@@ -90,7 +90,8 @@ class DeviceSerializer(HALSerializer):
         for category in categories.split(","):
             if category not in CATEGORY_CHOICE_ABBREVIATIONS:
                 raise serializers.ValidationError(
-                    f'categories needs to be either of {",".join(CATEGORY_CHOICE_ABBREVIATIONS)}')
+                    f'categories needs to be either of {",".join(CATEGORY_CHOICE_ABBREVIATIONS)}'
+                )
         return categories
 
     def to_representation(self, instance):
@@ -98,8 +99,10 @@ class DeviceSerializer(HALSerializer):
 
         # Only serve the owner and contact if the logged in user is the owner of the data.
         # Note that the organisation is served anyway by get_organisation() above.
-        if not self.context['request'].user \
-                or instance.owner.email != self.context['request'].user.email:
+        if (
+            not self.context['request'].user
+            or instance.owner.email != self.context['request'].user.email
+        ):
             data.pop('owner')
             data.pop('contact')
 
@@ -126,7 +129,7 @@ class DeviceSerializer(HALSerializer):
             owner = Person.objects.create(
                 name=f"{user.first_name} {user.last_name}",
                 email=user.email.lower(),
-                organisation=owner_data.get('organisation', None)
+                organisation=owner_data.get('organisation', None),
             )
             device.owner = owner
 
@@ -140,64 +143,6 @@ class DeviceSerializer(HALSerializer):
 
         device.save()
         return device
-
-
-class IotContactSerializer(serializers.Serializer):
-    device = serializers.CharField(
-        required=True,
-    )
-
-    name = serializers.CharField(
-        required=True,
-    )
-
-    email = serializers.EmailField(
-        required=True,
-    )
-
-    comment = serializers.CharField(
-        required=False,
-        allow_blank=True,
-        max_length=250,
-    )
-
-    can_i_have_access = serializers.BooleanField(
-        default=False,
-    )
-
-    can_i_get_more_information = serializers.BooleanField(
-        default=False,
-    )
-
-    can_i_use_collected_data = serializers.BooleanField(
-        default=False,
-    )
-
-    does_the_device_register_personal_data = serializers.BooleanField(
-        default=False,
-    )
-
-    def validate_device(self, value):
-        try:
-            device = Device.objects.get(pk=value)
-            return device.pk
-        except Device.DoesNotExist:
-            raise serializers.ValidationError('Device does not exists')
-
-    def save(self, **kwargs):
-        # We do not actualy store any data
-        device = self.validated_data['device']
-        contact_owner = self.validated_data.get('contact_owner', None)
-        device_data = self.validated_data.get('device_data', None)
-
-        if contact_owner and device_data:
-            # This means the device is fetched from an external source on the frontend,
-            # and we have no record of this on the backend. So we assume it comes from
-            # the maps.amsterdam.nl/privacy and we send the email to the person in
-            # charge there.
-            send_iot_request(form_data=self.validated_data, send_to_privacy_map=True)
-        else:
-            send_iot_request(form_data=self.validated_data, device_id=device)
 
 
 class Person2Serializer(HALSerializer):
@@ -261,8 +206,12 @@ class Device2Serializer(HALSerializer):
             return {'latitude': obj.location.y, 'longitude': obj.location.x}
 
     def get_themes(self, obj):
-        themes = ('Overig' if theme.is_other else theme.name for theme in obj.themes.all())
-        return list(dict.fromkeys(themes))  # use a dict.fromkeys to preserve original order
+        themes = (
+            'Overig' if theme.is_other else theme.name for theme in obj.themes.all()
+        )
+        return list(
+            dict.fromkeys(themes)
+        )  # use a dict.fromkeys to preserve original order
 
     def get_type(self, obj):
         return 'Overig' if obj.type.is_other else obj.type.name

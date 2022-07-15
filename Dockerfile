@@ -1,4 +1,4 @@
-FROM amsterdam/python:3.8-buster as app
+FROM amsterdam/python:3.7-buster as app
 MAINTAINER datapunt@amsterdam.nl
 
 WORKDIR /app/install
@@ -12,6 +12,8 @@ COPY src .
 COPY pyproject.toml /app
 
 ARG SECRET_KEY=not-used
+ARG OIDC_RP_CLIENT_ID=not-used
+ARG OIDC_RP_CLIENT_SECRET=not-used
 RUN DATABASE_ENABLED=false python manage.py collectstatic --no-input
 
 USER datapunt

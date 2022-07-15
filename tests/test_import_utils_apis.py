@@ -15,67 +15,43 @@ def sensor_data_delete():
             {
                 "id": 100,
                 "type": "Feature",
-                "geometry":
-                {
-                    "type": "Point",
-                    "coordinates": [
-                        4.901853,
-                        52.3794285
-                    ]
-                },
-                "properties":
-                {
+                "geometry": {"type": "Point", "coordinates": [4.901853, 52.3794285]},
+                "properties": {
                     "Objectnummer": "GABW-03",
                     "Soort": "WiFi sensor",
                     "Voeding": "Vaste spanning",
                     "Rotatie": 0,
                     "Actief": "Ja",
-                    "Privacyverklaring": "https://www.amsterdam.nl/foo/"
-                }
+                    "Privacyverklaring": "https://www.amsterdam.nl/foo/",
+                },
             },
             {
                 "id": 101,
                 "type": "Feature",
-                "geometry":
-                {
-                    "type": "Point",
-                    "coordinates": [
-                        4.9018522,
-                        52.3794284
-                    ]
-                },
-                "properties":
-                {
+                "geometry": {"type": "Point", "coordinates": [4.9018522, 52.3794284]},
+                "properties": {
                     "Objectnummer": "GABW-03",
                     "Soort": "WiFi sensor",
                     "Voeding": "Vaste spanning",
                     "Rotatie": 0,
                     "Actief": "Ja",
-                    "Privacyverklaring": "https://www.amsterdam.nl/foo/"
-                }
+                    "Privacyverklaring": "https://www.amsterdam.nl/foo/",
+                },
             },
             {
                 "id": 102,
                 "type": "Feature",
-                "geometry":
-                {
-                    "type": "Point",
-                    "coordinates": [
-                        4.9018523,
-                        52.3794285
-                    ]
-                },
-                "properties":
-                {
+                "geometry": {"type": "Point", "coordinates": [4.9018523, 52.3794285]},
+                "properties": {
                     "Objectnummer": "GABW-03",
                     "Soort": "WiFi sensor",
                     "Voeding": "Vaste spanning",
                     "Rotatie": 0,
                     "Actief": "Ja",
-                    "Privacyverklaring": "https://www.amsterdam.nl/foo/"
-                }
+                    "Privacyverklaring": "https://www.amsterdam.nl/foo/",
+                },
             },
-        ]
+        ],
     }
 
 
@@ -89,8 +65,7 @@ class TestDeleteNotFoundSensor:
     @property
     def actual(self):
         return [
-            Device2Serializer(device).data
-            for device in models.Device2.objects.all()
+            Device2Serializer(device).data for device in models.Device2.objects.all()
         ]
 
     @pytest.mark.skip()
@@ -117,7 +92,7 @@ class TestDeleteNotFoundSensor:
             website="https://www.amsterdam.nl/",
             first_name="verkeers",
             last_name_affix="",
-            last_name="onderzoek"
+            last_name="onderzoek",
         )
 
         sensor1 = SensorData(
@@ -126,14 +101,16 @@ class TestDeleteNotFoundSensor:
             type="Aanwezigheid of nabijheidsensor",
             location=LatLong(latitude=4.901852, longitude=52.3794284),
             datastream='',
-            observation_goals=[ObservationGoal(
-                observation_goal='Tellen van mensen.',
-                privacy_declaration='https://www.amsterdam.nl/foo/',
-                legal_ground='Verkeersmanagment in de rol van wegbeheerder.'
-            )],
+            observation_goals=[
+                ObservationGoal(
+                    observation_goal='Tellen van mensen.',
+                    privacy_declaration='https://www.amsterdam.nl/foo/',
+                    legal_ground='Verkeersmanagment in de rol van wegbeheerder.',
+                )
+            ],
             themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
             contains_pi_data='Ja',
-            active_until='01-01-2050'
+            active_until='01-01-2050',
         )
 
         sensor2 = SensorData(
@@ -142,20 +119,21 @@ class TestDeleteNotFoundSensor:
             type="Aanwezigheid of nabijheidsensor",
             location=LatLong(latitude=4.901853, longitude=52.3794284),
             datastream='',
-            observation_goals=[ObservationGoal(
-                observation_goal='Tellen van mensen.',
-                privacy_declaration='https://www.amsterdam.nl/foo/',
-                legal_ground='Verkeersmanagment in de rol van wegbeheerder.'
-            )],
+            observation_goals=[
+                ObservationGoal(
+                    observation_goal='Tellen van mensen.',
+                    privacy_declaration='https://www.amsterdam.nl/foo/',
+                    legal_ground='Verkeersmanagment in de rol van wegbeheerder.',
+                )
+            ],
             themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
             contains_pi_data='Ja',
-            active_until='01-01-2050'
+            active_until='01-01-2050',
         )
 
         sensors_list = [sensor1, sensor2]
         import_utils_apis.delete_not_found_sensors(
-            sensors=sensors_list,
-            source='wifi_sensor_crowd_management'
+            sensors=sensors_list, source='wifi_sensor_crowd_management'
         )
 
         assert len(self.actual) == 2
@@ -167,7 +145,7 @@ class TestDeleteNotFoundSensor:
     def test_delete_no_sensor_different_source(self, sensor_data_delete):
         """provide three sensors to be created for the wifi sensor crowd management. after that provide
         only two same sensors to the delete_sensor function from the a different source.
-        expect to have no sensor deleted from the wifi_sensor_crowd_management. """
+        expect to have no sensor deleted from the wifi_sensor_crowd_management."""
         parser = import_utils_apis.parse_wifi_sensor_crowd_management
         sensor_list = list(parser(sensor_data_delete))
         for sensor in sensor_list:
@@ -184,7 +162,7 @@ class TestDeleteNotFoundSensor:
             website="https://www.amsterdam.nl/",
             first_name="verkeers",
             last_name_affix="",
-            last_name="onderzoek"
+            last_name="onderzoek",
         )
         # list of sensor objects for the delete function
         sensor1 = SensorData(
@@ -193,14 +171,16 @@ class TestDeleteNotFoundSensor:
             type="Aanwezigheid of nabijheidsensor",
             location=LatLong(latitude=4.901852, longitude=52.3794284),
             datastream='',
-            observation_goals=[ObservationGoal(
-                observation_goal='Tellen van mensen.',
-                privacy_declaration='https://www.amsterdam.nl/foo/',
-                legal_ground='Verkeersmanagment in de rol van wegbeheerder.'
-            )],
+            observation_goals=[
+                ObservationGoal(
+                    observation_goal='Tellen van mensen.',
+                    privacy_declaration='https://www.amsterdam.nl/foo/',
+                    legal_ground='Verkeersmanagment in de rol van wegbeheerder.',
+                )
+            ],
             themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
             contains_pi_data='Ja',
-            active_until='01-01-2050'
+            active_until='01-01-2050',
         )
 
         sensor2 = SensorData(
@@ -209,20 +189,21 @@ class TestDeleteNotFoundSensor:
             type="Aanwezigheid of nabijheidsensor",
             location=LatLong(latitude=4.901853, longitude=52.3794284),
             datastream='',
-            observation_goals=[ObservationGoal(
-                observation_goal='Tellen van mensen.',
-                privacy_declaration='https://www.amsterdam.nl/foo/',
-                legal_ground='Verkeersmanagment in de rol van wegbeheerder.'
-            )],
+            observation_goals=[
+                ObservationGoal(
+                    observation_goal='Tellen van mensen.',
+                    privacy_declaration='https://www.amsterdam.nl/foo/',
+                    legal_ground='Verkeersmanagment in de rol van wegbeheerder.',
+                )
+            ],
             themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
             contains_pi_data='Ja',
-            active_until='01-01-2050'
+            active_until='01-01-2050',
         )
 
         sensors_list = [sensor1, sensor2]
         result = import_utils_apis.delete_not_found_sensors(
-            sensors=sensors_list,
-            source='sensor_crowd_management'
+            sensors=sensors_list, source='sensor_crowd_management'
         )
 
         assert result == (0, {})

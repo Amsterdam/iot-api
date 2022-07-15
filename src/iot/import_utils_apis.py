@@ -4,8 +4,7 @@ from typing import Dict, Generator, List, Tuple
 from django.conf import settings
 
 from iot import import_utils, models
-from iot.import_utils import (LatLong, Location, ObservationGoal, PersonData,
-                              SensorData)
+from iot.import_utils import LatLong, Location, ObservationGoal, PersonData, SensorData
 
 API = 'https://maps.amsterdam.nl/open_geodata/geojson_lnglat.php?'
 API_ANPR = 'https://service.vorin-amsterdam.nl/camera-geo_2/camera/geo'
@@ -20,7 +19,7 @@ API_MAPPER = {
     'ais_masten': f'{API}KAARTLAAG=PRIVACY_AISMASTEN&THEMA=privacy',
     'verkeersonderzoek_met_cameras': f'{API}KAARTLAAG=PRIVACY_OVERIG&THEMA=privacy',
     'beweegbare_fysieke_afsluiting': f'{API}KAARTLAAG=VIS_BFA&THEMA=vis',
-    'anpr': f'{API_ANPR}'
+    'anpr': f'{API_ANPR}',
 }
 
 
@@ -79,7 +78,7 @@ def parse_wifi_sensor_crowd_management(data: dict) -> Generator[SensorData, None
         website='https://www.amsterdam.nl/',
         first_name='Afdeling',
         last_name_affix='',
-        last_name='verkeersmanagment'
+        last_name='verkeersmanagment',
     )
 
     features = data['features']  # list of sensors i think for now
@@ -107,13 +106,15 @@ def parse_wifi_sensor_crowd_management(data: dict) -> Generator[SensorData, None
                 contains_pi_data='Ja',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 datastream='',
-                observation_goals=[ObservationGoal(
-                    observation_goal='Tellen van mensen.',
-                    legal_ground='Verkeersmanagment in de rol van wegbeheerder.',
-                    privacy_declaration=adjust_url(properties['Privacyverklaring']),
-                )],
+                observation_goals=[
+                    ObservationGoal(
+                        observation_goal='Tellen van mensen.',
+                        legal_ground='Verkeersmanagment in de rol van wegbeheerder.',
+                        privacy_declaration=adjust_url(properties['Privacyverklaring']),
+                    )
+                ],
                 active_until='01-01-2050',
-                projects=['']
+                projects=[''],
             )
 
 
@@ -132,7 +133,7 @@ def parse_sensor_crowd_management(data: dict) -> Generator[SensorData, None, Non
         website='https://www.amsterdam.nl/',
         first_name='Afdeling',
         last_name_affix='',
-        last_name='verkeersmanagment'
+        last_name='verkeersmanagment',
     )
 
     features = data['features']  # list of sensors i think for now
@@ -160,17 +161,21 @@ def parse_sensor_crowd_management(data: dict) -> Generator[SensorData, None, Non
                 contains_pi_data='Ja',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 datastream='',
-                observation_goals=[ObservationGoal(
-                    observation_goal='Tellen van mensen.',
-                    privacy_declaration=adjust_url(properties['Privacyverklaring']),
-                    legal_ground='Verkeersmanagment in de rol van wegbeheerder.'
-                )],
+                observation_goals=[
+                    ObservationGoal(
+                        observation_goal='Tellen van mensen.',
+                        privacy_declaration=adjust_url(properties['Privacyverklaring']),
+                        legal_ground='Verkeersmanagment in de rol van wegbeheerder.',
+                    )
+                ],
                 active_until='01-01-2050',
-                projects=['']
+                projects=[''],
             )
 
 
-def parse_camera_brug_en_sluisbediening(data: dict) -> Generator[SensorData, None, None]:
+def parse_camera_brug_en_sluisbediening(
+    data: dict,
+) -> Generator[SensorData, None, None]:
     """
     convert the camera brug en sluisbediening data list of dictionaries into SensorData objects and
     yield it.
@@ -185,7 +190,7 @@ def parse_camera_brug_en_sluisbediening(data: dict) -> Generator[SensorData, Non
         website='https://www.amsterdam.nl/',
         first_name='Afdeling',
         last_name_affix='',
-        last_name='stedelijkbeheer'
+        last_name='stedelijkbeheer',
     )
 
     features = data['features']  # list of sensors i think for now
@@ -209,17 +214,21 @@ def parse_camera_brug_en_sluisbediening(data: dict) -> Generator[SensorData, Non
                 contains_pi_data='Ja',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 datastream='',
-                observation_goals=[ObservationGoal(
-                    observation_goal='Het bedienen van sluisen en bruggen.',
-                    privacy_declaration=adjust_url(properties['Privacyverklaring']),
-                    legal_ground='Sluisbeheerder in het kader van de woningwet 1991'
-                )],
+                observation_goals=[
+                    ObservationGoal(
+                        observation_goal='Het bedienen van sluisen en bruggen.',
+                        privacy_declaration=adjust_url(properties['Privacyverklaring']),
+                        legal_ground='Sluisbeheerder in het kader van de woningwet 1991',
+                    )
+                ],
                 active_until='01-01-2050',
-                projects=['']
+                projects=[''],
             )
 
 
-def parse_cctv_camera_verkeersmanagement(data: dict) -> Generator[SensorData, None, None]:
+def parse_cctv_camera_verkeersmanagement(
+    data: dict,
+) -> Generator[SensorData, None, None]:
     """
     convert the cctv camera verkeersmanagement data list of dictionaries into
     SensorData objects and yield it. Yield only the sensors with Soort == TV Camera.
@@ -234,7 +243,7 @@ def parse_cctv_camera_verkeersmanagement(data: dict) -> Generator[SensorData, No
         website='https://www.amsterdam.nl/',
         first_name='Afdeling',
         last_name_affix='',
-        last_name='verkeersmanagement'
+        last_name='verkeersmanagement',
     )
 
     features = data['features']  # list of sensors i think for now
@@ -263,14 +272,16 @@ def parse_cctv_camera_verkeersmanagement(data: dict) -> Generator[SensorData, No
                 contains_pi_data='Ja',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 datastream='',
-                observation_goals=[ObservationGoal(
-                    observation_goal='Waarnemen van het verkeer.',
-                    privacy_declaration='https://www.amsterdam.nl/privacy/specifieke/\
+                observation_goals=[
+                    ObservationGoal(
+                        observation_goal='Waarnemen van het verkeer.',
+                        privacy_declaration='https://www.amsterdam.nl/privacy/specifieke/\
 privacyverklaring-parkeren-verkeer-bouw/verkeersmanagement',
-                    legal_ground='Verkeersmanagment in de rol van wegbeheerder.'
-                )],
+                        legal_ground='Verkeersmanagment in de rol van wegbeheerder.',
+                    )
+                ],
                 active_until='01-01-2050',
-                projects=['']
+                projects=[''],
             )
 
 
@@ -290,7 +301,7 @@ def parse_kentekencamera_reistijd(data: dict) -> Generator[SensorData, None, Non
         website='https://www.amsterdam.nl/',
         first_name='Afdeling',
         last_name_affix='',
-        last_name='verkeersmanagement'
+        last_name='verkeersmanagement',
     )
 
     features = data['features']  # list of sensors i think for now
@@ -319,14 +330,16 @@ def parse_kentekencamera_reistijd(data: dict) -> Generator[SensorData, None, Non
                 contains_pi_data='Ja',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 datastream='',
-                observation_goals=[ObservationGoal(
-                    observation_goal='Het tellen van voertuigen en meten van doorstroming.',
-                    privacy_declaration='https://www.amsterdam.nl/privacy/specifieke/\
+                observation_goals=[
+                    ObservationGoal(
+                        observation_goal='Het tellen van voertuigen en meten van doorstroming.',
+                        privacy_declaration='https://www.amsterdam.nl/privacy/specifieke/\
 privacyverklaring-parkeren-verkeer-bouw/reistijden-meetsysteem-privacy/',
-                    legal_ground='Verkeersmanagement in de rol van wegbeheerder.'
-                )],
+                        legal_ground='Verkeersmanagement in de rol van wegbeheerder.',
+                    )
+                ],
                 active_until='01-01-2050',
-                projects=['']
+                projects=[''],
             )
 
 
@@ -346,7 +359,7 @@ def parse_kentekencamera_milieuzone(data: dict) -> Generator[SensorData, None, N
         website='https://www.amsterdam.nl/',
         first_name='Afdeling',
         last_name_affix='',
-        last_name='stedelijk beheer'
+        last_name='stedelijk beheer',
     )
 
     features = data['features']  # list of sensors i think for now
@@ -375,14 +388,16 @@ def parse_kentekencamera_milieuzone(data: dict) -> Generator[SensorData, None, N
                 contains_pi_data='Ja',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto', 'Milieu']),
                 datastream='',
-                observation_goals=[ObservationGoal(
-                    observation_goal='Handhaving van verkeersbesluiten.',
-                    privacy_declaration='https://www.amsterdam.nl/privacy/specifieke/\
+                observation_goals=[
+                    ObservationGoal(
+                        observation_goal='Handhaving van verkeersbesluiten.',
+                        privacy_declaration='https://www.amsterdam.nl/privacy/specifieke/\
 privacyverklaringen-b/milieuzones/',
-                    legal_ground='Verkeersbesluiten in de rol van wegbeheerder.'
-                )],
+                        legal_ground='Verkeersbesluiten in de rol van wegbeheerder.',
+                    )
+                ],
                 active_until='01-01-2050',
-                projects=['']
+                projects=[''],
             )
 
 
@@ -401,7 +416,7 @@ def parse_ais_masten(data: dict) -> Generator[SensorData, None, None]:
         website='https://www.amsterdam.nl/',
         first_name='Programma',
         last_name_affix='',
-        last_name='varen'
+        last_name='varen',
     )
 
     features = data['features']  # list of sensors i think for now
@@ -425,17 +440,21 @@ def parse_ais_masten(data: dict) -> Generator[SensorData, None, None]:
                 contains_pi_data='Ja',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 datastream='',
-                observation_goals=[ObservationGoal(
-                    observation_goal='Vaarweg management',
-                    privacy_declaration=adjust_url(properties['Privacyverklaring']),
-                    legal_ground='In de rol van vaarwegbeheerder op basis van de binnenvaartwet.'
-                )],
+                observation_goals=[
+                    ObservationGoal(
+                        observation_goal='Vaarweg management',
+                        privacy_declaration=adjust_url(properties['Privacyverklaring']),
+                        legal_ground='In de rol van vaarwegbeheerder op basis van de binnenvaartwet.',
+                    )
+                ],
                 active_until='01-01-2050',
-                projects=['']
+                projects=[''],
             )
 
 
-def parse_verkeersonderzoek_met_cameras(data: dict) -> Generator[SensorData, None, None]:
+def parse_verkeersonderzoek_met_cameras(
+    data: dict,
+) -> Generator[SensorData, None, None]:
     """
     convert the verkeersonderzoek_met_cameras data dict into PersonData en
     SensorData objects and yield it.
@@ -450,7 +469,7 @@ def parse_verkeersonderzoek_met_cameras(data: dict) -> Generator[SensorData, Non
         website='https://www.amsterdam.nl/',
         first_name='Afdeling',
         last_name_affix='',
-        last_name='kennis en kaders'
+        last_name='kennis en kaders',
     )
 
     features = data['features']  # list of sensors i think for now
@@ -478,17 +497,21 @@ def parse_verkeersonderzoek_met_cameras(data: dict) -> Generator[SensorData, Non
                 contains_pi_data='Ja',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 datastream='',
-                observation_goals=[ObservationGoal(
-                    observation_goal='Tellen van voertuigen.',
-                    privacy_declaration=adjust_url(properties['Privacyverklaring']),
-                    legal_ground='Verkeersmanagement in de rol van wegbeheerder.'
-                )],
+                observation_goals=[
+                    ObservationGoal(
+                        observation_goal='Tellen van voertuigen.',
+                        privacy_declaration=adjust_url(properties['Privacyverklaring']),
+                        legal_ground='Verkeersmanagement in de rol van wegbeheerder.',
+                    )
+                ],
                 active_until='01-01-2050',
-                projects=['']
+                projects=[''],
             )
 
 
-def parse_beweegbare_fysieke_afsluiting(data: dict) -> Generator[SensorData, None, None]:
+def parse_beweegbare_fysieke_afsluiting(
+    data: dict,
+) -> Generator[SensorData, None, None]:
     """
     convert the beweegbare_fysieke_afsluiting data dict into PersonData en
     SensorData objects and yield it.
@@ -503,7 +526,7 @@ def parse_beweegbare_fysieke_afsluiting(data: dict) -> Generator[SensorData, Non
         website='https://www.amsterdam.nl/',
         first_name='Afdeling',
         last_name_affix='',
-        last_name='asset management'
+        last_name='asset management',
     )
 
     features = data['features']  # list of sensors i think for now
@@ -527,13 +550,15 @@ def parse_beweegbare_fysieke_afsluiting(data: dict) -> Generator[SensorData, Non
                 contains_pi_data='Ja',
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 datastream='',
-                observation_goals=[ObservationGoal(
-                    observation_goal='Verstrekken van selectieve toegang.',
-                    privacy_declaration='https://www.amsterdam.nl/privacy/privacyverklaring/',
-                    legal_ground='Verkeersmanagement in de rol van wegbeheerder.'
-                )],
+                observation_goals=[
+                    ObservationGoal(
+                        observation_goal='Verstrekken van selectieve toegang.',
+                        privacy_declaration='https://www.amsterdam.nl/privacy/privacyverklaring/',
+                        legal_ground='Verkeersmanagement in de rol van wegbeheerder.',
+                    )
+                ],
                 active_until='01-01-2050',
-                projects=['']
+                projects=[''],
             )
 
 
@@ -552,7 +577,7 @@ def parse_anpr(data: dict) -> Generator[SensorData, None, None]:
         website='https://www.amsterdam.nl/',
         first_name='Afdeling',
         last_name_affix='',
-        last_name='anpr management'
+        last_name='anpr management',
     )
 
     features = data['features']  # list of sensors i think for now
@@ -577,18 +602,23 @@ def parse_anpr(data: dict) -> Generator[SensorData, None, None]:
                 contains_pi_data='Nee',  # api has no contains_pi_data
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 datastream='',
-                observation_goals=[ObservationGoal(
-                    observation_goal=goal,
-                    privacy_declaration='https://www.amsterdam.nl/privacy/privacyverklaring/',
-                    legal_ground=None  # can be None because api has no contains_pi_data
-                ) for goal in goals],
+                observation_goals=[
+                    ObservationGoal(
+                        observation_goal=goal,
+                        privacy_declaration='https://www.amsterdam.nl/privacy/privacyverklaring/',
+                        legal_ground=None,  # can be None because api has no contains_pi_data
+                    )
+                    for goal in goals
+                ],
                 active_until='01-01-2050',
-                projects=['']
+                projects=[''],
             )
 
 
 # TODO: need to be adjusted with a unique value per source.
-def delete_not_found_sensors(sensors: List[SensorData], source: str) -> Tuple[int, Dict[str, int]]:
+def delete_not_found_sensors(
+    sensors: List[SensorData], source: str
+) -> Tuple[int, Dict[str, int]]:
     """takes a list of sensor data. with the source. compares their
     reference with the stored sensors that belong to the same owner (by source).
     If a sensor is not found in the stored sensor, it will delete it.
@@ -599,9 +629,11 @@ def delete_not_found_sensors(sensors: List[SensorData], source: str) -> Tuple[in
 
     # get all sensors that start with the source except the sensors with reference
     # in [api_sensor_ids] and delete them.
-    deleted_sensors = models.Device2.objects.filter(
-        reference__startswith=source).exclude(
-            reference__in=api_sensor_ids).delete()
+    deleted_sensors = (
+        models.Device2.objects.filter(reference__startswith=source)
+        .exclude(reference__in=api_sensor_ids)
+        .delete()
+    )
 
     return deleted_sensors
 

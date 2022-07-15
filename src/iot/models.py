@@ -1,8 +1,7 @@
 import typing
 
 from django.contrib.gis.db import models as gis_models
-from django.contrib.postgres.fields import (ArrayField, CIEmailField,
-                                            CITextField)
+from django.contrib.postgres.fields import ArrayField, CIEmailField, CITextField
 from django.db import models
 
 from .constants import FREQUENCY_CHOICES
@@ -12,6 +11,7 @@ class Type(models.Model):
     """
     The type
     """
+
     name = models.CharField(max_length=64)
     application = models.CharField(max_length=64)
     description = models.TextField(null=True, blank=True)
@@ -21,6 +21,7 @@ class Person(models.Model):
     """
     The owner/contact person
     """
+
     name = models.CharField(max_length=255)
     email = models.EmailField()
     organisation = models.CharField(max_length=250, null=True, blank=True)
@@ -30,6 +31,7 @@ class Device(models.Model):
     """
     The iot device "thing"
     """
+
     reference = models.CharField(max_length=64)
     application = models.CharField(max_length=64)
     types = models.ManyToManyField(to='Type')
@@ -46,9 +48,19 @@ class Device(models.Model):
 
     # Owner and contact
     owner = models.ForeignKey(
-        to='Person', on_delete=models.SET_NULL, null=True, blank=True, related_name='owner')
+        to='Person',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='owner',
+    )
     contact = models.ForeignKey(
-        to='Person', on_delete=models.SET_NULL, null=True, blank=True, related_name='contact')
+        to='Person',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='contact',
+    )
 
 
 # These models are loosely based on the data model from sensrnet, the intention
@@ -61,6 +73,7 @@ class Person2(models.Model):
     """
     The owner/contact person
     """
+
     # ContactDetails
     name = models.CharField(
         max_length=255,
@@ -70,7 +83,9 @@ class Person2(models.Model):
     telephone = models.CharField(max_length=15, verbose_name="Telefoon")
 
     # LegalEntity
-    organisation = models.CharField(max_length=255, verbose_name="Naam organisatie/bedrijf")
+    organisation = models.CharField(
+        max_length=255, verbose_name="Naam organisatie/bedrijf"
+    )
     website = models.TextField(verbose_name="Website", blank=True, null=True)
 
     class Meta:
@@ -130,6 +145,7 @@ class Region(models.Model):
     A part of Amsterdam city, usually a "Stadsdeel" but users can also enter
     "other, namely..."
     """
+
     name = CITextField(unique=True, verbose_name="Gebied")
     is_other = models.BooleanField(default=True, verbose_name="Anders, namelijk")
 
@@ -143,12 +159,11 @@ class Region(models.Model):
 
 class ObservationGoal(models.Model):
     observation_goal = models.CharField(
-        max_length=255,
-        verbose_name="Waarvoor meet u dat?",
-        blank=True,
-        null=True
+        max_length=255, verbose_name="Waarvoor meet u dat?", blank=True, null=True
     )
-    privacy_declaration = models.URLField(verbose_name="Privacyverklaring", blank=True, null=True)
+    privacy_declaration = models.URLField(
+        verbose_name="Privacyverklaring", blank=True, null=True
+    )
     legal_ground = models.ForeignKey(
         LegalGround,
         on_delete=models.PROTECT,
@@ -170,10 +185,7 @@ class Project(models.Model):
 
     path = ArrayField(
         models.CharField(
-            max_length=255,
-            verbose_name="Organisation name",
-            blank=False,
-            null=False
+            max_length=255, verbose_name="Organisation name", blank=False, null=False
         )
     )
 
@@ -189,6 +201,7 @@ class Device2(models.Model):
     """
     The iot device "thing"
     """
+
     reference = models.CharField(max_length=64, verbose_name="Referentienummer")
 
     # LegalEntity
@@ -227,17 +240,20 @@ class Device2(models.Model):
     # Datastream
     datastream = models.CharField(max_length=255, verbose_name="Wat meet de sensor?")
     themes = models.ManyToManyField(Theme, verbose_name="Thema")
-    contains_pi_data = models.BooleanField(verbose_name="Worden er persoonsgegevens verwerkt?")
+    contains_pi_data = models.BooleanField(
+        verbose_name="Worden er persoonsgegevens verwerkt?"
+    )
 
     # ObservationGoal
     observation_goals = models.ManyToManyField(
-        ObservationGoal,
-        verbose_name="ObservationGoal"
+        ObservationGoal, verbose_name="ObservationGoal"
     )
 
     projects = models.ManyToManyField(Project, verbose_name="Projects")
 
-    active_until = models.DateField(null=True, verbose_name="Tot wanneer is de sensor actief?")
+    active_until = models.DateField(
+        null=True, verbose_name="Tot wanneer is de sensor actief?"
+    )
 
     def __str__(self):
         return self.reference

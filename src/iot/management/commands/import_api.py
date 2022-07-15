@@ -21,10 +21,13 @@ class Command(BaseCommand):
     beweegbare_fysieke_afsluiting
     anpr
     """
+
     help = 'Imports Sensors data from APIs.To exeucting it: python manage.py import_api api1 api2'
 
     def add_arguments(self, parser):
-        parser.add_argument('api_name', nargs='*', type=str, help='provide the api_name')
+        parser.add_argument(
+            'api_name', nargs='*', type=str, help='provide the api_name'
+        )
 
     def handle(self, *args, **options) -> str:
         """
@@ -44,12 +47,16 @@ class Command(BaseCommand):
             api_names = import_utils_apis.API_MAPPER.keys()
 
         for api in api_names:
-            api_url = import_utils_apis.API_MAPPER[api]  # get the url that belongs to the api.
+            api_url = import_utils_apis.API_MAPPER[
+                api
+            ]  # get the url that belongs to the api.
 
             response = requests.get(url=api_url)
             # check if response is 200 and content type is json, if not, return
-            if response.status_code != 200 or \
-                    'application/json' not in response.headers["Content-Type"]:
+            if (
+                response.status_code != 200
+                or 'application/json' not in response.headers["Content-Type"]
+            ):
                 raise RuntimeError(f"{response.status_code} - {response.content}")
 
             data = response.json()  # get the content of the response as dict

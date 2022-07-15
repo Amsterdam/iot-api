@@ -2,8 +2,7 @@ import pytest
 from django.conf import settings
 
 from iot import import_utils, import_utils_apis, models
-from iot.import_utils import (LatLong, Location, ObservationGoal, PersonData,
-                              SensorData)
+from iot.import_utils import LatLong, Location, ObservationGoal, PersonData, SensorData
 from iot.serializers import Device2Serializer
 
 
@@ -15,39 +14,32 @@ def api_data():
         "features": [
             {
                 "type": "Feature",
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [
-                        4.918723, 52.389397
-                    ]
-                },
+                "geometry": {"type": "Point", "coordinates": [4.918723, 52.389397]},
                 "properties": {
                     "type": "camera",
                     "id": "ANPR-00001-V",
                     "doel": [
                         "verkeershandhaving_milieuzone",
-                        "verkeershandhaving_snorfietsrijbaan"
-                    ]
-                }
+                        "verkeershandhaving_snorfietsrijbaan",
+                    ],
+                },
             },
             {
                 "type": "Feature",
                 "geometry": {
                     "type": "Point",
-                    "coordinates": [
-                        4.915874, 52.34528
-                    ],
+                    "coordinates": [4.915874, 52.34528],
                 },
                 "properties": {
                     "type": "camera",
                     "id": "ANPR-00002-V",
                     "doel": [
                         "verkeershandhaving_milieuzone",
-                        "verkeershandhaving_snorfietsrijbaan"
-                    ]
-                }
-            }
-        ]
+                        "verkeershandhaving_snorfietsrijbaan",
+                    ],
+                },
+            },
+        ],
     }
 
 
@@ -59,38 +51,26 @@ def api_data_2():  # a second list of api data sensors
         "features": [
             {
                 "type": "Feature",
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [
-                        4.9999999, 52.999999
-                    ]
-                },
+                "geometry": {"type": "Point", "coordinates": [4.9999999, 52.999999]},
                 "properties": {
                     "type": "camera",
                     "id": "ANPR-00001-V",
                     "doel": [
                         "verkeershandhaving_milieuzone",
-                        "verkeershandhaving_snorfietsrijbaan"
-                    ]
-                }
+                        "verkeershandhaving_snorfietsrijbaan",
+                    ],
+                },
             },
             {
                 "type": "Feature",
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [
-                        4.85636, 52.37117
-                    ]
-                },
+                "geometry": {"type": "Point", "coordinates": [4.85636, 52.37117]},
                 "properties": {
                     "type": "camera",
                     "id": "ANPR-00003-V",
-                    "doel": [
-                        "verkeershandhaving_milieuzone"
-                    ]
-                }
-            }
-        ]
+                    "doel": ["verkeershandhaving_milieuzone"],
+                },
+            },
+        ],
     }
 
 
@@ -103,7 +83,7 @@ def person_data():
         website="https://www.amsterdam.nl/",
         first_name="Afdeling",
         last_name_affix="",
-        last_name="anpr management"
+        last_name="anpr management",
     )
 
 
@@ -117,23 +97,24 @@ def sensor_data(person_data):
             lat_long=LatLong(latitude=52.3794284, longitude=4.901852),
             postcode_house_number=None,
             description='',
-            regions=''
+            regions='',
         ),
         datastream="",
-        observation_goals=[ObservationGoal(
-            observation_goal="verkeershandhaving_snorfietsrijbaan",
-            privacy_declaration="https://www.amsterdam.nl/privacy/privacyverklaring/",
-            legal_ground=None
-        )],
+        observation_goals=[
+            ObservationGoal(
+                observation_goal="verkeershandhaving_snorfietsrijbaan",
+                privacy_declaration="https://www.amsterdam.nl/privacy/privacyverklaring/",
+                legal_ground=None,
+            )
+        ],
         themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
         contains_pi_data='Nee',
         active_until='01-01-2050',
-        projects=['']
+        projects=[''],
     )
 
 
 class TestApiParser:
-
     def test_parse_anpr_expected_persondata_sensor_objects(self, api_data):
         """
         provide a dict object with a list of sensoren from the anpr api.
@@ -148,7 +129,7 @@ class TestApiParser:
             website="https://www.amsterdam.nl/",
             first_name="Afdeling",
             last_name_affix="",
-            last_name="anpr management"
+            last_name="anpr management",
         )
         # expected_value is a list of sensors
         expected = [
@@ -160,7 +141,7 @@ class TestApiParser:
                     lat_long=LatLong(latitude=52.389397, longitude=4.918723),
                     postcode_house_number=None,
                     description='',
-                    regions=''
+                    regions='',
                 ),
                 datastream='',
                 observation_goals=[
@@ -173,12 +154,12 @@ class TestApiParser:
                         observation_goal="verkeershandhaving_snorfietsrijbaan",
                         legal_ground=None,
                         privacy_declaration="https://www.amsterdam.nl/privacy/privacyverklaring/",
-                    )
+                    ),
                 ],
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 contains_pi_data='Nee',
                 active_until='01-01-2050',
-                projects=['']
+                projects=[''],
             ),
             SensorData(
                 owner=expected_owner,
@@ -188,7 +169,7 @@ class TestApiParser:
                     lat_long=LatLong(latitude=52.34528, longitude=4.915874),
                     postcode_house_number=None,
                     description='',
-                    regions=''
+                    regions='',
                 ),
                 datastream='',
                 observation_goals=[
@@ -201,13 +182,13 @@ class TestApiParser:
                         observation_goal="verkeershandhaving_snorfietsrijbaan",
                         legal_ground=None,
                         privacy_declaration="https://www.amsterdam.nl/privacy/privacyverklaring/",
-                    )
+                    ),
                 ],
                 themes=settings.IPROX_SEPARATOR.join(['Mobiliteit: auto']),
                 contains_pi_data='Nee',
                 active_until='01-01-2050',
-                projects=['']
-            )
+                projects=[''],
+            ),
         ]
         sensors_list = list(import_utils_apis.parse_anpr(data=api_data))
 
@@ -221,7 +202,6 @@ class TestApiParser:
 
 @pytest.mark.django_db
 class TestImportPerson:
-
     @property
     def actual(self):
         fields = 'organisation', 'email', 'telephone', 'website', 'name'
@@ -242,12 +222,10 @@ class TestImportPerson:
 
 @pytest.mark.django_db
 class TestImportSensor:
-
     @property
     def actual(self):
         return [
-            Device2Serializer(device).data
-            for device in models.Device2.objects.all()
+            Device2Serializer(device).data for device in models.Device2.objects.all()
         ]
 
     expected_1 = {
@@ -260,13 +238,13 @@ class TestImportSensor:
             {
                 'observation_goal': 'verkeershandhaving_milieuzone',
                 'privacy_declaration': 'https://www.amsterdam.nl/privacy/privacyverklaring/',
-                'legal_ground': None
+                'legal_ground': None,
             },
             {
                 'observation_goal': 'verkeershandhaving_snorfietsrijbaan',
                 'privacy_declaration': 'https://www.amsterdam.nl/privacy/privacyverklaring/',
-                'legal_ground': None
-            }
+                'legal_ground': None,
+            },
         ],
         'owner': {
             'name': 'Afdeling anpr management',
@@ -277,7 +255,7 @@ class TestImportSensor:
         'themes': ['Mobiliteit: auto'],
         'type': 'Optische / camera sensor',
         'reference': 'ANPR-00001-V',
-        'project_paths': []
+        'project_paths': [],
     }
 
     expected_2 = {
@@ -290,7 +268,7 @@ class TestImportSensor:
             {
                 'observation_goal': 'verkeershandhaving_snorfietsrijbaan',
                 'privacy_declaration': 'https://www.amsterdam.nl/privacy/privacyverklaring/',
-                'legal_ground': None
+                'legal_ground': None,
             }
         ],
         'owner': {
@@ -302,7 +280,7 @@ class TestImportSensor:
         'themes': ['Mobiliteit: auto'],
         'type': 'Optische / camera sensor',
         'reference': 'ANPR-00004-V',
-        'project_paths': []
+        'project_paths': [],
     }
 
     expected_3 = {
@@ -315,13 +293,13 @@ class TestImportSensor:
             {
                 'observation_goal': 'verkeershandhaving_milieuzone',
                 'privacy_declaration': 'https://www.amsterdam.nl/privacy/privacyverklaring/',
-                'legal_ground': None
+                'legal_ground': None,
             },
             {
                 'observation_goal': 'verkeershandhaving_snorfietsrijbaan',
                 'privacy_declaration': 'https://www.amsterdam.nl/privacy/privacyverklaring/',
-                'legal_ground': None
-            }
+                'legal_ground': None,
+            },
         ],
         'owner': {
             'name': 'Afdeling anpr management',
@@ -332,7 +310,7 @@ class TestImportSensor:
         'themes': ['Mobiliteit: auto'],
         'type': 'Optische / camera sensor',
         'reference': 'ANPR-00002-V',
-        'project_paths': []
+        'project_paths': [],
     }
 
     def test_import_sensor(self, sensor_data):
@@ -366,8 +344,7 @@ class TestConvertApiData:
     @property
     def actual(self):
         return [
-            Device2Serializer(device).data
-            for device in models.Device2.objects.all()
+            Device2Serializer(device).data for device in models.Device2.objects.all()
         ]
 
     def test_convert_api_data_anpr_sensor_only_insert_2(self, api_data_2):
@@ -378,14 +355,15 @@ class TestConvertApiData:
         """
 
         result = import_utils_apis.convert_api_data(
-            api_name='anpr',
-            api_data=api_data_2
+            api_name='anpr', api_data=api_data_2
         )
 
         assert result == ([], 2, 0)
         assert len(self.actual) == 2
 
-    def test_convert_api_data_anpr_sensor_three_insert_one_update(self, api_data, api_data_2):
+    def test_convert_api_data_anpr_sensor_three_insert_one_update(
+        self, api_data, api_data_2
+    ):
         """
         call the convert_api function twice with two different lists of sensors.
         The second list will contain also two sensors, one of them is the same as
@@ -396,27 +374,28 @@ class TestConvertApiData:
         # insert the first list of sensor which should include two sensors with the ids
         # ANPR-00001-V & ANPR-00002-V.
         result_1 = import_utils_apis.convert_api_data(
-            api_name='anpr',
-            api_data=api_data
+            api_name='anpr', api_data=api_data
         )
 
         # insert the second list of sensor which should include two sensors with the ids
         # ANPR-00001-V & ANPR-00003-V. The ANPR-00001-V has different location points.
         result_2 = import_utils_apis.convert_api_data(
-            api_name='anpr',
-            api_data=api_data_2
+            api_name='anpr', api_data=api_data_2
         )
 
         # get the sensor with referece ANPR-00001-V because it should have been
         # updated with a new location.
-        sensor_ref_00001 = next((sensor for sensor in self.actual if
-                                 sensor['reference'] == 'ANPR-00001-V'), None)
+        sensor_ref_00001 = next(
+            (sensor for sensor in self.actual if sensor['reference'] == 'ANPR-00001-V'),
+            None,
+        )
 
         assert result_1 == ([], 2, 0)
         assert result_2 == ([], 1, 1)
         assert len(self.actual) == 3
         assert sensor_ref_00001['location']['longitude'] == 4.9999999
         assert sensor_ref_00001['location']['latitude'] == 52.999999
+
 
 #     @pytest.mark.skip()
 #     def test_convert_api_data_wifi_sensor_one_update_one_delete(self, api_data, api_data_2):

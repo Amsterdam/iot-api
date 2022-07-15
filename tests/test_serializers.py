@@ -5,7 +5,6 @@ from iot import factories, models, serializers
 
 @pytest.mark.django_db
 class TestIsOtherEntitySerializer:
-
     def test_theme_is_other_values_should_be_grouped_under_overig(self):
         instance = factories.Device2Factory()
         instance.themes.all().delete()

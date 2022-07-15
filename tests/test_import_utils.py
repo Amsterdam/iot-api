@@ -53,51 +53,64 @@ def dict_to_workbook(value):
 
 
 class TestParse:
-
-    @pytest.mark.parametrize("dir, parser, expected_location, expected_references,\
-                             expected_project, expected_row_numbers", [
-        (
-            'iprox_single',
-            import_utils.parse_iprox_xlsx,
-            import_utils.Location(
-                lat_long=None,
-                postcode_house_number=import_utils.PostcodeHouseNumber('1011 PN', '3', 'III'),
-                description='',
-                regions=''
+    @pytest.mark.parametrize(
+        "dir, parser, expected_location, expected_references,\
+                             expected_project, expected_row_numbers",
+        [
+            (
+                'iprox_single',
+                import_utils.parse_iprox_xlsx,
+                import_utils.Location(
+                    lat_long=None,
+                    postcode_house_number=import_utils.PostcodeHouseNumber(
+                        '1011 PN', '3', 'III'
+                    ),
+                    description='',
+                    regions='',
+                ),
+                ['7079-2296.0', '7079-2296.1'],
+                [''],
+                [1, 1],
             ),
-            ['7079-2296.0', '7079-2296.1'],
-            [''],
-            [1, 1],
-        ),
-        (
-            'iprox_multiple',
-            import_utils.parse_iprox_xlsx,
-            import_utils.Location(
-                lat_long=None,
-                postcode_house_number=import_utils.PostcodeHouseNumber('1011 PN', '3', 'III'),
-                description='',
-                regions=''
+            (
+                'iprox_multiple',
+                import_utils.parse_iprox_xlsx,
+                import_utils.Location(
+                    lat_long=None,
+                    postcode_house_number=import_utils.PostcodeHouseNumber(
+                        '1011 PN', '3', 'III'
+                    ),
+                    description='',
+                    regions='',
+                ),
+                ['7079-2296.0', '7079-2297.0'],
+                [''],
+                [1, 2],
             ),
-            ['7079-2296.0', '7079-2297.0'],
-            [''],
-            [1, 2],
-        ),
-        (
-            'bulk',
-            import_utils.parse_bulk_xlsx,
-            import_utils.Location(
-                lat_long=import_utils.LatLong('52.3676', '4.9041'),
-                postcode_house_number=None,
-                description='',
-                regions='AB;AC',
+            (
+                'bulk',
+                import_utils.parse_bulk_xlsx,
+                import_utils.Location(
+                    lat_long=import_utils.LatLong('52.3676', '4.9041'),
+                    postcode_house_number=None,
+                    description='',
+                    regions='AB;AC',
+                ),
+                ['7079-2296', '7079-2297'],
+                ['Verkeershandhaving;Gemeente Amsterdam'],
+                [1, 2],
             ),
-            ['7079-2296', '7079-2297'],
-            ['Verkeershandhaving;Gemeente Amsterdam'],
-            [1, 2],
-        ),
-    ])
-    def test_parse_sensor_data(self, dir, parser, expected_location, expected_references,
-                               expected_project, expected_row_numbers):
+        ],
+    )
+    def test_parse_sensor_data(
+        self,
+        dir,
+        parser,
+        expected_location,
+        expected_references,
+        expected_project,
+        expected_row_numbers,
+    ):
         """
         Each of the source files contains the same sensors, just in a different
         format, so we call the various parse functions and verify that
@@ -124,11 +137,13 @@ class TestParse:
                 type='Optische / camera sensor',
                 location=expected_location,
                 datastream='Aantal schepen dat voorbij vaart',
-                observation_goals=[import_utils.ObservationGoal(
-                    observation_goal='Drukte en geluidsoverlast',
-                    privacy_declaration='',
-                    legal_ground=''
-                )],
+                observation_goals=[
+                    import_utils.ObservationGoal(
+                        observation_goal='Drukte en geluidsoverlast',
+                        privacy_declaration='',
+                        legal_ground='',
+                    )
+                ],
                 themes='Veiligheid',
                 contains_pi_data='Nee',
                 active_until='06-07-2021',
@@ -141,12 +156,14 @@ class TestParse:
                 type='Chemiesensor',
                 location=expected_location,
                 datastream='Of er chemie is tussen mensen',
-                observation_goals=[import_utils.ObservationGoal(
-                    observation_goal='Vind ik gewoon leuk',
-                    privacy_declaration='',
-                    legal_ground='Bescherming vitale belangen betrokkene(n) of'
-                                 ' van een andere natuurlijke persoon)'
-                )],
+                observation_goals=[
+                    import_utils.ObservationGoal(
+                        observation_goal='Vind ik gewoon leuk',
+                        privacy_declaration='',
+                        legal_ground='Bescherming vitale belangen betrokkene(n) of'
+                        ' van een andere natuurlijke persoon)',
+                    )
+                ],
                 themes='Veiligheid;Lucht',
                 contains_pi_data='Ja',
                 active_until='01-01-2050',
@@ -164,7 +181,7 @@ class TestParse:
             ['non', 'sense'],
             import_utils.IPROX_FIELDS[:-1],
             import_utils.IPROX_FIELDS[:-1] + ['nonsense'],
-        ]
+        ],
     )
     def test_parse_prox_invalid_fields_should_be_detected(self, fields):
         # check that an incorrect number of fields can be correctly detected
@@ -179,7 +196,7 @@ class TestParse:
             ['non', 'sense'],
             import_utils.BULK_PERSON_FIELDS[:-1],
             import_utils.BULK_PERSON_FIELDS[:-1] + ['nonsense'],
-        ]
+        ],
     )
     def test_parse_bulk_invalid_person_fields_should_be_detected(self, fields):
         # check that an incorrect number of fields can be correctly detected
@@ -194,25 +211,30 @@ class TestParse:
             ['non', 'sense'],
             import_utils.BULK_SENSOR_FIELDS[:-1],
             import_utils.BULK_SENSOR_FIELDS[:-1] + ['nonsense'],
-        ]
+        ],
     )
     def test_parse_bulk_invalid_sensor_fields_should_be_detected(self, fields):
         # check that an incorrect number of fields can be correctly detected
         person_fields = [[f, f] for f in import_utils.BULK_PERSON_FIELDS]
-        workbook = dict_to_workbook({'Uw gegevens': person_fields, 'Sensorregistratie': [fields]})
+        workbook = dict_to_workbook(
+            {'Uw gegevens': person_fields, 'Sensorregistratie': [fields]}
+        )
         with pytest.raises(import_utils.InvalidSensorFields):
             list(import_utils.parse_bulk_xlsx(workbook))
 
-    @pytest.mark.parametrize("dir, parser", [
-        (
-            'empty_rows_columns_iprox',
-            import_utils.parse_iprox_xlsx,
-        ),
-        (
-            'empty_rows_columns_bulk',
-            import_utils.parse_bulk_xlsx,
-        ),
-    ])
+    @pytest.mark.parametrize(
+        "dir, parser",
+        [
+            (
+                'empty_rows_columns_iprox',
+                import_utils.parse_iprox_xlsx,
+            ),
+            (
+                'empty_rows_columns_bulk',
+                import_utils.parse_bulk_xlsx,
+            ),
+        ],
+    )
     def test_empty_rows_and_columns_should_be_skipped(self, dir, parser):
         # verify that empty rows and columns after the expected data is ignored
         workbook = csv_to_workbook(Path(__file__).parent / 'data' / dir)
@@ -220,7 +242,9 @@ class TestParse:
 
     def test_iprox_five_sensors(self):
         # verify that is possible to import the max number of sensors
-        workbook = csv_to_workbook(Path(__file__).parent / 'data' / 'iprox_five_sensors')
+        workbook = csv_to_workbook(
+            Path(__file__).parent / 'data' / 'iprox_five_sensors'
+        )
         assert len(list(import_utils.parse_iprox_xlsx(workbook))) == 5
 
 
@@ -239,7 +263,6 @@ def person_data():
 
 @pytest.mark.django_db
 class TestImportPerson:
-
     @property
     def actual(self):
         fields = 'organisation', 'email', 'telephone', 'website', 'name'
@@ -282,7 +305,10 @@ class TestImportPerson:
         import_utils.import_person(person_data)
         person_data.email = 'p.er.soon@rotterdam.nl'
         import_utils.import_person(person_data)
-        assert self.actual == [self.expected, dict(self.expected, email='p.er.soon@rotterdam.nl')]
+        assert self.actual == [
+            self.expected,
+            dict(self.expected, email='p.er.soon@rotterdam.nl'),
+        ]
 
 
 @pytest.fixture
@@ -298,27 +324,27 @@ def sensor_data(person_data):
             regions='',
         ),
         datastream='water',
-        observation_goals=[import_utils.ObservationGoal(
-            observation_goal='Nare bedoelingen',
-            privacy_declaration='https://amsterdam.nl/privacy',
-            legal_ground='Publieke taak'
-        )],
-        themes=settings.IPROX_SEPARATOR.join([
-            'Mobiliteit: auto',
-            'Mobiliteit: fiets',
-        ]),
+        observation_goals=[
+            import_utils.ObservationGoal(
+                observation_goal='Nare bedoelingen',
+                privacy_declaration='https://amsterdam.nl/privacy',
+                legal_ground='Publieke taak',
+            )
+        ],
+        themes=settings.IPROX_SEPARATOR.join(
+            [
+                'Mobiliteit: auto',
+                'Mobiliteit: fiets',
+            ]
+        ),
         contains_pi_data='Ja',
         active_until='05-05-2050',
-        projects=[
-            'Gemeente Amsterdam;Verkeers',
-            'Noord Amsterdam;Zuid Amsterdam'
-        ],
+        projects=['Gemeente Amsterdam;Verkeers', 'Noord Amsterdam;Zuid Amsterdam'],
     )
 
 
 @pytest.mark.django_db
 class TestImportSensor:
-
     @property
     def actual(self):
         return [
@@ -336,7 +362,7 @@ class TestImportSensor:
             {
                 'observation_goal': 'Nare bedoelingen',
                 'privacy_declaration': 'https://amsterdam.nl/privacy',
-                'legal_ground': 'Publieke taak'
+                'legal_ground': 'Publieke taak',
             }
         ],
         'owner': {
@@ -353,7 +379,7 @@ class TestImportSensor:
         'reference': '1234',
         'project_paths': [
             ['Gemeente Amsterdam', 'Verkeers'],
-            ['Noord Amsterdam', 'Zuid Amsterdam']
+            ['Noord Amsterdam', 'Zuid Amsterdam'],
         ],
     }
 
@@ -374,21 +400,25 @@ class TestImportSensor:
         # check that a second import of the same sensor updates values
         owner = import_utils.import_person(sensor_data.owner)
         import_utils.import_sensor(sensor_data, owner)
-        sensor_data.observation_goals[0].privacy_declaration = 'http://rotterdam.nl/privacy'
+        sensor_data.observation_goals[
+            0
+        ].privacy_declaration = 'http://rotterdam.nl/privacy'
         import_utils.import_sensor(sensor_data, owner)
         assert self.actual == [
-            dict(self.expected, observation_goals=[
-                {
-                    'observation_goal': 'Nare bedoelingen',
-                    'privacy_declaration': 'https://amsterdam.nl/privacy',
-                    'legal_ground': 'Publieke taak'
-                },
-                {
-                    'observation_goal': 'Nare bedoelingen',
-                    'privacy_declaration': 'http://rotterdam.nl/privacy',
-                    'legal_ground': 'Publieke taak'
-                }
-            ]
+            dict(
+                self.expected,
+                observation_goals=[
+                    {
+                        'observation_goal': 'Nare bedoelingen',
+                        'privacy_declaration': 'https://amsterdam.nl/privacy',
+                        'legal_ground': 'Publieke taak',
+                    },
+                    {
+                        'observation_goal': 'Nare bedoelingen',
+                        'privacy_declaration': 'http://rotterdam.nl/privacy',
+                        'legal_ground': 'Publieke taak',
+                    },
+                ],
             )
         ]
 
@@ -403,14 +433,16 @@ class TestImportSensor:
     def test_import_sensor_location(self, sensor_data):
         # check that the location is imported correctly
         owner = import_utils.import_person(sensor_data.owner)
-        sensor_data.location.lat_long = import_utils.LatLong(latitude=52.3676, longitude=4.9041)
+        sensor_data.location.lat_long = import_utils.LatLong(
+            latitude=52.3676, longitude=4.9041
+        )
         import_utils.import_sensor(sensor_data, owner)
         location = {"latitude": 52.3676, "longitude": 4.9041}
         assert self.actual == [
             dict(
                 self.expected,
                 location_description='Somewhere over the rainbow',
-                location=location
+                location=location,
             )
         ]
 
@@ -437,7 +469,7 @@ class TestImportSensor:
         expected = dict(
             self.expected,
             location_description='Somewhere over the rainbow',
-            regions=regions
+            regions=regions,
         )
         assert self.actual == [expected]
 
@@ -450,22 +482,26 @@ class TestImportSensor:
             dict(
                 self.expected,
                 location_description='Somewhere over the rainbow',
-                regions=["Diemen"]
+                regions=["Diemen"],
             )
         ]
 
     def test_import_postcode_house_number(self, sensor_data):
         # check that we can import a location based on postcode and house number
         owner = import_utils.import_person(sensor_data.owner)
-        sensor_data.location.postcode_house_number = import_utils.PostcodeHouseNumber("1111AA", 1)
-        with patch('iot.import_utils.get_center_coordinates', lambda *_: Point(4.9041, 52.3676)):
+        sensor_data.location.postcode_house_number = import_utils.PostcodeHouseNumber(
+            "1111AA", 1
+        )
+        with patch(
+            'iot.import_utils.get_center_coordinates', lambda *_: Point(4.9041, 52.3676)
+        ):
             import_utils.import_sensor(sensor_data, owner)
         location = {"latitude": 52.3676, "longitude": 4.9041}
         assert self.actual == [
             dict(
                 self.expected,
                 location_description='Somewhere over the rainbow',
-                location=location
+                location=location,
             )
         ]
 
@@ -476,20 +512,26 @@ class TestImportSensor:
             import_utils.ObservationGoal(
                 observation_goal='my_observation_goal',
                 privacy_declaration='my_privacy_declaration',
-                legal_ground='my_legal_ground'
+                legal_ground='my_legal_ground',
             )
         ]
         import_utils.import_sensor(sensor_data, owner)
-        assert self.actual == self.actual == [
-            dict(self.expected, observation_goals=[
-                {
-                    'observation_goal': 'my_observation_goal',
-                    'privacy_declaration': 'my_privacy_declaration',
-                    'legal_ground': 'my_legal_ground'
-                }
+        assert (
+            self.actual
+            == self.actual
+            == [
+                dict(
+                    self.expected,
+                    observation_goals=[
+                        {
+                            'observation_goal': 'my_observation_goal',
+                            'privacy_declaration': 'my_privacy_declaration',
+                            'legal_ground': 'my_legal_ground',
+                        }
+                    ],
+                )
             ]
-            )
-        ]
+        )
 
     @pytest.mark.parametrize("source", ["iprox", "bulk"])
     def test_duplicate_references_should_be_rejected(self, source):
@@ -535,7 +577,9 @@ class TestValidate:
 
     @pytest.mark.parametrize("value", [None, '', 'onzin', '1111', 'XX'])
     def test_invalid_postcode(self, sensor_data, value):
-        sensor_data.location.postcode_house_number = import_utils.PostcodeHouseNumber(value, 1)
+        sensor_data.location.postcode_house_number = import_utils.PostcodeHouseNumber(
+            value, 1
+        )
         with pytest.raises(import_utils.InvalidPostcode):
             import_utils.validate_sensor(sensor_data)
 
@@ -569,7 +613,9 @@ class TestValidate:
         "value,contains_pi_data",
         itertools.product(['nee', '-', 'n/a', 'n.v.t.'], ['Ja', 'Nee']),
     )
-    def test_invalid_privacy_declaration_invalid_urls(self, sensor_data, value, contains_pi_data):
+    def test_invalid_privacy_declaration_invalid_urls(
+        self, sensor_data, value, contains_pi_data
+    ):
         # never accept invalid urls
         sensor_data.contains_pi_data = contains_pi_data
         sensor_data.observation_goals[0].privacy_declaration = value
@@ -577,13 +623,17 @@ class TestValidate:
             import_utils.validate_sensor(sensor_data)
 
     @pytest.mark.parametrize("value", [None, ''])
-    def test_invalid_privacy_declaration_can_be_empty_if_no_pi_data(self, sensor_data, value):
+    def test_invalid_privacy_declaration_can_be_empty_if_no_pi_data(
+        self, sensor_data, value
+    ):
         sensor_data.contains_pi_data = 'Nee'
         sensor_data.observation_goals[0].privacy_declaration = value
         try:
             import_utils.validate_sensor(sensor_data)
         except import_utils.InvalidPrivacyDeclaration:
-            pytest.fail('Should not raise on empty declaration when no personal data collected')
+            pytest.fail(
+                'Should not raise on empty declaration when no personal data collected'
+            )
 
     @pytest.mark.parametrize("value", [None, '', ' ', 'not-an-email'])
     def test_invalid_email(self, person_data, value):
@@ -628,7 +678,6 @@ def override_url_settings(settings):
 
 
 class TestGetCenterCoordinates:
-
     @pytest.fixture(autouse=True)
     def inject_requests_mock(self, requests_mock):
         self.requests_mock = requests_mock
@@ -685,17 +734,20 @@ class TestGetCenterCoordinatesInvalidResponses:
     def inject_requests_mock(self, requests_mock):
         self.requests_mock = requests_mock
 
-    @pytest.mark.parametrize('postcode_response, address_response', [
-        ('{}', '{}'),
-        ('{"results": null}', '{}'),
-        ('{"results": []}', '{}'),
-        ('{"results": [{}]}', '{}'),
-        ('{"results": [{"straat": null}]}', '{}'),
-        (HERENGRACHT_POSTCODE_RESPONSE, '{}'),
-        (HERENGRACHT_POSTCODE_RESPONSE, '{"results": null}'),
-        (HERENGRACHT_POSTCODE_RESPONSE, '{"results": []}'),
-        (HERENGRACHT_POSTCODE_RESPONSE, '{"results": [{}]}'),
-    ])
+    @pytest.mark.parametrize(
+        'postcode_response, address_response',
+        [
+            ('{}', '{}'),
+            ('{"results": null}', '{}'),
+            ('{"results": []}', '{}'),
+            ('{"results": [{}]}', '{}'),
+            ('{"results": [{"straat": null}]}', '{}'),
+            (HERENGRACHT_POSTCODE_RESPONSE, '{}'),
+            (HERENGRACHT_POSTCODE_RESPONSE, '{"results": null}'),
+            (HERENGRACHT_POSTCODE_RESPONSE, '{"results": []}'),
+            (HERENGRACHT_POSTCODE_RESPONSE, '{"results": [{}]}'),
+        ],
+    )
     def test_house_number_exception_should_be_raised_on_invalid_response(
         self,
         postcode_response: str,

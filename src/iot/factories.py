@@ -42,8 +42,12 @@ class Device2Factory(factory.django.DjangoModelFactory):
 
     @factory.post_generation
     def observation_goals(self, *args, **kwargs):
-        for observation_goal, privacy_declaration, legal_ground in sample_model(ObservationGoal, 0):
-            self.observation_goal.add(observation_goal, privacy_declaration, legal_ground)
+        for observation_goal, privacy_declaration, legal_ground in sample_model(
+            ObservationGoal, 0
+        ):
+            self.observation_goal.add(
+                observation_goal, privacy_declaration, legal_ground
+            )
 
     @factory.post_generation
     def projects(self, *args, **kwargs):

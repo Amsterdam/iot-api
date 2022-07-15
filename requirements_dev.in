@@ -10,17 +10,15 @@ pip-tools
 
 # Useful extra developer packages:
 django-debug-toolbar
-flake8<4  # pin flake8 to version 3 to prevent StringIO error (see tholo/pytest-flake8#81)
 faker
 factory_boy
-tox
 pytest
 pytest-django
 pytest-env
 pytest-factoryboy
 pytest-cov
-pytest-flake8<1.1  # 1.1 drops python 3.6 support
 pytest-faker
-pytest-isort
 responses
 pyinstrument
+black
+isort

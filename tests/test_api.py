@@ -13,7 +13,9 @@ class PingTestCase(APITestCase):
         response = self.client.get(url)
 
         self.assertEqual(
-            status.HTTP_200_OK, response.status_code, 'Wrong response code for {}'.format(url)
+            status.HTTP_200_OK,
+            response.status_code,
+            'Wrong response code for {}'.format(url),
         )
 
 

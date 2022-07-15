@@ -27,7 +27,9 @@ class PostcodeSearchException(ValueError):
     house_number: int
 
     def __str__(self):
-        return f"Ongeldige postcode ({self.postcode}) / huisnummer ({self.house_number})"
+        return (
+            f"Ongeldige postcode ({self.postcode}) / huisnummer ({self.house_number})"
+        )
 
 
 def normalize_postcode(postcode: str) -> str:
@@ -73,8 +75,9 @@ def get_center_coordinates(postcode: str, house_number: Union[int, str]) -> Poin
             if 'centroid' not in result:
                 raise PostcodeSearchException(postcode, house_number)
 
-            if result.get('postcode') == postcode_normalized and \
-                    str(result.get('huisnummer')) == str(house_number):
+            if result.get('postcode') == postcode_normalized and str(
+                result.get('huisnummer')
+            ) == str(house_number):
                 centroid = result['centroid']
                 return Point(centroid[0], centroid[1])
 
@@ -225,7 +228,7 @@ IPROX_SENSOR_FIELDS = [
 ]
 
 
-ALL_IPROX_SENSOR_FIELDS = (IPROX_SENSOR_FIELDS * settings.IPROX_NUM_SENSORS)
+ALL_IPROX_SENSOR_FIELDS = IPROX_SENSOR_FIELDS * settings.IPROX_NUM_SENSORS
 # Last sensor does not have "Wilt u nog een sensor melden?"
 ALL_IPROX_SENSOR_FIELDS.pop()
 IPROX_FIELDS = IPROX_REGISTRATION_FIELDS + IPROX_PERSON_FIELDS + ALL_IPROX_SENSOR_FIELDS
@@ -254,6 +257,7 @@ class Values:
     >>> values['a', 2]
     30
     """
+
     fields: list
     values: list
 
@@ -271,17 +275,27 @@ class Values:
         """
         if isinstance(field, tuple):
             requested_field, nth = field
-            matches = (i for i, field in enumerate(self.fields) if field == requested_field)
+            matches = (
+                i for i, field in enumerate(self.fields) if field == requested_field
+            )
             matching_index = next(islice(matches, nth, nth + 1), None)
             if matching_index is not None:
                 matching_value = self.values[matching_index]
-                val = matching_value.value if isinstance(matching_value, Cell) else matching_value
+                val = (
+                    matching_value.value
+                    if isinstance(matching_value, Cell)
+                    else matching_value
+                )
                 return val.strip() if isinstance(val, str) else val
         else:
             # raise KeyError when field not present
             with contextlib.suppress(ValueError):
                 matching_value = self.values[self.fields.index(field)]
-                val = matching_value.value if isinstance(matching_value, Cell) else matching_value
+                val = (
+                    matching_value.value
+                    if isinstance(matching_value, Cell)
+                    else matching_value
+                )
                 return val.strip() if isinstance(val, str) else val
 
         # didn't return yet, then item could not be found
@@ -296,7 +310,9 @@ class InvalidFields(ValueError):
     def __str__(self):
         for actual_field, expected_field in zip_longest(self.fields, self.expected):
             if actual_field != expected_field:
-                return f"Onverwachte veldnaam : {actual_field}, verwacht {expected_field}"
+                return (
+                    f"Onverwachte veldnaam : {actual_field}, verwacht {expected_field}"
+                )
         return "Onverwachte velden"
 
 
@@ -351,17 +367,20 @@ def parse_iprox_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
                         row["Toevoeging", sensor_index + 1],
                     )
 
-            location_description = row.get(
-                'Omschrijving van de locatie van de sensor', sensor_index
-            ) or ''
+            location_description = (
+                row.get('Omschrijving van de locatie van de sensor', sensor_index) or ''
+            )
 
-            regions = row.get('In welk gebied bevindt zich de mobiele sensor?', sensor_index) or ''
+            regions = (
+                row.get('In welk gebied bevindt zich de mobiele sensor?', sensor_index)
+                or ''
+            )
 
             location = Location(
                 postcode_house_number=location_postcode,
                 description=location_description,
                 regions=regions,
-                lat_long=None
+                lat_long=None,
             )
 
             yield SensorData(
@@ -370,13 +389,17 @@ def parse_iprox_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
                 type=row["Kies soort / type sensor", sensor_index],
                 location=location,
                 datastream=row["Wat meet de sensor?", sensor_index],
-                observation_goals=[ObservationGoal(
-                    observation_goal=row["Waarvoor meet u dat?", sensor_index],
-                    privacy_declaration=row["Privacyverklaring", sensor_index],
-                    legal_ground=row["Wettelijke grondslag", sensor_index]
-                )],
+                observation_goals=[
+                    ObservationGoal(
+                        observation_goal=row["Waarvoor meet u dat?", sensor_index],
+                        privacy_declaration=row["Privacyverklaring", sensor_index],
+                        legal_ground=row["Wettelijke grondslag", sensor_index],
+                    )
+                ],
                 themes=row["Kies een of meerdere thema's", sensor_index],
-                contains_pi_data=row["Worden er persoonsgegevens verwerkt?", sensor_index],
+                contains_pi_data=row[
+                    "Worden er persoonsgegevens verwerkt?", sensor_index
+                ],
                 active_until=row["Wanneer wordt de sensor verwijderd?", sensor_index],
                 projects=[''],  # not required for the iprox
                 row_number=row_number + 1,
@@ -478,36 +501,42 @@ def parse_bulk_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
             reference=row["Referentie"],
             type=row["Kies soort / type sensor"],
             location=Location(
-                lat_long=LatLong(
-                    row["Latitude"],
-                    row["Longitude"]
-                ),
+                lat_long=LatLong(row["Latitude"], row["Longitude"]),
                 postcode_house_number=None,
                 description='',
-                regions=row.get('In welk gebied bevindt zich de mobiele sensor?') or ''
+                regions=row.get('In welk gebied bevindt zich de mobiele sensor?') or '',
             ),
             datastream=row["Wat meet de sensor?"],
-            observation_goals=[ObservationGoal(
-                observation_goal=row["Waarvoor meet u dat?"],
-                privacy_declaration=row["Privacyverklaring"],
-                legal_ground=row["Wettelijke grondslag"]
-            )],
-            themes=settings.IPROX_SEPARATOR.join(filter(None, [
-                row["Thema 1"],
-                row["Thema 2 (niet verplicht)"],
-                row["Thema 3 (niet verplicht)"],
-                row["Thema 4 (niet verplicht)"],
-                row["Thema 5 (niet verplicht)"],
-                row["Thema 6 (niet verplicht)"],
-                row["Thema 7 (niet verplicht)"],
-                row["Thema 8 (niet verplicht)"],
-            ])),
+            observation_goals=[
+                ObservationGoal(
+                    observation_goal=row["Waarvoor meet u dat?"],
+                    privacy_declaration=row["Privacyverklaring"],
+                    legal_ground=row["Wettelijke grondslag"],
+                )
+            ],
+            themes=settings.IPROX_SEPARATOR.join(
+                filter(
+                    None,
+                    [
+                        row["Thema 1"],
+                        row["Thema 2 (niet verplicht)"],
+                        row["Thema 3 (niet verplicht)"],
+                        row["Thema 4 (niet verplicht)"],
+                        row["Thema 5 (niet verplicht)"],
+                        row["Thema 6 (niet verplicht)"],
+                        row["Thema 7 (niet verplicht)"],
+                        row["Thema 8 (niet verplicht)"],
+                    ],
+                )
+            ),
             contains_pi_data=row["Worden er persoonsgegevens verwerkt?"],
             active_until=row["Wanneer wordt de sensor verwijderd?"],
             projects=[row.get('Project') or ''],
             row_number=row_number + 1,
         )
-        for row_number, row in enumerate(Values(BULK_SENSOR_FIELDS, row) for row in rows)
+        for row_number, row in enumerate(
+            Values(BULK_SENSOR_FIELDS, row) for row in rows
+        )
         if (row['Referentie'] or '').strip()  # Ignore any rows with an empty reference
     )
 
@@ -523,7 +552,7 @@ def get_location(sensor_data: SensorData) -> Dict:
     if isinstance(sensor_data.location.lat_long, LatLong):
         locations['location'] = Point(
             sensor_data.location.lat_long.longitude,
-            sensor_data.location.lat_long.latitude
+            sensor_data.location.lat_long.latitude,
         )
     if sensor_data.location.description:
         locations['location_description'] = sensor_data.location.description
@@ -547,9 +576,11 @@ class SensorValidationError(ValueError):
     target = NotImplemented
 
     def __str__(self):
-        return f"Foutieve data voor sensor met referentie {self.sensor_data.reference} " \
-               f" (rij {self.sensor_data.row_number}) {self.source}=" \
-               f"{getattr(self.sensor_data, self.target)}"
+        return (
+            f"Foutieve data voor sensor met referentie {self.sensor_data.reference} "
+            f" (rij {self.sensor_data.row_number}) {self.source}="
+            f"{getattr(self.sensor_data, self.target)}"
+        )
 
 
 class InvalidSensorType(SensorValidationError):
@@ -689,8 +720,9 @@ def validate_location(sensor_data):
 
 def validate_postcode_house_number(sensor_data):
     postcode_regex = r'\d\d\d\d ?[a-zA-Z][a-zA-Z]'
-    if not sensor_data.location.postcode_house_number.postcode or \
-            not re.match(postcode_regex, sensor_data.location.postcode_house_number.postcode):
+    if not sensor_data.location.postcode_house_number.postcode or not re.match(
+        postcode_regex, sensor_data.location.postcode_house_number.postcode
+    ):
         raise InvalidPostcode(sensor_data)
 
 
@@ -717,14 +749,17 @@ def import_person(person_data: PersonData, action_logger=lambda x: x):
 
     names.append(person_data.last_name)
 
-    owner, _ = action_logger(models.Person2.objects.update_or_create(
-        email=person_data.email, organisation=person_data.organisation,
-        defaults={
-            'name': ' '.join(names),
-            'telephone': person_data.telephone,
-            'website': person_data.website,
-        },
-    ))
+    owner, _ = action_logger(
+        models.Person2.objects.update_or_create(
+            email=person_data.email,
+            organisation=person_data.organisation,
+            defaults={
+                'name': ' '.join(names),
+                'telephone': person_data.telephone,
+                'website': person_data.website,
+            },
+        )
+    )
 
     return owner
 
@@ -739,16 +774,22 @@ def parse_date(value: Union[str, datetime.date, datetime.datetime]):
     elif isinstance(value, (datetime.date, datetime.datetime)):
         return value
     else:
-        raise TypeError(f'Expected `str`, `date` or `datetime` instance got {type(value)}')
+        raise TypeError(
+            f'Expected `str`, `date` or `datetime` instance got {type(value)}'
+        )
 
 
-def import_sensor(sensor_data: SensorData, owner: models.Person2, action_logger=lambda x: x):
+def import_sensor(
+    sensor_data: SensorData, owner: models.Person2, action_logger=lambda x: x
+):
     """
     Import sensor data parsed from an iprox or bulk registration excel file.
     """
 
     defaults = {
-        'type': action_logger(models.Type2.objects.get_or_create(name=sensor_data.type))[0],
+        'type': action_logger(
+            models.Type2.objects.get_or_create(name=sensor_data.type)
+        )[0],
         'datastream': sensor_data.datastream,
         'contains_pi_data': sensor_data.contains_pi_data == 'Ja',
         'active_until': parse_date(sensor_data.active_until),
@@ -762,15 +803,19 @@ def import_sensor(sensor_data: SensorData, owner: models.Person2, action_logger=
     )
 
     # use the sensor_index to give each sensor a unique reference
-    device, created = action_logger(models.Device2.objects.update_or_create(
-        owner=owner,
-        reference=sensor_data.reference,
-        defaults=defaults,
-    ))
+    device, created = action_logger(
+        models.Device2.objects.update_or_create(
+            owner=owner,
+            reference=sensor_data.reference,
+            defaults=defaults,
+        )
+    )
 
     if 'regions' in location:
         for region_name in location['regions'].split(settings.IPROX_SEPARATOR):
-            region = action_logger(models.Region.objects.get_or_create(name=region_name))[0]
+            region = action_logger(
+                models.Region.objects.get_or_create(name=region_name)
+            )[0]
             device.regions.add(region)
 
     for theme_name in sensor_data.themes.split(settings.IPROX_SEPARATOR):
@@ -780,14 +825,23 @@ def import_sensor(sensor_data: SensorData, owner: models.Person2, action_logger=
     for observation_goal in sensor_data.observation_goals:
 
         # only create a legal_ground if it's not empty string and valid, otherwise make it None.
-        legal_ground = None if not observation_goal.legal_ground else \
-            action_logger(models.LegalGround.objects.get_or_create(
-                name=observation_goal.legal_ground))[0]
+        legal_ground = (
+            None
+            if not observation_goal.legal_ground
+            else action_logger(
+                models.LegalGround.objects.get_or_create(
+                    name=observation_goal.legal_ground
+                )
+            )[0]
+        )
 
-        import_result = action_logger(models.ObservationGoal.objects.get_or_create(
-            observation_goal=observation_goal.observation_goal,
-            privacy_declaration=observation_goal.privacy_declaration,
-            legal_ground=legal_ground))[0]
+        import_result = action_logger(
+            models.ObservationGoal.objects.get_or_create(
+                observation_goal=observation_goal.observation_goal,
+                privacy_declaration=observation_goal.privacy_declaration,
+                legal_ground=legal_ground,
+            )
+        )[0]
         device.observation_goals.add(import_result)
 
     for project in sensor_data.projects:
@@ -796,8 +850,9 @@ def import_sensor(sensor_data: SensorData, owner: models.Person2, action_logger=
             path = project.split(settings.IPROX_SEPARATOR)
             # because it's a list of string, convert every string to a list because it's an
             # arrayfield that will take a list of string for each path.
-            project_paths = action_logger(models.Project.objects.get_or_create(
-                path=path))[0]
+            project_paths = action_logger(
+                models.Project.objects.get_or_create(path=path)
+            )[0]
             device.projects.add(project_paths)
 
     return device, created
@@ -838,8 +893,10 @@ def import_xlsx(workbook, action_logger=lambda x: x):
         try:
             sensor.owner.validate()
         except Exception as e:
-            raise Exception(f"Foutieve persoon data voor {sensor.reference}"
-                            f" (rij {sensor.row_number}): {e}") from e
+            raise Exception(
+                f"Foutieve persoon data voor {sensor.reference}"
+                f" (rij {sensor.row_number}): {e}"
+            ) from e
 
     imported_owners = {
         person_data.email.lower(): import_person(person_data, action_logger)
