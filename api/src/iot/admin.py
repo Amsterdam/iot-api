@@ -6,11 +6,11 @@ from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import redirect, render
 from django.urls import path, reverse
 from django.utils.safestring import mark_safe
-from iot.import_utils import import_xlsx
 from leaflet.admin import LeafletGeoAdmin, LeafletGeoAdminMixin
 from openpyxl import load_workbook
 
 from iot import models
+from iot.import_utils import import_xlsx
 
 admin.site.register(models.Type2)
 admin.site.register(models.Theme)
