@@ -47,3 +47,4 @@ nosetests.xml
 coverage.xml
 
 docker-compose.override.yml
+.env
