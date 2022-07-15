@@ -3,7 +3,7 @@ from django.conf import settings
 
 from iot import import_utils, import_utils_apis, models
 from iot.import_utils import LatLong, ObservationGoal, PersonData, SensorData
-from iot.serializers import Device2Serializer
+from iot.serializers import DeviceSerializer
 
 
 @pytest.fixture
@@ -64,9 +64,7 @@ class TestDeleteNotFoundSensor:
 
     @property
     def actual(self):
-        return [
-            Device2Serializer(device).data for device in models.Device2.objects.all()
-        ]
+        return [DeviceSerializer(device).data for device in models.Device.objects.all()]
 
     @pytest.mark.skip()
     def test_delete_one_sensor_from_three_sensors(self, sensor_data_delete):

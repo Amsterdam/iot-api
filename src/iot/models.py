@@ -4,14 +4,13 @@ from django.contrib.gis.db import models as gis_models
 from django.contrib.postgres.fields import ArrayField, CIEmailField, CITextField
 from django.db import models
 
-
 # These models are loosely based on the data model from sensrnet, the intention
 # is to migrate this data to the sensrnet system once we are able to host our
 # own sensrnet node. For more information about the sensrnet data model see
 # https://kadaster-labs.github.io/sensrnet-home/Model/
 
 
-class Person2(models.Model):
+class Person(models.Model):
     """
     The owner/contact person
     """
@@ -39,7 +38,7 @@ class Person2(models.Model):
         return f'{self.email} ({self.name})'
 
 
-class Type2(models.Model):
+class Type(models.Model):
     name = CITextField(unique=True, verbose_name="Kies soort / type sensor")
     is_other = models.BooleanField(default=True, verbose_name="Anders, namelijk")
 
@@ -139,7 +138,7 @@ class Project(models.Model):
         verbose_name_plural = 'Projects'
 
 
-class Device2(models.Model):
+class Device(models.Model):
     """
     The iot device "thing"
     """
@@ -148,14 +147,14 @@ class Device2(models.Model):
 
     # LegalEntity
     owner = models.ForeignKey(
-        Person2,
+        Person,
         on_delete=models.CASCADE,
         verbose_name="Eigenaar",
     )
 
     # Sensor
     type = models.ForeignKey(
-        Type2,
+        Type,
         on_delete=models.PROTECT,
         verbose_name="Kies soort / type sensor",
     )

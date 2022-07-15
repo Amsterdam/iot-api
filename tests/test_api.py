@@ -2,9 +2,8 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from iot.factories import Device2Factory
-from iot.serializers import DeviceJsonSerializer
-from iot.views import DevicesViewSet
+from iot.factories import DeviceFactory
+from iot.serializers import DeviceSerializer
 
 
 class PingTestCase(APITestCase):
@@ -21,9 +20,9 @@ class PingTestCase(APITestCase):
 
 class DeviceTestCase(APITestCase):
     def test_get(self):
-        Device2Factory.create()
+        device = DeviceFactory.create()
         url = reverse('device-list')
         response = self.client.get(url)
         actual = response.json()['results'][0]
-        expected = DeviceJsonSerializer(DevicesViewSet.queryset[0]).data
+        expected = DeviceSerializer(device).data
         assert actual == expected

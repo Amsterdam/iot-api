@@ -750,7 +750,7 @@ def import_person(person_data: PersonData, action_logger=lambda x: x):
     names.append(person_data.last_name)
 
     owner, _ = action_logger(
-        models.Person2.objects.update_or_create(
+        models.Person.objects.update_or_create(
             email=person_data.email,
             organisation=person_data.organisation,
             defaults={
@@ -780,16 +780,16 @@ def parse_date(value: Union[str, datetime.date, datetime.datetime]):
 
 
 def import_sensor(
-    sensor_data: SensorData, owner: models.Person2, action_logger=lambda x: x
+    sensor_data: SensorData, owner: models.Person, action_logger=lambda x: x
 ):
     """
     Import sensor data parsed from an iprox or bulk registration excel file.
     """
 
     defaults = {
-        'type': action_logger(
-            models.Type2.objects.get_or_create(name=sensor_data.type)
-        )[0],
+        'type': action_logger(models.Type.objects.get_or_create(name=sensor_data.type))[
+            0
+        ],
         'datastream': sensor_data.datastream,
         'contains_pi_data': sensor_data.contains_pi_data == 'Ja',
         'active_until': parse_date(sensor_data.active_until),
@@ -804,7 +804,7 @@ def import_sensor(
 
     # use the sensor_index to give each sensor a unique reference
     device, created = action_logger(
-        models.Device2.objects.update_or_create(
+        models.Device.objects.update_or_create(
             owner=owner,
             reference=sensor_data.reference,
             defaults=defaults,

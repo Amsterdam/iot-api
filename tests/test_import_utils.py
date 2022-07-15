@@ -16,7 +16,7 @@ from rest_framework.exceptions import ValidationError
 
 from iot import import_utils, models
 from iot.import_utils import DuplicateReferenceError
-from iot.serializers import Device2Serializer
+from iot.serializers import DeviceSerializer
 
 
 def csv_to_workbook(path):
@@ -266,7 +266,7 @@ class TestImportPerson:
     @property
     def actual(self):
         fields = 'organisation', 'email', 'telephone', 'website', 'name'
-        return list(models.Person2.objects.values(*fields).order_by('id').all())
+        return list(models.Person.objects.values(*fields).order_by('id').all())
 
     expected = {
         'organisation': 'Gemeente Amsterdam',
@@ -348,8 +348,8 @@ class TestImportSensor:
     @property
     def actual(self):
         return [
-            Device2Serializer(device).data
-            for device in models.Device2.objects.all().order_by('id')
+            DeviceSerializer(device).data
+            for device in models.Device.objects.all().order_by('id')
         ]
 
     expected = {

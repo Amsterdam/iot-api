@@ -630,7 +630,7 @@ def delete_not_found_sensors(
     # get all sensors that start with the source except the sensors with reference
     # in [api_sensor_ids] and delete them.
     deleted_sensors = (
-        models.Device2.objects.filter(reference__startswith=source)
+        models.Device.objects.filter(reference__startswith=source)
         .exclude(reference__in=api_sensor_ids)
         .delete()
     )

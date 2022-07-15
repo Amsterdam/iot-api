@@ -3,7 +3,7 @@ from django.conf import settings
 
 from iot import import_utils_apis, models
 from iot.import_utils import LatLong, Location, ObservationGoal, PersonData, SensorData
-from iot.serializers import Device2Serializer
+from iot.serializers import DeviceSerializer
 
 
 @pytest.fixture
@@ -251,9 +251,7 @@ class TestConvertApiData:
 
     @property
     def actual(self):
-        return [
-            Device2Serializer(device).data for device in models.Device2.objects.all()
-        ]
+        return [DeviceSerializer(device).data for device in models.Device.objects.all()]
 
     def test_convert_api_data_sensor_only_insert_2(self, api_data_2):
         """

@@ -12,7 +12,7 @@ from openpyxl import load_workbook
 from iot import models
 from iot.import_utils import import_xlsx
 
-admin.site.register(models.Type2)
+admin.site.register(models.Type)
 admin.site.register(models.Theme)
 admin.site.register(models.LegalGround)
 admin.site.register(models.ObservationGoal)
@@ -123,7 +123,7 @@ def send_messages_to_user(request, message_user, num_created, num_updated, error
             )
 
 
-@admin.register(models.Device2)
+@admin.register(models.Device)
 class DeviceAdmin(LeafletGeoAdmin):
 
     change_list_template = "devices_change_list.html"
@@ -149,12 +149,12 @@ class DeviceAdmin(LeafletGeoAdmin):
 
 
 class DeviceInline(LeafletGeoAdminMixin, admin.StackedInline):
-    model = models.Device2
+    model = models.Device
     extra = 1
     settings_overrides = LEAFLET_SETTINGS_OVERRIDES
 
 
-@admin.register(models.Person2)
+@admin.register(models.Person)
 class PersonAdmin(LeafletGeoAdmin):
     search_fields = 'organisation', 'email', 'name'
     inlines = [DeviceInline]

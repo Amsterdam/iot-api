@@ -1,16 +1,14 @@
 from datapunt_api.rest import HALSerializer
-from drf_extra_fields.geo_fields import PointField
 from rest_framework import serializers
 from rest_framework.fields import DateField, JSONField
 from rest_framework.serializers import Serializer
 
-from .constants import CATEGORY_CHOICE_ABBREVIATIONS, CATEGORY_CHOICES
-from .models import Device2, ObservationGoal, Person2, Project
+from .models import Device, ObservationGoal, Person, Project
 
 
-class Person2Serializer(HALSerializer):
+class PersonSerializer(HALSerializer):
     class Meta:
-        model = Person2
+        model = Person
         fields = ['name', 'email', 'organisation']
 
 
@@ -38,17 +36,17 @@ class ProjectSerializer(HALSerializer):
         return representation['path']
 
 
-class Device2Serializer(HALSerializer):
+class DeviceSerializer(HALSerializer):
     type = serializers.SerializerMethodField()
     regions = serializers.StringRelatedField(many=True)
     themes = serializers.SerializerMethodField()
-    owner = Person2Serializer()
+    owner = PersonSerializer()
     location = serializers.SerializerMethodField()
     observation_goals = ObservationGoalSerializer(many=True)
     project_paths = ProjectSerializer(many=True, source='projects')
 
     class Meta:
-        model = Device2
+        model = Device
         fields = [
             'owner',
             'type',

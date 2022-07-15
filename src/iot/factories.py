@@ -4,12 +4,12 @@ import factory
 import faker
 from django.contrib.gis.geos import Point
 
-from .models import Device2, ObservationGoal, Person2, Project, Theme, Type2
+from .models import Device, ObservationGoal, Person, Project, Theme, Type
 
 fake = faker.Faker()
 
 
-class Person2Factory(factory.django.DjangoModelFactory):
+class PersonFactory(factory.django.DjangoModelFactory):
     name = fake.name()
     email = fake.company_email()
     telephone = '06123456789'
@@ -17,7 +17,7 @@ class Person2Factory(factory.django.DjangoModelFactory):
     website = fake.url(['https'])
 
     class Meta:
-        model = Person2
+        model = Person
 
 
 def sample_model(model, n=1):
@@ -26,10 +26,10 @@ def sample_model(model, n=1):
     return random.sample(population, n)
 
 
-class Device2Factory(factory.django.DjangoModelFactory):
+class DeviceFactory(factory.django.DjangoModelFactory):
     reference = fake.text(64)
-    owner = factory.SubFactory(Person2Factory)
-    type = factory.LazyFunction(lambda: sample_model(Type2)[0])
+    owner = factory.SubFactory(PersonFactory)
+    type = factory.LazyFunction(lambda: sample_model(Type)[0])
     location = Point(4.58565, 52.03560)
     datastream = fake.text(255)
 
@@ -57,4 +57,4 @@ class Device2Factory(factory.django.DjangoModelFactory):
     active_until = fake.date()
 
     class Meta:
-        model = Device2
+        model = Device

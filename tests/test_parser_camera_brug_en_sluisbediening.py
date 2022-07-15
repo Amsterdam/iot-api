@@ -3,7 +3,7 @@ from django.conf import settings
 
 from iot import import_utils, import_utils_apis, models
 from iot.import_utils import LatLong, Location, ObservationGoal, PersonData, SensorData
-from iot.serializers import Device2Serializer
+from iot.serializers import DeviceSerializer
 
 
 @pytest.fixture
@@ -161,7 +161,7 @@ class TestImportPerson:
     @property
     def actual(self):
         fields = 'organisation', 'email', 'telephone', 'website', 'name'
-        return list(models.Person2.objects.values(*fields).order_by('id').all())
+        return list(models.Person.objects.values(*fields).order_by('id').all())
 
     expected = {
         'organisation': 'Gemeente Amsterdam',
@@ -180,9 +180,7 @@ class TestImportPerson:
 class TestImportSensor:
     @property
     def actual(self):
-        return [
-            Device2Serializer(device).data for device in models.Device2.objects.all()
-        ]
+        return [DeviceSerializer(device).data for device in models.Device.objects.all()]
 
     expected_1 = {
         'active_until': '2050-01-01',
@@ -253,9 +251,7 @@ class TestImportSensor:
         imported_person = import_utils.import_person(person_data=person)
         result = import_utils.import_sensor(sensor, imported_person)
 
-        assert (
-            type(result[0]) == models.Device2
-        )  # expet a device2 object to be returned
+        assert type(result[0]) == models.Device  # expet a device2 object to be returned
         assert self.actual[0] == self.expected_1
 
 
@@ -265,9 +261,7 @@ class TestConvertApiData:
 
     @property
     def actual(self):
-        return [
-            Device2Serializer(device).data for device in models.Device2.objects.all()
-        ]
+        return [DeviceSerializer(device).data for device in models.Device.objects.all()]
 
     def test_convert_api_data_brug_en_sluis_only_insert_2(self, api_data_2):
         """
