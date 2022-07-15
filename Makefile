@@ -60,6 +60,8 @@ lint:                               ## Execute lint checks
 test: lint                          ## Execute tests
 	$(run) test pytest /app/tests/$(APP) $(ARGS)
 
+qa: lint test                      ## Execute all QA tools
+
 pdb:
 	$(run) test pytest /app/tests/$(APP) --pdb $(ARGS)
 
