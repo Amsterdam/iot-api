@@ -1,102 +1,112 @@
 #!groovy
-
-def tryStep(String message, Closure block, Closure tearDown = null) {
-    try {
-        block()
-    }
-    catch (Throwable t) {
-        slackSend message: "${env.JOB_NAME}: ${message} failure ${env.BUILD_URL}", channel: '#ci-channel-app', color: 'danger'
-
-        throw t
-    }
-    finally {
-        if (tearDown) {
-            tearDown()
-        }
-    }
-}
+def PROJECT_NAME = "sensoren-register"
+def SLACK_CHANNEL = '#opdrachten-deployments'
+def PLAYBOOK = 'deploy.yml'
+def SLACK_MESSAGE = [
+    "title_link": BUILD_URL,
+    "fields": [
+        ["title": "Project","value": PROJECT_NAME],
+        ["title":"Branch", "value": BRANCH_NAME, "short":true],
+        ["title":"Build number", "value": BUILD_NUMBER, "short":true]
+    ]
+]
 
 
-node {
-    stage("Checkout") {
-        checkout scm
+
+pipeline {
+    agent any
+
+    options {
+        timeout(time: 1, unit: 'HOURS')
     }
 
-    stage("Test") {
-        tryStep "Test", {
-            sh "api/deploy/test/test.sh"
-        }
+    environment {
+        SHORT_UUID = sh( script: "uuidgen | cut -d '-' -f1", returnStdout: true).trim()
+        COMPOSE_PROJECT_NAME = "${PROJECT_NAME}-${env.SHORT_UUID}"
+        VERSION = env.BRANCH_NAME.replace('master', 'latest')
     }
 
-    stage("Build dockers") {
-        tryStep "build", {
-            docker.withRegistry("${DOCKER_REGISTRY_HOST}",'docker_registry_auth') {
-                def api = docker.build("datapunt/iothings-api:${env.BUILD_NUMBER}", "api")
-                api.push()
-                api.push("acceptance")
+    stages {
+        stage('Test') {
+            steps {
+                sh 'make test'
             }
         }
-    }
-}
 
+        stage('Build') {
+            steps {
+                sh 'make build'
+            }
+        }
 
-String BRANCH = "${env.BRANCH_NAME}"
-
-if (BRANCH == "master") {
-
-    node {
-        stage('Push acceptance image') {
-            tryStep "image tagging", {
-                docker.withRegistry("${DOCKER_REGISTRY_HOST}",'docker_registry_auth') {
-                    def image = docker.image("datapunt/iothings-api:${env.BUILD_NUMBER}")
-                    image.pull()
-                    image.push("acceptance")
+        stage('Push') {
+            when {
+                anyOf {
+                    buildingTag()
+                    branch 'master'
+                }
+            }
+            steps {
+                retry(3) {
+                    sh 'make push'
                 }
             }
         }
-    }
 
-    node {
-        stage("Deploy to ACC") {
-            tryStep "deployment", {
-                build job: 'Subtask_Openstack_Playbook',
-                parameters: [
-                    [$class: 'StringParameterValue', name: 'INVENTORY', value: 'acceptance'],
-                    [$class: 'StringParameterValue', name: 'PLAYBOOK', value: 'deploy.yml'],
-                    [$class: 'StringParameterValue', name: 'PLAYBOOKPARAMS', value: "-e cmdb_id=app_iothings"]
-                ]
+        stage('Deploy to acceptance') {
+            when {
+                branch 'master'
+            }
+            steps {
+                sh 'VERSION=acceptance make push'
+                build job: 'Subtask_Openstack_Playbook', parameters: [
+                    string(name: 'PLAYBOOK', value: PLAYBOOK),
+                    string(name: 'INVENTORY', value: "acceptance"),
+                    string(
+                        name: 'PLAYBOOKPARAMS',
+                        value: "-e 'deployversion=${VERSION} cmdb_id=app_iot-api'"
+                    )
+                ], wait: true
             }
         }
-    }
 
-    stage('Waiting for approval') {
-        slackSend channel: '#ci-channel', color: 'warning', message: 'IoThings is waiting for Production Release - please confirm'
-        input "Deploy to Production?"
-    }
+        stage('Deploy to production') {
+            when { 
+                tag pattern: "^(?i)\\d+\\.\\d+\\.\\d+(?!-rc.*)", comparator: "REGEXP"
+            }
+            steps {
+                sh 'VERSION=production make push'
+                build job: 'Subtask_Openstack_Playbook', parameters: [
+                    string(name: 'PLAYBOOK', value: PLAYBOOK),
+                    string(name: 'INVENTORY', value: "production"),
+                    string(
+                        name: 'PLAYBOOKPARAMS',
+                        value: "-e 'deployversion=${VERSION} cmdb_id=app_iot-api'"
+                    )
+                ], wait: true
 
-    node {
-        stage('Push production image') {
-            tryStep "image tagging", {
-                docker.withRegistry("${DOCKER_REGISTRY_HOST}",'docker_registry_auth') {
-                def api = docker.image("datapunt/iothings-api:${env.BUILD_NUMBER}")
-                    api.pull()
-                    api.push("production")
-                    api.push("latest")
-                }
+                slackSend(channel: SLACK_CHANNEL, attachments: [SLACK_MESSAGE <<
+                    [
+                        "color": "#36a64f",
+                        "title": "Deploy to production succeeded :rocket:",
+                    ]
+                ])
             }
         }
-    }
 
-    node {
-        stage("Deploy") {
-            tryStep "deployment", {
-                build job: 'Subtask_Openstack_Playbook',
-                parameters: [
-                    [$class: 'StringParameterValue', name: 'INVENTORY', value: 'production'],
-                    [$class: 'StringParameterValue', name: 'PLAYBOOK', value: 'deploy.yml'],
-                    [$class: 'StringParameterValue', name: 'PLAYBOOKPARAMS', value: "-e cmdb_id=app_iothings"]
+    }
+    post {
+        always {
+            sh 'make clean'
+        }
+        failure {
+            slackSend(channel: SLACK_CHANNEL, attachments: [SLACK_MESSAGE <<
+                [
+                    "color": "#D53030",
+                    "title": "Build failed :fire:",
                 ]
-            }
+            ])
         }
     }
 }
+
