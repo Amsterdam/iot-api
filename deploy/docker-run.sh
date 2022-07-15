@@ -2,7 +2,6 @@
 
 set -u   # crash on missing env variables
 set -e   # stop on any error
+set -x   # print what we are doing
 
-# run uwsgi
-cd /app/
-exec uwsgi
+uwsgi --emperor=.
