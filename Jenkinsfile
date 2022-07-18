@@ -29,7 +29,7 @@ pipeline {
     stages {
         stage('Test') {
             steps {
-                sh 'make qa'
+                sh 'make test'
             }
         }
 
