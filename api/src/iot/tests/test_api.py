@@ -3,7 +3,8 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from iot.factories import Device2Factory
-from iot.serializers import Device2Serializer
+from iot.serializers import DeviceJsonSerializer
+from iot.views import DevicesViewSet
 
 
 class PingTestCase(APITestCase):
@@ -18,9 +19,9 @@ class PingTestCase(APITestCase):
 
 class DeviceTestCase(APITestCase):
     def test_get(self):
-        device = Device2Factory.create()
+        Device2Factory.create()
         url = reverse('device-list')
         response = self.client.get(url)
         actual = response.json()['results'][0]
-        expected = Device2Serializer(device).data
+        expected = DeviceJsonSerializer(DevicesViewSet.queryset[0]).data
         assert actual == expected

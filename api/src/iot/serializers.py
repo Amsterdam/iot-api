@@ -1,7 +1,7 @@
 from datapunt_api.rest import HALSerializer
 from drf_extra_fields.geo_fields import PointField
 from rest_framework import serializers
-from rest_framework.fields import JSONField
+from rest_framework.fields import DateField, JSONField
 from rest_framework.serializers import Serializer
 
 from .constants import CATEGORY_CHOICE_ABBREVIATIONS, CATEGORY_CHOICES
@@ -274,11 +274,11 @@ class JSONFieldFilterNone(JSONField):
         # array in SQL (https://modern-sql.com/feature/filter) but I
         # can't seem to get it working with django, so we filter them
         # out here instead.
-        return filter(lambda x: x is not None, super().to_representation(instance))
+        return list(filter(lambda x: x is not None, super().to_representation(instance)))
 
 
 class DeviceJsonSerializer(Serializer):
-    active_until = JSONField()
+    active_until = DateField()
     contains_pi_data = JSONField()
     datastream = JSONField()
     location_description = JSONField()
