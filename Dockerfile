@@ -1,4 +1,4 @@
-FROM amsterdam/python:3.7-buster as app
+FROM amsterdam/python:3.9-buster as app
 MAINTAINER datapunt@amsterdam.nl
 
 WORKDIR /app/install
