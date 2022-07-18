@@ -301,7 +301,7 @@ specifieke/privacyverklaring-parkeren-verkeer-bouw/verkeersmanagement",
         imported_person = import_utils.import_person(person_data=person)
         result = import_utils.import_sensor(sensor, imported_person)
 
-        assert type(result[0]) == models.Device  # expet a device2 object to be returned
+        assert type(result[0]) == models.Device  # expect a device object to be returned
         assert self.actual[0] == self.expected_1
 
 
