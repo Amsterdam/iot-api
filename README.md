@@ -40,5 +40,6 @@ There are a number of csvs in the test folders which can be used as a basis for 
 
 ### Developing
 
+First copy `.env.sample` to `.env` and fill in OIDC_RP_CLIENT_ID and OIDC_RP_CLIENT_SECRET (can be retrieved from vault)
 This project uses the standard makefile as described in the [dev guide](https://github.com/Amsterdam/opdrachten_team_dev),
 The structure however is not currently in line with this standard (see TAO-897)
