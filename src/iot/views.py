@@ -45,11 +45,14 @@ class DevicesViewSet(DatapuntViewSet):
     queryset = (
         Device.objects.all()
         .annotate(_themes=JSONBAgg('themes__name'))
-        .annotate(_observation_goals=JSONBAgg(
-            JSONObject(
-                observation_goal='observation_goals__observation_goal',
-                legal_ground='observation_goals__legal_ground',
-            ),
+        .annotate(
+            _observation_goals=JSONBAgg(
+                JSONObject(
+                    observation_goal='observation_goals__observation_goal',
+                    legal_ground='observation_goals__legal_ground__name',
+                    privacy_declaration='observation_goals__privacy_declaration',
+                )
+            )
         )
         .annotate(_project_paths=JSONBAgg('projects__path'))
         .annotate(_regions=JSONBAgg('regions__name'))

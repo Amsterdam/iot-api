@@ -84,7 +84,9 @@ class JSONFieldFilterNone(JSONField):
         # array in SQL (https://modern-sql.com/feature/filter) but I
         # can't seem to get it working with django, so we filter them
         # out here instead.
-        return list(filter(lambda x: x is not None, super().to_representation(instance)))
+        return list(
+            filter(lambda x: x is not None, super().to_representation(instance))
+        )
 
 
 class DeviceJsonSerializer(Serializer):
