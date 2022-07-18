@@ -49,7 +49,7 @@ class DevicesViewSet(DatapuntViewSet):
         .annotate(_observation_goals=JSONBAgg(
             JSONObject(
                 observation_goal='observation_goals__observation_goal',
-                legal_ground='observation_goals__legal_ground',
+                legal_ground='observation_goals__legal_ground__name',
                 privacy_declaration='observation_goals__privacy_declaration',
             )
         ))
