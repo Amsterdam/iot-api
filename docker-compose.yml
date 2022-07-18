@@ -14,7 +14,6 @@ x-app: &base-app
 
 volumes:
   db_data:
-  db_wal:
 
 services:
   database:
@@ -24,10 +23,8 @@ services:
       POSTGRES_USER: iothings
       POSTGRES_PASSWORD: insecure
       PGDATA: /data
-      POSTGRES_INITDB_WALDIR: /wal
     volumes:
       - db_data:/data
-      - db_wal:/wal
 
   app:
     <<: *base-app
