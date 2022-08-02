@@ -57,3 +57,5 @@ services:
     environment:
       DEBUG: "true"
       DJANGO_SETTINGS_MODULE: "iot.settings.settings"
+      OIDC_RP_CLIENT_ID: "x"
+      OIDC_RP_CLIENT_SECRET: "x"
