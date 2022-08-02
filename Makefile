@@ -1,11 +1,11 @@
-.PHONY: clean venv requirements.txt tox test build_requirements
-DEPS:=api/requirements.txt
-DEPS_DEV:=api/requirements_dev.txt
-PIP=`. venv/bin/activate; which pip`
+# This Makefile is based on the Makefile defined in the Python Best Practices repository:
+# https://git.datapunt.amsterdam.nl/Datapunt/python-best-practices/blob/master/dependency_management/
+.PHONY: help pip-tools install requirements update test init
 
 dc = docker-compose
 run = $(dc) run --rm
-manage = $(run) api python manage.py
+manage = $(run) dev python manage.py
+pytest = $(run) test pytest $(ARGS)
 
 help:                               ## Show this help.
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
@@ -14,11 +14,11 @@ pip-tools:
 	pip install pip-tools
 
 install: pip-tools                  ## Install requirements and sync venv with expected state as defined in requirements.txt
-	pip-sync api/requirements_dev.txt
+	pip-sync requirements_dev.txt
 
 requirements: pip-tools             ## Upgrade requirements (in requirements.in) to latest versions and compile requirements.txt
-	pip-compile --upgrade --output-file api/requirements.txt api/requirements.in
-	pip-compile --upgrade --output-file api/requirements_dev.txt api/requirements_dev.in
+	pip-compile --upgrade --output-file requirements.txt requirements.in
+	pip-compile --upgrade --output-file requirements_dev.txt requirements_dev.in
 
 upgrade: requirements install       ## Run 'requirements' and 'install' targets
 
@@ -34,38 +34,45 @@ urls:
 build:
 	$(dc) build
 
-tox:
-	cd src && tox ${ARGS}
-
-isort:
-	isort -ac -rc -sg "api/src/*migrations/*.py" -sg "src/tests/*" -s .tox .
-
-docker_up:
-	$(dc) up -d
+push: build
+	$(dc) push
 
 app:
-	$(run) --service-ports api
+	$(run) --service-ports app
 
 shell:
 	$(manage) shell_plus --print-sql
 
-test:                           	## Execute tests
-	$(run) api pytest $(APP) $(ARGS)
+notebook:
+	$(dc) run -e DJANGO_ALLOW_ASYNC_UNSAFE=true --rm --service-ports dev python manage.py shell_plus --notebook
 
-pyclean:
-	@find . -name *.pyc -delete
-	@rm -rf venv
+dev: 						        ## Run the development app (and run extra migrations first)
+	$(run) --service-ports dev
+
+lintfix:                            ## Execute lint fixes
+	$(run) test isort /app/src/$(APP) /app/tests/$(APP)
+	$(run) test black /app/src/$(APP) /app/tests/$(APP)
+
+lint:                               ## Execute lint checks
+	$(run) test isort --diff --check /app/src/$(APP) /app/tests/$(APP)
+	$(run) test black --diff --check /app/src/$(APP) /app/tests/$(APP)
+
+test: lint                          ## Execute tests
+	$(run) test pytest /app/tests/$(APP) $(ARGS)
+
+qa: lint test                      ## Execute all QA tools
+
+pdb:
+	$(run) test pytest /app/tests/$(APP) --pdb $(ARGS)
 
 clean:                              ## Clean docker stuff
 	$(dc) down -v --remove-orphans
 
-venv: pyclean
-	virtualenv -p python3.6 venv
-	$(PIP) install -U "pip"
-	$(PIP) install -r $(DEPS) $(DEPS_DEV)
-
 bash:
-	$(dc) run --rm api bash
+	$(dc) run --rm dev bash
+
+bash-test:
+	$(dc) run --rm test bash
 
 env:
 	env | sort
