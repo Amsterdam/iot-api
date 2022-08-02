@@ -56,3 +56,4 @@ services:
       target: tests
     environment:
       DEBUG: "true"
+      DJANGO_SETTINGS_MODULE: "iot.settings.settings"
