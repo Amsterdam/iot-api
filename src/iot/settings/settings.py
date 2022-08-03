@@ -198,19 +198,6 @@ STATIC_ROOT = os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)), 'static')
 MEDIA_URL = '/iothings/media/'
 MEDIA_ROOT = os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)), 'media')
 
-# Object store / Swift
-if os.getenv('SWIFT_ENABLED', 'false') == 'true':
-    DEFAULT_FILE_STORAGE = 'swift.storage.SwiftStorage'
-    SWIFT_USERNAME = os.getenv('SWIFT_USERNAME')
-    SWIFT_PASSWORD = os.getenv('SWIFT_PASSWORD')
-    SWIFT_AUTH_URL = os.getenv('SWIFT_AUTH_URL')
-    SWIFT_TENANT_ID = os.getenv('SWIFT_TENANT_ID')
-    SWIFT_TENANT_NAME = os.getenv('SWIFT_TENANT_NAME')
-    SWIFT_REGION_NAME = os.getenv('SWIFT_REGION_NAME')
-    SWIFT_CONTAINER_NAME = os.getenv('SWIFT_CONTAINER_NAME')
-    SWIFT_TEMP_URL_KEY = os.getenv('SWIFT_TEMP_URL_KEY')
-    SWIFT_USE_TEMP_URLS = True
-
 
 # Django cache settings
 CACHES = {
@@ -344,18 +331,6 @@ REST_FRAMEWORK = dict(
     ),
     DEFAULT_THROTTLE_RATES={'nouser': '60/hour'},
 )
-
-
-# Mail
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = os.getenv('EMAIL_HOST')
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
-EMAIL_PORT = os.getenv('EMAIL_PORT', 465)
-EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', False)
-if not EMAIL_USE_TLS:
-    EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL', True)
-
 
 ATLAS_POSTCODE_SEARCH = 'https://api.data.amsterdam.nl/atlas/search/postcode'
 ATLAS_ADDRESS_SEARCH = 'https://api.data.amsterdam.nl/atlas/search/adres'
