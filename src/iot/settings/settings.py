@@ -3,14 +3,6 @@ from distutils.util import strtobool
 
 from keycloak_oidc.default_settings import *
 
-from .settings_databases import (
-    OVERRIDE_HOST_ENV_VAR,
-    OVERRIDE_PORT_ENV_VAR,
-    LocationKey,
-    get_database_key,
-    get_docker_host,
-)
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Django settings
@@ -156,34 +148,17 @@ TEMPLATES = [
     }
 ]
 
-# Database
-DATABASE_OPTIONS = {
-    LocationKey.docker: {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': os.getenv('DATABASE_NAME', 'iothings'),
-        'USER': os.getenv('DATABASE_USER', 'iothings'),
-        'PASSWORD': os.getenv('DATABASE_PASSWORD', 'insecure'),
-        'HOST': 'database',
-        'PORT': '5432',
-    },
-    LocationKey.local: {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': os.getenv('DATABASE_NAME', 'iothings'),
-        'USER': os.getenv('DATABASE_USER', 'iothings'),
-        'PASSWORD': os.getenv('DATABASE_PASSWORD', 'insecure'),
-        'HOST': get_docker_host(),
-        'PORT': '5432',
-    },
-    LocationKey.override: {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': os.getenv('DATABASE_NAME', 'iothings'),
-        'USER': os.getenv('DATABASE_USER', 'iothings'),
-        'PASSWORD': os.getenv('DATABASE_PASSWORD', 'insecure'),
-        'HOST': os.getenv(OVERRIDE_HOST_ENV_VAR),
-        'PORT': os.getenv(OVERRIDE_PORT_ENV_VAR, '5432'),
+DATABASES = {
+    "default": {
+        "ENGINE": "django.contrib.gis.db.backends.postgis",
+        "NAME": os.getenv("DATABASE_NAME", "dev"),
+        "USER": os.getenv("DATABASE_USER", "dev"),
+        "PASSWORD": os.getenv("DATABASE_PASSWORD", "dev"),
+        "HOST": os.getenv("DATABASE_HOST", "database"),
+        "CONN_MAX_AGE": 20,
+        "PORT": os.getenv("DATABASE_PORT", "5432"),
     },
 }
-DATABASES = {'default': DATABASE_OPTIONS[get_database_key()]}
 
 # Internationalization
 LANGUAGE_CODE = 'nl-NL'

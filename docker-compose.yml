@@ -19,9 +19,9 @@ services:
   database:
     image: amsterdam/postgres11
     environment:
-      POSTGRES_DB: iothings
-      POSTGRES_USER: iothings
-      POSTGRES_PASSWORD: insecure
+      POSTGRES_DB: dev
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: dev
       PGDATA: /data
     volumes:
       - db_data:/data
