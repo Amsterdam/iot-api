@@ -40,7 +40,7 @@ services:
         - BUILD_DATE
         - BUILD_REVISION
         - BUILD_VERSION
-    image: docker-registry.data.amsterdam.nl/datapunt/iot-api:${VERSION:-latest}
+    image: docker-registry.data.amsterdam.nl/datapunt/iothings-api:${VERSION:-latest}
     command: /app/deploy/docker-run.sh
     environment:
       <<: *base-app-env
