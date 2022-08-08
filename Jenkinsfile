@@ -64,7 +64,7 @@ pipeline {
                     string(name: 'INVENTORY', value: "acceptance"),
                     string(
                         name: 'PLAYBOOKPARAMS',
-                        value: "-e 'deployversion=${VERSION} cmdb_id=app_iot-api'"
+                        value: "-e 'deployversion=${VERSION} cmdb_id=app_iothings'"
                     )
                 ], wait: true
             }
@@ -81,7 +81,7 @@ pipeline {
                     string(name: 'INVENTORY', value: "production"),
                     string(
                         name: 'PLAYBOOKPARAMS',
-                        value: "-e 'deployversion=${VERSION} cmdb_id=app_iot-api'"
+                        value: "-e 'deployversion=${VERSION} cmdb_id=app_iothings'"
                     )
                 ], wait: true
 
