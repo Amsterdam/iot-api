@@ -9,6 +9,8 @@ x-app: &base-app
   environment: &base-app-env
     SECRET_KEY: "insecure"
     DEBUG: "true"
+    OIDC_RP_CLIENT_ID: "x"
+    OIDC_RP_CLIENT_SECRET: "x"
   volumes:
     - ./src:/app/src
     - ./tests:/app/tests
@@ -59,5 +61,3 @@ services:
     environment:
       <<: *base-app-env
       DJANGO_SETTINGS_MODULE: "iot.settings.settings"
-      OIDC_RP_CLIENT_ID: "x"
-      OIDC_RP_CLIENT_SECRET: "x"
