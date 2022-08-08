@@ -5,10 +5,9 @@ from keycloak_oidc.default_settings import *
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Django settings
-INSECURE_SECRET_KEY = 'insecure'
-SECRET_KEY = os.getenv('SECRET_KEY', INSECURE_SECRET_KEY)
-DEBUG = bool(strtobool(os.getenv('DEBUG', "false")))
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = os.getenv('SECRET_KEY')
+DEBUG = os.getenv('DEBUG', 'false').lower() == 'true'
 
 ALLOWED_HOSTS = [
     'api.data.amsterdam.nl',

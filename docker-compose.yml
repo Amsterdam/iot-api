@@ -6,6 +6,9 @@ x-app: &base-app
     target: app
   depends_on:
     - database
+  environment: &base-app-env
+    SECRET_KEY: "insecure"
+    DEBUG: "true"
   volumes:
     - ./src:/app/src
     - ./tests:/app/tests
@@ -38,6 +41,7 @@ services:
     image: docker-registry.data.amsterdam.nl/datapunt/iot-api:${VERSION:-latest}
     command: /app/deploy/docker-run.sh
     environment:
+      <<: *base-app-env
       DEBUG: "false"
 
   dev:
@@ -46,8 +50,6 @@ services:
       context: .
       target: dev
     command: python manage.py runserver 0.0.0.0:8001
-    environment:
-      DEBUG: "true"
 
   test:
     <<: *base-app
@@ -55,7 +57,7 @@ services:
       context: .
       target: tests
     environment:
-      DEBUG: "true"
+      <<: *base-app-env
       DJANGO_SETTINGS_MODULE: "iot.settings.settings"
       OIDC_RP_CLIENT_ID: "x"
       OIDC_RP_CLIENT_SECRET: "x"
