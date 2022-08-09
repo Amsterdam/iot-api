@@ -1,4 +1,4 @@
-version: '3.5'
+version: "3.5"
 
 x-app: &base-app
   build:
@@ -9,8 +9,8 @@ x-app: &base-app
   environment: &base-app-env
     SECRET_KEY: "insecure"
     DEBUG: "true"
-    OIDC_RP_CLIENT_ID: "x"
-    OIDC_RP_CLIENT_SECRET: "x"
+    OIDC_RP_CLIENT_ID:
+    OIDC_RP_CLIENT_SECRET:
   volumes:
     - ./src:/app/src
     - ./tests:/app/tests
@@ -51,7 +51,7 @@ services:
     build:
       context: .
       target: dev
-    command: python manage.py runserver 0.0.0.0:8001
+    command: python manage.py runserver_plus --print-sql 0.0.0.0:8000
 
   test:
     <<: *base-app
