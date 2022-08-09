@@ -1,5 +1,5 @@
 import os
-from distutils.util import strtobool
+import sys
 
 from keycloak_oidc.default_settings import *
 
@@ -34,7 +34,7 @@ X_FRAME_OPTIONS = 'DENY'
 LOGIN_REDIRECT_URL = "/iothings/admin/"
 
 OIDC_DEFAULT_URL = (
-    'https://iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect/'
+    'https://iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect'
 )
 
 OIDC_RP_CLIENT_ID = os.environ['OIDC_RP_CLIENT_ID']
@@ -147,6 +147,9 @@ TEMPLATES = [
     }
 ]
 
+SHELL_PLUS_PRINT_SQL = True
+SHELL_PLUS_PRINT_SQL_TRUNCATE = 10_000
+
 DATABASES = {
     "default": {
         "ENGINE": "django.contrib.gis.db.backends.postgis",
@@ -214,9 +217,11 @@ LOGGING = {
             'propagate': True,
         },
         'django': {
-            'level': 'ERROR',
             'handlers': ['console'],
-            'propagate': True,
+            'level': os.getenv(
+                'DJANGO_LOG_LEVEL', 'ERROR' if 'pytest' in sys.argv[0] else 'INFO'
+            ).upper(),
+            'propagate': False,
         },
         'raven': {
             'level': 'DEBUG',

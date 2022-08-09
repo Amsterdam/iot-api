@@ -22,3 +22,7 @@ responses
 pyinstrument
 black
 isort
+ipdb
+
+# extra package to run runserver_plus
+werkzeug
