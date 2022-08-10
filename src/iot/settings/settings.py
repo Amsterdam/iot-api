@@ -66,6 +66,7 @@ DJANGO_APPS = (
     'django.contrib.sessions',
     'django.contrib.admin',
     'django.contrib.messages',
+    'corsheaders',
 )
 
 THIRD_PARTY_APPS = (
@@ -89,6 +90,7 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = (
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
