@@ -1,9 +1,9 @@
 from datapunt_api.rest import HALSerializer
 from rest_framework import serializers
 from rest_framework.fields import DateField, JSONField
-from rest_framework.serializers import Serializer
+from rest_framework.serializers import ModelSerializer, Serializer
 
-from .models import Device, ObservationGoal, Person, Project
+from .models import Device, DeviceJson, ObservationGoal, Person, Project
 
 
 class PersonSerializer(HALSerializer):
@@ -78,27 +78,7 @@ class DeviceSerializer(HALSerializer):
         return 'Overig' if obj.type.is_other else obj.type.name
 
 
-class JSONFieldFilterNone(JSONField):
-    def to_representation(self, instance):
-        # it should be possible to filter out None values from the
-        # array in SQL (https://modern-sql.com/feature/filter) but I
-        # can't seem to get it working with django, so we filter them
-        # out here instead.
-        return list(
-            filter(lambda x: x is not None, super().to_representation(instance))
-        )
-
-
-class DeviceJsonSerializer(Serializer):
-    active_until = DateField()
-    contains_pi_data = JSONField()
-    datastream = JSONField()
-    location_description = JSONField()
-    reference = JSONField()
-    type = JSONField(source="type__name")
-    themes = JSONField(source='_themes')
-    owner = JSONField(source='_owner')
-    location = JSONField(source='_location')
-    observation_goals = JSONFieldFilterNone(source='_observation_goals')
-    project_paths = JSONFieldFilterNone(source='_project_paths')
-    regions = JSONFieldFilterNone(source='_regions')
+class DeviceJsonSerializer(ModelSerializer):
+    class Meta:
+        model = DeviceJson
+        fields = '__all__'
