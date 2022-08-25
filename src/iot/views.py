@@ -1,16 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from datapunt_api.rest import DatapuntViewSet
-from django.contrib.postgres.aggregates import JSONBAgg
-from django.db.models import Aggregate, Min
-from django.db.models.expressions import F, Func
-from django.db.models.functions import Cast, JSONObject
-from django.forms import BooleanField, IntegerField
 from django.utils import timezone
 from rest_framework import routers, views
 from rest_framework.response import Response
 
-from .models import Device, DeviceJson
+from .models import DeviceJson
 from .serializers import DeviceJsonSerializer
 
 
