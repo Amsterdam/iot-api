@@ -811,6 +811,8 @@ def import_sensor(
         )
     )
 
+    # many2many relations
+    device.regions.all().delete()
     if 'regions' in location:
         for region_name in location['regions'].split(settings.IPROX_SEPARATOR):
             region = action_logger(
@@ -818,10 +820,12 @@ def import_sensor(
             )[0]
             device.regions.add(region)
 
+    device.themes.all().delete()
     for theme_name in sensor_data.themes.split(settings.IPROX_SEPARATOR):
         theme = models.Theme.objects.get_or_create(name=theme_name)[0]
         device.themes.add(theme)
 
+    device.observation_goals.all().delete()
     for observation_goal in sensor_data.observation_goals:
 
         # only create a legal_ground if it's not empty string and valid, otherwise make it None.
@@ -844,6 +848,7 @@ def import_sensor(
         )[0]
         device.observation_goals.add(import_result)
 
+    device.projects.all().delete()
     for project in sensor_data.projects:
         # only import the projects if the list is not empty
         if project:
