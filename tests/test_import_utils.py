@@ -4,7 +4,7 @@ import json
 import os
 from dataclasses import asdict
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 import requests
@@ -404,15 +404,10 @@ class TestImportSensor:
             0
         ].privacy_declaration = 'http://rotterdam.nl/privacy'
         import_utils.import_sensor(sensor_data, owner)
-        assert self.actual == [
+        expected = [
             dict(
                 self.expected,
                 observation_goals=[
-                    {
-                        'observation_goal': 'Nare bedoelingen',
-                        'privacy_declaration': 'https://amsterdam.nl/privacy',
-                        'legal_ground': 'Publieke taak',
-                    },
                     {
                         'observation_goal': 'Nare bedoelingen',
                         'privacy_declaration': 'http://rotterdam.nl/privacy',
@@ -421,6 +416,7 @@ class TestImportSensor:
                 ],
             )
         ]
+        assert self.actual == expected
 
     def test_import_sensor_should_import_multiple_sensors(self, sensor_data):
         # check that we can import multiple sensors
