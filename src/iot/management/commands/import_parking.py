@@ -26,15 +26,14 @@ parse_geometry = GeometryField().to_internal_value
 def get_parking_zone_polygons():
     url = "https://amsterdam-maps.bma-collective.com/embed/parkeren/deploy_data/tarieven.json"
     parking_zones = get(url).values()
-    return [
-        parse_geometry(zone["location"])
-        for zone in parking_zones
-    ]
+    return [parse_geometry(zone["location"]) for zone in parking_zones]
 
 
 def get_neighbourhoods():
     url = "https://maps.amsterdam.nl/open_geodata/geojson_lnglat.php"
-    neighbourhoods = get(url, KAARTLAAG="INDELING_BUURT", THEMA="gebiedsindeling")["features"]
+    neighbourhoods = get(url, KAARTLAAG="INDELING_BUURT", THEMA="gebiedsindeling")[
+        "features"
+    ]
     return {
         neighbourhood["properties"]["Buurtcode"]: parse_geometry(
             neighbourhood["geometry"]
