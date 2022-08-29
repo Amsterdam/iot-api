@@ -779,6 +779,11 @@ def parse_date(value: Union[str, datetime.date, datetime.datetime]):
         )
 
 
+def remove_all(relation):
+    for entity in relation.all():
+        relation.remove(entity)
+
+
 def import_sensor(
     sensor_data: SensorData, owner: models.Person, action_logger=lambda x: x
 ):
@@ -812,7 +817,7 @@ def import_sensor(
     )
 
     # many2many relations
-    device.regions.all().delete()
+    remove_all(device.regions)
     if 'regions' in location:
         for region_name in location['regions'].split(settings.IPROX_SEPARATOR):
             region = action_logger(
@@ -820,12 +825,12 @@ def import_sensor(
             )[0]
             device.regions.add(region)
 
-    device.themes.all().delete()
+    remove_all(device.themes)
     for theme_name in sensor_data.themes.split(settings.IPROX_SEPARATOR):
         theme = models.Theme.objects.get_or_create(name=theme_name)[0]
         device.themes.add(theme)
 
-    device.observation_goals.all().delete()
+    remove_all(device.observation_goals)
     for observation_goal in sensor_data.observation_goals:
 
         # only create a legal_ground if it's not empty string and valid, otherwise make it None.
@@ -848,7 +853,7 @@ def import_sensor(
         )[0]
         device.observation_goals.add(import_result)
 
-    device.projects.all().delete()
+    remove_all(device.projects)
     for project in sensor_data.projects:
         # only import the projects if the list is not empty
         if project:
