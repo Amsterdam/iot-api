@@ -779,6 +779,19 @@ def parse_date(value: Union[str, datetime.date, datetime.datetime]):
         )
 
 
+STADSDEEL_TO_STADSDEEL_CODE_MAPPING = {
+    "Stadsdeel Centrum": "A",
+    "Stadsdeel Oost": "M",
+    "Stadsdeel Westpoort": "B",
+    "Stadsdeel Nieuw-West": "F",
+    "Stadsdeel Zuidoost": "T",
+    "Stadsdeel Noord": "N",
+    "Stadsdeel West": "E",
+    "Stadsdeel Weesp": "S",
+    "Stadsdeel Zuid": "K",
+}
+
+
 def remove_all(relation):
     for entity in relation.all():
         relation.remove(entity)
@@ -821,7 +834,11 @@ def import_sensor(
     if 'regions' in location:
         for region_name in location['regions'].split(settings.IPROX_SEPARATOR):
             region = action_logger(
-                models.Region.objects.get_or_create(name=region_name)
+                models.Region.objects.get_or_create(
+                    name=STADSDEEL_TO_STADSDEEL_CODE_MAPPING.get(
+                        region_name, region_name
+                    )
+                )
             )[0]
             device.regions.add(region)
 
