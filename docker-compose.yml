@@ -1,5 +1,11 @@
 version: "3.5"
 
+networks:
+  default:
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: 1400
+
 x-app: &base-app
   build:
     context: .
@@ -9,6 +15,8 @@ x-app: &base-app
   environment: &base-app-env
     SECRET_KEY: "insecure"
     DEBUG: "true"
+    PYTHONBREAKPOINT:
+    SENTRY_DSN:
     OIDC_RP_CLIENT_ID:
     OIDC_RP_CLIENT_SECRET:
   volumes:

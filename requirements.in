@@ -48,4 +48,4 @@ markdown
 pygments
 
 # Sentry
-raven
+sentry-sdk

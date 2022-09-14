@@ -1,7 +1,9 @@
 import os
 import sys
 
+import sentry_sdk
 from keycloak_oidc.default_settings import *
+from sentry_sdk.integrations.django import DjangoIntegration
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -37,8 +39,8 @@ OIDC_DEFAULT_URL = (
     'https://iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect'
 )
 
-OIDC_RP_CLIENT_ID = os.environ['OIDC_RP_CLIENT_ID']
-OIDC_RP_CLIENT_SECRET = os.environ['OIDC_RP_CLIENT_SECRET']
+OIDC_RP_CLIENT_ID = os.environ.get('OIDC_RP_CLIENT_ID')
+OIDC_RP_CLIENT_SECRET = os.environ.get('OIDC_RP_CLIENT_SECRET')
 OIDC_OP_AUTHORIZATION_ENDPOINT = os.environ.get(
     'OIDC_OP_AUTHORIZATION_ENDPOINT', f'{OIDC_DEFAULT_URL}/auth'
 )
@@ -74,7 +76,6 @@ THIRD_PARTY_APPS = (
     'django_filters',
     'datapunt_api',
     'drf_yasg',
-    'raven.contrib.django.raven_compat',
     'rest_framework',
     'rest_framework_gis',
     'keycloak_oidc',  # load after django.contrib.auth!
@@ -185,18 +186,13 @@ CACHES = {
     }
 }
 
-# Sentry logging
-RAVEN_CONFIG = {
-    'dsn': os.getenv('SENTRY_RAVEN_DSN'),
-}
-
 # Django Logging settings
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'root': {
         'level': 'INFO',
-        'handlers': ['console', 'sentry'],
+        'handlers': ['console'],
     },
     'formatters': {
         'console': {'format': '%(asctime)s - %(name)s - %(levelname)s - %(message)s'}
@@ -206,10 +202,6 @@ LOGGING = {
             'level': 'INFO',
             'class': 'logging.StreamHandler',
             'formatter': 'console',
-        },
-        'sentry': {
-            'level': 'WARNING',
-            'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
         },
     },
     'loggers': {
@@ -223,64 +215,7 @@ LOGGING = {
             'level': os.getenv(
                 'DJANGO_LOG_LEVEL', 'ERROR' if 'pytest' in sys.argv[0] else 'INFO'
             ).upper(),
-            'propagate': False,
-        },
-        'raven': {
-            'level': 'DEBUG',
-            'handlers': ['console'],
-            'propagate': False,
-        },
-        'sentry.errors': {
-            'level': 'DEBUG',
-            'handlers': ['console'],
-            'propagate': False,
-        },
-        # Debug all batch jobs
-        'doc': {
-            'level': 'INFO',
-            'handlers': ['console'],
-            'propagate': False,
-        },
-        'index': {
-            'level': 'INFO',
-            'handlers': ['console'],
-            'propagate': False,
-        },
-        'search': {
-            'level': 'ERROR',
-            'handlers': ['console'],
-            'propagate': False,
-        },
-        'elasticsearch': {
-            'level': 'ERROR',
-            'handlers': ['console'],
-            'propagate': False,
-        },
-        'urllib3': {
-            'level': 'ERROR',
-            'handlers': ['console'],
-            'propagate': False,
-        },
-        'factory.containers': {
-            'level': 'INFO',
-            'handlers': ['console'],
-            'propagate': False,
-        },
-        'factory.generate': {
-            'handlers': ['console'],
-            'level': 'INFO',
-            'propagate': False,
-        },
-        'requests.packages.urllib3.connectionpool': {
-            'level': 'ERROR',
-            'handlers': ['console'],
-            'propagate': False,
-        },
-        # Log all unhandled exceptions
-        'django.request': {
-            'level': 'ERROR',
-            'handlers': ['console'],
-            'propagate': False,
+            'propagate': True,
         },
     },
 }
@@ -321,3 +256,22 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 # In the IPROX formuler the user can register 5 sensors at a time
 IPROX_NUM_SENSORS = 5
 IPROX_SEPARATOR = ';'
+
+# Sentry logging
+sentry_dsn = os.getenv('SENTRY_DSN')
+if sentry_dsn:
+    sentry_sdk.init(
+        dsn=sentry_dsn,
+        environment=os.getenv('ENVIRONMENT', 'dev'),
+        release=os.getenv('VERSION', 'dev'),
+        integrations=[
+            DjangoIntegration(),
+        ],
+        # Set traces_sample_rate to 1.0 to capture 100%
+        # of transactions for performance monitoring.
+        # We recommend adjusting this value in production.
+        traces_sample_rate=1.0,
+        # If you wish to associate users to errors (assuming you are using
+        # django.contrib.auth) you may enable sending PII data.
+        send_default_pii=True,
+    )

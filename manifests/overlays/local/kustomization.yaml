@@ -1,0 +1,54 @@
+bases:
+  - ../../base
+
+resources:
+  - database.deployment.yaml
+  - database.service.yaml
+
+commonLabels:
+  env: dev
+
+configMapGenerator:
+  - name: database-env
+    envs:
+      - database.env
+
+secretGenerator:
+  - name: app-secrets
+    envs:
+      - secrets.env
+
+patches:
+  - target:
+      kind: Deployment
+      name: app
+    patch: |-
+      - op: add
+        path: "/spec/template/spec/containers/0/envFrom/-"
+        value:
+          secretRef:
+            name: app-secrets
+  - target:
+      kind: Job
+      name: migrate
+    patch: |-
+      - op: add
+        path: "/spec/template/spec/containers/0/envFrom/-"
+        value:
+          secretRef:
+            name: app-secrets
+
+images:
+  - name: nginxdemos/hello
+    newName: iot-api-app
+    newTag: latest
+    # newTag: plain-text
+
+patchesStrategicMerge:
+  - deployment.yaml
+
+configMapGenerator:
+  - name: app-env
+    behavior: merge
+    envs:
+      - app.env

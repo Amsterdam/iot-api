@@ -48,3 +48,4 @@ coverage.xml
 
 docker-compose.override.yml
 .env
+secrets.env

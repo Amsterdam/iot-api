@@ -1,0 +1,27 @@
+namespace: default
+
+commonLabels:
+  app: sensorenregister
+  env: base
+
+labels:
+  - pairs:
+      team: TAMM
+    includeSelectors: false
+    includeTemplates: true
+
+configMapGenerator:
+  - name: app-env
+    envs:
+      - app.env
+  - name: app-config
+    files:
+      - app.ini
+
+resources:
+  - configmap.yaml
+  - migrate.job.yaml
+  - import.job.yaml
+  - deployment.yaml
+  - service.yaml
+  - ingress.yaml

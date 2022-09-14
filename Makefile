@@ -1,6 +1,6 @@
 # This Makefile is based on the Makefile defined in the Python Best Practices repository:
 # https://git.datapunt.amsterdam.nl/Datapunt/python-best-practices/blob/master/dependency_management/
-.PHONY: help pip-tools install requirements update test init
+.PHONY: help pip-tools install requirements update test init manifests
 
 UID:=$(shell id --user)
 GID:=$(shell id --group)

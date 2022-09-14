@@ -23,6 +23,7 @@ pyinstrument
 black
 isort
 ipdb
+ipython
 
 # extra package to run runserver_plus
 werkzeug

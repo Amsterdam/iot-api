@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: database
+  template:
+    metadata:
+      labels:
+        component: database
+    spec:
+      containers:
+        - name: main
+          image: postgis/postgis
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: POSTGRES_DB
+              value: dev
+            - name: POSTGRES_USER
+              value: dev
+            - name: POSTGRES_PASSWORD
+              value: dev
+            - name: PGDATA
+              value: /data

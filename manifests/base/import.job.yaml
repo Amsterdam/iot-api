@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: import
+spec:
+  backoffLimit: 9
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: main
+          image: nginxdemos/hello
+          imagePullPolicy: IfNotPresent
+          command:
+            - python
+            - manage.py
+            - import_api
+          envFrom:
+            - configMapRef:
+                name: app-env
+          volumeMounts:
+            - mountPath: /config
+              name: config
+      volumes:
+        - name: config
+          configMap:
+            name: app-config
