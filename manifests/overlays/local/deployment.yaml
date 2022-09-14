@@ -3,17 +3,17 @@ kind: Deployment
 metadata:
   name: app
 spec:
-  replicas: 3
+  replicas: 1
   template:
     spec:
       containers:
         - name: main
           resources:
             limits:
-              cpu: 4
+              cpu: 1
               memory: "256Mi"
             requests:
-              cpu: 4
+              cpu: 1
               memory: "256Mi"
           # command:
             # - bash

@@ -4,14 +4,16 @@ bases:
 resources:
   - database.deployment.yaml
   - database.service.yaml
+  - nodeport.yaml
 
 commonLabels:
   env: dev
 
 configMapGenerator:
-  - name: database-env
+  - name: app-env
+    behavior: merge
     envs:
-      - database.env
+      - app.env
 
 secretGenerator:
   - name: app-secrets
@@ -40,15 +42,9 @@ patches:
 
 images:
   - name: nginxdemos/hello
-    newName: iot-api-app
+    newName: iot-api-dev
     newTag: latest
     # newTag: plain-text
 
 patchesStrategicMerge:
   - deployment.yaml
-
-configMapGenerator:
-  - name: app-env
-    behavior: merge
-    envs:
-      - app.env
