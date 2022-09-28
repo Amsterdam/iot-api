@@ -6,6 +6,8 @@ spec:
   replicas: 1
   template:
     spec:
+      nodeSelector:
+        kubernetes.io/os: linux
       containers:
         - name: main
           resources:
@@ -15,7 +17,17 @@ spec:
             requests:
               cpu: 1
               memory: "256Mi"
+          command:
+            - /app/deploy/wait-for-it.sh
+            - database:5432
+            - -t 30
+            - --
+            - python
+            - manage.py
+            - runserver_plus
+            - --print-sql
+            - 0.0.0.0:8000
           # command:
-            # - bash
-            # - -c
-            # - python manage.py runserver_plus --print-sql 0.0.0.0:8000
+          # - bash
+          # - -c
+          # - python manage.py runserver_plus --print-sql 0.0.0.0:8000

@@ -2,16 +2,10 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: app-ingress
-  # annotations:
-  # nginx.ingress.kubernetes.io/rewrite-target: /$2
-  annotations:
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    nginx.ingress.kubernetes.io/use-regex: "true"
-    nginx.ingress.kubernetes.io/rewrite-target: /$1
 spec:
-  ingressClassName: nginx
   rules:
-    - http:
+    - host: "sensorenregister.amsterdam.nl"
+      http:
         paths:
           - pathType: Prefix
             path: /
@@ -20,3 +14,7 @@ spec:
                 name: app
                 port:
                   number: 8000
+  tls:
+    - hosts:
+        - sensorenregister.amsterdam.nl
+      secretName: tls

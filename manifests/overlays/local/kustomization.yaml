@@ -7,7 +7,7 @@ resources:
   - nodeport.yaml
 
 commonLabels:
-  env: dev
+  env: local
 
 configMapGenerator:
   - name: app-env
@@ -19,6 +19,10 @@ secretGenerator:
   - name: app-secrets
     envs:
       - secrets.env
+
+patchesStrategicMerge:
+  - deployment.yaml
+  - migrate.job.yaml
 
 patches:
   - target:
@@ -39,12 +43,14 @@ patches:
         value:
           secretRef:
             name: app-secrets
+      - op: add
+        path: "/spec/template/spec/containers/0/envFrom/-"
+        value:
+          secretRef:
+            name: app-secrets
 
 images:
   - name: nginxdemos/hello
     newName: iot-api-dev
     newTag: latest
     # newTag: plain-text
-
-patchesStrategicMerge:
-  - deployment.yaml
