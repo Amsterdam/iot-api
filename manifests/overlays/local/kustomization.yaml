@@ -23,6 +23,7 @@ secretGenerator:
 patchesStrategicMerge:
   - deployment.yaml
   - migrate.job.yaml
+  - import.job.yaml
 
 patches:
   - target:

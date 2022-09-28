@@ -20,7 +20,7 @@ spec:
           command:
             - /app/deploy/wait-for-it.sh
             - database:5432
-            - -t 30
+            - --timeout=30
             - --
             - python
             - manage.py
