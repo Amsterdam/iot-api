@@ -3,6 +3,7 @@ kind: Service
 metadata:
   name: app
 spec:
+  type: ClusterIP
   ports:
     - port: 8000
   selector:

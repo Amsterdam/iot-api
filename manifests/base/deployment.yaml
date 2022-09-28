@@ -12,6 +12,23 @@ spec:
       labels:
         component: api
     spec:
+
+      securityContext:
+        runAsNonRoot: true
+        privileged: false
+        readOnlyRootFilesystem: read-only
+        allowPrivilegeEscalation: false
+
+      automountServiceAccountToken: false
+      nodeSelector:
+        environment: ssr01
+
+      tolerations:
+        - key: "ssr01"
+          operator: "Equal"
+          value: "true"
+          effect: "NoSchedule"
+
       containers:
         - name: main
           image: nginxdemos/hello

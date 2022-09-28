@@ -1,0 +1,11 @@
+apiVersion: projectcalico.org/v3
+kind: NetworkPolicy
+metadata:
+  name: allow-nginx
+spec:
+  selector: app == 'sensorenregister'
+  types:
+    - Ingress
+    - Egress
+  ingress:
+    - action: Allow
