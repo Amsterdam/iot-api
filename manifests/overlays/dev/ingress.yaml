@@ -1,19 +1,8 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: app-ingress
+  name: app
 spec:
-  rules:
-    - host: "api.dev.sensorenregister.amsterdam.nl"
-      http:
-        paths:
-          - pathType: Prefix
-            path: /
-            backend:
-              service:
-                name: app
-                port:
-                  number: 8000
   tls:
     - hosts:
         - api.dev.sensorenregister.amsterdam.nl

@@ -7,3 +7,12 @@ commonLabels:
 patchesStrategicMerge:
   - deployment.yaml
   - ingress.yaml
+
+patches:
+  - target:
+      kind: Ingress
+      name: app
+    patch: |-
+      - op: add
+        path: "/spec/rules/0/host"
+        value: api.dev.sensorenregister.amsterdam.nl
