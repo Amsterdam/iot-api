@@ -48,7 +48,7 @@ services:
         - BUILD_DATE
         - BUILD_REVISION
         - BUILD_VERSION
-    image: docker-registry.data.amsterdam.nl/datapunt/iothings-api:${VERSION:-latest}
+    image: localhost:5000/iothings-api:${VERSION:-latest}
     command: /app/deploy/docker-run.sh
     environment:
       <<: *base-app-env
@@ -56,6 +56,7 @@ services:
 
   dev:
     <<: *base-app
+    image: localhost:5000/iothings-dev:${VERSION:-latest}
     build:
       context: .
       target: dev
@@ -63,6 +64,7 @@ services:
 
   test:
     <<: *base-app
+    image: localhost:5000/iothings-test:${VERSION:-latest}
     build:
       context: .
       target: tests

@@ -49,9 +49,16 @@ patches:
         value:
           secretRef:
             name: app-secrets
+  - target:
+      kind: Ingress
+      name: app
+    patch: |-
+      - op: add
+        path: "/spec/rules/0/host"
+        value: localhost
 
 images:
   - name: nginxdemos/hello
-    newName: iot-api-dev
+    newName: localhost:5000/iothings-dev
     newTag: latest
     # newTag: plain-text

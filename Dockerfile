@@ -1,5 +1,4 @@
 FROM amsterdam/python:3.9-buster as app
-MAINTAINER datapunt@amsterdam.nl
 
 WORKDIR /app/install
 COPY requirements.txt requirements.txt

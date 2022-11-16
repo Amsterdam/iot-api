@@ -1,0 +1,64 @@
+pool:
+  vmImage: ubuntu-latest
+
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      name: mobiliteit/templates
+      ref: main
+
+trigger:
+  batch: true
+  branches:
+    include:
+      - main
+  tags:
+    include:
+      - "*.*.*"
+
+steps:
+  - task: AzureCLI@2
+    displayName: "test"
+    inputs:
+      azureSubscription: "ARM-CCC-SSR-ont-01"
+      scriptType: "bash"
+      scriptLocation: "inlineScript"
+      inlineScript: |
+        kustomize build manifests/overlays/dev > generated.yaml
+        cat generated.yaml
+
+  - task: Kubernetes@1
+    inputs:
+      connectionType: "Kubernetes Service Connection"
+      kubernetesServiceEndpoint: "SCN-K8S-O-SSR"
+      command: "apply"
+      arguments: "-f generated.yaml"
+
+  - task: Kubernetes@1
+    inputs:
+      connectionType: "Kubernetes Service Connection"
+      kubernetesServiceEndpoint: "SCN-K8S-O-SSR"
+      command: "get"
+      arguments: "all"
+
+  - task: AzureCLI@2
+    displayName: "ACR Login"
+    inputs:
+      azureSubscription: "ARM-CCC-SSR-ont-01"
+      scriptType: "bash"
+      scriptLocation: "inlineScript"
+      inlineScript: |
+        az acr login -n mainweuacroyh7oqq4sbyjt
+
+  - task: DockerCompose@0
+    inputs:
+      containerregistrytype: "Azure Container Registry"
+      azureSubscription: "ARM-CCC-SSR-ont-01"
+      azureContainerRegistry: '{"loginServer":"mainweuacroyh7oqq4sbyjt.azurecr.io", "id" : "/subscriptions/d160060b-6437-448d-8919-c1d007547414/resourceGroups/main-o-rg/providers/Microsoft.ContainerRegistry/registries/mainweuacroyh7oqq4sbyjt"}'
+      dockerComposeFile: "docker-compose.yml"
+      dockerComposeFileArgs: "foo=bar"
+      action: "Build services"
+      additionalImageTags: "dev"
+      includeSourceTags: true
+      includeLatestTag: true
