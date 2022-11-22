@@ -18,10 +18,37 @@ jobs:
   - job: build
     pool:
       vmImage: ubuntu-latest
+    variables:
+      registry: mainweuacroyh7oqq4sbyjt.azurecr.io
     steps:
-      - task: DockerInstaller@0
+      #################################################
+      # Set some variables to be used later
+      #################################################
+      - task: AzureCLI@2
+        displayName: Set variables
         inputs:
-          dockerVersion: "20.10.21"
+          azureSubscription: "ARM-CCC-SSR-ont-01"
+          scriptType: pscore
+          scriptLocation: inlineScript
+          inlineScript: |
+            $agentIpAddress=$(dig TXT +short o-o.myaddr.l.google.com `@ns1.google.com | tr -d '"')
+            echo "The (MS-hosted) agent has ipv4: $agentIpAddress\n"
+            echo "##vso[task.setvariable variable=agentIpAddress;]$($agentIpAddress)"
+
+      - task: AzureCLI@2
+        displayName: Add agent IP to firewall
+        inputs:
+          azureSubscription: "ARM-CCC-SSR-ont-01"
+          scriptType: pscore
+          scriptLocation: inlineScript
+          inlineScript: |
+            az acr network-rule `
+              add -n mainweuacroyh7oqq4sbyjt `
+              --ip-address $(agentIpAddress)
+
+      # - task: DockerInstaller@0
+      #   inputs:
+      #     dockerVersion: "20.10.21"
 
       - task: AzureCLI@2
         condition: eq(variables['Build.Reason'], 'PullRequest')
@@ -42,17 +69,14 @@ jobs:
           inlineScript: |
             az acr login -n mainweuacroyh7oqq4sbyjt
 
-      - task: DockerCompose@0
+      - task: AzureCLI@2
+        displayName: "dump env"
         inputs:
-          containerregistrytype: "Azure Container Registry"
           azureSubscription: "ARM-CCC-SSR-ont-01"
-          azureContainerRegistry: mainweuacroyh7oqq4sbyjt.azurecr.io
-          dockerComposeFile: "docker-compose.yml"
-          dockerComposeFileArgs: "foo=bar"
-          action: "Push services"
-          additionalImageTags: ${{ variables['Build.SourceBranchName'] }}
-          includeSourceTags: true
-          includeLatestTag: true
+          scriptType: "bash"
+          scriptLocation: "inlineScript"
+          inlineScript: |
+            env | sort
 
       - task: AzureCLI@2
         displayName: "build"
@@ -63,9 +87,26 @@ jobs:
           scriptType: "bash"
           scriptLocation: "inlineScript"
           inlineScript: |
-            VERSION=latest make build
-            VERSION=$(variables['Build.SourceBranch']) make build
-            VERSION=$(variables['Build.SourceVersion']) make build
+            # Build numer
+            VERSION=$(Build.BuildId) make push
+
+            # Git hash
+            VERSION=$(Build.SourceVersion) make push
+
+            # Branch name / Tag name
+            VERSION=$(Build.SourceBranchName) make push
+
+      - task: AzureCLI@2
+        displayName: Remove agent ip from firewall
+        condition: always()
+        inputs:
+          azureSubscription: "ARM-CCC-SSR-ont-01"
+          scriptType: pscore
+          scriptLocation: inlineScript
+          inlineScript: |
+            az acr network-rule `
+              remove -n mainweuacroyh7oqq4sbyjt `
+              --ip-address $(agentIpAddress)
 
   - job: deploy
     dependsOn: build
