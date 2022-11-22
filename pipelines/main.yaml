@@ -18,6 +18,16 @@ trigger:
 
 steps:
   - task: AzureCLI@2
+    condition: eq(variables['Build.Reason'], 'PullRequest')
+    displayName: "QA"
+    inputs:
+      azureSubscription: "ARM-CCC-SSR-ont-01"
+      scriptType: "bash"
+      scriptLocation: "inlineScript"
+      inlineScript: |
+        make test
+
+  - task: AzureCLI@2
     displayName: "test"
     inputs:
       azureSubscription: "ARM-CCC-SSR-ont-01"
