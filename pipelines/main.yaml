@@ -66,6 +66,7 @@ steps:
     inputs:
       connectionType: "Kubernetes Service Connection"
       kubernetesServiceEndpoint: "SCN-K8S-O-SSR"
+      namespace: "ns-ccc-ssr-ont-01-sensorenregister"
       command: "apply"
       arguments: "-f generated.yaml"
 
