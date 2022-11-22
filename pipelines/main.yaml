@@ -1,5 +1,3 @@
-pool: TAMM
-
 resources:
   repositories:
     - repository: templates
@@ -16,63 +14,113 @@ trigger:
     include:
       - "*.*.*"
 
-steps:
-  - task: AzureCLI@2
-    condition: eq(variables['Build.Reason'], 'PullRequest')
-    displayName: "QA"
-    inputs:
-      azureSubscription: "ARM-CCC-SSR-ont-01"
-      scriptType: "bash"
-      scriptLocation: "inlineScript"
-      inlineScript: |
-        make test
+jobs:
+  - job: build
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+      - task: DockerInstaller@0
+        inputs:
+          dockerVersion: "20.10.21"
 
-  - task: DockerInstaller@0
-    inputs:
-      dockerVersion: "20.10.21"
+      - task: AzureCLI@2
+        condition: eq(variables['Build.Reason'], 'PullRequest')
+        displayName: "QA"
+        inputs:
+          azureSubscription: "ARM-CCC-SSR-ont-01"
+          scriptType: "bash"
+          scriptLocation: "inlineScript"
+          inlineScript: |
+            make test
 
-  # - task: AzureCLI@2
-  #   displayName: "ACR Login"
-  #   inputs:
-  #     azureSubscription: "ARM-CCC-SSR-ont-01"
-  #     scriptType: "bash"
-  #     scriptLocation: "inlineScript"
-  #     inlineScript: |
-  #       az acr login -n mainweuacroyh7oqq4sbyjt
+      - task: AzureCLI@2
+        displayName: "ACR Login"
+        inputs:
+          azureSubscription: "ARM-CCC-SSR-ont-01"
+          scriptType: "bash"
+          scriptLocation: "inlineScript"
+          inlineScript: |
+            az acr login -n mainweuacroyh7oqq4sbyjt
 
-  - task: DockerCompose@0
-    inputs:
-      containerregistrytype: "Azure Container Registry"
-      azureSubscription: "ARM-CCC-SSR-ont-01"
-      azureContainerRegistry: '{"loginServer":"mainweuacroyh7oqq4sbyjt.azurecr.io", "id" : "/subscriptions/d160060b-6437-448d-8919-c1d007547414/resourceGroups/main-o-rg/providers/Microsoft.ContainerRegistry/registries/mainweuacroyh7oqq4sbyjt"}'
-      dockerComposeFile: "docker-compose.yml"
-      dockerComposeFileArgs: "foo=bar"
-      action: "Build services"
-      additionalImageTags: ${{ variables['Build.SourceBranch'] }}
-      includeSourceTags: true
-      includeLatestTag: true
+      - task: DockerCompose@0
+        inputs:
+          containerregistrytype: "Azure Container Registry"
+          azureSubscription: "ARM-CCC-SSR-ont-01"
+          azureContainerRegistry: mainweuacroyh7oqq4sbyjt.azurecr.io
+          dockerComposeFile: "docker-compose.yml"
+          dockerComposeFileArgs: "foo=bar"
+          action: "Push services"
+          additionalImageTags: ${{ variables['Build.SourceBranchName'] }}
+          includeSourceTags: true
+          includeLatestTag: true
 
-  - task: AzureCLI@2
-    displayName: "test"
-    inputs:
-      azureSubscription: "ARM-CCC-SSR-ont-01"
-      scriptType: "bash"
-      scriptLocation: "inlineScript"
-      inlineScript: |
-        kustomize build manifests/overlays/dev > generated.yaml
-        cat generated.yaml
+      - task: AzureCLI@2
+        displayName: "build"
+        env:
+          REGISTRY: mainweuacroyh7oqq4sbyjt.azurecr.io
+        inputs:
+          azureSubscription: "ARM-CCC-SSR-ont-01"
+          scriptType: "bash"
+          scriptLocation: "inlineScript"
+          inlineScript: |
+            VERSION=latest make build
+            VERSION=$(variables['Build.SourceBranch']) make build
+            VERSION=$(variables['Build.SourceVersion']) make build
 
-  - task: Kubernetes@1
-    inputs:
-      connectionType: "Kubernetes Service Connection"
-      kubernetesServiceEndpoint: "SCN-K8S-O-SSR"
-      namespace: "ns-ccc-ssr-ont-01-sensorenregister"
-      command: "apply"
-      arguments: "-f generated.yaml"
+  - job: deploy
+    dependsOn: build
+    pool: TAMM
+    steps:
+      - task: AzureCLI@2
+        displayName: "test"
+        inputs:
+          azureSubscription: "ARM-CCC-SSR-ont-01"
+          scriptType: "bash"
+          scriptLocation: "inlineScript"
+          inlineScript: |
+            kustomize build manifests/overlays/dev > generated.yaml
+            cat generated.yaml
 
-  - task: Kubernetes@1
-    inputs:
-      connectionType: "Kubernetes Service Connection"
-      kubernetesServiceEndpoint: "SCN-K8S-O-SSR"
-      command: "get"
-      arguments: "all"
+      - task: Kubernetes@1
+        inputs:
+          connectionType: "Kubernetes Service Connection"
+          kubernetesServiceEndpoint: "SCN-K8S-O-SSR"
+          namespace: "ns-ccc-ssr-ont-01-sensorenregister"
+          command: "apply"
+          arguments: "-f generated.yaml"
+
+      - task: Kubernetes@1
+        inputs:
+          connectionType: "Kubernetes Service Connection"
+          kubernetesServiceEndpoint: "SCN-K8S-O-SSR"
+          namespace: "ns-ccc-ssr-ont-01-sensorenregister"
+          command: "get"
+          arguments: "all"
+
+      - task: Kubernetes@1
+        displayName: "Login to Kubernetes Cluster"
+        inputs:
+          connectionType: "Kubernetes Service Connection"
+          kubernetesServiceEndpoint: "SCN-K8S-O-SSR"
+          namespace: "ns-ccc-ssr-ont-01-sensorenregister"
+          command: login
+          # useClusterAdmin: true
+
+      - task: AzureCLI@2
+        displayName: "Set a default namespace"
+        inputs:
+          azureSubscription: "ARM-CCC-SSR-ont-01"
+          scriptType: "bash"
+          scriptLocation: "inlineScript"
+          inlineScript: |
+            kubectl config set-context --current --namespace=ns-ccc-ssr-ont-01-sensorenregister
+            kubectl config view
+
+      - task: AzureCLI@2
+        displayName: "Set a default namespace"
+        inputs:
+          azureSubscription: "ARM-CCC-SSR-ont-01"
+          scriptType: "bash"
+          scriptLocation: "inlineScript"
+          inlineScript: |
+            kubectl get all
