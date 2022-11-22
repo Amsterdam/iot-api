@@ -27,14 +27,18 @@ steps:
       inlineScript: |
         make test
 
-  - task: AzureCLI@2
-    displayName: "ACR Login"
+  - task: DockerInstaller@0
     inputs:
-      azureSubscription: "ARM-CCC-SSR-ont-01"
-      scriptType: "bash"
-      scriptLocation: "inlineScript"
-      inlineScript: |
-        az acr login -n mainweuacroyh7oqq4sbyjt
+      dockerVersion: "20.10.21"
+
+  # - task: AzureCLI@2
+  #   displayName: "ACR Login"
+  #   inputs:
+  #     azureSubscription: "ARM-CCC-SSR-ont-01"
+  #     scriptType: "bash"
+  #     scriptLocation: "inlineScript"
+  #     inlineScript: |
+  #       az acr login -n mainweuacroyh7oqq4sbyjt
 
   - task: DockerCompose@0
     inputs:
