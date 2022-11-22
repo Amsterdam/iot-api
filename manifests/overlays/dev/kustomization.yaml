@@ -15,4 +15,10 @@ patches:
     patch: |-
       - op: add
         path: "/spec/rules/0/host"
-        value: api.dev.sensorenregister.amsterdam.nl
+        value: ssr-o.azure.amsterdam.nl
+
+images:
+  - name: localhost:5000/sensorenregister/api
+    newName: mainweuacroyh7oqq4sbyjt.azurecr.io/sensorenregister/api
+    newTag: latest
+    # newTag: plain-text

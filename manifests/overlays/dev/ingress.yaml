@@ -5,5 +5,5 @@ metadata:
 spec:
   tls:
     - hosts:
-        - api.dev.sensorenregister.amsterdam.nl
+        - ssr-o.azure.amsterdam.nl
       secretName: tls

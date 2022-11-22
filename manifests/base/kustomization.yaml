@@ -16,6 +16,68 @@ configMapGenerator:
     files:
       - app.ini
 
+# Copy some fields from the deployments to the jobs
+replacements:
+  - source:
+      kind: Deployment
+      name: app
+      fieldPath: spec.template.spec.containers.[name=main].envFrom
+    targets:
+      - select:
+          kind: Job
+          name: migrate
+        fieldPaths:
+          - spec.template.spec.containers.[name=main].envFrom
+        options:
+          create: true
+      - select:
+          kind: Job
+          name: import
+        fieldPaths:
+          - spec.template.spec.containers.[name=main].envFrom
+        options:
+          create: true
+
+  - source:
+      kind: Deployment
+      name: app
+      fieldPath: spec.template.spec.containers.[name=main].volumeMounts
+    targets:
+      - select:
+          kind: Job
+          name: migrate
+        fieldPaths:
+          - spec.template.spec.containers.[name=main].volumeMounts
+        options:
+          create: true
+      - select:
+          kind: Job
+          name: import
+        fieldPaths:
+          - spec.template.spec.containers.[name=main].volumeMounts
+        options:
+          create: true
+
+  - source:
+      kind: Deployment
+      name: app
+      fieldPath: spec.template.spec.volumes
+    targets:
+      - select:
+          kind: Job
+          name: migrate
+        fieldPaths:
+          - spec.template.spec.volumes
+        options:
+          create: true
+      - select:
+          kind: Job
+          name: import
+        fieldPaths:
+          - spec.template.spec.volumes
+        options:
+          create: true
+
 resources:
   - configmap.yaml
   - migrate.job.yaml
@@ -23,3 +85,4 @@ resources:
   - deployment.yaml
   - service.yaml
   - ingress.yaml
+  - secretproviderclass.yaml

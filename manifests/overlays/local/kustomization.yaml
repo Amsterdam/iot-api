@@ -15,40 +15,32 @@ configMapGenerator:
     envs:
       - app.env
 
-secretGenerator:
-  - name: app-secrets
-    envs:
-      - secrets.env
-
 patchesStrategicMerge:
   - deployment.yaml
   - migrate.job.yaml
   - import.job.yaml
+  - |-
+    apiVersion: secrets-store.csi.x-k8s.io/v1
+    kind: SecretProviderClass
+    metadata:
+      name: secrets
+    $patch: delete
 
 patches:
-  - target:
-      kind: Deployment
-      name: app
-    patch: |-
-      - op: add
-        path: "/spec/template/spec/containers/0/envFrom/-"
-        value:
-          secretRef:
-            name: app-secrets
-  - target:
-      kind: Job
-      name: migrate
-    patch: |-
-      - op: add
-        path: "/spec/template/spec/containers/0/envFrom/-"
-        value:
-          secretRef:
-            name: app-secrets
-      - op: add
-        path: "/spec/template/spec/containers/0/envFrom/-"
-        value:
-          secretRef:
-            name: app-secrets
+  # - target:
+  #     kind: Job
+  #     name: migrate
+  #   patch: |-
+  #     - op: add
+  #       path: "/spec/template/spec/containers/0/envFrom/-"
+  #       value:
+  #         secretRef:
+  #           name: app-secrets
+  #     - op: add
+  #       path: "/spec/template/spec/containers/0/envFrom/-"
+  #       value:
+  #         secretRef:
+  #           name: app-secrets
   - target:
       kind: Ingress
       name: app
@@ -58,7 +50,6 @@ patches:
         value: localhost
 
 images:
-  - name: nginxdemos/hello
-    newName: localhost:5000/iothings-dev
+  - name: localhost:5000/sensorenregister/api
+    newName: localhost:5000/sensorenregister/api-dev
     newTag: latest
-    # newTag: plain-text

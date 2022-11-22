@@ -14,154 +14,179 @@ trigger:
     include:
       - "*.*.*"
 
-jobs:
-  - job: build
+stages:
+  - stage: build
     pool:
       vmImage: ubuntu-latest
-    variables:
-      registry: mainweuacroyh7oqq4sbyjt.azurecr.io
-    steps:
-      #################################################
-      # Set some variables to be used later
-      #################################################
-      - task: AzureCLI@2
-        displayName: Set variables
-        inputs:
-          azureSubscription: "ARM-CCC-SSR-ont-01"
-          scriptType: pscore
-          scriptLocation: inlineScript
-          inlineScript: |
-            $agentIpAddress=$(dig TXT +short o-o.myaddr.l.google.com `@ns1.google.com | tr -d '"')
-            echo "The (MS-hosted) agent has ipv4: $agentIpAddress\n"
-            echo "##vso[task.setvariable variable=agentIpAddress;]$($agentIpAddress)"
+    jobs:
+      - job: build
+        variables:
+          registry: mainweuacroyh7oqq4sbyjt.azurecr.io
+        steps:
+          #################################################
+          # Set some variables to be used later
+          #################################################
+          - task: AzureCLI@2
+            displayName: Set variables
+            inputs:
+              azureSubscription: "ARM-CCC-SSR-ont-01"
+              scriptType: pscore
+              scriptLocation: inlineScript
+              inlineScript: |
+                $agentIpAddress=$(dig TXT +short o-o.myaddr.l.google.com `@ns1.google.com | tr -d '"')
+                echo "The (MS-hosted) agent has ipv4: $agentIpAddress\n"
+                echo "##vso[task.setvariable variable=agentIpAddress;]$($agentIpAddress)"
 
-      - task: AzureCLI@2
-        displayName: Add agent IP to firewall
-        inputs:
-          azureSubscription: "ARM-CCC-SSR-ont-01"
-          scriptType: pscore
-          scriptLocation: inlineScript
-          inlineScript: |
-            az acr network-rule `
-              add -n mainweuacroyh7oqq4sbyjt `
-              --ip-address $(agentIpAddress)
+          - task: AzureCLI@2
+            displayName: Add agent IP to firewall
+            inputs:
+              azureSubscription: "ARM-CCC-SSR-ont-01"
+              scriptType: pscore
+              scriptLocation: inlineScript
+              inlineScript: |
+                az acr network-rule `
+                  add -n mainweuacroyh7oqq4sbyjt `
+                  --ip-address $(agentIpAddress)
 
-      # - task: DockerInstaller@0
-      #   inputs:
-      #     dockerVersion: "20.10.21"
+          # - task: DockerInstaller@0
+          #   inputs:
+          #     dockerVersion: "20.10.21"
 
-      - task: AzureCLI@2
-        condition: eq(variables['Build.Reason'], 'PullRequest')
-        displayName: "QA"
-        inputs:
-          azureSubscription: "ARM-CCC-SSR-ont-01"
-          scriptType: "bash"
-          scriptLocation: "inlineScript"
-          inlineScript: |
-            make test
+          - task: AzureCLI@2
+            displayName: "Build"
+            inputs:
+              azureSubscription: "ARM-CCC-SSR-ont-01"
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+                make build
 
-      - task: AzureCLI@2
-        displayName: "ACR Login"
-        inputs:
-          azureSubscription: "ARM-CCC-SSR-ont-01"
-          scriptType: "bash"
-          scriptLocation: "inlineScript"
-          inlineScript: |
-            az acr login -n mainweuacroyh7oqq4sbyjt
+          - task: AzureCLI@2
+            condition: eq(variables['Build.Reason'], 'PullRequest')
+            displayName: "QA - tests"
+            inputs:
+              azureSubscription: "ARM-CCC-SSR-ont-01"
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+                make test
 
-      - task: AzureCLI@2
-        displayName: "dump env"
-        inputs:
-          azureSubscription: "ARM-CCC-SSR-ont-01"
-          scriptType: "bash"
-          scriptLocation: "inlineScript"
-          inlineScript: |
-            env | sort
+          - task: AzureCLI@2
+            displayName: "ACR Login"
+            retryCountOnTaskFailure: 10
+            inputs:
+              azureSubscription: "ARM-CCC-SSR-ont-01"
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+                az acr login -n mainweuacroyh7oqq4sbyjt
 
-      - task: AzureCLI@2
-        displayName: "build"
-        env:
-          REGISTRY: mainweuacroyh7oqq4sbyjt.azurecr.io
-        inputs:
-          azureSubscription: "ARM-CCC-SSR-ont-01"
-          scriptType: "bash"
-          scriptLocation: "inlineScript"
-          inlineScript: |
-            # Build numer
-            VERSION=$(Build.BuildId) make push
+          - task: AzureCLI@2
+            displayName: "build"
+            env:
+              REGISTRY: mainweuacroyh7oqq4sbyjt.azurecr.io
+            inputs:
+              azureSubscription: "ARM-CCC-SSR-ont-01"
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+                # Build numer
+                VERSION=$(Build.BuildId) make push
 
-            # Git hash
-            VERSION=$(Build.SourceVersion) make push
+                # Git hash
+                VERSION=$(Build.SourceVersion) make push
 
-            # Branch name / Tag name
-            VERSION=$(Build.SourceBranchName) make push
+                # Branch name / Tag name
+                VERSION=$(Build.SourceBranchName) make push
 
-      - task: AzureCLI@2
-        displayName: Remove agent ip from firewall
-        condition: always()
-        inputs:
-          azureSubscription: "ARM-CCC-SSR-ont-01"
-          scriptType: pscore
-          scriptLocation: inlineScript
-          inlineScript: |
-            az acr network-rule `
-              remove -n mainweuacroyh7oqq4sbyjt `
-              --ip-address $(agentIpAddress)
-
-  - job: deploy
-    dependsOn: build
+          - task: AzureCLI@2
+            displayName: Remove agent ip from firewall
+            condition: always()
+            inputs:
+              azureSubscription: "ARM-CCC-SSR-ont-01"
+              scriptType: pscore
+              scriptLocation: inlineScript
+              inlineScript: |
+                az acr network-rule `
+                  remove -n mainweuacroyh7oqq4sbyjt `
+                  --ip-address $(agentIpAddress)
+  - stage: deploy
     pool: TAMM
-    steps:
-      - task: AzureCLI@2
-        displayName: "test"
-        inputs:
-          azureSubscription: "ARM-CCC-SSR-ont-01"
-          scriptType: "bash"
-          scriptLocation: "inlineScript"
-          inlineScript: |
-            kustomize build manifests/overlays/dev > generated.yaml
-            cat generated.yaml
+    jobs:
+      - job: deploy
+        steps:
+          - task: Kubernetes@1
+            retryCountOnTaskFailure: 10
+            inputs:
+              connectionType: "Kubernetes Service Connection"
+              kubernetesServiceEndpoint: "SCN-K8S-O-SSR"
+              namespace: "ns-ccc-ssr-ont-01-sensorenregister"
+              command: "get"
+              arguments: "deploy,svc,ingress,configmap,secrets,job,cronjob"
 
-      - task: Kubernetes@1
-        inputs:
-          connectionType: "Kubernetes Service Connection"
-          kubernetesServiceEndpoint: "SCN-K8S-O-SSR"
-          namespace: "ns-ccc-ssr-ont-01-sensorenregister"
-          command: "apply"
-          arguments: "-f generated.yaml"
+          - task: Kubernetes@1
+            inputs:
+              connectionType: "Kubernetes Service Connection"
+              kubernetesServiceEndpoint: "SCN-K8S-O-SSR"
+              namespace: "ns-ccc-ssr-ont-01-sensorenregister"
+              command: "delete"
+              arguments: "deploy,svc,ingress,configmap,secrets,job,cronjob --all"
 
-      - task: Kubernetes@1
-        inputs:
-          connectionType: "Kubernetes Service Connection"
-          kubernetesServiceEndpoint: "SCN-K8S-O-SSR"
-          namespace: "ns-ccc-ssr-ont-01-sensorenregister"
-          command: "get"
-          arguments: "all"
+          - task: AzureCLI@2
+            displayName: "Generate manifests"
+            inputs:
+              azureSubscription: "ARM-CCC-SSR-ont-01"
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+                pushd manifests/overlays/dev
+                kustomize edit set image localhost:5000/sensorenregister/api=mainweuacroyh7oqq4sbyjt.azurecr.io/sensorenregister/api:manifests
 
-      - task: Kubernetes@1
-        displayName: "Login to Kubernetes Cluster"
-        inputs:
-          connectionType: "Kubernetes Service Connection"
-          kubernetesServiceEndpoint: "SCN-K8S-O-SSR"
-          namespace: "ns-ccc-ssr-ont-01-sensorenregister"
-          command: login
-          # useClusterAdmin: true
+                kustomize edit set namespace ns-ccc-ssr-ont-01-sensorenregister
+                kustomize build > generated.yaml
+                cat generated.yaml
+                popd
 
-      - task: AzureCLI@2
-        displayName: "Set a default namespace"
-        inputs:
-          azureSubscription: "ARM-CCC-SSR-ont-01"
-          scriptType: "bash"
-          scriptLocation: "inlineScript"
-          inlineScript: |
-            kubectl config set-context --current --namespace=ns-ccc-ssr-ont-01-sensorenregister
-            kubectl config view
+          - task: Kubernetes@1
+            inputs:
+              connectionType: "Kubernetes Service Connection"
+              kubernetesServiceEndpoint: "SCN-K8S-O-SSR"
+              namespace: "ns-ccc-ssr-ont-01-sensorenregister"
+              command: "apply"
+              arguments: "-f manifests/overlays/dev/generated.yaml"
 
-      - task: AzureCLI@2
-        displayName: "Set a default namespace"
-        inputs:
-          azureSubscription: "ARM-CCC-SSR-ont-01"
-          scriptType: "bash"
-          scriptLocation: "inlineScript"
-          inlineScript: |
-            kubectl get all
+          - task: Kubernetes@1
+            inputs:
+              connectionType: "Kubernetes Service Connection"
+              kubernetesServiceEndpoint: "SCN-K8S-O-SSR"
+              namespace: "ns-ccc-ssr-ont-01-sensorenregister"
+              command: "get"
+              arguments: "all"
+
+          - task: Kubernetes@1
+            displayName: "Login to Kubernetes Cluster"
+            inputs:
+              connectionType: "Kubernetes Service Connection"
+              kubernetesServiceEndpoint: "SCN-K8S-O-SSR"
+              namespace: "ns-ccc-ssr-ont-01-sensorenregister"
+              command: login
+              # useClusterAdmin: true
+
+          - task: AzureCLI@2
+            displayName: "Set a default namespace"
+            inputs:
+              azureSubscription: "ARM-CCC-SSR-ont-01"
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+                kubectl config set-context --current --namespace=ns-ccc-ssr-ont-01-sensorenregister
+                kubectl config view
+
+          - task: AzureCLI@2
+            displayName: "get all resources"
+            inputs:
+              azureSubscription: "ARM-CCC-SSR-ont-01"
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+                kubectl get all
