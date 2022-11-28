@@ -3,7 +3,7 @@ from django.conf import settings
 
 from iot import models
 from iot.dateclasses import LatLong, Location, ObservationGoal, PersonData, SensorData
-from iot.importers import import_person, import_sensor, import_apis
+from iot.importers import import_apis, import_person, import_sensor
 from iot.serializers import DeviceSerializer
 
 
@@ -351,9 +351,7 @@ class TestConvertApiData:
         sensors created and a tuple to be returned.
         """
 
-        result = import_apis.convert_api_data(
-            api_name='anpr', api_data=api_data_2
-        )
+        result = import_apis.convert_api_data(api_name='anpr', api_data=api_data_2)
 
         assert result == ([], 2, 0)
         assert len(self.actual) == 2
@@ -370,15 +368,11 @@ class TestConvertApiData:
 
         # insert the first list of sensor which should include two sensors with the ids
         # ANPR-00001-V & ANPR-00002-V.
-        result_1 = import_apis.convert_api_data(
-            api_name='anpr', api_data=api_data
-        )
+        result_1 = import_apis.convert_api_data(api_name='anpr', api_data=api_data)
 
         # insert the second list of sensor which should include two sensors with the ids
         # ANPR-00001-V & ANPR-00003-V. The ANPR-00001-V has different location points.
-        result_2 = import_apis.convert_api_data(
-            api_name='anpr', api_data=api_data_2
-        )
+        result_2 = import_apis.convert_api_data(api_name='anpr', api_data=api_data_2)
 
         # get the sensor with referece ANPR-00001-V because it should have been
         # updated with a new location.

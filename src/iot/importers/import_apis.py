@@ -3,8 +3,7 @@ from typing import Dict, Generator, List, Tuple
 
 from django.conf import settings
 
-from iot import validators
-from iot import models
+from iot import models, validators
 from iot.dateclasses import LatLong, Location, ObservationGoal, PersonData, SensorData
 from iot.importers import import_person, import_sensor
 from iot.validators import validate_person_data

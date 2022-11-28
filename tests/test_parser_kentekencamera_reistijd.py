@@ -3,7 +3,7 @@ from django.conf import settings
 
 from iot import models
 from iot.dateclasses import LatLong, Location, ObservationGoal, PersonData, SensorData
-from iot.importers import import_person, import_sensor, import_apis
+from iot.importers import import_apis, import_person, import_sensor
 from iot.serializers import DeviceSerializer
 
 
@@ -194,9 +194,7 @@ privacyverklaring-parkeren-verkeer-bouw/reistijden-meetsysteem-privacy/",
                 projects=[''],
             )
         ]
-        sensor_list = list(
-            import_apis.parse_kentekencamera_reistijd(data=api_data)
-        )
+        sensor_list = list(import_apis.parse_kentekencamera_reistijd(data=api_data))
         sensor_data = sensor_list[0]
         person_data = sensor_data.owner
 

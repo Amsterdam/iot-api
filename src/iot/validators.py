@@ -5,9 +5,19 @@ import re
 from django.core.validators import URLValidator
 from rest_framework.exceptions import ValidationError
 
-from iot.dateclasses import SensorData, LatLong, PostcodeHouseNumber
-from iot.exceptions import InvalidDate, InvalidPersonDataError, InvalidSensorType, InvalidThemes, InvalidLatitude, \
-    InvalidLongitude, InvalidPostcode, InvalidContainsPiData, InvalidLegalGround, InvalidPrivacyDeclaration
+from iot.dateclasses import LatLong, PostcodeHouseNumber, SensorData
+from iot.exceptions import (
+    InvalidContainsPiData,
+    InvalidDate,
+    InvalidLatitude,
+    InvalidLegalGround,
+    InvalidLongitude,
+    InvalidPersonDataError,
+    InvalidPostcode,
+    InvalidPrivacyDeclaration,
+    InvalidSensorType,
+    InvalidThemes,
+)
 from iot.serializers import PersonDataSerializer
 from iot.utils import DATE_FORMAT
 

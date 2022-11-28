@@ -493,7 +493,8 @@ class TestImportSensor:
             iot.dateclasses.PostcodeHouseNumber("1111AA", 1)
         )
         with patch(
-            'iot.importers.import_sensor.get_center_coordinates', lambda *_: Point(4.9041, 52.3676)
+            'iot.importers.import_sensor.get_center_coordinates',
+            lambda *_: Point(4.9041, 52.3676),
         ):
             import_sensor.import_sensor(sensor_data, owner)
         location = {"latitude": 52.3676, "longitude": 4.9041}
