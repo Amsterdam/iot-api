@@ -1,6 +1,5 @@
 from datapunt_api.rest import HALSerializer
 from rest_framework import serializers
-from rest_framework.fields import DateField, JSONField
 from rest_framework.serializers import ModelSerializer, Serializer
 
 from .models import Device, DeviceJson, ObservationGoal, Person, Project

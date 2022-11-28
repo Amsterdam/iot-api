@@ -66,6 +66,7 @@ DJANGO_APPS = (
     'django.contrib.sessions',
     'django.contrib.admin',
     'django.contrib.messages',
+    'health',
 )
 
 THIRD_PARTY_APPS = (
