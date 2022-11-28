@@ -8,26 +8,33 @@ spec:
     spec:
       nodeSelector:
         kubernetes.io/os: linux
-      containers:
-        - name: main
-          resources:
-            limits:
-              cpu: 1
-              memory: "256Mi"
-            requests:
-              cpu: 1
-              memory: "256Mi"
+      initContainers:
+        - name: wait
+          image: localhost:5000/sensorenregister/api:latest
           command:
             - /app/deploy/wait-for-it.sh
             - database:5432
-            - --timeout=30
-            - --
-            - python
-            - manage.py
-            - runserver_plus
-            - --print-sql
-            - 0.0.0.0:8000
-          # command:
-          # - bash
-          # - -c
-          # - python manage.py runserver_plus --print-sql 0.0.0.0:8000
+            - -t
+            - "60"
+        # - name: main
+        #   resources:
+        #     limits:
+        #       cpu: 1
+        #       memory: "256Mi"
+        #     requests:
+        #       cpu: 1
+        #       memory: "256Mi"
+        #   command:
+        #     - /app/deploy/wait-for-it.sh
+        #     - database:5432
+        #     - --timeout=30
+        #     - --
+        #     - python
+        #     - manage.py
+        #     - runserver_plus
+        #     - --print-sql
+        #     - 0.0.0.0:8000
+        # command:
+        # - bash
+        # - -c
+        # - python manage.py runserver_plus --print-sql 0.0.0.0:8000

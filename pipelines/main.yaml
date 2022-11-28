@@ -124,13 +124,13 @@ stages:
               command: "get"
               arguments: "deploy,svc,ingress,configmap,secrets,job,cronjob"
 
-          - task: Kubernetes@1
-            inputs:
-              connectionType: "Kubernetes Service Connection"
-              kubernetesServiceEndpoint: "SCN-K8S-O-SSR"
-              namespace: "ns-ccc-ssr-ont-01-sensorenregister"
-              command: "delete"
-              arguments: "deploy,svc,ingress,configmap,secrets,job,cronjob --all"
+          # - task: Kubernetes@1
+          #   inputs:
+          #     connectionType: "Kubernetes Service Connection"
+          #     kubernetesServiceEndpoint: "SCN-K8S-O-SSR"
+          #     namespace: "ns-ccc-ssr-ont-01-sensorenregister"
+          #     command: "delete"
+          #     arguments: "-l team=TAMM,app=sensorenregister deploy,svc,ingress,configmap,secrets,job,cronjob,networkpolicy,secretproviderclass --all"
 
           - task: AzureCLI@2
             displayName: "Generate manifests"

@@ -42,10 +42,22 @@ spec:
           envFrom:
             - configMapRef:
                 name: app-env
+            - secretRef:
+                name: app-secrets
           volumeMounts:
             - mountPath: /config
               name: config
+              readOnly: true
+            - mountPath: /secrets
+              name: secrets
+              readOnly: true
       volumes:
         - name: config
           configMap:
             name: app-config
+        - name: secrets
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: secrets

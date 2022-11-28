@@ -1,11 +1,15 @@
-bases:
+resources:
   - ../../base
 
 commonLabels:
   env: dev
 
+components:
+  - ../../components/app
+  - ../../components/ingress
+  - ../../components/keyvault
+
 patchesStrategicMerge:
-  - deployment.yaml
   - ingress.yaml
 
 patches:

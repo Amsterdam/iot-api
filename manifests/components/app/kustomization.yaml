@@ -1,0 +1,69 @@
+kind: Component
+
+configMapGenerator:
+  - name: app-env
+    envs:
+      - app.env
+  - name: app-config
+    files:
+      - app.ini
+
+resources:
+  - deployment.yaml
+  - service.yaml
+  - migrate.job.yaml
+  - import.job.yaml
+
+# Copy some fields from the deployments to the jobs
+replacements:
+  - source:
+      kind: Deployment
+      name: app
+      fieldPath: spec.template.spec.containers.[name=main].envFrom
+    targets:
+      - select:
+          kind: Job
+          labelSelector: component=api
+        fieldPaths:
+          - spec.template.spec.containers.[name=main].envFrom
+        options:
+          create: true
+
+  - source:
+      kind: Deployment
+      name: app
+      fieldPath: spec.template.spec.containers.[name=main].volumeMounts
+    targets:
+      - select:
+          kind: Job
+          labelSelector: component=api
+        fieldPaths:
+          - spec.template.spec.containers.[name=main].volumeMounts
+        options:
+          create: true
+
+  - source:
+      kind: Deployment
+      name: app
+      fieldPath: spec.template.spec.volumes
+    targets:
+      - select:
+          kind: Job
+          labelSelector: component=api
+        fieldPaths:
+          - spec.template.spec.volumes
+        options:
+          create: true
+
+  - source:
+      kind: Deployment
+      name: app
+      fieldPath: spec.template.spec.tolerations
+    targets:
+      - select:
+          kind: Job
+          labelSelector: component=api
+        fieldPaths:
+          - spec.template.spec.tolerations
+        options:
+          create: true

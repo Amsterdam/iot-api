@@ -1,11 +1,37 @@
-apiVersion: projectcalico.org/v3
+apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: allow-nginx
+  name: main
 spec:
-  selector: app == 'sensorenregister'
-  types:
-    - Ingress
-    - Egress
+  podSelector: {}
   ingress:
-    - action: Allow
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+      ports:
+        - port: 8000
+
+    # Allow traffic in our namespace
+    - from:
+        - podSelector: {}
+  # egress:
+  #   # Allow traffic in our namespace
+  #   - to:
+  #       - podSelector: {}
+
+  #   # Allow access to kube dns
+  #   - to:
+  #       - namespaceSelector:
+  #           matchLabels:
+  #             kubernetes.io/metadata.name: kube-system
+  #     ports:
+  #       - port: 53
+  #         protocol: UDP
+
+  #   # Allow internet access on 443
+  #   - to:
+  #       - ipBlock:
+  #           cidr: 0.0.0.0/0
+  #     ports:
+  #       - port: 443

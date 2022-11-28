@@ -1,13 +1,22 @@
-bases:
-  - ../../base
+commonLabels:
+  team: TAMM
+  app: sensorenregister
+  env: local
+
+labels:
+  - pairs:
+      team: TAMM
+    includeSelectors: false
+    includeTemplates: true
 
 resources:
-  - database.deployment.yaml
-  - database.service.yaml
-  - nodeport.yaml
+  - ../../base
 
-commonLabels:
-  env: local
+components:
+  - ../../components/app
+  - ../../components/database
+  - ../../components/ingress
+  - ../../components/keyvault
 
 configMapGenerator:
   - name: app-env
@@ -17,30 +26,23 @@ configMapGenerator:
 
 patchesStrategicMerge:
   - deployment.yaml
-  - migrate.job.yaml
-  - import.job.yaml
-  - |-
-    apiVersion: secrets-store.csi.x-k8s.io/v1
-    kind: SecretProviderClass
-    metadata:
-      name: secrets
-    $patch: delete
+  - secretproviderclass.yaml
+
+replacements:
+  - source:
+      kind: Deployment
+      name: app
+      fieldPath: spec.template.spec.initContainers
+    targets:
+      - select:
+          kind: Job
+          labelSelector: component=api
+        fieldPaths:
+          - spec.template.spec.initContainers
+        options:
+          create: true
 
 patches:
-  # - target:
-  #     kind: Job
-  #     name: migrate
-  #   patch: |-
-  #     - op: add
-  #       path: "/spec/template/spec/containers/0/envFrom/-"
-  #       value:
-  #         secretRef:
-  #           name: app-secrets
-  #     - op: add
-  #       path: "/spec/template/spec/containers/0/envFrom/-"
-  #       value:
-  #         secretRef:
-  #           name: app-secrets
   - target:
       kind: Ingress
       name: app
