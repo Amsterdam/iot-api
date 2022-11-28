@@ -1,5 +1,6 @@
 commonLabels:
-  team: TAMM
+  generator: kustomize
+  team: cccssront01
   app: sensorenregister
   env: local
 

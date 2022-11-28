@@ -2,6 +2,9 @@ resources:
   - ../../base
 
 commonLabels:
+  generator: kustomize
+  team: cccssront01
+  app: sensorenregister
   env: dev
 
 components:

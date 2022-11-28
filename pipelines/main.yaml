@@ -14,6 +14,10 @@ trigger:
     include:
       - "*.*.*"
 
+variables:
+  # Debugging
+  System.Debug: true
+
 stages:
   - stage: build
     pool:
@@ -122,15 +126,23 @@ stages:
               kubernetesServiceEndpoint: "SCN-K8S-O-SSR"
               namespace: "ns-ccc-ssr-ont-01-sensorenregister"
               command: "get"
-              arguments: "deploy,svc,ingress,configmap,secrets,job,cronjob"
+              arguments: "deploy,svc,ingress,configmap,secrets,job,cronjob,networkpolicy,secretproviderclass"
 
-          # - task: Kubernetes@1
-          #   inputs:
-          #     connectionType: "Kubernetes Service Connection"
-          #     kubernetesServiceEndpoint: "SCN-K8S-O-SSR"
-          #     namespace: "ns-ccc-ssr-ont-01-sensorenregister"
-          #     command: "delete"
-          #     arguments: "-l team=TAMM,app=sensorenregister deploy,svc,ingress,configmap,secrets,job,cronjob,networkpolicy,secretproviderclass --all"
+          - task: Kubernetes@1
+            inputs:
+              connectionType: "Kubernetes Service Connection"
+              kubernetesServiceEndpoint: "SCN-K8S-O-SSR"
+              namespace: "ns-ccc-ssr-ont-01-sensorenregister"
+              command: "delete"
+              arguments: "-l generator=kustomize deploy,svc,ingress,configmap,secrets,job,cronjob,networkpolicy,secretproviderclass"
+
+          - task: Kubernetes@1
+            inputs:
+              connectionType: "Kubernetes Service Connection"
+              kubernetesServiceEndpoint: "SCN-K8S-O-SSR"
+              namespace: "ns-ccc-ssr-ont-01-sensorenregister"
+              command: "delete"
+              arguments: "-l app=sensorenregister,env=dev,team=TAMM deploy,svc,ingress,configmap,secrets,job,cronjob,networkpolicy,secretproviderclass"
 
           - task: AzureCLI@2
             displayName: "Generate manifests"
@@ -179,14 +191,36 @@ stages:
               scriptType: "bash"
               scriptLocation: "inlineScript"
               inlineScript: |
-                kubectl config set-context --current --namespace=ns-ccc-ssr-ont-01-sensorenregister
+                kubectl config set-context deploy --namespace=ns-ccc-ssr-ont-01-sensorenregister
+                kubectl config use-context deploy
                 kubectl config view
 
           - task: AzureCLI@2
-            displayName: "get all resources"
+            displayName: "describe all"
             inputs:
               azureSubscription: "ARM-CCC-SSR-ont-01"
               scriptType: "bash"
               scriptLocation: "inlineScript"
               inlineScript: |
                 kubectl get all
+                kubectl describe all
+
+          - task: AzureCLI@2
+            displayName: "describe ingress"
+            inputs:
+              azureSubscription: "ARM-CCC-SSR-ont-01"
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+                kubectl get ingress
+                kubectl describe ingress
+
+          - task: AzureCLI@2
+            displayName: "describe secrets"
+            inputs:
+              azureSubscription: "ARM-CCC-SSR-ont-01"
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+                kubectl get secrets
+                kubectl describe secrets
