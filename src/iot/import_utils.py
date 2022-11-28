@@ -135,7 +135,9 @@ class PersonData:
 
     def validate(self):
         try:
-            PersonDataSerializer(data=dataclasses.asdict(self)).is_valid(True)
+            PersonDataSerializer(data=dataclasses.asdict(self)).is_valid(
+                raise_exception=True
+            )
         except ValidationError as e:
             raise InvalidPersonDataError(e) from e
 
@@ -779,6 +781,24 @@ def parse_date(value: Union[str, datetime.date, datetime.datetime]):
         )
 
 
+STADSDEEL_TO_STADSDEEL_CODE_MAPPING = {
+    "Stadsdeel Centrum": "A",
+    "Stadsdeel Oost": "M",
+    "Stadsdeel Westpoort": "B",
+    "Stadsdeel Nieuw-West": "F",
+    "Stadsdeel Zuidoost": "T",
+    "Stadsdeel Noord": "N",
+    "Stadsdeel West": "E",
+    "Stadsdeel Weesp": "S",
+    "Stadsdeel Zuid": "K",
+}
+
+
+def remove_all(relation):
+    for entity in relation.all():
+        relation.remove(entity)
+
+
 def import_sensor(
     sensor_data: SensorData, owner: models.Person, action_logger=lambda x: x
 ):
@@ -811,17 +831,25 @@ def import_sensor(
         )
     )
 
+    # many2many relations
+    remove_all(device.regions)
     if 'regions' in location:
         for region_name in location['regions'].split(settings.IPROX_SEPARATOR):
             region = action_logger(
-                models.Region.objects.get_or_create(name=region_name)
+                models.Region.objects.get_or_create(
+                    name=STADSDEEL_TO_STADSDEEL_CODE_MAPPING.get(
+                        region_name, region_name
+                    )
+                )
             )[0]
             device.regions.add(region)
 
+    remove_all(device.themes)
     for theme_name in sensor_data.themes.split(settings.IPROX_SEPARATOR):
         theme = models.Theme.objects.get_or_create(name=theme_name)[0]
         device.themes.add(theme)
 
+    remove_all(device.observation_goals)
     for observation_goal in sensor_data.observation_goals:
 
         # only create a legal_ground if it's not empty string and valid, otherwise make it None.
@@ -844,6 +872,7 @@ def import_sensor(
         )[0]
         device.observation_goals.add(import_result)
 
+    remove_all(device.projects)
     for project in sensor_data.projects:
         # only import the projects if the list is not empty
         if project:

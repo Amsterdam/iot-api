@@ -8,6 +8,7 @@ from django.db import models
 # is to migrate this data to the sensrnet system once we are able to host our
 # own sensrnet node. For more information about the sensrnet data model see
 # https://kadaster-labs.github.io/sensrnet-home/Model/
+from django.db.models import JSONField
 
 
 class Person(models.Model):
@@ -136,6 +137,26 @@ class Project(models.Model):
     class Meta:
         verbose_name = 'Project'
         verbose_name_plural = 'Projects'
+
+
+class DeviceJson(models.Model):
+    # unmanaged model so we can perform a raw sql query to retrieve
+    # the results for the api (see DevicesViewSet)
+    themes = models.JSONField()
+    observation_goals = models.JSONField()
+    project_paths = models.JSONField()
+    regions = models.JSONField()
+    owner = models.JSONField()
+    location = models.JSONField()
+    active_until = models.DateField()
+    contains_pi_data = models.BooleanField()
+    datastream = models.TextField()
+    location_description = models.TextField()
+    reference = models.TextField()
+    type = models.TextField()
+
+    class Meta:
+        managed = False
 
 
 class Device(models.Model):
