@@ -1,8 +1,9 @@
 import pytest
 from django.conf import settings
 
-from iot import import_utils, import_utils_apis, models
-from iot.import_utils import LatLong, Location, ObservationGoal, PersonData, SensorData
+from iot import models
+from iot.dateclasses import LatLong, Location, ObservationGoal, PersonData, SensorData
+from iot.importers import import_person, import_sensor, import_apis
 from iot.serializers import DeviceSerializer
 
 
@@ -144,7 +145,7 @@ privacyverklaringen-b/artikel-3/",
             )
         ]
         sensor_list = list(
-            import_utils_apis.parse_verkeersonderzoek_met_cameras(data=api_data)
+            import_apis.parse_verkeersonderzoek_met_cameras(data=api_data)
         )
         sensor_data = sensor_list[0]
         person_data = sensor_data.owner
@@ -169,7 +170,7 @@ class TestImportPerson:
     }
 
     def test_import_person(self, person_data):
-        import_utils.import_person(person_data)
+        import_person.import_person(person_data)
         assert self.actual == [self.expected]
 
 
@@ -233,8 +234,8 @@ privacyverklaringen-b/artikel-3/',
 
     def test_import_sensor(self, sensor_data):
         # Basic check for importing sensor data
-        owner = import_utils.import_person(sensor_data.owner)
-        import_utils.import_sensor(sensor_data, owner)
+        owner = import_person.import_person(sensor_data.owner)
+        import_sensor.import_sensor(sensor_data, owner)
         assert self.actual[0] == self.expected_2
 
     def test_import_sensor_from_parse_verkeersonderzoek_met_cameras_success(
@@ -245,12 +246,12 @@ privacyverklaringen-b/artikel-3/',
         the parser of the verkeersonderzoek_met_cameras to get a sensor.
         call the import_sensor and expected it to be imported.
         """
-        parser = import_utils_apis.parse_verkeersonderzoek_met_cameras
+        parser = import_apis.parse_verkeersonderzoek_met_cameras
         sensor_list = list(parser(api_data))
         sensor = sensor_list[0]
         person = sensor.owner
-        imported_person = import_utils.import_person(person_data=person)
-        result = import_utils.import_sensor(sensor, imported_person)
+        imported_person = import_person.import_person(person_data=person)
+        result = import_sensor.import_sensor(sensor, imported_person)
 
         assert type(result[0]) == models.Device  # expect a device object to be returned
         assert self.actual[0] == self.expected_1

@@ -1,8 +1,9 @@
 import pytest
 from django.conf import settings
 
-from iot import import_utils, import_utils_apis, models
-from iot.import_utils import LatLong, ObservationGoal, PersonData, SensorData
+from iot import models
+from iot.dateclasses import LatLong, Location, ObservationGoal, PersonData, SensorData
+from iot.importers import import_person, import_sensor, import_apis
 from iot.serializers import DeviceSerializer
 
 
@@ -73,12 +74,12 @@ class TestDeleteNotFoundSensor:
         after that provide only two same sensors to the delete_sensor function from the
         same source. expect to have only two sensors remaining and one deleted.
         """
-        parser = import_utils_apis.parse_wifi_sensor_crowd_management
+        parser = import_apis.parse_wifi_sensor_crowd_management
         sensor_list = list(parser(sensor_data_delete))
         for sensor in sensor_list:
             person = sensor.owner
-            imported_person = import_utils.import_person(person_data=person)
-            import_utils.import_sensor(sensor, imported_person)
+            imported_person = import_person.import_person(person_data=person)
+            import_sensor.import_sensor(sensor, imported_person)
 
         assert len(self.actual) == 3
 
@@ -130,7 +131,7 @@ class TestDeleteNotFoundSensor:
         )
 
         sensors_list = [sensor1, sensor2]
-        import_utils_apis.delete_not_found_sensors(
+        import_apis.delete_not_found_sensors(
             sensors=sensors_list, source='wifi_sensor_crowd_management'
         )
 
@@ -144,12 +145,12 @@ class TestDeleteNotFoundSensor:
         """provide three sensors to be created for the wifi sensor crowd management. after that provide
         only two same sensors to the delete_sensor function from the a different source.
         expect to have no sensor deleted from the wifi_sensor_crowd_management."""
-        parser = import_utils_apis.parse_wifi_sensor_crowd_management
+        parser = import_apis.parse_wifi_sensor_crowd_management
         sensor_list = list(parser(sensor_data_delete))
         for sensor in sensor_list:
             person = sensor.owner
-            imported_person = import_utils.import_person(person_data=person)
-            import_utils.import_sensor(sensor, imported_person)
+            imported_person = import_person.import_person(person_data=person)
+            import_sensor.import_sensor(sensor, imported_person)
 
         assert len(self.actual) == 3
 
@@ -200,7 +201,7 @@ class TestDeleteNotFoundSensor:
         )
 
         sensors_list = [sensor1, sensor2]
-        result = import_utils_apis.delete_not_found_sensors(
+        result = import_apis.delete_not_found_sensors(
             sensors=sensors_list, source='sensor_crowd_management'
         )
 
@@ -222,7 +223,7 @@ class TestUrlAdjusterForLegalDeclarations:
         """provide a url that starts with https://. expect the same url will be returned."""
 
         privacy_declaration_url = "https://www.amsterdam.nl/foo/"
-        returned_url = import_utils_apis.adjust_url(privacy_declaration_url)
+        returned_url = import_apis.adjust_url(privacy_declaration_url)
 
         assert returned_url == privacy_declaration_url
 
@@ -232,7 +233,7 @@ class TestUrlAdjusterForLegalDeclarations:
 
         privacy_declaration_url = "www.amsterdam.nl/foo/"
         expected_url = "https://www.amsterdam.nl/foo/"
-        returned_url = import_utils_apis.adjust_url(privacy_declaration_url)
+        returned_url = import_apis.adjust_url(privacy_declaration_url)
 
         assert returned_url == expected_url
 
@@ -242,6 +243,6 @@ class TestUrlAdjusterForLegalDeclarations:
 
         privacy_declaration_url = "https://www.amsterdam.nl/foo/ "
         expected_url = "https://www.amsterdam.nl/foo/"
-        returned_url = import_utils_apis.adjust_url(privacy_declaration_url)
+        returned_url = import_apis.adjust_url(privacy_declaration_url)
 
         assert returned_url == expected_url
