@@ -1,5 +1,3 @@
-import typing
-
 from django.contrib.gis.db import models as gis_models
 from django.contrib.postgres.fields import ArrayField, CIEmailField, CITextField
 from django.db import models
