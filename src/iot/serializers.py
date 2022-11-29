@@ -14,6 +14,7 @@ class PersonSerializer(HALSerializer):
         """Overriding method to disable unique together checks"""
         return []
 
+
 class ObservationGoalSerializer(HALSerializer):
     legal_ground = serializers.StringRelatedField()
 
