@@ -63,6 +63,13 @@ patches:
       - op: add
         path: "/spec/rules/0/host"
         value: localhost
+  - target:
+      kind: SecretProviderClass
+      name: secrets
+    patch: |-
+      - op: remove
+        path: "/spec/secretObjects/0"
+        value: localhost
 
 images:
   - name: localhost:5000/sensorenregister/api

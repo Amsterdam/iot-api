@@ -154,6 +154,15 @@ stages:
                 popd
 
           - task: Kubernetes@1
+            displayName: "Dry Run manifests"
+            inputs:
+              connectionType: "Kubernetes Service Connection"
+              kubernetesServiceEndpoint: "SCN-K8S-O-SSR"
+              namespace: "ns-ccc-ssr-ont-01-sensorenregister"
+              command: "apply"
+              arguments: "--dry-run=client -f manifests/overlays/dev/generated.yaml"
+
+          - task: Kubernetes@1
             displayName: "Apply manifests"
             inputs:
               connectionType: "Kubernetes Service Connection"
