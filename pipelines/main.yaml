@@ -220,6 +220,8 @@ stages:
                 kubectl get deploy
                 echo "----------------------------------------------------------"
                 kubectl describe deploy
+                echo "----------------------------------------------------------"
+                kubectl get deploy -o yaml
 
           - task: AzureCLI@2
             displayName: "describe pods"
