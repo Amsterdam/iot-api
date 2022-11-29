@@ -211,40 +211,94 @@ stages:
                 kubectl describe all
 
           - task: AzureCLI@2
-            displayName: "ingress"
+            displayName: "describe deploys"
+            inputs:
+              azureSubscription: "ARM-CCC-SSR-ont-01"
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+                kubectl get deploy
+                echo "----------------------------------------------------------"
+                kubectl describe deploy
+
+          - task: AzureCLI@2
+            displayName: "describe pods"
+            inputs:
+              azureSubscription: "ARM-CCC-SSR-ont-01"
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+                kubectl get pods
+                echo "----------------------------------------------------------"
+                kubectl describe pods
+
+          - task: AzureCLI@2
+            displayName: "describe jobs"
+            inputs:
+              azureSubscription: "ARM-CCC-SSR-ont-01"
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+                kubectl get jobs
+                echo "----------------------------------------------------------"
+                kubectl describe jobs
+
+          - task: AzureCLI@2
+            displayName: "describe ingress"
             inputs:
               azureSubscription: "ARM-CCC-SSR-ont-01"
               scriptType: "bash"
               scriptLocation: "inlineScript"
               inlineScript: |
                 kubectl get ingress
+                echo "----------------------------------------------------------"
                 kubectl describe ingress
 
           - task: AzureCLI@2
-            displayName: "networkpolicy"
+            displayName: "describe networkpolicy"
             inputs:
               azureSubscription: "ARM-CCC-SSR-ont-01"
               scriptType: "bash"
               scriptLocation: "inlineScript"
               inlineScript: |
                 kubectl get NetworkPolicy.projectcalico
+                echo "----------------------------------------------------------"
                 kubectl describe NetworkPolicy.projectcalico
 
           - task: AzureCLI@2
-            displayName: "secrets"
+            displayName: "describe secrets"
             inputs:
               azureSubscription: "ARM-CCC-SSR-ont-01"
               scriptType: "bash"
               scriptLocation: "inlineScript"
               inlineScript: |
                 kubectl get secrets
+                echo "----------------------------------------------------------"
                 kubectl describe secrets
 
           - task: AzureCLI@2
-            displayName: "app logs"
+            displayName: "logs deploy/app"
             inputs:
               azureSubscription: "ARM-CCC-SSR-ont-01"
               scriptType: "bash"
               scriptLocation: "inlineScript"
               inlineScript: |
                 kubectl logs deploy/app
+
+          - task: AzureCLI@2
+            displayName: "logs job/migrate"
+            inputs:
+              azureSubscription: "ARM-CCC-SSR-ont-01"
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+                kubectl logs job/migrate
+
+          - task: AzureCLI@2
+            displayName: "logs job/import"
+            inputs:
+              azureSubscription: "ARM-CCC-SSR-ont-01"
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+                kubectl logs job/import
