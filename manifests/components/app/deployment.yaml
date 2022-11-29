@@ -11,6 +11,7 @@ spec:
     metadata:
       labels:
         component: api
+        version: "1"
     spec:
       securityContext:
         runAsNonRoot: true

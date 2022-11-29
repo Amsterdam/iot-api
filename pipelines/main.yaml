@@ -16,7 +16,7 @@ trigger:
 
 variables:
   # Debugging
-  System.Debug: true
+  System.Debug: false
 
 stages:
   - stage: build
@@ -203,11 +203,15 @@ stages:
               scriptLocation: "inlineScript"
               inlineScript: |
 
-                for i in {1..10}; do kubectl get all; sleep 1; done
+                for i in {1..10}; do 
+                  echo "----------------------------------------------------------"
+                  kubectl get all; 
+                  sleep 1; 
+                done
                 kubectl describe all
 
           - task: AzureCLI@2
-            displayName: "describe ingress"
+            displayName: "ingress"
             inputs:
               azureSubscription: "ARM-CCC-SSR-ont-01"
               scriptType: "bash"
@@ -217,7 +221,7 @@ stages:
                 kubectl describe ingress
 
           - task: AzureCLI@2
-            displayName: "describe networkpolicy"
+            displayName: "networkpolicy"
             inputs:
               azureSubscription: "ARM-CCC-SSR-ont-01"
               scriptType: "bash"
@@ -227,7 +231,7 @@ stages:
                 kubectl describe NetworkPolicy.projectcalico
 
           - task: AzureCLI@2
-            displayName: "describe secrets"
+            displayName: "secrets"
             inputs:
               azureSubscription: "ARM-CCC-SSR-ont-01"
               scriptType: "bash"
@@ -235,3 +239,12 @@ stages:
               inlineScript: |
                 kubectl get secrets
                 kubectl describe secrets
+
+          - task: AzureCLI@2
+            displayName: "app logs"
+            inputs:
+              azureSubscription: "ARM-CCC-SSR-ont-01"
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+                kubectl logs deploy/app
