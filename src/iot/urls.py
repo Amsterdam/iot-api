@@ -58,6 +58,7 @@ urlpatterns = [
         ),
     ),
     url(r'^status/', include('iot.health.urls')),
+    url(r'', views.PingView.as_view(), name='ping'),
 ]
 
 if settings.DEBUG:

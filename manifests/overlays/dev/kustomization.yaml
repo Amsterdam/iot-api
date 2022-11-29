@@ -13,6 +13,7 @@ components:
   - ../../components/keyvault
 
 patchesStrategicMerge:
+  - deployment.yaml
   - ingress.yaml
 
 patches:

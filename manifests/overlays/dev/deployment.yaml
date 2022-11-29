@@ -1,0 +1,14 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app
+spec:
+  template:
+    spec:
+      nodeSelector:
+        environment: cccssront01
+      tolerations:
+        - key: "cccssront01"
+          operator: "Equal"
+          value: "true"
+          effect: "NoSchedule"

@@ -18,10 +18,8 @@ spec:
 
       automountServiceAccountToken: false
 
-      nodeSelector:
-        environment: cccssront01
       tolerations:
-        - key: "cccssront01"
+        - key: "foo"
           operator: "Equal"
           value: "true"
           effect: "NoSchedule"
