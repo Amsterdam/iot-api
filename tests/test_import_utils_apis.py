@@ -1,9 +1,6 @@
 import pytest
-from django.conf import settings
 
-from iot import import_utils, import_utils_apis, models
-from iot.import_utils import LatLong, ObservationGoal, PersonData, SensorData
-from iot.serializers import DeviceSerializer
+from iot import import_utils_apis
 
 
 @pytest.fixture
