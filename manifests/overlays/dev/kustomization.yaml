@@ -26,6 +26,6 @@ patches:
 
 images:
   - name: localhost:5000/sensorenregister/api
-    newName: mainweuacroyh7oqq4sbyjt.azurecr.io/sensorenregister/api
+    newName: mainweuacroyh7oqq4sbyjt.azurecr.io/sensorenregister/api-dev
     newTag: latest
     # newTag: plain-text
