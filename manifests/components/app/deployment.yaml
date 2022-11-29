@@ -37,10 +37,10 @@ spec:
           resources:
             requests:
               cpu: 1
-              memory: "128Mi"
+              memory: "512Mi"
             limits:
               cpu: 1
-              memory: "128Mi"
+              memory: "512Mi"
           envFrom:
             - configMapRef:
                 name: app-env
