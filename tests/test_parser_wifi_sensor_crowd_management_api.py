@@ -1,8 +1,9 @@
 import pytest
 from django.conf import settings
 
-from iot import import_utils, import_utils_apis, models
-from iot.import_utils import LatLong, Location, ObservationGoal, PersonData, SensorData
+from iot import models
+from iot.dateclasses import LatLong, Location, ObservationGoal, PersonData, SensorData
+from iot.importers import import_apis, import_person, import_sensor
 from iot.serializers import DeviceSerializer
 
 
@@ -164,7 +165,7 @@ class TestApiParser:
             )
         ]
         sensor_list = list(
-            import_utils_apis.parse_wifi_sensor_crowd_management(data=api_data)
+            import_apis.parse_wifi_sensor_crowd_management(data=api_data)
         )
 
         assert len(sensor_list) == 1
@@ -192,7 +193,7 @@ class TestImportPerson:
     }
 
     def test_import_person(self, person_data):
-        import_utils.import_person(person_data)
+        import_person.import_person(person_data)
         assert self.actual == [self.expected]
 
 
@@ -254,8 +255,8 @@ class TestImportSensor:
 
     def test_import_sensor(self, sensor_data):
         # Basic check for importing sensor data
-        owner = import_utils.import_person(sensor_data.owner)
-        import_utils.import_sensor(sensor_data, owner)
+        owner = import_person.import_person(sensor_data.owner)
+        import_sensor.import_sensor(sensor_data, owner)
         assert self.actual[0] == self.expected_2
 
     def test_import_sensor_from_wifi_sensor_crowd_management(self, api_data):
@@ -264,12 +265,12 @@ class TestImportSensor:
         the parser of the wifi_sensor_crowd_management to get a sensor.
         call the import_sensor and expected it to be imported.
         """
-        parser = import_utils_apis.parse_wifi_sensor_crowd_management
+        parser = import_apis.parse_wifi_sensor_crowd_management
         sensor_list = list(parser(api_data))
         sensor = sensor_list[0]
         person = sensor.owner
-        imported_person = import_utils.import_person(person_data=person)
-        result = import_utils.import_sensor(sensor, imported_person)
+        imported_person = import_person.import_person(person_data=person)
+        result = import_sensor.import_sensor(sensor, imported_person)
 
         assert type(result[0]) == models.Device  # expect a device object to be returned
         assert self.actual[0] == self.expected_1
@@ -290,7 +291,7 @@ class TestConvertApiData:
         sensors created and a tuple to be returned.
         """
 
-        result = import_utils_apis.convert_api_data(
+        result = import_apis.convert_api_data(
             api_name='wifi_sensor_crowd_management', api_data=api_data_2
         )
 
@@ -308,12 +309,12 @@ class TestConvertApiData:
         """
 
         # insert the first list of sensor which should include only one sensor.
-        result_1 = import_utils_apis.convert_api_data(
+        result_1 = import_apis.convert_api_data(
             api_name='wifi_sensor_crowd_management', api_data=api_data
         )
 
         # insert the second list of sensor which should include two sensors.
-        result_2 = import_utils_apis.convert_api_data(
+        result_2 = import_apis.convert_api_data(
             api_name='wifi_sensor_crowd_management', api_data=api_data_2
         )
 

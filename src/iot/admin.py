@@ -10,7 +10,7 @@ from leaflet.admin import LeafletGeoAdmin, LeafletGeoAdminMixin
 from openpyxl import load_workbook
 
 from iot import models
-from iot.import_utils import import_xlsx
+from iot.importers.import_xlsx import import_xlsx
 
 admin.site.register(models.Type)
 admin.site.register(models.Theme)

@@ -1,6 +1,6 @@
 import pytest
 
-from iot import import_utils_apis
+from iot.importers import import_apis
 
 
 @pytest.fixture
@@ -62,7 +62,7 @@ class TestUrlAdjusterForLegalDeclarations:
         """provide a url that starts with https://. expect the same url will be returned."""
 
         privacy_declaration_url = "https://www.amsterdam.nl/foo/"
-        returned_url = import_utils_apis.adjust_url(privacy_declaration_url)
+        returned_url = import_apis.adjust_url(privacy_declaration_url)
 
         assert returned_url == privacy_declaration_url
 
@@ -72,7 +72,7 @@ class TestUrlAdjusterForLegalDeclarations:
 
         privacy_declaration_url = "www.amsterdam.nl/foo/"
         expected_url = "https://www.amsterdam.nl/foo/"
-        returned_url = import_utils_apis.adjust_url(privacy_declaration_url)
+        returned_url = import_apis.adjust_url(privacy_declaration_url)
 
         assert returned_url == expected_url
 
@@ -82,6 +82,6 @@ class TestUrlAdjusterForLegalDeclarations:
 
         privacy_declaration_url = "https://www.amsterdam.nl/foo/ "
         expected_url = "https://www.amsterdam.nl/foo/"
-        returned_url = import_utils_apis.adjust_url(privacy_declaration_url)
+        returned_url = import_apis.adjust_url(privacy_declaration_url)
 
         assert returned_url == expected_url

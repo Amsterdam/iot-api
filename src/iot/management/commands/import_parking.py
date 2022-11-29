@@ -3,15 +3,9 @@ from django.contrib.gis.geos import Polygon
 from django.core.management import BaseCommand
 from rest_framework_gis.fields import GeometryField
 
-from iot.import_utils import (
-    LatLong,
-    Location,
-    ObservationGoal,
-    PersonData,
-    SensorData,
-    import_person,
-    import_sensor,
-)
+from iot.dateclasses import LatLong, Location, ObservationGoal, PersonData, SensorData
+from iot.importers.import_person import import_person
+from iot.importers.import_sensor import import_sensor
 
 
 def get(url, **params):

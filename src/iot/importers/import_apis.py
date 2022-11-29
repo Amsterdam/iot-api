@@ -3,8 +3,10 @@ from typing import Dict, Generator, List, Tuple
 
 from django.conf import settings
 
-from iot import import_utils, models
-from iot.import_utils import LatLong, Location, ObservationGoal, PersonData, SensorData
+from iot import models, validators
+from iot.dateclasses import LatLong, Location, ObservationGoal, PersonData, SensorData
+from iot.importers import import_person, import_sensor
+from iot.validators import validate_person_data
 
 API = 'https://maps.amsterdam.nl/open_geodata/geojson_lnglat.php?'
 API_ANPR = 'https://service.vorin-amsterdam.nl/camera-geo_2/camera/geo'
@@ -37,10 +39,10 @@ def convert_api_data(api_name: str, api_data: dict) -> Tuple[List[Exception], in
     owners_list = [sensor.owner for sensor in sensors]
 
     for owner in owners_list:
-        owner.validate()
+        validate_person_data(owner)
 
     imported_owners = {
-        person_data.email.lower(): import_utils.import_person(person_data)
+        person_data.email.lower(): import_person.import_person(person_data)
         for person_data in owners_list
     }
 
@@ -49,9 +51,9 @@ def convert_api_data(api_name: str, api_data: dict) -> Tuple[List[Exception], in
     errors: List[Exception] = []
     for sensor_data in sensors:
         try:
-            import_utils.validate_sensor(sensor_data)
+            validators.validate_sensor(sensor_data)
             owner = imported_owners[sensor_data.owner.email.lower()]
-            _, created = import_utils.import_sensor(sensor_data, owner)
+            _, created = import_sensor.import_sensor(sensor_data, owner)
             counter.update([created])
         except Exception as e:
             errors.append(e)

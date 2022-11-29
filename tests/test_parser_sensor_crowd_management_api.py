@@ -1,8 +1,9 @@
 import pytest
 from django.conf import settings
 
-from iot import import_utils_apis, models
-from iot.import_utils import LatLong, Location, ObservationGoal, PersonData, SensorData
+from iot import models
+from iot.dateclasses import LatLong, Location, ObservationGoal, PersonData, SensorData
+from iot.importers import import_apis
 from iot.serializers import DeviceSerializer
 
 
@@ -233,9 +234,7 @@ class TestApiParser:
                 projects=[''],
             ),
         ]
-        sensor_list = list(
-            import_utils_apis.parse_sensor_crowd_management(data=api_data)
-        )
+        sensor_list = list(import_apis.parse_sensor_crowd_management(data=api_data))
 
         assert len(sensor_list) == 3
 
@@ -260,7 +259,7 @@ class TestConvertApiData:
         sensors created and a tuple to be returned.
         """
 
-        result = import_utils_apis.convert_api_data(
+        result = import_apis.convert_api_data(
             api_name='sensor_crowd_management', api_data=api_data_2
         )
 
@@ -276,12 +275,12 @@ class TestConvertApiData:
         """
 
         # insert the first list of sensor which should include only one sensor.
-        result_1 = import_utils_apis.convert_api_data(
+        result_1 = import_apis.convert_api_data(
             api_name='sensor_crowd_management', api_data=api_data
         )
 
         # insert the second list of sensor which should include two sensors.
-        result_2 = import_utils_apis.convert_api_data(
+        result_2 = import_apis.convert_api_data(
             api_name='sensor_crowd_management', api_data=api_data_2
         )
 

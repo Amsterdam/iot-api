@@ -1,7 +1,7 @@
 import requests
 from django.core.management.base import BaseCommand
 
-from iot import import_utils_apis
+from iot.importers import import_apis
 
 
 class Command(BaseCommand):
@@ -44,10 +44,10 @@ class Command(BaseCommand):
 
         api_names = options['api_name']
         if not api_names:
-            api_names = import_utils_apis.API_MAPPER.keys()
+            api_names = import_apis.API_MAPPER.keys()
 
         for api in api_names:
-            api_url = import_utils_apis.API_MAPPER[
+            api_url = import_apis.API_MAPPER[
                 api
             ]  # get the url that belongs to the api.
 
@@ -60,7 +60,7 @@ class Command(BaseCommand):
                 raise RuntimeError(f"{response.status_code} - {response.content}")
 
             data = response.json()  # get the content of the response as dict
-            result = import_utils_apis.convert_api_data(api_name=api, api_data=data)
+            result = import_apis.convert_api_data(api_name=api, api_data=data)
             # convert the out to a str with inserts, updates and errors
             output = f'{api}: inserts {result[1]}, updates {result[2]}, errors {len(result[0])}'
 

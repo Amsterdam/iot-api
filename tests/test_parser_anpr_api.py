@@ -1,8 +1,9 @@
 import pytest
 from django.conf import settings
 
-from iot import import_utils, import_utils_apis, models
-from iot.import_utils import LatLong, Location, ObservationGoal, PersonData, SensorData
+from iot import models
+from iot.dateclasses import LatLong, Location, ObservationGoal, PersonData, SensorData
+from iot.importers import import_apis, import_person, import_sensor
 from iot.serializers import DeviceSerializer
 
 
@@ -190,7 +191,7 @@ class TestApiParser:
                 projects=[''],
             ),
         ]
-        sensors_list = list(import_utils_apis.parse_anpr(data=api_data))
+        sensors_list = list(import_apis.parse_anpr(data=api_data))
 
         assert len(sensors_list) == 2
 
@@ -216,7 +217,7 @@ class TestImportPerson:
     }
 
     def test_import_person(self, person_data):
-        import_utils.import_person(person_data)
+        import_person.import_person(person_data)
         assert self.actual == [self.expected]
 
 
@@ -313,8 +314,8 @@ class TestImportSensor:
 
     def test_import_sensor(self, sensor_data):
         # Basic check for importing sensor data
-        owner = import_utils.import_person(sensor_data.owner)
-        import_utils.import_sensor(sensor_data, owner)
+        owner = import_person.import_person(sensor_data.owner)
+        import_sensor.import_sensor(sensor_data, owner)
         assert self.actual[0] == self.expected_2
 
     def test_import_sensor_from_anpr(self, api_data):
@@ -324,11 +325,11 @@ class TestImportSensor:
         call the import_sensor with only the second parsed sensor
         and expected it to be imported.
         """
-        parser = import_utils_apis.parse_anpr
+        parser = import_apis.parse_anpr
         sensors_list = list(parser(api_data))
         person = sensors_list[0].owner  # take the owner from the first sensor
-        imported_person = import_utils.import_person(person_data=person)
-        result = import_utils.import_sensor(sensors_list[1], imported_person)
+        imported_person = import_person.import_person(person_data=person)
+        result = import_sensor.import_sensor(sensors_list[1], imported_person)
 
         assert len(result) == 2  # expect two sensors
         assert len(self.actual) == 1
@@ -350,9 +351,7 @@ class TestConvertApiData:
         sensors created and a tuple to be returned.
         """
 
-        result = import_utils_apis.convert_api_data(
-            api_name='anpr', api_data=api_data_2
-        )
+        result = import_apis.convert_api_data(api_name='anpr', api_data=api_data_2)
 
         assert result == ([], 2, 0)
         assert len(self.actual) == 2
@@ -369,15 +368,11 @@ class TestConvertApiData:
 
         # insert the first list of sensor which should include two sensors with the ids
         # ANPR-00001-V & ANPR-00002-V.
-        result_1 = import_utils_apis.convert_api_data(
-            api_name='anpr', api_data=api_data
-        )
+        result_1 = import_apis.convert_api_data(api_name='anpr', api_data=api_data)
 
         # insert the second list of sensor which should include two sensors with the ids
         # ANPR-00001-V & ANPR-00003-V. The ANPR-00001-V has different location points.
-        result_2 = import_utils_apis.convert_api_data(
-            api_name='anpr', api_data=api_data_2
-        )
+        result_2 = import_apis.convert_api_data(api_name='anpr', api_data=api_data_2)
 
         # get the sensor with referece ANPR-00001-V because it should have been
         # updated with a new location.
