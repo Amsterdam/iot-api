@@ -23,6 +23,7 @@ pyinstrument
 black
 isort
 ipdb
+autoflake
 
 # extra package to run runserver_plus
 werkzeug
