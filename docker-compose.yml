@@ -15,6 +15,7 @@ x-app: &base-app
     - ./src:/app/src
     - ./tests:/app/tests
     - ./deploy:/app/deploy
+    - ./pyproject.toml:/app/pyproject.toml
   entrypoint: /app/deploy/wait-for-it.sh database:5432 --
 
 volumes:
