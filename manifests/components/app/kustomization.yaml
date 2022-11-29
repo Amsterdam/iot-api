@@ -54,16 +54,3 @@ replacements:
           - spec.template.spec.volumes
         options:
           create: true
-
-  - source:
-      kind: Deployment
-      name: app
-      fieldPath: spec.template.spec.tolerations
-    targets:
-      - select:
-          kind: Job
-          labelSelector: component=api
-        fieldPaths:
-          - spec.template.spec.tolerations
-        options:
-          create: true

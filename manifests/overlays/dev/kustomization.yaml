@@ -7,15 +7,15 @@ commonLabels:
   app: sensorenregister
   env: dev
 
+patchesStrategicMerge:
+  - deployment.yaml
+  - ingress.yaml
+
 components:
   - ../../components/app
   - ../../components/ingress
   - ../../components/keyvault
   - ../../components/network
-
-patchesStrategicMerge:
-  - deployment.yaml
-  - ingress.yaml
 
 patches:
   - target:
@@ -31,3 +31,17 @@ images:
     newName: mainweuacroyh7oqq4sbyjt.azurecr.io/sensorenregister/api-dev
     newTag: latest
     # newTag: plain-text
+
+replacements:
+  - source:
+      kind: Deployment
+      name: app
+      fieldPath: spec.template.spec.tolerations
+    targets:
+      - select:
+          kind: Job
+          labelSelector: component=api
+        fieldPaths:
+          - spec.template.spec.tolerations
+        options:
+          create: true

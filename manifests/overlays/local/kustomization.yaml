@@ -25,6 +25,18 @@ configMapGenerator:
     envs:
       - app.env
 
+secretGenerator:
+  - name: app-secrets
+    literals:
+      - DEBUG=true
+      - SECRET_KEY=dev
+      - DATABASE_HOST=database
+      - DATABASE_NAME=dev
+      - DATABASE_PASSWORD=dev
+      - DATABASE_USER=dev
+      - OIDC_RP_CLIENT_ID=dev
+      - OIDC_RP_CLIENT_SECRET=dev
+
 patchesStrategicMerge:
   - deployment.yaml
   - secretproviderclass.yaml
