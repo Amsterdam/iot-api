@@ -6,7 +6,7 @@ from django.core.validators import URLValidator
 from rest_framework.exceptions import ValidationError
 
 from iot.dateclasses import LatLong, PostcodeHouseNumber, SensorData
-from iot.serializers import PersonDataSerializer
+from iot.serializers import PersonSerializer
 from iot.utils import DATE_FORMAT
 
 
@@ -18,12 +18,7 @@ def validate_active_until(sensor_data):
 
 
 def validate_person_data(self):
-    try:
-        PersonDataSerializer(data=dataclasses.asdict(self)).is_valid(
-            raise_exception=True
-        )
-    except ValidationError as e:
-        raise ValidationError(e) from e
+    PersonSerializer(data=dataclasses.asdict(self)).is_valid(raise_exception=True)
 
 
 def validate_sensor(sensor_data: SensorData):

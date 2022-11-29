@@ -1,3 +1,5 @@
+import json
+
 import pytest
 from django.conf import settings
 
@@ -82,9 +84,7 @@ def person_data():
         email="Meldingsplicht.Sensoren@amsterdam.nl",
         telephone="14020",
         website="https://www.amsterdam.nl/",
-        first_name="Afdeling",
-        last_name_affix="",
-        last_name="anpr management",
+        name="Afdeling anpr management",
     )
 
 
@@ -128,9 +128,7 @@ class TestApiParser:
             email="Meldingsplicht.Sensoren@amsterdam.nl",
             telephone="14020",
             website="https://www.amsterdam.nl/",
-            first_name="Afdeling",
-            last_name_affix="",
-            last_name="anpr management",
+            name="Afdeling anpr management",
         )
         # expected_value is a list of sensors
         expected = [
@@ -225,7 +223,10 @@ class TestImportPerson:
 class TestImportSensor:
     @property
     def actual(self):
-        return [DeviceSerializer(device).data for device in models.Device.objects.all()]
+        return [
+            json.loads(json.dumps(DeviceSerializer(device).data))
+            for device in models.Device.objects.all()
+        ]
 
     expected_1 = {
         'active_until': '2050-01-01',
@@ -249,6 +250,8 @@ class TestImportSensor:
             'name': 'Afdeling anpr management',
             'email': 'Meldingsplicht.Sensoren@amsterdam.nl',
             'organisation': 'Gemeente Amsterdam',
+            'telephone': '14020',
+            'website': 'https://www.amsterdam.nl/',
         },
         'regions': [],
         'themes': ['Mobiliteit: auto'],
@@ -274,6 +277,8 @@ class TestImportSensor:
             'name': 'Afdeling anpr management',
             'email': 'Meldingsplicht.Sensoren@amsterdam.nl',
             'organisation': 'Gemeente Amsterdam',
+            'telephone': '14020',
+            'website': 'https://www.amsterdam.nl/',
         },
         'regions': [],
         'themes': ['Mobiliteit: auto'],
@@ -304,6 +309,8 @@ class TestImportSensor:
             'name': 'Afdeling anpr management',
             'email': 'Meldingsplicht.Sensoren@amsterdam.nl',
             'organisation': 'Gemeente Amsterdam',
+            'telephone': '14020',
+            'website': 'https://www.amsterdam.nl/',
         },
         'regions': [],
         'themes': ['Mobiliteit: auto'],
@@ -342,7 +349,10 @@ class TestConvertApiData:
 
     @property
     def actual(self):
-        return [DeviceSerializer(device).data for device in models.Device.objects.all()]
+        return [
+            json.loads(json.dumps(DeviceSerializer(device).data))
+            for device in models.Device.objects.all()
+        ]
 
     def test_convert_api_data_anpr_sensor_only_insert_2(self, api_data_2):
         """

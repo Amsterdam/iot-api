@@ -78,9 +78,7 @@ def parse_wifi_sensor_crowd_management(data: dict) -> Generator[SensorData, None
         email='LVMA@amsterdam.nl',
         telephone='14020',
         website='https://www.amsterdam.nl/',
-        first_name='Afdeling',
-        last_name_affix='',
-        last_name='verkeersmanagment',
+        name='Afdeling verkeersmanagment',
     )
 
     features = data['features']  # list of sensors i think for now
@@ -133,9 +131,7 @@ def parse_sensor_crowd_management(data: dict) -> Generator[SensorData, None, Non
         email='LVMA@amsterdam.nl',
         telephone='14020',
         website='https://www.amsterdam.nl/',
-        first_name='Afdeling',
-        last_name_affix='',
-        last_name='verkeersmanagment',
+        name='Afdeling verkeersmanagment',
     )
 
     features = data['features']  # list of sensors i think for now
@@ -190,9 +186,7 @@ def parse_camera_brug_en_sluisbediening(
         email='Meldingsplicht.Sensoren@amsterdam.nl',
         telephone='14020',
         website='https://www.amsterdam.nl/',
-        first_name='Afdeling',
-        last_name_affix='',
-        last_name='stedelijkbeheer',
+        name='Afdeling stedelijkbeheer',
     )
 
     features = data['features']  # list of sensors i think for now
@@ -243,9 +237,7 @@ def parse_cctv_camera_verkeersmanagement(
         email='Meldingsplicht.Sensoren@amsterdam.nl',
         telephone='14020',
         website='https://www.amsterdam.nl/',
-        first_name='Afdeling',
-        last_name_affix='',
-        last_name='verkeersmanagement',
+        name='Afdeling verkeersmanagement',
     )
 
     features = data['features']  # list of sensors i think for now
@@ -301,9 +293,7 @@ def parse_kentekencamera_reistijd(data: dict) -> Generator[SensorData, None, Non
         email='Meldingsplicht.Sensoren@amsterdam.nl',
         telephone='14020',
         website='https://www.amsterdam.nl/',
-        first_name='Afdeling',
-        last_name_affix='',
-        last_name='verkeersmanagement',
+        name='Afdeling verkeersmanagement',
     )
 
     features = data['features']  # list of sensors i think for now
@@ -359,9 +349,7 @@ def parse_kentekencamera_milieuzone(data: dict) -> Generator[SensorData, None, N
         email='Meldingsplicht.Sensoren@amsterdam.nl',
         telephone='14020',
         website='https://www.amsterdam.nl/',
-        first_name='Afdeling',
-        last_name_affix='',
-        last_name='stedelijk beheer',
+        name='Afdeling stedelijk beheer',
     )
 
     features = data['features']  # list of sensors i think for now
@@ -416,9 +404,7 @@ def parse_ais_masten(data: dict) -> Generator[SensorData, None, None]:
         email='Meldingsplicht.Sensoren@amsterdam.nl',
         telephone='14020',
         website='https://www.amsterdam.nl/',
-        first_name='Programma',
-        last_name_affix='',
-        last_name='varen',
+        name='Programma varen',
     )
 
     features = data['features']  # list of sensors i think for now
@@ -469,9 +455,7 @@ def parse_verkeersonderzoek_met_cameras(
         email='verkeersonderzoek@amsterdam.nl',
         telephone='14020',
         website='https://www.amsterdam.nl/',
-        first_name='Afdeling',
-        last_name_affix='',
-        last_name='kennis en kaders',
+        name='Afdeling kennis en kaders',
     )
 
     features = data['features']  # list of sensors i think for now
@@ -526,9 +510,7 @@ def parse_beweegbare_fysieke_afsluiting(
         email='Meldingsplicht.Sensoren@amsterdam.nl',
         telephone='14020',
         website='https://www.amsterdam.nl/',
-        first_name='Afdeling',
-        last_name_affix='',
-        last_name='asset management',
+        name='Afdeling asset management',
     )
 
     features = data['features']  # list of sensors i think for now
@@ -577,9 +559,7 @@ def parse_anpr(data: dict) -> Generator[SensorData, None, None]:
         email='Meldingsplicht.Sensoren@amsterdam.nl',
         telephone='14020',
         website='https://www.amsterdam.nl/',
-        first_name='Afdeling',
-        last_name_affix='',
-        last_name='anpr management',
+        name='Afdeling anpr management',
     )
 
     features = data['features']  # list of sensors i think for now

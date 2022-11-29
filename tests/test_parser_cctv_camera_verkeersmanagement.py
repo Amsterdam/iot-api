@@ -1,3 +1,5 @@
+import json
+
 import pytest
 from django.conf import settings
 
@@ -114,9 +116,7 @@ def person_data():
         email="Meldingsplicht.Sensoren@amsterdam.nl",
         telephone="14020",
         website="https://www.amsterdam.nl/",
-        first_name="Afdeling",
-        last_name_affix="",
-        last_name="verkeersmanagement",
+        name="Afdeling verkeersmanagement",
     )
 
 
@@ -163,9 +163,7 @@ class TestApiParser:
             email="Meldingsplicht.Sensoren@amsterdam.nl",
             telephone="14020",
             website="https://www.amsterdam.nl/",
-            first_name="Afdeling",
-            last_name_affix="",
-            last_name="verkeersmanagement",
+            name="Afdeling verkeersmanagement",
         )
         # expected_value is a sensors
         expected = [
@@ -229,7 +227,10 @@ class TestImportPerson:
 class TestImportSensor:
     @property
     def actual(self):
-        return [DeviceSerializer(device).data for device in models.Device.objects.all()]
+        return [
+            json.loads(json.dumps(DeviceSerializer(device).data))
+            for device in models.Device.objects.all()
+        ]
 
     expected_1 = {
         'active_until': '2050-01-01',
@@ -249,6 +250,8 @@ specifieke/privacyverklaring-parkeren-verkeer-bouw/verkeersmanagement",
             'name': 'Afdeling verkeersmanagement',
             'email': 'Meldingsplicht.Sensoren@amsterdam.nl',
             'organisation': 'Gemeente Amsterdam',
+            'telephone': '14020',
+            'website': 'https://www.amsterdam.nl/',
         },
         'regions': [],
         'themes': ['Mobiliteit: auto'],
@@ -275,6 +278,8 @@ specifieke/privacyverklaring-parkeren-verkeer-bouw/verkeersmanagement",
             'name': 'Afdeling verkeersmanagement',
             'email': 'Meldingsplicht.Sensoren@amsterdam.nl',
             'organisation': 'Gemeente Amsterdam',
+            'telephone': '14020',
+            'website': 'https://www.amsterdam.nl/',
         },
         'regions': [],
         'themes': ['Mobiliteit: auto'],
@@ -312,7 +317,10 @@ class TestConverteApiData:
 
     @property
     def actual(self):
-        return [DeviceSerializer(device).data for device in models.Device.objects.all()]
+        return [
+            json.loads(json.dumps(DeviceSerializer(device).data))
+            for device in models.Device.objects.all()
+        ]
 
     def test_convert_api_data_cctvcv_only_insert_2(self, api_data_2):
         """

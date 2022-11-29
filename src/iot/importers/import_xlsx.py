@@ -90,14 +90,21 @@ def parse_bulk_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
         raise ValidationError(fields)
 
     values = Values(BULK_PERSON_FIELDS, [row[1] for row in rows])
+    names = [
+        n
+        for n in (
+            values['Voornaam'],
+            values['Tussenvoegsel (niet verplicht)'],
+            values['Achternaam'],
+        )
+        if n
+    ]
     owner = PersonData(
         organisation=values['Naam organisatie/bedrijf'],
         email=values['E-mail'],
         telephone=values['Telefoonnummer'],
         website=values['Website (niet verplicht)'],
-        first_name=values['Voornaam'],
-        last_name_affix=values['Tussenvoegsel (niet verplicht)'],
-        last_name=values['Achternaam'],
+        name=" ".join(names),
     )
 
     rows = workbook['Sensorregistratie'].rows
@@ -176,14 +183,15 @@ def parse_iprox_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
         if not referentienummer.strip():
             continue
 
+        names = [
+            n for n in (row['Voornaam'], row['Tussenvoegsel'], row['Achternaam']) if n
+        ]
         owner = PersonData(
             organisation=row['Naam organisatie/bedrijf'],
             email=row['E-mail'],
             telephone=row['Telefoonnummer'],
             website=row['Website'],
-            first_name=row['Voornaam'],
-            last_name_affix=row['Tussenvoegsel'],
-            last_name=row['Achternaam'],
+            name=" ".join(names),
         )
 
         reference = row['Referentienummer']

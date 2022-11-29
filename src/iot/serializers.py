@@ -1,7 +1,6 @@
 from datapunt_api.rest import HALSerializer
-from rest_framework import fields, serializers
-from rest_framework.fields import EmailField
-from rest_framework.serializers import ModelSerializer, Serializer
+from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer
 
 from .models import Device, DeviceJson, ObservationGoal, Person, Project
 
@@ -9,11 +8,13 @@ from .models import Device, DeviceJson, ObservationGoal, Person, Project
 class PersonSerializer(HALSerializer):
     class Meta:
         model = Person
-        fields = ['name', 'email', 'organisation']
+        fields = ['name', 'email', 'organisation', 'telephone', 'website']
 
+    def get_unique_together_validators(self):
+        """Overriding method to disable unique together checks"""
+        return []
 
 class ObservationGoalSerializer(HALSerializer):
-
     legal_ground = serializers.StringRelatedField()
 
     class Meta:
@@ -22,9 +23,9 @@ class ObservationGoalSerializer(HALSerializer):
 
 
 class ProjectSerializer(HALSerializer):
-
-    # converts the string list to a list.
-    path = serializers.ListField(child=serializers.StringRelatedField())
+    path = serializers.ListField(
+        child=serializers.StringRelatedField()
+    )  # converts the string list to a list.
 
     class Meta:
         model = Project
@@ -82,13 +83,3 @@ class DeviceJsonSerializer(ModelSerializer):
     class Meta:
         model = DeviceJson
         fields = '__all__'
-
-
-class PersonDataSerializer(Serializer):
-    organisation = fields.CharField(max_length=255, source="Naam organisatie/bedrijf", allow_blank=True, allow_null=True)
-    email = EmailField(allow_blank=False, allow_null=False, source="E-mail")
-    telephone = fields.CharField(max_length=15, source="Telefoonnummer", allow_blank=False, allow_null=False)
-    website = fields.URLField(allow_blank=True, allow_null=True, source="Website")
-    first_name = fields.CharField(max_length=84, source="Voornaam", allow_blank=False, allow_null=False)
-    last_name_affix = fields.CharField(max_length=84, source="Tussenvoegsel", allow_blank=True, allow_null=True)
-    last_name = fields.CharField(max_length=84, source="Achternaam", allow_blank=False, allow_null=False)

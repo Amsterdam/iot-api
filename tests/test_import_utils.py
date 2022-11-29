@@ -126,9 +126,7 @@ class TestParse:
             email="p.ersoon@amsterdam.nl",
             telephone="06123456789",
             website="amsterdam.nl",
-            first_name="Pieter",
-            last_name_affix="",
-            last_name="Ersoon",
+            name="Pieter Ersoon",
         )
 
         # We expect the reference number and source to be different, so check the
@@ -258,9 +256,7 @@ def person_data():
         email="p.er.soon@amsterdam.nl",
         telephone="06123456789",
         website="amsterdam.nl",
-        first_name="Piet",
-        last_name_affix="Er",
-        last_name="Soon",
+        name="Piet Er Soon",
     )
 
 
@@ -351,7 +347,7 @@ class TestImportSensor:
     @property
     def actual(self):
         return [
-            DeviceSerializer(device).data
+            json.loads(json.dumps(DeviceSerializer(device).data))
             for device in models.Device.objects.all().order_by("id")
         ]
 
@@ -372,6 +368,8 @@ class TestImportSensor:
             "name": "Piet Er Soon",
             "email": "p.er.soon@amsterdam.nl",
             "organisation": "Gemeente Amsterdam",
+            'telephone': '06123456789',
+            'website': 'amsterdam.nl',
         },
         "regions": [],
         "themes": [
