@@ -128,21 +128,21 @@ stages:
               command: "get"
               arguments: "deploy,svc,ingress,configmap,secrets,job,cronjob,networkpolicy,secretproviderclass"
 
-          - task: Kubernetes@1
-            inputs:
-              connectionType: "Kubernetes Service Connection"
-              kubernetesServiceEndpoint: "SCN-K8S-O-SSR"
-              namespace: "ns-ccc-ssr-ont-01-sensorenregister"
-              command: "delete"
-              arguments: "-l generator=kustomize deploy,svc,ingress,configmap,secrets,job,cronjob,networkpolicy,secretproviderclass"
+          # - task: Kubernetes@1
+          #   inputs:
+          #     connectionType: "Kubernetes Service Connection"
+          #     kubernetesServiceEndpoint: "SCN-K8S-O-SSR"
+          #     namespace: "ns-ccc-ssr-ont-01-sensorenregister"
+          #     command: "delete"
+          #     arguments: "-l generator=kustomize deploy,svc,ingress,configmap,secrets,job,cronjob,networkpolicy,secretproviderclass"
 
-          - task: Kubernetes@1
-            inputs:
-              connectionType: "Kubernetes Service Connection"
-              kubernetesServiceEndpoint: "SCN-K8S-O-SSR"
-              namespace: "ns-ccc-ssr-ont-01-sensorenregister"
-              command: "delete"
-              arguments: "-l app=sensorenregister,env=dev,team=TAMM deploy,svc,ingress,configmap,secrets,job,cronjob,networkpolicy,secretproviderclass"
+          # - task: Kubernetes@1
+          #   inputs:
+          #     connectionType: "Kubernetes Service Connection"
+          #     kubernetesServiceEndpoint: "SCN-K8S-O-SSR"
+          #     namespace: "ns-ccc-ssr-ont-01-sensorenregister"
+          #     command: "delete"
+          #     arguments: "-l app=sensorenregister,env=dev,team=TAMM deploy,svc,ingress,configmap,secrets,job,cronjob,networkpolicy,secretproviderclass"
 
           - task: AzureCLI@2
             displayName: "Generate manifests"
@@ -202,7 +202,8 @@ stages:
               scriptType: "bash"
               scriptLocation: "inlineScript"
               inlineScript: |
-                kubectl get all
+
+                for i in {1..10}; do kubectl get all; sleep 1; done
                 kubectl describe all
 
           - task: AzureCLI@2
