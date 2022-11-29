@@ -1,0 +1,145 @@
+stages:
+  - stage: status
+    pool: TAMM
+    jobs:
+      - job: status
+        steps:
+          - task: Kubernetes@1
+            displayName: "Login to Kubernetes Cluster"
+            inputs:
+              connectionType: "Kubernetes Service Connection"
+              kubernetesServiceEndpoint: "SCN-K8S-O-SSR"
+              namespace: "ns-ccc-ssr-ont-01-sensorenregister"
+              command: login
+
+          - task: AzureCLI@2
+            displayName: "Set a default namespace"
+            inputs:
+              azureSubscription: "ARM-CCC-SSR-ont-01"
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+                kubectl config set-context deploy --namespace=ns-ccc-ssr-ont-01-sensorenregister
+                kubectl config use-context deploy
+                kubectl config view
+
+          - task: AzureCLI@2
+            displayName: "describe all"
+            inputs:
+              azureSubscription: "ARM-CCC-SSR-ont-01"
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+
+                for i in {1..10}; do 
+                  echo "----------------------------------------------------------"
+                  kubectl get all; 
+                  sleep 1; 
+                done
+                kubectl describe all
+
+          - task: AzureCLI@2
+            displayName: "describe deploys"
+            inputs:
+              azureSubscription: "ARM-CCC-SSR-ont-01"
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+                kubectl get deploy
+                echo "----------------------------------------------------------"
+                kubectl describe deploy
+                echo "----------------------------------------------------------"
+                kubectl get deploy -o yaml
+
+          - task: AzureCLI@2
+            displayName: "describe pods"
+            inputs:
+              azureSubscription: "ARM-CCC-SSR-ont-01"
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+                kubectl get pods
+                echo "----------------------------------------------------------"
+                kubectl describe pods
+
+          - task: AzureCLI@2
+            displayName: "describe jobs"
+            inputs:
+              azureSubscription: "ARM-CCC-SSR-ont-01"
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+                kubectl get jobs
+                echo "----------------------------------------------------------"
+                kubectl describe jobs
+
+          - task: AzureCLI@2
+            displayName: "describe ingress"
+            inputs:
+              azureSubscription: "ARM-CCC-SSR-ont-01"
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+                kubectl get ingress
+                echo "----------------------------------------------------------"
+                kubectl describe ingress
+
+          - task: AzureCLI@2
+            displayName: "describe endpoints"
+            inputs:
+              azureSubscription: "ARM-CCC-SSR-ont-01"
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+                kubectl get ep
+                echo "----------------------------------------------------------"
+                kubectl describe ep
+
+          - task: AzureCLI@2
+            displayName: "describe networkpolicy"
+            inputs:
+              azureSubscription: "ARM-CCC-SSR-ont-01"
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+                kubectl get NetworkPolicy.projectcalico
+                echo "----------------------------------------------------------"
+                kubectl describe NetworkPolicy.projectcalico
+
+          - task: AzureCLI@2
+            displayName: "describe secrets"
+            inputs:
+              azureSubscription: "ARM-CCC-SSR-ont-01"
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+                kubectl get secrets
+                echo "----------------------------------------------------------"
+                kubectl describe secrets
+
+          # - task: AzureCLI@2
+          #   displayName: "logs deploy/app"
+          #   inputs:
+          #     azureSubscription: "ARM-CCC-SSR-ont-01"
+          #     scriptType: "bash"
+          #     scriptLocation: "inlineScript"
+          #     inlineScript: |
+          #       kubectl logs deploy/app
+
+          # - task: AzureCLI@2
+          #   displayName: "logs job/migrate"
+          #   inputs:
+          #     azureSubscription: "ARM-CCC-SSR-ont-01"
+          #     scriptType: "bash"
+          #     scriptLocation: "inlineScript"
+          #     inlineScript: |
+          #       kubectl logs job/migrate
+
+          # - task: AzureCLI@2
+          #   displayName: "logs job/import"
+          #   inputs:
+          #     azureSubscription: "ARM-CCC-SSR-ont-01"
+          #     scriptType: "bash"
+          #     scriptLocation: "inlineScript"
+          #     inlineScript: |
+          #       kubectl logs job/import
