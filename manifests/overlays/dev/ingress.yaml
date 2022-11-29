@@ -3,6 +3,7 @@ kind: Ingress
 metadata:
   name: app
 spec:
+  ingressClassName: nginx-internal
   tls:
     - hosts:
         - ssr-o.azure.amsterdam.nl
