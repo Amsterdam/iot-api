@@ -217,6 +217,16 @@ stages:
                 kubectl describe ingress
 
           - task: AzureCLI@2
+            displayName: "describe networkpolicy"
+            inputs:
+              azureSubscription: "ARM-CCC-SSR-ont-01"
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+                kubectl get NetworkPolicy.projectcalico
+                kubectl describe NetworkPolicy.projectcalico
+
+          - task: AzureCLI@2
             displayName: "describe secrets"
             inputs:
               azureSubscription: "ARM-CCC-SSR-ont-01"
