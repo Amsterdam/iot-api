@@ -128,13 +128,13 @@ stages:
               command: "get"
               arguments: "deploy,svc,ingress,configmap,secrets,job,cronjob,networkpolicy,secretproviderclass"
 
-          # - task: Kubernetes@1
-          #   inputs:
-          #     connectionType: "Kubernetes Service Connection"
-          #     kubernetesServiceEndpoint: "SCN-K8S-O-SSR"
-          #     namespace: "ns-ccc-ssr-ont-01-sensorenregister"
-          #     command: "delete"
-          #     arguments: "-l generator=kustomize deploy,svc,ingress,configmap,secrets,job,cronjob,networkpolicy,secretproviderclass"
+          - task: Kubernetes@1
+            inputs:
+              connectionType: "Kubernetes Service Connection"
+              kubernetesServiceEndpoint: "SCN-K8S-O-SSR"
+              namespace: "ns-ccc-ssr-ont-01-sensorenregister"
+              command: "delete"
+              arguments: "-l generator=kustomize deploy,svc,ingress,configmap,secrets,job,cronjob,networkpolicy,secretproviderclass"
 
           # - task: Kubernetes@1
           #   inputs:
