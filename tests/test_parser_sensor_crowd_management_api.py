@@ -3,7 +3,7 @@ from django.conf import settings
 
 from iot import models
 from iot.dateclasses import LatLong, Location, ObservationGoal, PersonData, SensorData
-from iot.importers import import_apis, import_person, import_sensor
+from iot.importers import import_apis
 from iot.serializers import DeviceSerializer
 
 
