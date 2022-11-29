@@ -1,5 +1,3 @@
-kubectl exec -i vault-0 -- vault kv put secret/app oidc-rp-client-id=1337 oidc-rp-client-secret=supersecret
-kubectl exec -i vault-0 -- vault kv get secret/app
 kubectl exec -i vault-0 -- vault auth enable kubernetes
 kubectl exec -it vault-0 -- sh -c '
 vault write auth/kubernetes/config \
@@ -19,4 +17,18 @@ vault write auth/kubernetes/role/dev \
     bound_service_account_namespaces=default \
     policies=dev \
     ttl=20m
+'
+
+kubectl exec -it vault-0 -- sh -c '
+vault kv put secret/app \
+  oidc-rp-client-id=1337 \
+  oidc-rp-client-secret=supersecret \
+  secret-key=dev \
+  debug=true \
+  postgresql-main-host=database \
+  postgresql-main-admin=dev \
+  postgresql-main-password=dev \
+  postgresql-main-database=dev
+
+vault kv get secret/app
 '

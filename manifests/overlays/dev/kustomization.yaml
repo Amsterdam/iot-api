@@ -11,6 +11,7 @@ components:
   - ../../components/app
   - ../../components/ingress
   - ../../components/keyvault
+  - ../../components/network
 
 patchesStrategicMerge:
   - deployment.yaml
