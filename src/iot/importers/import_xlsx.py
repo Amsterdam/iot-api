@@ -3,6 +3,7 @@ from typing import Generator, List
 
 from django.conf import settings
 from openpyxl import Workbook
+from rest_framework.exceptions import ValidationError
 
 from iot.constants.sensor_fields import (
     BULK_PERSON_FIELDS,
@@ -16,12 +17,6 @@ from iot.dateclasses import (
     PersonData,
     PostcodeHouseNumber,
     SensorData,
-)
-from iot.exceptions import (
-    DuplicateReferenceError,
-    InvalidIproxFields,
-    InvalidPersonFields,
-    InvalidSensorFields,
 )
 from iot.importers.import_person import import_person
 from iot.importers.import_sensor import import_sensor
@@ -44,7 +39,7 @@ def import_xlsx(workbook, action_logger=lambda x: x):
 
     sensor_counter = Counter(sensor.reference for sensor in sensors)
     errors: List[Exception] = [
-        DuplicateReferenceError(reference, count)
+        ValidationError(reference, count)
         for reference, count in sensor_counter.most_common()
         if count > 1
     ]
@@ -92,7 +87,7 @@ def parse_bulk_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
         if i < len(BULK_PERSON_FIELDS)  # ignore any rows after the expected data
     ]
     if fields != BULK_PERSON_FIELDS:
-        raise InvalidPersonFields(fields)
+        raise ValidationError(fields)
 
     values = Values(BULK_PERSON_FIELDS, [row[1] for row in rows])
     owner = PersonData(
@@ -112,7 +107,7 @@ def parse_bulk_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
         if i < len(BULK_SENSOR_FIELDS)  # ignore all columns after the expected data
     ]
     if fields != BULK_SENSOR_FIELDS:
-        raise InvalidSensorFields(fields)
+        raise ValidationError(fields)
 
     return (
         SensorData(
@@ -172,7 +167,7 @@ def parse_iprox_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
         if i < len(IPROX_FIELDS)  # ignore columns after expected data
     ]
     if fields != IPROX_FIELDS:
-        raise InvalidIproxFields(fields)
+        raise ValidationError(fields)
 
     for row_number, row in enumerate(Values(IPROX_FIELDS, row) for row in rows):
 

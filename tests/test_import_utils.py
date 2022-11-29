@@ -16,8 +16,7 @@ from rest_framework.exceptions import ValidationError
 
 import iot.constants.sensor_fields
 import iot.dateclasses
-from iot import exceptions, models, validators
-from iot.exceptions import DuplicateReferenceError
+from iot import models, validators
 from iot.importers import import_person, import_sensor, import_xlsx
 from iot.serializers import DeviceSerializer
 from iot.validators import validate_person_data
@@ -190,7 +189,7 @@ class TestParse:
     def test_parse_prox_invalid_fields_should_be_detected(self, fields):
         # check that an incorrect number of fields can be correctly detected
         workbook = dict_to_workbook({"Sensorregistratie": [fields]})
-        with pytest.raises(exceptions.InvalidIproxFields):
+        with pytest.raises(ValidationError):
             list(import_xlsx.parse_iprox_xlsx(workbook))
 
     @pytest.mark.parametrize(
@@ -205,7 +204,7 @@ class TestParse:
     def test_parse_bulk_invalid_person_fields_should_be_detected(self, fields):
         # check that an incorrect number of fields can be correctly detected
         workbook = dict_to_workbook({"Uw gegevens": [[f, f] for f in fields]})
-        with pytest.raises(exceptions.InvalidPersonFields):
+        with pytest.raises(ValidationError):
             list(import_xlsx.parse_bulk_xlsx(workbook))
 
     @pytest.mark.parametrize(
@@ -223,7 +222,7 @@ class TestParse:
         workbook = dict_to_workbook(
             {"Uw gegevens": person_fields, "Sensorregistratie": [fields]}
         )
-        with pytest.raises(exceptions.InvalidSensorFields):
+        with pytest.raises(ValidationError):
             list(import_xlsx.parse_bulk_xlsx(workbook))
 
     @pytest.mark.parametrize(
@@ -539,11 +538,9 @@ class TestImportSensor:
         path = Path(__file__).parent / "data" / f"{source}_duplicate_references"
         workbook = csv_to_workbook(path)
         errors = import_xlsx.import_xlsx(workbook)[0]
-        expected = [
-            DuplicateReferenceError("7079-2296.0", 2),
-            DuplicateReferenceError("7079-2296.1", 2),
-        ]
-        assert errors == expected
+        assert len(errors) == 2
+        for err in errors:
+            assert isinstance(err, ValidationError)
 
 
 @pytest.mark.django_db
@@ -555,25 +552,25 @@ class TestValidate:
     @pytest.mark.parametrize("value", [None, "", " ", "  "])
     def test_invalid_sensor_type(self, sensor_data, value):
         sensor_data.type = value
-        with pytest.raises(exceptions.InvalidSensorType):
+        with pytest.raises(ValidationError):
             validators.validate_sensor(sensor_data)
 
     @pytest.mark.parametrize("value", [None, "", " ", "  "])
     def test_invalid_themes(self, sensor_data, value):
         sensor_data.themes = value
-        with pytest.raises(exceptions.InvalidThemes):
+        with pytest.raises(ValidationError):
             validators.validate_sensor(sensor_data)
 
     @pytest.mark.parametrize("value", [None, "", "onzin"])
     def test_invalid_latitude(self, sensor_data, value):
         sensor_data.location.lat_long = iot.dateclasses.LatLong(value, 4)
-        with pytest.raises(exceptions.InvalidLatitude):
+        with pytest.raises(ValidationError):
             validators.validate_sensor(sensor_data)
 
     @pytest.mark.parametrize("value", [None, "", "onzin"])
     def test_invalid_longitude(self, sensor_data, value):
         sensor_data.location.lat_long = iot.dateclasses.LatLong(52, value)
-        with pytest.raises(exceptions.InvalidLongitude):
+        with pytest.raises(ValidationError):
             validators.validate_sensor(sensor_data)
 
     @pytest.mark.parametrize("value", [None, "", "onzin", "1111", "XX"])
@@ -581,25 +578,25 @@ class TestValidate:
         sensor_data.location.postcode_house_number = (
             iot.dateclasses.PostcodeHouseNumber(value, 1)
         )
-        with pytest.raises(exceptions.InvalidPostcode):
+        with pytest.raises(ValidationError):
             validators.validate_sensor(sensor_data)
 
     @pytest.mark.parametrize("value", [None, "", "Yes", True, False, "true", "false"])
     def test_invalid_contains_pi_data(self, sensor_data, value):
         sensor_data.contains_pi_data = value
-        with pytest.raises(exceptions.InvalidContainsPiData):
+        with pytest.raises(ValidationError):
             validators.validate_sensor(sensor_data)
 
     @pytest.mark.parametrize("value", [None, ""])
     def test_invalid_legal_ground(self, sensor_data, value):
         sensor_data.observation_goals[0].legal_ground = value
-        with pytest.raises(exceptions.InvalidLegalGround):
+        with pytest.raises(ValidationError):
             validators.validate_sensor(sensor_data)
 
     @pytest.mark.parametrize("value", [None, "", "5 Nov 1605", "1999/12/31", "onzin"])
     def test_invalid_date(self, sensor_data, value):
         sensor_data.active_until = value
-        with pytest.raises(exceptions.InvalidDate):
+        with pytest.raises(ValidationError):
             validators.validate_sensor(sensor_data)
 
     @pytest.mark.parametrize("value", [None, ""])
@@ -607,7 +604,7 @@ class TestValidate:
         # don't accept empty values when the sensor collects personal data
         sensor_data.contains_pi_data = "Ja"
         sensor_data.observation_goals[0].privacy_declaration = value
-        with pytest.raises(exceptions.InvalidPrivacyDeclaration):
+        with pytest.raises(ValidationError):
             validators.validate_sensor(sensor_data)
 
     @pytest.mark.parametrize(
@@ -620,7 +617,7 @@ class TestValidate:
         # never accept invalid urls
         sensor_data.contains_pi_data = contains_pi_data
         sensor_data.observation_goals[0].privacy_declaration = value
-        with pytest.raises(exceptions.InvalidPrivacyDeclaration):
+        with pytest.raises(ValidationError):
             validators.validate_sensor(sensor_data)
 
     @pytest.mark.parametrize("value", [None, ""])
@@ -631,7 +628,7 @@ class TestValidate:
         sensor_data.observation_goals[0].privacy_declaration = value
         try:
             validators.validate_sensor(sensor_data)
-        except exceptions.InvalidPrivacyDeclaration:
+        except ValidationError:
             pytest.fail(
                 "Should not raise on empty declaration when no personal data collected"
             )
@@ -705,7 +702,7 @@ class TestGetCenterCoordinates:
         situation the best thing is to just produce an error and let the person
         who is doing the import figure out the best course of action.
         """
-        with pytest.raises(exceptions.PostcodeSearchException):
+        with pytest.raises(ValidationError):
             import_sensor.get_center_coordinates("1015 BA", 11)
 
     def test_pagination_links_should_be_followed(self):
@@ -764,5 +761,5 @@ class TestGetCenterCoordinatesInvalidResponses:
         url = import_sensor.get_address_url("Herengracht", 1)
         mock_get(self.requests_mock, url, address_response)
 
-        with pytest.raises(exceptions.PostcodeSearchException):
+        with pytest.raises(ValidationError):
             import_sensor.get_center_coordinates("1015 BA", 1)
