@@ -50,10 +50,12 @@ dev: 						        ## Run the development app (and run extra migrations first)
 	$(run) --service-ports dev
 
 lintfix:                            ## Execute lint fixes
+	$(run) test autoflake /app --recursive --in-place --remove-unused-variables --remove-all-unused-imports --quiet
 	$(run) test isort /app/src/$(APP) /app/tests/$(APP)
 	$(run) test black /app/src/$(APP) /app/tests/$(APP)
 
 lint:                               ## Execute lint checks
+	$(run) test autoflake /app --check --recursive --quiet
 	$(run) test isort --diff --check /app/src/$(APP) /app/tests/$(APP)
 	$(run) test black --diff --check /app/src/$(APP) /app/tests/$(APP)
 

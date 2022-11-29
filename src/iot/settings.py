@@ -1,8 +1,6 @@
 import os
 import sys
 
-from keycloak_oidc.default_settings import *
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -66,6 +64,7 @@ DJANGO_APPS = (
     'django.contrib.sessions',
     'django.contrib.admin',
     'django.contrib.messages',
+    'health',
 )
 
 THIRD_PARTY_APPS = (

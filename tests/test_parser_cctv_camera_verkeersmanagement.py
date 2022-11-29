@@ -355,30 +355,3 @@ class TestConverteApiData:
         assert result_2 == ([], 1, 1)
         assert len(self.actual) == 2
         assert sensor_ref_2['location']['latitude'] == 52.381543
-
-    @pytest.mark.skip("waiting for the delete function to be adjusted")
-    def test_convert_api_data_cctvcv_one_update_one_delete(self, api_data, api_data_2):
-        """
-        call the convert_api_datafunction twice with two different lists of sensors.
-        The second list will not contain one of the sensors of the first list.
-        Expect to have one sensor being updated and another one deleted.
-        A tuple to be returned.
-        """
-
-        # insert the first list of sensor which should include two sensor.
-        result_1 = import_utils_apis.convert_api_data(
-            api_name='cctv_camera_verkeersmanagement', api_data=api_data_2
-        )
-
-        # insert the second list of sensor which should include one sensors.
-        result_2 = import_utils_apis.convert_api_data(
-            api_name='cctv_camera_verkeersmanagement', api_data=api_data
-        )
-
-        # get the only sensor that should have been updated.
-        sensor = self.actual[0]
-
-        assert result_1 == ([], 2, 0)
-        assert result_2 == ([], 1, 0)
-        assert len(self.actual) == 1
-        assert sensor['location']['latitude'] == 52.381543

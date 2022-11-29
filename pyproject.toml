@@ -6,9 +6,27 @@ skip-string-normalization = true
 exclude = 'migrations'
 
 [tool.pytest.ini_options]
-addopts = "-v -ra -s --ff --nf --disable-pytest-warnings --pdbcls=IPython.terminal.debugger:TerminalPdb"
+addopts = "-v -s --ff --nf --cov --cov-report term-missing --cov-config /app/pyproject.toml"
 
 [tool.isort]
 profile = "black"
 src_paths = ["src", "tests"]
 skip = "migrations"
+
+[tool.coverage.run]
+source = ["/app/src"]
+omit = [
+    "/app/tests",
+    "/app/src/manage.py",
+    "/app/src/main/asgi.py",
+    "/app/src/main/wsgi.py",
+    "/app/src/main/settings.py",
+    "/app/src/main/urls.py",
+    "/app/src/main/migrations/*.py"
+]
+
+[tool.coverage.report]
+fail_under = 80
+skip_covered = true
+show_missing = true
+sort = "Cover"
