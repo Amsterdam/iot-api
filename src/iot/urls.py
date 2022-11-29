@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings
-from django.conf.urls import include, url
+from django.conf.urls import include
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
@@ -35,29 +35,29 @@ schema_view = get_schema_view(
 
 
 urlpatterns = [
-    url(
+    re_path(
         r'^iothings/',
         include(
             router.urls
             + [
-                url(
+                re_path(
                     r'^swagger(?P<format>\.json|\.yaml)$',
                     schema_view.without_ui(cache_timeout=None),
                     name='schema-json',
                 ),
-                url(
+                re_path(
                     r'^swagger/$',
                     schema_view.with_ui('swagger', cache_timeout=None),
                     name='schema-swagger-ui',
                 ),
-                url(r'^ping/$', views.PingView.as_view(), name='ping'),
-                url(r'^oidc/', include('keycloak_oidc.urls')),
+                re_path(r'^ping/$', views.PingView.as_view(), name='ping'),
+                re_path(r'^oidc/', include('keycloak_oidc.urls')),
                 path('admin/login/', auth.oidc_login),
                 path('admin/', admin.site.urls),
             ]
         ),
     ),
-    url(r'^status/', include('iot.health.urls')),
+    re_path(r'^status/', include('health.urls')),
 ]
 
 if settings.DEBUG:
@@ -65,7 +65,7 @@ if settings.DEBUG:
 
     urlpatterns.extend(
         [
-            url(r'^__debug__/', include(debug_toolbar.urls)),
+            re_path(r'^__debug__/', include(debug_toolbar.urls)),
         ]
     )
 

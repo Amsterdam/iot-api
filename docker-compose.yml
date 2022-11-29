@@ -15,6 +15,7 @@ x-app: &base-app
     - ./src:/app/src
     - ./tests:/app/tests
     - ./deploy:/app/deploy
+    - ./pyproject.toml:/app/pyproject.toml
   entrypoint: /app/deploy/wait-for-it.sh database:5432 --
 
 volumes:
@@ -60,6 +61,6 @@ services:
       target: tests
     environment:
       <<: *base-app-env
-      DJANGO_SETTINGS_MODULE: "iot.settings.settings"
+      DJANGO_SETTINGS_MODULE: "iot.settings"
       OIDC_RP_CLIENT_ID: tests
       OIDC_RP_CLIENT_SECRET: tests

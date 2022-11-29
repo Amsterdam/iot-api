@@ -33,8 +33,8 @@ def csv_to_workbook(path):
     for file_entry in os.listdir(path):
         file_path = path / file_entry
         sheet = workbook.create_sheet(file_path.stem)
-        with open(file_path, encoding='utf-8-sig') as f:
-            for row in csv.reader(f, delimiter=';'):
+        with open(file_path, encoding="utf-8-sig") as f:
+            for row in csv.reader(f, delimiter=";"):
                 sheet.append(row)
 
     return workbook
@@ -62,46 +62,46 @@ class TestParse:
                              expected_project, expected_row_numbers",
         [
             (
-                'iprox_single',
+                "iprox_single",
                 import_xlsx.parse_iprox_xlsx,
                 iot.dateclasses.Location(
                     lat_long=None,
                     postcode_house_number=iot.dateclasses.PostcodeHouseNumber(
-                        '1011 PN', '3', 'III'
+                        "1011 PN", "3", "III"
                     ),
-                    description='',
-                    regions='',
+                    description="",
+                    regions="",
                 ),
-                ['7079-2296.0', '7079-2296.1'],
-                [''],
+                ["7079-2296.0", "7079-2296.1"],
+                [""],
                 [1, 1],
             ),
             (
-                'iprox_multiple',
+                "iprox_multiple",
                 import_xlsx.parse_iprox_xlsx,
                 iot.dateclasses.Location(
                     lat_long=None,
                     postcode_house_number=iot.dateclasses.PostcodeHouseNumber(
-                        '1011 PN', '3', 'III'
+                        "1011 PN", "3", "III"
                     ),
-                    description='',
-                    regions='',
+                    description="",
+                    regions="",
                 ),
-                ['7079-2296.0', '7079-2297.0'],
-                [''],
+                ["7079-2296.0", "7079-2297.0"],
+                [""],
                 [1, 2],
             ),
             (
-                'bulk',
+                "bulk",
                 import_xlsx.parse_bulk_xlsx,
                 iot.dateclasses.Location(
-                    lat_long=iot.dateclasses.LatLong('52.3676', '4.9041'),
+                    lat_long=iot.dateclasses.LatLong("52.3676", "4.9041"),
                     postcode_house_number=None,
-                    description='',
-                    regions='AB;AC',
+                    description="",
+                    regions="AB;AC",
                 ),
-                ['7079-2296', '7079-2297'],
-                ['Verkeershandhaving;Gemeente Amsterdam'],
+                ["7079-2296", "7079-2297"],
+                ["Verkeershandhaving;Gemeente Amsterdam"],
                 [1, 2],
             ),
         ],
@@ -119,17 +119,17 @@ class TestParse:
         Each of the source files contains the same sensors, just in a different
         format, so we call the various parse functions and verify that
         """
-        workbook = csv_to_workbook(Path(__file__).parent / 'data' / dir)
+        workbook = csv_to_workbook(Path(__file__).parent / "data" / dir)
         actual = list(parser(workbook))
 
         expected_owner = iot.dateclasses.PersonData(
-            organisation='Gemeente Amsterdam',
-            email='p.ersoon@amsterdam.nl',
-            telephone='06123456789',
-            website='amsterdam.nl',
-            first_name='Pieter',
-            last_name_affix='',
-            last_name='Ersoon',
+            organisation="Gemeente Amsterdam",
+            email="p.ersoon@amsterdam.nl",
+            telephone="06123456789",
+            website="amsterdam.nl",
+            first_name="Pieter",
+            last_name_affix="",
+            last_name="Ersoon",
         )
 
         # We expect the reference number and source to be different, so check the
@@ -138,40 +138,40 @@ class TestParse:
             iot.dateclasses.SensorData(
                 reference=expected_references[0],
                 owner=expected_owner,
-                type='Optische / camera sensor',
+                type="Optische / camera sensor",
                 location=expected_location,
-                datastream='Aantal schepen dat voorbij vaart',
+                datastream="Aantal schepen dat voorbij vaart",
                 observation_goals=[
                     iot.dateclasses.ObservationGoal(
-                        observation_goal='Drukte en geluidsoverlast',
-                        privacy_declaration='',
-                        legal_ground='',
+                        observation_goal="Drukte en geluidsoverlast",
+                        privacy_declaration="",
+                        legal_ground="",
                     )
                 ],
-                themes='Veiligheid',
-                contains_pi_data='Nee',
-                active_until='06-07-2021',
+                themes="Veiligheid",
+                contains_pi_data="Nee",
+                active_until="06-07-2021",
                 projects=expected_project,
                 row_number=expected_row_numbers[0],
             ),
             iot.dateclasses.SensorData(
                 reference=expected_references[1],
                 owner=expected_owner,
-                type='Chemiesensor',
+                type="Chemiesensor",
                 location=expected_location,
-                datastream='Of er chemie is tussen mensen',
+                datastream="Of er chemie is tussen mensen",
                 observation_goals=[
                     iot.dateclasses.ObservationGoal(
-                        observation_goal='Vind ik gewoon leuk',
-                        privacy_declaration='',
-                        legal_ground='Bescherming vitale belangen betrokkene(n) of'
-                        ' van een andere natuurlijke persoon)',
+                        observation_goal="Vind ik gewoon leuk",
+                        privacy_declaration="",
+                        legal_ground="Bescherming vitale belangen betrokkene(n) of"
+                        " van een andere natuurlijke persoon)",
                     )
                 ],
-                themes='Veiligheid;Lucht',
-                contains_pi_data='Ja',
-                active_until='01-01-2050',
-                projects=[''],
+                themes="Veiligheid;Lucht",
+                contains_pi_data="Ja",
+                active_until="01-01-2050",
+                projects=[""],
                 row_number=expected_row_numbers[1],
             ),
         ]
@@ -182,14 +182,14 @@ class TestParse:
         "fields",
         [
             [],
-            ['non', 'sense'],
+            ["non", "sense"],
             iot.constants.sensor_fields.IPROX_FIELDS[:-1],
-            iot.constants.sensor_fields.IPROX_FIELDS[:-1] + ['nonsense'],
+            iot.constants.sensor_fields.IPROX_FIELDS[:-1] + ["nonsense"],
         ],
     )
     def test_parse_prox_invalid_fields_should_be_detected(self, fields):
         # check that an incorrect number of fields can be correctly detected
-        workbook = dict_to_workbook({'Sensorregistratie': [fields]})
+        workbook = dict_to_workbook({"Sensorregistratie": [fields]})
         with pytest.raises(exceptions.InvalidIproxFields):
             list(import_xlsx.parse_iprox_xlsx(workbook))
 
@@ -197,14 +197,14 @@ class TestParse:
         "fields",
         [
             [],
-            ['non', 'sense'],
+            ["non", "sense"],
             iot.constants.sensor_fields.BULK_PERSON_FIELDS[:-1],
-            iot.constants.sensor_fields.BULK_PERSON_FIELDS[:-1] + ['nonsense'],
+            iot.constants.sensor_fields.BULK_PERSON_FIELDS[:-1] + ["nonsense"],
         ],
     )
     def test_parse_bulk_invalid_person_fields_should_be_detected(self, fields):
         # check that an incorrect number of fields can be correctly detected
-        workbook = dict_to_workbook({'Uw gegevens': [[f, f] for f in fields]})
+        workbook = dict_to_workbook({"Uw gegevens": [[f, f] for f in fields]})
         with pytest.raises(exceptions.InvalidPersonFields):
             list(import_xlsx.parse_bulk_xlsx(workbook))
 
@@ -212,16 +212,16 @@ class TestParse:
         "fields",
         [
             [],
-            ['non', 'sense'],
+            ["non", "sense"],
             iot.constants.sensor_fields.BULK_SENSOR_FIELDS[:-1],
-            iot.constants.sensor_fields.BULK_SENSOR_FIELDS[:-1] + ['nonsense'],
+            iot.constants.sensor_fields.BULK_SENSOR_FIELDS[:-1] + ["nonsense"],
         ],
     )
     def test_parse_bulk_invalid_sensor_fields_should_be_detected(self, fields):
         # check that an incorrect number of fields can be correctly detected
         person_fields = [[f, f] for f in iot.constants.sensor_fields.BULK_PERSON_FIELDS]
         workbook = dict_to_workbook(
-            {'Uw gegevens': person_fields, 'Sensorregistratie': [fields]}
+            {"Uw gegevens": person_fields, "Sensorregistratie": [fields]}
         )
         with pytest.raises(exceptions.InvalidSensorFields):
             list(import_xlsx.parse_bulk_xlsx(workbook))
@@ -230,24 +230,24 @@ class TestParse:
         "dir, parser",
         [
             (
-                'empty_rows_columns_iprox',
+                "empty_rows_columns_iprox",
                 import_xlsx.parse_iprox_xlsx,
             ),
             (
-                'empty_rows_columns_bulk',
+                "empty_rows_columns_bulk",
                 import_xlsx.parse_bulk_xlsx,
             ),
         ],
     )
     def test_empty_rows_and_columns_should_be_skipped(self, dir, parser):
         # verify that empty rows and columns after the expected data is ignored
-        workbook = csv_to_workbook(Path(__file__).parent / 'data' / dir)
+        workbook = csv_to_workbook(Path(__file__).parent / "data" / dir)
         assert len(list(parser(workbook))) == 1
 
     def test_iprox_five_sensors(self):
         # verify that is possible to import the max number of sensors
         workbook = csv_to_workbook(
-            Path(__file__).parent / 'data' / 'iprox_five_sensors'
+            Path(__file__).parent / "data" / "iprox_five_sensors"
         )
         assert len(list(import_xlsx.parse_iprox_xlsx(workbook))) == 5
 
@@ -255,13 +255,13 @@ class TestParse:
 @pytest.fixture
 def person_data():
     return iot.dateclasses.PersonData(
-        organisation='Gemeente Amsterdam',
-        email='p.er.soon@amsterdam.nl',
-        telephone='06123456789',
-        website='amsterdam.nl',
-        first_name='Piet',
-        last_name_affix='Er',
-        last_name='Soon',
+        organisation="Gemeente Amsterdam",
+        email="p.er.soon@amsterdam.nl",
+        telephone="06123456789",
+        website="amsterdam.nl",
+        first_name="Piet",
+        last_name_affix="Er",
+        last_name="Soon",
     )
 
 
@@ -269,15 +269,15 @@ def person_data():
 class TestImportPerson:
     @property
     def actual(self):
-        fields = 'organisation', 'email', 'telephone', 'website', 'name'
-        return list(models.Person.objects.values(*fields).order_by('id').all())
+        fields = "organisation", "email", "telephone", "website", "name"
+        return list(models.Person.objects.values(*fields).order_by("id").all())
 
     expected = {
-        'organisation': 'Gemeente Amsterdam',
-        'email': 'p.er.soon@amsterdam.nl',
-        'telephone': '06123456789',
-        'website': 'amsterdam.nl',
-        'name': 'Piet Er Soon',
+        "organisation": "Gemeente Amsterdam",
+        "email": "p.er.soon@amsterdam.nl",
+        "telephone": "06123456789",
+        "website": "amsterdam.nl",
+        "name": "Piet Er Soon",
     }
 
     def test_import_person(self, person_data):
@@ -293,25 +293,25 @@ class TestImportPerson:
     def test_import_person_should_be_case_insensitive(self, person_data):
         # check that matching by email address is case insensitive
         import_person.import_person(person_data)
-        person_data.email = 'p.Er.SoOn@AmStErDaM.nL'
+        person_data.email = "p.Er.SoOn@AmStErDaM.nL"
         import_person.import_person(person_data)
         assert self.actual == [self.expected]
 
     def test_import_person_should_update_values(self, person_data):
         # check that a second import of the same person updates values
         import_person.import_person(person_data)
-        person_data.telephone = '0201234567890'
+        person_data.telephone = "0201234567890"
         import_person.import_person(person_data)
-        assert self.actual == [dict(self.expected, telephone='0201234567890')]
+        assert self.actual == [dict(self.expected, telephone="0201234567890")]
 
     def test_import_person_should_import_multiple_people(self, person_data):
         # check that difference email addresses result in different people
         import_person.import_person(person_data)
-        person_data.email = 'p.er.soon@rotterdam.nl'
+        person_data.email = "p.er.soon@rotterdam.nl"
         import_person.import_person(person_data)
         assert self.actual == [
             self.expected,
-            dict(self.expected, email='p.er.soon@rotterdam.nl'),
+            dict(self.expected, email="p.er.soon@rotterdam.nl"),
         ]
 
 
@@ -319,31 +319,31 @@ class TestImportPerson:
 def sensor_data(person_data):
     return iot.dateclasses.SensorData(
         owner=person_data,
-        reference='1234',
-        type='Chemiesensor',
+        reference="1234",
+        type="Chemiesensor",
         location=iot.dateclasses.Location(
             lat_long=None,
             postcode_house_number=None,
-            description='Somewhere over the rainbow',
-            regions='',
+            description="Somewhere over the rainbow",
+            regions="",
         ),
-        datastream='water',
+        datastream="water",
         observation_goals=[
             iot.dateclasses.ObservationGoal(
-                observation_goal='Nare bedoelingen',
-                privacy_declaration='https://amsterdam.nl/privacy',
-                legal_ground='Publieke taak',
+                observation_goal="Nare bedoelingen",
+                privacy_declaration="https://amsterdam.nl/privacy",
+                legal_ground="Publieke taak",
             )
         ],
         themes=settings.IPROX_SEPARATOR.join(
             [
-                'Mobiliteit: auto',
-                'Mobiliteit: fiets',
+                "Mobiliteit: auto",
+                "Mobiliteit: fiets",
             ]
         ),
-        contains_pi_data='Ja',
-        active_until='05-05-2050',
-        projects=['Gemeente Amsterdam;Verkeers', 'Noord Amsterdam;Zuid Amsterdam'],
+        contains_pi_data="Ja",
+        active_until="05-05-2050",
+        projects=["Gemeente Amsterdam;Verkeers", "Noord Amsterdam;Zuid Amsterdam"],
     )
 
 
@@ -353,37 +353,37 @@ class TestImportSensor:
     def actual(self):
         return [
             DeviceSerializer(device).data
-            for device in models.Device.objects.all().order_by('id')
+            for device in models.Device.objects.all().order_by("id")
         ]
 
     expected = {
-        'active_until': '2050-05-05',
-        'contains_pi_data': True,
-        'datastream': 'water',
-        'location': None,
-        'location_description': "Somewhere over the rainbow",
-        'observation_goals': [
+        "active_until": "2050-05-05",
+        "contains_pi_data": True,
+        "datastream": "water",
+        "location": None,
+        "location_description": "Somewhere over the rainbow",
+        "observation_goals": [
             {
-                'observation_goal': 'Nare bedoelingen',
-                'privacy_declaration': 'https://amsterdam.nl/privacy',
-                'legal_ground': 'Publieke taak',
+                "observation_goal": "Nare bedoelingen",
+                "privacy_declaration": "https://amsterdam.nl/privacy",
+                "legal_ground": "Publieke taak",
             }
         ],
-        'owner': {
-            'name': 'Piet Er Soon',
-            'email': 'p.er.soon@amsterdam.nl',
-            'organisation': 'Gemeente Amsterdam',
+        "owner": {
+            "name": "Piet Er Soon",
+            "email": "p.er.soon@amsterdam.nl",
+            "organisation": "Gemeente Amsterdam",
         },
-        'regions': [],
-        'themes': [
-            'Mobiliteit: auto',
-            'Mobiliteit: fiets',
+        "regions": [],
+        "themes": [
+            "Mobiliteit: auto",
+            "Mobiliteit: fiets",
         ],
-        'type': 'Chemiesensor',
-        'reference': '1234',
-        'project_paths': [
-            ['Gemeente Amsterdam', 'Verkeers'],
-            ['Noord Amsterdam', 'Zuid Amsterdam'],
+        "type": "Chemiesensor",
+        "reference": "1234",
+        "project_paths": [
+            ["Gemeente Amsterdam", "Verkeers"],
+            ["Noord Amsterdam", "Zuid Amsterdam"],
         ],
     }
 
@@ -406,16 +406,16 @@ class TestImportSensor:
         import_sensor.import_sensor(sensor_data, owner)
         sensor_data.observation_goals[
             0
-        ].privacy_declaration = 'http://rotterdam.nl/privacy'
+        ].privacy_declaration = "http://rotterdam.nl/privacy"
         import_sensor.import_sensor(sensor_data, owner)
         expected = [
             dict(
                 self.expected,
                 observation_goals=[
                     {
-                        'observation_goal': 'Nare bedoelingen',
-                        'privacy_declaration': 'http://rotterdam.nl/privacy',
-                        'legal_ground': 'Publieke taak',
+                        "observation_goal": "Nare bedoelingen",
+                        "privacy_declaration": "http://rotterdam.nl/privacy",
+                        "legal_ground": "Publieke taak",
                     },
                 ],
             )
@@ -426,9 +426,9 @@ class TestImportSensor:
         # check that we can import multiple sensors
         owner = import_person.import_person(sensor_data.owner)
         import_sensor.import_sensor(sensor_data, owner)
-        sensor_data.reference = '2468'
+        sensor_data.reference = "2468"
         import_sensor.import_sensor(sensor_data, owner)
-        assert self.actual == [self.expected, dict(self.expected, reference='2468')]
+        assert self.actual == [self.expected, dict(self.expected, reference="2468")]
 
     def test_import_sensor_location(self, sensor_data):
         # check that the location is imported correctly
@@ -441,7 +441,7 @@ class TestImportSensor:
         assert self.actual == [
             dict(
                 self.expected,
-                location_description='Somewhere over the rainbow',
+                location_description="Somewhere over the rainbow",
                 location=location,
             )
         ]
@@ -468,7 +468,7 @@ class TestImportSensor:
         import_sensor.import_sensor(sensor_data, owner)
         expected = dict(
             self.expected,
-            location_description='Somewhere over the rainbow',
+            location_description="Somewhere over the rainbow",
             regions=regions,
         )
         assert self.actual == [expected]
@@ -481,7 +481,7 @@ class TestImportSensor:
         assert self.actual == [
             dict(
                 self.expected,
-                location_description='Somewhere over the rainbow',
+                location_description="Somewhere over the rainbow",
                 regions=["Diemen"],
             )
         ]
@@ -493,7 +493,7 @@ class TestImportSensor:
             iot.dateclasses.PostcodeHouseNumber("1111AA", 1)
         )
         with patch(
-            'iot.importers.import_sensor.get_center_coordinates',
+            "iot.importers.import_sensor.get_center_coordinates",
             lambda *_: Point(4.9041, 52.3676),
         ):
             import_sensor.import_sensor(sensor_data, owner)
@@ -501,7 +501,7 @@ class TestImportSensor:
         assert self.actual == [
             dict(
                 self.expected,
-                location_description='Somewhere over the rainbow',
+                location_description="Somewhere over the rainbow",
                 location=location,
             )
         ]
@@ -511,9 +511,9 @@ class TestImportSensor:
         owner = import_person.import_person(sensor_data.owner)
         sensor_data.observation_goals = [
             iot.dateclasses.ObservationGoal(
-                observation_goal='my_observation_goal',
-                privacy_declaration='my_privacy_declaration',
-                legal_ground='my_legal_ground',
+                observation_goal="my_observation_goal",
+                privacy_declaration="my_privacy_declaration",
+                legal_ground="my_legal_ground",
             )
         ]
         import_sensor.import_sensor(sensor_data, owner)
@@ -525,9 +525,9 @@ class TestImportSensor:
                     self.expected,
                     observation_goals=[
                         {
-                            'observation_goal': 'my_observation_goal',
-                            'privacy_declaration': 'my_privacy_declaration',
-                            'legal_ground': 'my_legal_ground',
+                            "observation_goal": "my_observation_goal",
+                            "privacy_declaration": "my_privacy_declaration",
+                            "legal_ground": "my_legal_ground",
                         }
                     ],
                 )
@@ -536,12 +536,12 @@ class TestImportSensor:
 
     @pytest.mark.parametrize("source", ["iprox", "bulk"])
     def test_duplicate_references_should_be_rejected(self, source):
-        path = Path(__file__).parent / 'data' / f'{source}_duplicate_references'
+        path = Path(__file__).parent / "data" / f"{source}_duplicate_references"
         workbook = csv_to_workbook(path)
         errors = import_xlsx.import_xlsx(workbook)[0]
         expected = [
-            DuplicateReferenceError('7079-2296.0', 2),
-            DuplicateReferenceError('7079-2296.1', 2),
+            DuplicateReferenceError("7079-2296.0", 2),
+            DuplicateReferenceError("7079-2296.1", 2),
         ]
         assert errors == expected
 
@@ -552,31 +552,31 @@ class TestValidate:
     Check that the validation function can report problematic values.
     """
 
-    @pytest.mark.parametrize("value", [None, '', ' ', '  '])
+    @pytest.mark.parametrize("value", [None, "", " ", "  "])
     def test_invalid_sensor_type(self, sensor_data, value):
         sensor_data.type = value
         with pytest.raises(exceptions.InvalidSensorType):
             validators.validate_sensor(sensor_data)
 
-    @pytest.mark.parametrize("value", [None, '', ' ', '  '])
+    @pytest.mark.parametrize("value", [None, "", " ", "  "])
     def test_invalid_themes(self, sensor_data, value):
         sensor_data.themes = value
         with pytest.raises(exceptions.InvalidThemes):
             validators.validate_sensor(sensor_data)
 
-    @pytest.mark.parametrize("value", [None, '', 'onzin'])
+    @pytest.mark.parametrize("value", [None, "", "onzin"])
     def test_invalid_latitude(self, sensor_data, value):
         sensor_data.location.lat_long = iot.dateclasses.LatLong(value, 4)
         with pytest.raises(exceptions.InvalidLatitude):
             validators.validate_sensor(sensor_data)
 
-    @pytest.mark.parametrize("value", [None, '', 'onzin'])
+    @pytest.mark.parametrize("value", [None, "", "onzin"])
     def test_invalid_longitude(self, sensor_data, value):
         sensor_data.location.lat_long = iot.dateclasses.LatLong(52, value)
         with pytest.raises(exceptions.InvalidLongitude):
             validators.validate_sensor(sensor_data)
 
-    @pytest.mark.parametrize("value", [None, '', 'onzin', '1111', 'XX'])
+    @pytest.mark.parametrize("value", [None, "", "onzin", "1111", "XX"])
     def test_invalid_postcode(self, sensor_data, value):
         sensor_data.location.postcode_house_number = (
             iot.dateclasses.PostcodeHouseNumber(value, 1)
@@ -584,35 +584,35 @@ class TestValidate:
         with pytest.raises(exceptions.InvalidPostcode):
             validators.validate_sensor(sensor_data)
 
-    @pytest.mark.parametrize("value", [None, '', 'Yes', True, False, 'true', 'false'])
+    @pytest.mark.parametrize("value", [None, "", "Yes", True, False, "true", "false"])
     def test_invalid_contains_pi_data(self, sensor_data, value):
         sensor_data.contains_pi_data = value
         with pytest.raises(exceptions.InvalidContainsPiData):
             validators.validate_sensor(sensor_data)
 
-    @pytest.mark.parametrize("value", [None, ''])
+    @pytest.mark.parametrize("value", [None, ""])
     def test_invalid_legal_ground(self, sensor_data, value):
         sensor_data.observation_goals[0].legal_ground = value
         with pytest.raises(exceptions.InvalidLegalGround):
             validators.validate_sensor(sensor_data)
 
-    @pytest.mark.parametrize("value", [None, '', '5 Nov 1605', '1999/12/31', 'onzin'])
+    @pytest.mark.parametrize("value", [None, "", "5 Nov 1605", "1999/12/31", "onzin"])
     def test_invalid_date(self, sensor_data, value):
         sensor_data.active_until = value
         with pytest.raises(exceptions.InvalidDate):
             validators.validate_sensor(sensor_data)
 
-    @pytest.mark.parametrize("value", [None, ''])
+    @pytest.mark.parametrize("value", [None, ""])
     def test_invalid_privacy_declaration(self, sensor_data, value):
         # don't accept empty values when the sensor collects personal data
-        sensor_data.contains_pi_data = 'Ja'
+        sensor_data.contains_pi_data = "Ja"
         sensor_data.observation_goals[0].privacy_declaration = value
         with pytest.raises(exceptions.InvalidPrivacyDeclaration):
             validators.validate_sensor(sensor_data)
 
     @pytest.mark.parametrize(
         "value,contains_pi_data",
-        itertools.product(['nee', '-', 'n/a', 'n.v.t.'], ['Ja', 'Nee']),
+        itertools.product(["nee", "-", "n/a", "n.v.t."], ["Ja", "Nee"]),
     )
     def test_invalid_privacy_declaration_invalid_urls(
         self, sensor_data, value, contains_pi_data
@@ -623,39 +623,39 @@ class TestValidate:
         with pytest.raises(exceptions.InvalidPrivacyDeclaration):
             validators.validate_sensor(sensor_data)
 
-    @pytest.mark.parametrize("value", [None, ''])
+    @pytest.mark.parametrize("value", [None, ""])
     def test_invalid_privacy_declaration_can_be_empty_if_no_pi_data(
         self, sensor_data, value
     ):
-        sensor_data.contains_pi_data = 'Nee'
+        sensor_data.contains_pi_data = "Nee"
         sensor_data.observation_goals[0].privacy_declaration = value
         try:
             validators.validate_sensor(sensor_data)
         except exceptions.InvalidPrivacyDeclaration:
             pytest.fail(
-                'Should not raise on empty declaration when no personal data collected'
+                "Should not raise on empty declaration when no personal data collected"
             )
 
-    @pytest.mark.parametrize("value", [None, '', ' ', 'not-an-email'])
+    @pytest.mark.parametrize("value", [None, "", " ", "not-an-email"])
     def test_invalid_email(self, person_data, value):
         person_data.email = value
         with pytest.raises(ValidationError):
             validate_person_data(person_data)
 
-    @pytest.mark.parametrize("value", [None, '', ' '])
+    @pytest.mark.parametrize("value", [None, "", " "])
     def test_invalid_first_name(self, person_data, value):
         person_data.first_name = value
         with pytest.raises(ValidationError):
             validate_person_data(person_data)
 
-    @pytest.mark.parametrize("value", [None, '', ' '])
+    @pytest.mark.parametrize("value", [None, "", " "])
     def test_invalid_last_name(self, person_data, value):
         person_data.last_name = value
         with pytest.raises(ValidationError):
             validate_person_data(person_data)
 
 
-DATA_DIR = Path(__file__).parent / 'data' / 'json'
+DATA_DIR = Path(__file__).parent / "data" / "json"
 
 
 @pytest.fixture()
@@ -674,8 +674,8 @@ def mock_get(requests_mock, url, response):
 def override_url_settings(settings):
     # make sure we don't accidentally call the actual API during tests
     # we should use the mocked values
-    settings.ATLAS_POSTCODE_SEARCH = 'http://postcode'
-    settings.ATLAS_ADDRESS_SEARCH = 'http://adres'
+    settings.ATLAS_POSTCODE_SEARCH = "http://postcode"
+    settings.ATLAS_ADDRESS_SEARCH = "http://adres"
 
 
 class TestGetCenterCoordinates:
@@ -686,7 +686,7 @@ class TestGetCenterCoordinates:
             for file in os.listdir(DATA_DIR / path):
                 response = json.loads((DATA_DIR / path / file).read_text())
                 query = file.replace(".json", "")
-                url = f'http://{path}/?q={query}'
+                url = f"http://{path}/?q={query}"
                 mock_get(self.requests_mock, url, response)
 
     def test_house_number_expected_point(self):
@@ -694,7 +694,7 @@ class TestGetCenterCoordinates:
         Check that when the correct response is given we get the expected
         result for the postcode + house number.
         """
-        actual = import_sensor.get_center_coordinates('1015 BA', 1)
+        actual = import_sensor.get_center_coordinates("1015 BA", 1)
         assert tuple(actual) == (4.892287512614596, 52.37905673120624)
 
     def test_house_number_not_found_should_raise_exception(self):
@@ -706,7 +706,7 @@ class TestGetCenterCoordinates:
         who is doing the import figure out the best course of action.
         """
         with pytest.raises(exceptions.PostcodeSearchException):
-            import_sensor.get_center_coordinates('1015 BA', 11)
+            import_sensor.get_center_coordinates("1015 BA", 11)
 
     def test_pagination_links_should_be_followed(self):
         """
@@ -714,10 +714,10 @@ class TestGetCenterCoordinates:
         for example when searching for "Herengracht 1" and we mean the
         Heregracht in Weesp.
         """
-        actual = import_sensor.get_center_coordinates('1382 AE', 1)
+        actual = import_sensor.get_center_coordinates("1382 AE", 1)
         assert tuple(actual) == (5.042682700063272, 52.30925075920674)
 
-    @pytest.mark.parametrize("postcode", ['1016ht', '1016 ht', '1016 HT', '1016HT'])
+    @pytest.mark.parametrize("postcode", ["1016ht", "1016 ht", "1016 HT", "1016HT"])
     def test_postcode_should_be_normalized(self, postcode):
         """
         Check that the postcode is correctly normalized, if a postcode
@@ -729,21 +729,21 @@ class TestGetCenterCoordinates:
 
 class TestGetCenterCoordinatesInvalidResponses:
 
-    HERENGRACHT_POSTCODE_RESPONSE = json.dumps({"results": [{"straat": 'Herengracht'}]})
+    HERENGRACHT_POSTCODE_RESPONSE = json.dumps({"results": [{"straat": "Herengracht"}]})
 
     @pytest.fixture(autouse=True)
     def inject_requests_mock(self, requests_mock):
         self.requests_mock = requests_mock
 
     @pytest.mark.parametrize(
-        'postcode_response, address_response',
+        "postcode_response, address_response",
         [
-            ('{}', '{}'),
-            ('{"results": null}', '{}'),
-            ('{"results": []}', '{}'),
-            ('{"results": [{}]}', '{}'),
-            ('{"results": [{"straat": null}]}', '{}'),
-            (HERENGRACHT_POSTCODE_RESPONSE, '{}'),
+            ("{}", "{}"),
+            ('{"results": null}', "{}"),
+            ('{"results": []}', "{}"),
+            ('{"results": [{}]}', "{}"),
+            ('{"results": [{"straat": null}]}', "{}"),
+            (HERENGRACHT_POSTCODE_RESPONSE, "{}"),
             (HERENGRACHT_POSTCODE_RESPONSE, '{"results": null}'),
             (HERENGRACHT_POSTCODE_RESPONSE, '{"results": []}'),
             (HERENGRACHT_POSTCODE_RESPONSE, '{"results": [{}]}'),
@@ -759,10 +759,10 @@ class TestGetCenterCoordinatesInvalidResponses:
         check that an exception is raised if the response (postcode or herengracht%201&page=2.json)
         from atlas is not in the expected form.
         """
-        url = import_sensor.get_postcode_url('1015 BA')
+        url = import_sensor.get_postcode_url("1015 BA")
         mock_get(self.requests_mock, url, postcode_response)
-        url = import_sensor.get_address_url('Herengracht', 1)
+        url = import_sensor.get_address_url("Herengracht", 1)
         mock_get(self.requests_mock, url, address_response)
 
         with pytest.raises(exceptions.PostcodeSearchException):
-            import_sensor.get_center_coordinates('1015 BA', 1)
+            import_sensor.get_center_coordinates("1015 BA", 1)

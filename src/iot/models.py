@@ -8,7 +8,6 @@ from django.db import models
 # is to migrate this data to the sensrnet system once we are able to host our
 # own sensrnet node. For more information about the sensrnet data model see
 # https://kadaster-labs.github.io/sensrnet-home/Model/
-from django.db.models import JSONField
 
 
 class Person(models.Model):

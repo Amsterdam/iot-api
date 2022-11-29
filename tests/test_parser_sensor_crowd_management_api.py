@@ -293,34 +293,3 @@ class TestConvertApiData:
         assert result_2 == ([], 1, 1)
         assert len(self.actual) == 4
         assert sensor_ref_2['location']['longitude'] == 4.99999
-
-    @pytest.mark.skip()
-    def test_convert_api_data_sensor_one_update_one_delete(self, api_data, api_data_2):
-        """
-        call the convert_api function twice with two different lists of sensors.
-        The second list will not contain one of the sensors of the first list.
-        Expect to have one sensor being updated, two inserted and another one
-        deleted. A tuple to be returned.
-        """
-
-        # insert the first list of sensor which should include two sensor.
-        result_1 = import_apis.convert_api_data(
-            api_name='sensor_crowd_management', api_data=api_data_2
-        )
-
-        # insert the second list of sensor which should include one sensors.
-        result_2 = import_apis.convert_api_data(
-            api_name='sensor_crowd_management', api_data=api_data
-        )
-
-        # get the only sensor that should have been updated.
-        sensor = self.actual[0]
-
-        assert result_1 == (
-            [],
-            2,
-            0,
-        )  # confirm the first insert only inserted two records
-        assert result_2 == ([], 2, 1)  # confirm thar there is an update only
-        assert len(self.actual) == 3
-        assert sensor['location']['longitude'] == 4.901852
