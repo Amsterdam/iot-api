@@ -255,6 +255,17 @@ stages:
                 kubectl describe ingress
 
           - task: AzureCLI@2
+            displayName: "describe endpoints"
+            inputs:
+              azureSubscription: "ARM-CCC-SSR-ont-01"
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+                kubectl get ep
+                echo "----------------------------------------------------------"
+                kubectl describe ep
+
+          - task: AzureCLI@2
             displayName: "describe networkpolicy"
             inputs:
               azureSubscription: "ARM-CCC-SSR-ont-01"
