@@ -4,7 +4,7 @@ import factory
 import faker
 from django.contrib.gis.geos import Point
 
-from .models import Device, ObservationGoal, Person, Project, Theme, Type
+from iot.models import Device, ObservationGoal, Person, Project, Theme, Type
 
 fake = faker.Faker()
 

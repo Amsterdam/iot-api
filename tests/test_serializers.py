@@ -1,6 +1,7 @@
 import pytest
 
-from iot import factories, models, serializers
+from iot import models, serializers
+import factories
 
 
 @pytest.mark.django_db
