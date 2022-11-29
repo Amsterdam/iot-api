@@ -1,5 +1,5 @@
 commonLabels:
   app: sensorenregister
   env: base
-# resources:
-#   - networkpolicy.yaml
+resources:
+  - networkpolicy.yaml
