@@ -6,20 +6,6 @@ from rest_framework.serializers import ModelSerializer, Serializer
 from .models import Device, DeviceJson, ObservationGoal, Person, Project
 
 
-class RequiredCharField(fields.CharField):
-    def __init__(self, **kwargs):
-        kwargs.setdefault('allow_blank', False)
-        kwargs.setdefault('allow_null', False)
-        super().__init__(**kwargs)
-
-
-class OptionalCharField(fields.CharField):
-    def __init__(self, **kwargs):
-        kwargs.setdefault('allow_blank', True)
-        kwargs.setdefault('allow_null', True)
-        super().__init__(**kwargs)
-
-
 class PersonSerializer(HALSerializer):
     class Meta:
         model = Person
@@ -99,10 +85,10 @@ class DeviceJsonSerializer(ModelSerializer):
 
 
 class PersonDataSerializer(Serializer):
-    organisation = OptionalCharField(max_length=255, source="Naam organisatie/bedrijf")
+    organisation = fields.CharField(max_length=255, source="Naam organisatie/bedrijf", allow_blank=True, allow_null=True)
     email = EmailField(allow_blank=False, allow_null=False, source="E-mail")
-    telephone = RequiredCharField(max_length=15, source="Telefoonnummer")
+    telephone = fields.CharField(max_length=15, source="Telefoonnummer", allow_blank=False, allow_null=False)
     website = fields.URLField(allow_blank=True, allow_null=True, source="Website")
-    first_name = RequiredCharField(max_length=84, source="Voornaam")
-    last_name_affix = OptionalCharField(max_length=84, source="Tussenvoegsel")
-    last_name = RequiredCharField(max_length=84, source="Achternaam")
+    first_name = fields.CharField(max_length=84, source="Voornaam", allow_blank=False, allow_null=False)
+    last_name_affix = fields.CharField(max_length=84, source="Tussenvoegsel", allow_blank=True, allow_null=True)
+    last_name = fields.CharField(max_length=84, source="Achternaam", allow_blank=False, allow_null=False)
