@@ -3,10 +3,10 @@ from typing import Dict, Union
 import requests
 from django.conf import settings
 from django.contrib.gis.geos import Point
+from rest_framework.exceptions import ValidationError
 
 from iot import models
 from iot.dateclasses import LatLong, PostcodeHouseNumber, SensorData
-from iot.exceptions import PostcodeSearchException
 from iot.utils import parse_date, remove_all
 
 STADSDEEL_TO_STADSDEEL_CODE_MAPPING = {
@@ -147,7 +147,7 @@ def get_center_coordinates(postcode: str, house_number: Union[int, str]) -> Poin
     data = requests.get(url).json()
 
     if not data or not data.get('results') or 'naam' not in data['results'][0]:
-        raise PostcodeSearchException(postcode, house_number)
+        raise ValidationError(postcode, house_number)
 
     url = get_address_url(data['results'][0]['naam'], house_number)
 
@@ -165,7 +165,7 @@ def get_center_coordinates(postcode: str, house_number: Union[int, str]) -> Poin
         for result in data['results']:
 
             if 'centroid' not in result:
-                raise PostcodeSearchException(postcode, house_number)
+                raise ValidationError(postcode, house_number)
 
             if result.get('postcode') == postcode_normalized and str(
                 result.get('huisnummer')
@@ -179,7 +179,7 @@ def get_center_coordinates(postcode: str, house_number: Union[int, str]) -> Poin
     # If we got here it is because we didn't find a result with the correct
     # postcode and house number, so it seems this house number does not exist
     # for the given postcode.
-    raise PostcodeSearchException(postcode, house_number)
+    raise ValidationError(postcode, house_number)
 
 
 def normalize_postcode(postcode: str) -> str:

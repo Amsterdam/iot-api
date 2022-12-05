@@ -39,9 +39,7 @@ class PersonData:
     email: str
     telephone: str
     website: str
-    first_name: str
-    last_name_affix: str
-    last_name: str
+    name: str
 
 
 @dataclasses.dataclass

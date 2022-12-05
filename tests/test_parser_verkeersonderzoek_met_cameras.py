@@ -1,3 +1,5 @@
+import json
+
 import pytest
 from django.conf import settings
 
@@ -67,9 +69,7 @@ def person_data():
         email="verkeersonderzoek@amsterdam.nl",
         telephone="14020",
         website="https://www.amsterdam.nl/",
-        first_name="Afdeling",
-        last_name_affix="",
-        last_name="kennis en kaders",
+        name="Afdeling kennis en kaders",
     )
 
 
@@ -113,9 +113,7 @@ class TestApiParser:
             email="verkeersonderzoek@amsterdam.nl",
             telephone="14020",
             website="https://www.amsterdam.nl/",
-            first_name="Afdeling",
-            last_name_affix="",
-            last_name="kennis en kaders",
+            name="Afdeling kennis en kaders",
         )
         # expected_value is a sensors
         expected = [
@@ -178,7 +176,10 @@ class TestImportPerson:
 class TestImportSensor:
     @property
     def actual(self):
-        return [DeviceSerializer(device).data for device in models.Device.objects.all()]
+        return [
+            json.loads(json.dumps(DeviceSerializer(device).data))
+            for device in models.Device.objects.all()
+        ]
 
     expected_1 = {
         'active_until': '2050-01-01',
@@ -198,6 +199,8 @@ privacyverklaringen-b/artikel-3/',
             'name': 'Afdeling kennis en kaders',
             'email': 'verkeersonderzoek@amsterdam.nl',
             'organisation': 'Gemeente Amsterdam',
+            'telephone': '14020',
+            'website': 'https://www.amsterdam.nl/',
         },
         'regions': [],
         'themes': ['Mobiliteit: auto'],
@@ -224,6 +227,8 @@ privacyverklaringen-b/artikel-3/',
             'name': 'Afdeling kennis en kaders',
             'email': 'verkeersonderzoek@amsterdam.nl',
             'organisation': 'Gemeente Amsterdam',
+            'telephone': '14020',
+            'website': 'https://www.amsterdam.nl/',
         },
         'regions': [],
         'themes': ['Mobiliteit: auto'],

@@ -1,5 +1,3 @@
-import typing
-
 from django.contrib.gis.db import models as gis_models
 from django.contrib.postgres.fields import ArrayField, CIEmailField, CITextField
 from django.db import models
@@ -25,17 +23,17 @@ class Person(models.Model):
 
     # LegalEntity
     organisation = models.CharField(
-        max_length=255, verbose_name="Naam organisatie/bedrijf"
+        max_length=255, verbose_name="Naam organisatie/bedrijf", blank=True, null=True
     )
-    website = models.TextField(verbose_name="Website", blank=True, null=True)
+    website = models.URLField(verbose_name="Website", blank=True, null=True)
 
     class Meta:
-        verbose_name = 'Eigenaar'
-        verbose_name_plural = 'Eigenaren'
-        unique_together = [['email', 'organisation']]
+        verbose_name = "Eigenaar"
+        verbose_name_plural = "Eigenaren"
+        unique_together = [["email", "organisation"]]
 
     def __str__(self):
-        return f'{self.email} ({self.name})'
+        return f"{self.email} ({self.name})"
 
 
 class Type(models.Model):
@@ -46,8 +44,8 @@ class Type(models.Model):
         return self.name
 
     class Meta:
-        verbose_name = 'Type'
-        verbose_name_plural = 'Types'
+        verbose_name = "Type"
+        verbose_name_plural = "Types"
 
 
 class Theme(models.Model):
@@ -58,8 +56,8 @@ class Theme(models.Model):
         return self.name
 
     class Meta:
-        verbose_name = 'Thema'
-        verbose_name_plural = 'Themas'
+        verbose_name = "Thema"
+        verbose_name_plural = "Themas"
 
 
 class LegalGround(models.Model):
@@ -69,16 +67,8 @@ class LegalGround(models.Model):
         return self.name
 
     class Meta:
-        verbose_name = 'Wettelijke grondslag'
-        verbose_name_plural = 'Wettelijke grondslagen'
-
-
-def id_from_name(model: typing.Type[models.Model], name: str):
-    """
-    Get the id of the instance of model with the given name. Name should be a
-    unique key, when the instance does not exist a DoesNotExist will be raised.
-    """
-    return model.objects.values_list('id', flat=True).filter(name=name).get()
+        verbose_name = "Wettelijke grondslag"
+        verbose_name_plural = "Wettelijke grondslagen"
 
 
 class Region(models.Model):
@@ -94,8 +84,8 @@ class Region(models.Model):
         return self.name
 
     class Meta:
-        verbose_name = 'Gebied'
-        verbose_name_plural = 'Gebieden'
+        verbose_name = "Gebied"
+        verbose_name_plural = "Gebieden"
 
 
 class ObservationGoal(models.Model):
@@ -114,11 +104,11 @@ class ObservationGoal(models.Model):
     )
 
     def __str__(self):
-        return f'{self.observation_goal} - {self.legal_ground}'
+        return f"{self.observation_goal} - {self.legal_ground}"
 
     class Meta:
-        verbose_name = 'ObservationGoal'
-        verbose_name_plural = 'ObservationGoals'
+        verbose_name = "ObservationGoal"
+        verbose_name_plural = "ObservationGoals"
 
 
 class Project(models.Model):
@@ -131,11 +121,11 @@ class Project(models.Model):
     )
 
     def __str__(self):
-        return f'{self.path}'
+        return f"{self.path}"
 
     class Meta:
-        verbose_name = 'Project'
-        verbose_name_plural = 'Projects'
+        verbose_name = "Project"
+        verbose_name_plural = "Projects"
 
 
 class DeviceJson(models.Model):
@@ -220,6 +210,6 @@ class Device(models.Model):
         return self.reference
 
     class Meta:
-        verbose_name = 'Sensor'
-        verbose_name_plural = 'Sensoren'
-        unique_together = 'reference', 'owner'
+        verbose_name = "Sensor"
+        verbose_name_plural = "Sensoren"
+        unique_together = "reference", "owner"

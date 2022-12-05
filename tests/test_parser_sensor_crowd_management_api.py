@@ -1,3 +1,5 @@
+import json
+
 import pytest
 from django.conf import settings
 
@@ -112,9 +114,7 @@ def person_data():
         email="LVMA@amsterdam.nl",
         telephone="14020",
         website="https://www.amsterdam.nl/",
-        first_name="Afdeling",
-        last_name_affix="",
-        last_name="verkeersmanagment",
+        name="Afdeling verkeersmanagment",
     )
 
 
@@ -158,9 +158,7 @@ class TestApiParser:
             email="LVMA@amsterdam.nl",
             telephone="14020",
             website="https://www.amsterdam.nl/",
-            first_name="Afdeling",
-            last_name_affix="",
-            last_name="verkeersmanagment",
+            name="Afdeling verkeersmanagment",
         )
         # expected_value is a sensors
         expected_sensors = [
@@ -250,7 +248,10 @@ class TestConvertApiData:
 
     @property
     def actual(self):
-        return [DeviceSerializer(device).data for device in models.Device.objects.all()]
+        return [
+            json.loads(json.dumps(DeviceSerializer(device).data))
+            for device in models.Device.objects.all()
+        ]
 
     def test_convert_api_data_sensor_only_insert_2(self, api_data_2):
         """

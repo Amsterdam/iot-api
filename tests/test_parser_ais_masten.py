@@ -1,3 +1,5 @@
+import json
+
 import pytest
 from django.conf import settings
 
@@ -64,9 +66,7 @@ def person_data():
         email="Meldingsplicht.Sensoren@amsterdam.nl",
         telephone="14020",
         website="https://www.amsterdam.nl/",
-        first_name="Programma",
-        last_name_affix="",
-        last_name="varen",
+        name="Programma varen",
     )
 
 
@@ -110,9 +110,7 @@ class TestApiParser:
             email="Meldingsplicht.Sensoren@amsterdam.nl",
             telephone="14020",
             website="https://www.amsterdam.nl/",
-            first_name="Programma",
-            last_name_affix="",
-            last_name="varen",
+            name="Programma varen",
         )
         # expected_value is a sensors
         expected = [
@@ -173,7 +171,10 @@ class TestImportPerson:
 class TestImportSensor:
     @property
     def actual(self):
-        return [DeviceSerializer(device).data for device in models.Device.objects.all()]
+        return [
+            json.loads(json.dumps(DeviceSerializer(device).data))
+            for device in models.Device.objects.all()
+        ]
 
     expected_1 = {
         'active_until': '2050-01-01',
@@ -193,6 +194,8 @@ privacyverklaringen-b/vaarwegbeheer/',
             'name': 'Programma varen',
             'email': 'Meldingsplicht.Sensoren@amsterdam.nl',
             'organisation': 'Gemeente Amsterdam',
+            'telephone': '14020',
+            'website': 'https://www.amsterdam.nl/',
         },
         'regions': [],
         'themes': ['Mobiliteit: auto'],
@@ -219,6 +222,8 @@ privacyverklaringen-b/vaarwegbeheer/',
             'name': 'Programma varen',
             'email': 'Meldingsplicht.Sensoren@amsterdam.nl',
             'organisation': 'Gemeente Amsterdam',
+            'telephone': '14020',
+            'website': 'https://www.amsterdam.nl/',
         },
         'regions': [],
         'themes': ['Mobiliteit: auto'],
@@ -256,7 +261,10 @@ class TestConverteApiData:
 
     @property
     def actual(self):
-        return [DeviceSerializer(device).data for device in models.Device.objects.all()]
+        return [
+            json.loads(json.dumps(DeviceSerializer(device).data))
+            for device in models.Device.objects.all()
+        ]
 
     def test_convert_api_data_ais_masten_only_insert_2(self, api_data_2):
         """

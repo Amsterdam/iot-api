@@ -1,33 +1,25 @@
 from datapunt_api.rest import HALSerializer
-from rest_framework import fields, serializers
-from rest_framework.fields import EmailField
-from rest_framework.serializers import ModelSerializer, Serializer
+from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer
 
 from .models import Device, DeviceJson, ObservationGoal, Person, Project
-
-
-class RequiredCharField(fields.CharField):
-    def __init__(self, **kwargs):
-        kwargs.setdefault('allow_blank', False)
-        kwargs.setdefault('allow_null', False)
-        super().__init__(**kwargs)
-
-
-class OptionalCharField(fields.CharField):
-    def __init__(self, **kwargs):
-        kwargs.setdefault('allow_blank', True)
-        kwargs.setdefault('allow_null', True)
-        super().__init__(**kwargs)
 
 
 class PersonSerializer(HALSerializer):
     class Meta:
         model = Person
-        fields = ['name', 'email', 'organisation']
+        fields = ['name', 'email', 'organisation', 'telephone', 'website']
+
+    def get_unique_together_validators(self):
+        """
+        Overriding method to disable unique together checks.
+        The unique together checks are inherited from the Person model class.
+        When the serializer is used for updates, we should not evaluate the uniqueness constraint.
+        """
+        return []
 
 
 class ObservationGoalSerializer(HALSerializer):
-
     legal_ground = serializers.StringRelatedField()
 
     class Meta:
@@ -36,9 +28,9 @@ class ObservationGoalSerializer(HALSerializer):
 
 
 class ProjectSerializer(HALSerializer):
-
-    # converts the string list to a list.
-    path = serializers.ListField(child=serializers.StringRelatedField())
+    path = serializers.ListField(
+        child=serializers.StringRelatedField()
+    )  # converts the string list to a list.
 
     class Meta:
         model = Project
@@ -96,13 +88,3 @@ class DeviceJsonSerializer(ModelSerializer):
     class Meta:
         model = DeviceJson
         fields = '__all__'
-
-
-class PersonDataSerializer(Serializer):
-    organisation = OptionalCharField(max_length=255, source="Naam organisatie/bedrijf")
-    email = EmailField(allow_blank=False, allow_null=False, source="E-mail")
-    telephone = RequiredCharField(max_length=15, source="Telefoonnummer")
-    website = fields.URLField(allow_blank=True, allow_null=True, source="Website")
-    first_name = RequiredCharField(max_length=84, source="Voornaam")
-    last_name_affix = OptionalCharField(max_length=84, source="Tussenvoegsel")
-    last_name = RequiredCharField(max_length=84, source="Achternaam")
