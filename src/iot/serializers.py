@@ -11,7 +11,11 @@ class PersonSerializer(HALSerializer):
         fields = ['name', 'email', 'organisation', 'telephone', 'website']
 
     def get_unique_together_validators(self):
-        """Overriding method to disable unique together checks"""
+        """
+        Overriding method to disable unique together checks.
+        The unique together checks are inherited from the Person model class.
+        When the serializer is used for updates, we should not evaluate the uniqueness constraint.
+        """
         return []
 
 
