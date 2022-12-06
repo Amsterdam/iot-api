@@ -1,6 +1,8 @@
 import os
 import sys
 
+from keycloak_oidc.default_settings import *  # noqa
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
