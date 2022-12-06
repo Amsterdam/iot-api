@@ -153,15 +153,24 @@ TEMPLATES = [
 SHELL_PLUS_PRINT_SQL = True
 SHELL_PLUS_PRINT_SQL_TRUNCATE = 10_000
 
+DATABASE_HOST = os.getenv("DATABASE_HOST", "database")
+DATABASE_NAME = os.getenv("DATABASE_NAME", "dev")
+DATABASE_USER = os.getenv("DATABASE_USER", "dev")
+DATABASE_PASSWORD = os.getenv("DATABASE_PASSWORD", "dev")
+DATABASE_PORT = os.getenv("DATABASE_PORT", "5432")
+
+if 'azure.com' in DATABASE_HOST:
+    DATABASE_USER += '@' + DATABASE_HOST
+
 DATABASES = {
     "default": {
         "ENGINE": "django.contrib.gis.db.backends.postgis",
-        "NAME": os.getenv("DATABASE_NAME", "dev"),
-        "USER": os.getenv("DATABASE_USER", "dev"),
-        "PASSWORD": os.getenv("DATABASE_PASSWORD", "dev"),
-        "HOST": os.getenv("DATABASE_HOST", "database"),
+        "NAME": DATABASE_NAME,
+        "USER": DATABASE_USER,
+        "PASSWORD": DATABASE_PASSWORD,
+        "HOST": DATABASE_HOST,
         "CONN_MAX_AGE": 20,
-        "PORT": os.getenv("DATABASE_PORT", "5432"),
+        "PORT": DATABASE_PORT,
         'OPTIONS': {'sslmode': 'allow'},
     },
 }
