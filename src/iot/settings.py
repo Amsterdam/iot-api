@@ -1,6 +1,8 @@
 import os
 import sys
 
+# This import enables the OIDC login. Without this import, users cannot log in to the admin portal!
+# The "noqa" comment prevents Flake from removing this import as an unused import.
 from keycloak_oidc.default_settings import *  # noqa
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -51,7 +53,7 @@ OIDC_OP_USER_ENDPOINT = os.environ.get(
 OIDC_OP_JWKS_ENDPOINT = os.environ.get(
     'OIDC_OP_JWKS_ENDPOINT', f'{OIDC_DEFAULT_URL}/certs'
 )
-OIDC_OP_LOGOUT_ENDPOINT = LOGOUT_REDIRECT_URL = os.environ.get(
+OIDC_OP_LOGOUT_ENDPOINT = OIDC_OP_LOGOUT_URL_METHOD = os.environ.get(
     'OIDC_OP_LOGOUT_ENDPOINT', f'{OIDC_DEFAULT_URL}/logout'
 )
 LOGIN_REDIRECT_URL_FAILURE = '/iothings/static/403.html'
