@@ -135,7 +135,7 @@ class PersonData:
 
     def validate(self):
         try:
-            PersonDataSerializer(data=dataclasses.asdict(self)).is_valid(True)
+            PersonDataSerializer(data=dataclasses.asdict(self)).is_valid()
         except ValidationError as e:
             raise InvalidPersonDataError(e) from e
 

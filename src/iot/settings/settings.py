@@ -2,6 +2,7 @@ import os
 import sys
 
 import sentry_sdk
+from azure.identity import ManagedIdentityCredential
 from keycloak_oidc.default_settings import *
 from sentry_sdk.integrations.django import DjangoIntegration
 
@@ -159,8 +160,28 @@ DATABASE_USER = os.getenv("DATABASE_USER", "dev")
 DATABASE_PASSWORD = os.getenv("DATABASE_PASSWORD", "dev")
 DATABASE_PORT = os.getenv("DATABASE_PORT", "5432")
 
+
+class DBPassword:
+
+    SCOPES = ['https://ossrdbms-aad.database.windows.net']
+
+    def __init__(self, object_id) -> None:
+        self.managed_identity = ManagedIdentityCredential(
+            identity_config=dict(object_id=object_id)
+        )
+
+    def get_azure_token(self):
+        access_token = self.managed_identity.get_token(*self.SCOPES)
+        return access_token.token
+
+    def __str__(self):
+        return self.get_azure_token()
+
+
 if 'azure.com' in DATABASE_HOST:
+    DATABASE_USER = 's-aks-writer'
     DATABASE_USER += '@' + DATABASE_HOST
+    DATABASE_PASSWORD = DBPassword(os.getenv('MANAGED_IDENTITY_OBJECTID'))
 
 DATABASES = {
     "default": {
