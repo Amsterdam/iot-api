@@ -1,6 +1,10 @@
 import os
 import sys
 
+# This import enables the OIDC login. Without this import, users cannot log in to the admin portal!
+# The "noqa" comment prevents Flake from removing this import as an unused import.
+from keycloak_oidc.default_settings import *  # noqa
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
