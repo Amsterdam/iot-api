@@ -8,22 +8,60 @@ asgiref==3.5.2
     # via
     #   -r ./requirements.txt
     #   django
-asttokens==2.0.8
+asttokens==2.2.1
     # via stack-data
 attrs==22.1.0
     # via
     #   -r ./requirements.txt
     #   jsonschema
     #   pytest
-backcall==0.2.0
-    # via ipython
-black==22.6.0
-    # via -r requirements_dev.in
-build==0.8.0
-    # via pip-tools
-certifi==2022.6.15
+azure-common==1.1.28
     # via
     #   -r ./requirements.txt
+    #   azure-keyvault-certificates
+    #   azure-keyvault-keys
+    #   azure-keyvault-secrets
+azure-core==1.26.1
+    # via
+    #   -r ./requirements.txt
+    #   azure-identity
+    #   azure-keyvault-certificates
+    #   azure-keyvault-keys
+    #   azure-keyvault-secrets
+    #   msrest
+    #   opencensus-ext-azure
+azure-identity==1.12.0
+    # via
+    #   -r ./requirements.txt
+    #   opencensus-ext-azure
+azure-keyvault==4.2.0
+    # via -r ./requirements.txt
+azure-keyvault-certificates==4.6.0
+    # via
+    #   -r ./requirements.txt
+    #   azure-keyvault
+azure-keyvault-keys==4.7.0
+    # via
+    #   -r ./requirements.txt
+    #   azure-keyvault
+azure-keyvault-secrets==4.6.0
+    # via
+    #   -r ./requirements.txt
+    #   azure-keyvault
+backcall==0.2.0
+    # via ipython
+black==22.10.0
+    # via -r requirements_dev.in
+build==0.9.0
+    # via pip-tools
+cachetools==5.2.0
+    # via
+    #   -r ./requirements.txt
+    #   google-auth
+certifi==2022.12.7
+    # via
+    #   -r ./requirements.txt
+    #   msrest
     #   requests
     #   sentry-sdk
 cffi==1.15.1
@@ -49,13 +87,17 @@ coreschema==0.0.4
     #   -r ./requirements.txt
     #   coreapi
     #   drf-yasg
-coverage[toml]==6.4.4
+coverage[toml]==6.5.0
     # via pytest-cov
-cryptography==37.0.4
+cryptography==38.0.4
     # via
     #   -r ./requirements.txt
+    #   azure-identity
+    #   azure-keyvault-keys
     #   josepy
     #   mozilla-django-oidc
+    #   msal
+    #   pyjwt
     #   pyopenssl
 datapunt-keycloak-oidc==0.5.1
     # via -r ./requirements.txt
@@ -67,7 +109,7 @@ defusedxml==0.7.1
     # via
     #   -r ./requirements.txt
     #   djangorestframework-xml
-django==3.2.15
+django==3.2.16
     # via
     #   -r ./requirements.txt
     #   django-braces
@@ -85,11 +127,11 @@ django-braces==1.15.0
     # via -r ./requirements.txt
 django-cors-headers==3.13.0
     # via -r ./requirements.txt
-django-countries==7.3.2
+django-countries==7.4.2
     # via -r ./requirements.txt
-django-debug-toolbar==3.6.0
+django-debug-toolbar==3.8.1
     # via -r requirements_dev.in
-django-extensions==3.2.0
+django-extensions==3.2.1
     # via -r ./requirements.txt
 django-extra-fields==3.0.2
     # via -r ./requirements.txt
@@ -99,7 +141,7 @@ django-leaflet==0.28.3
     # via -r ./requirements.txt
 django-multiselectfield==0.1.12
     # via -r ./requirements.txt
-djangorestframework==3.13.1
+djangorestframework==3.14.0
     # via
     #   -r ./requirements.txt
     #   django-extra-fields
@@ -124,32 +166,46 @@ drf-extensions==0.7.1
     # via
     #   -r ./requirements.txt
     #   drf-amsterdam
-drf-yasg==1.21.3
+drf-yasg==1.21.4
     # via -r ./requirements.txt
 et-xmlfile==1.1.0
     # via
     #   -r ./requirements.txt
     #   openpyxl
-executing==0.10.0
+exceptiongroup==1.0.4
+    # via pytest
+executing==1.2.0
     # via stack-data
 factory-boy==3.2.1
     # via
     #   -r requirements_dev.in
     #   pytest-factoryboy
-faker==14.1.0
+faker==15.3.4
     # via
     #   -r requirements_dev.in
     #   factory-boy
     #   pytest-faker
 flex==6.14.1
     # via -r ./requirements.txt
+google-api-core==2.11.0
+    # via
+    #   -r ./requirements.txt
+    #   opencensus
+google-auth==2.15.0
+    # via
+    #   -r ./requirements.txt
+    #   google-api-core
+googleapis-common-protos==1.57.0
+    # via
+    #   -r ./requirements.txt
+    #   google-api-core
 graypy==2.1.0
     # via -r ./requirements.txt
-idna==3.3
+idna==3.4
     # via
     #   -r ./requirements.txt
     #   requests
-importlib-metadata==4.12.0
+importlib-metadata==5.1.0
     # via
     #   -r ./requirements.txt
     #   markdown
@@ -162,17 +218,21 @@ iniconfig==1.1.1
     # via pytest
 ipdb==0.13.9
     # via -r requirements_dev.in
-ipython==8.4.0
+ipython==8.7.0
     # via
     #   -r requirements_dev.in
     #   ipdb
+isodate==0.6.1
+    # via
+    #   -r ./requirements.txt
+    #   msrest
 isort==5.10.1
     # via -r requirements_dev.in
 itypes==1.2.0
     # via
     #   -r ./requirements.txt
     #   coreapi
-jedi==0.18.1
+jedi==0.18.2
     # via ipython
 jinja2==3.1.2
     # via
@@ -186,7 +246,7 @@ jsonpointer==2.3
     # via
     #   -r ./requirements.txt
     #   flex
-jsonschema==4.14.0
+jsonschema==4.17.3
     # via
     #   -r ./requirements.txt
     #   swagger-spec-validator
@@ -203,11 +263,40 @@ mozilla-django-oidc==1.2.4
     # via
     #   -r ./requirements.txt
     #   datapunt-keycloak-oidc
+msal==1.20.0
+    # via
+    #   -r ./requirements.txt
+    #   azure-identity
+    #   msal-extensions
+msal-extensions==1.0.0
+    # via
+    #   -r ./requirements.txt
+    #   azure-identity
+msrest==0.7.1
+    # via
+    #   -r ./requirements.txt
+    #   azure-keyvault-certificates
+    #   azure-keyvault-keys
+    #   azure-keyvault-secrets
 mypy-extensions==0.4.3
     # via black
+oauthlib==3.2.2
+    # via
+    #   -r ./requirements.txt
+    #   requests-oauthlib
+opencensus==0.11.0
+    # via
+    #   -r ./requirements.txt
+    #   opencensus-ext-azure
+opencensus-context==0.1.3
+    # via
+    #   -r ./requirements.txt
+    #   opencensus
+opencensus-ext-azure==1.1.7
+    # via -r ./requirements.txt
 openpyxl==3.0.10
     # via -r ./requirements.txt
-packaging==21.3
+packaging==22.0
     # via
     #   -r ./requirements.txt
     #   build
@@ -215,7 +304,7 @@ packaging==21.3
     #   pytest
 parso==0.8.3
     # via jedi
-pathspec==0.9.0
+pathspec==0.10.2
     # via black
 pep517==0.13.0
     # via build
@@ -223,22 +312,42 @@ pexpect==4.8.0
     # via ipython
 pickleshare==0.7.5
     # via ipython
-pip-tools==6.8.0
+pip-tools==6.11.0
     # via -r requirements_dev.in
-platformdirs==2.5.2
+platformdirs==2.6.0
     # via black
 pluggy==1.0.0
     # via pytest
-prompt-toolkit==3.0.30
+portalocker==2.6.0
+    # via
+    #   -r ./requirements.txt
+    #   msal-extensions
+prompt-toolkit==3.0.36
     # via ipython
-psycopg2-binary==2.9.3
+protobuf==4.21.11
+    # via
+    #   -r ./requirements.txt
+    #   google-api-core
+    #   googleapis-common-protos
+psutil==5.9.4
+    # via
+    #   -r ./requirements.txt
+    #   opencensus-ext-azure
+psycopg2-binary==2.9.5
     # via -r ./requirements.txt
 ptyprocess==0.7.0
     # via pexpect
 pure-eval==0.2.2
     # via stack-data
-py==1.11.0
-    # via pytest
+pyasn1==0.4.8
+    # via
+    #   -r ./requirements.txt
+    #   pyasn1-modules
+    #   rsa
+pyasn1-modules==0.2.8
+    # via
+    #   -r ./requirements.txt
+    #   google-auth
 pycparser==2.21
     # via
     #   -r ./requirements.txt
@@ -249,40 +358,40 @@ pygments==2.13.0
     # via
     #   -r ./requirements.txt
     #   ipython
-pyinstrument==4.3.0
+pyinstrument==4.4.0
     # via -r requirements_dev.in
-pyopenssl==22.0.0
+pyjwt[crypto]==2.6.0
+    # via
+    #   -r ./requirements.txt
+    #   msal
+pyopenssl==22.1.0
     # via
     #   -r ./requirements.txt
     #   josepy
-pyparsing==3.0.9
-    # via
-    #   -r ./requirements.txt
-    #   packaging
-pyrsistent==0.18.1
+pyrsistent==0.19.2
     # via
     #   -r ./requirements.txt
     #   jsonschema
-pytest==7.1.2
+pytest==7.2.0
     # via
     #   -r requirements_dev.in
     #   pytest-cov
     #   pytest-django
     #   pytest-env
     #   pytest-factoryboy
-pytest-cov==3.0.0
+pytest-cov==4.0.0
     # via -r requirements_dev.in
 pytest-django==4.5.2
     # via -r requirements_dev.in
-pytest-env==0.6.2
+pytest-env==0.8.1
     # via -r requirements_dev.in
-pytest-factoryboy==2.5.0
+pytest-factoryboy==2.5.1
     # via -r requirements_dev.in
 pytest-faker==2.0.0
     # via -r requirements_dev.in
 python-dateutil==2.8.2
     # via faker
-pytz==2022.2.1
+pytz==2022.6
     # via
     #   -r ./requirements.txt
     #   django
@@ -296,65 +405,91 @@ pyyaml==6.0
 requests==2.28.1
     # via
     #   -r ./requirements.txt
+    #   azure-core
     #   coreapi
     #   flex
+    #   google-api-core
     #   mozilla-django-oidc
+    #   msal
+    #   msrest
+    #   opencensus-ext-azure
+    #   requests-oauthlib
     #   responses
-responses==0.21.0
+requests-oauthlib==1.3.1
+    # via
+    #   -r ./requirements.txt
+    #   msrest
+responses==0.22.0
     # via -r requirements_dev.in
 rfc3987==1.3.8
     # via
     #   -r ./requirements.txt
     #   flex
+rsa==4.9
+    # via
+    #   -r ./requirements.txt
+    #   google-auth
 ruamel-yaml==0.17.21
     # via
     #   -r ./requirements.txt
     #   drf-yasg
-ruamel-yaml-clib==0.2.6
+ruamel-yaml-clib==0.2.7
     # via
     #   -r ./requirements.txt
     #   ruamel-yaml
-sentry-sdk==1.9.5
+sentry-sdk==1.11.1
     # via -r ./requirements.txt
 six==1.16.0
     # via
     #   -r ./requirements.txt
+    #   azure-core
+    #   azure-identity
+    #   azure-keyvault-certificates
+    #   azure-keyvault-keys
+    #   azure-keyvault-secrets
     #   djangorestframework-csv
     #   flex
+    #   google-auth
+    #   isodate
     #   mozilla-django-oidc
     #   python-dateutil
-    #   swagger-spec-validator
-sqlparse==0.4.2
+sqlparse==0.4.3
     # via
     #   -r ./requirements.txt
     #   django
     #   django-debug-toolbar
-stack-data==0.4.0
+stack-data==0.6.2
     # via ipython
 strict-rfc3339==0.7
     # via
     #   -r ./requirements.txt
     #   flex
-swagger-spec-validator==2.7.4
+swagger-spec-validator==3.0.3
     # via -r ./requirements.txt
 toml==0.10.2
-    # via ipdb
+    # via
+    #   ipdb
+    #   responses
 tomli==2.0.1
     # via
     #   black
     #   build
     #   coverage
     #   pytest
-traitlets==5.3.0
+traitlets==5.6.0
     # via
     #   ipython
     #   matplotlib-inline
-typing-extensions==4.3.0
+types-toml==0.10.8.1
+    # via responses
+typing-extensions==4.4.0
     # via
     #   -r ./requirements.txt
+    #   azure-core
     #   black
     #   django-countries
     #   pytest-factoryboy
+    #   swagger-spec-validator
 unicodecsv==0.14.1
     # via
     #   -r ./requirements.txt
@@ -364,7 +499,7 @@ uritemplate==4.1.1
     #   -r ./requirements.txt
     #   coreapi
     #   drf-yasg
-urllib3==1.26.12
+urllib3==1.26.13
     # via
     #   -r ./requirements.txt
     #   requests
@@ -378,9 +513,9 @@ wcwidth==0.2.5
     # via prompt-toolkit
 werkzeug==2.2.2
     # via -r requirements_dev.in
-wheel==0.37.1
+wheel==0.38.4
     # via pip-tools
-zipp==3.8.1
+zipp==3.11.0
     # via
     #   -r ./requirements.txt
     #   importlib-metadata

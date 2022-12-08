@@ -49,3 +49,9 @@ pygments
 
 # Sentry
 sentry-sdk
+
+# Azure
+azure-identity
+azure-keyvault
+opencensus-ext-azure
+azure-core
