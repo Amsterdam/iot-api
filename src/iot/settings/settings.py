@@ -165,10 +165,8 @@ class DBPassword:
 
     SCOPES = ['https://ossrdbms-aad.database.windows.net']
 
-    def __init__(self, object_id) -> None:
-        self.managed_identity = ManagedIdentityCredential(
-            identity_config=dict(object_id=object_id)
-        )
+    def __init__(self, client_id) -> None:
+        self.managed_identity = ManagedIdentityCredential(client_id=client_id)
 
     def get_azure_token(self):
         access_token = self.managed_identity.get_token(*self.SCOPES)
@@ -179,9 +177,8 @@ class DBPassword:
 
 
 if 'azure.com' in DATABASE_HOST:
-    DATABASE_USER = 's-aks-writer'
     DATABASE_USER += '@' + DATABASE_HOST
-    DATABASE_PASSWORD = DBPassword(os.getenv('MANAGED_IDENTITY_OBJECTID'))
+    DATABASE_PASSWORD = DBPassword(os.getenv('MANAGED_IDENTITY_CLIENTID'))
 
 DATABASES = {
     "default": {
