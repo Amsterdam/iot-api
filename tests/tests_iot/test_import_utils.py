@@ -118,7 +118,7 @@ class TestParse:
         Each of the source files contains the same sensors, just in a different
         format, so we call the various parse functions and verify that
         """
-        workbook = csv_to_workbook(Path(__file__).parent / "data" / dir)
+        workbook = csv_to_workbook(Path(__file__).parent.parent / "data" / dir)
         actual = list(parser(workbook))
 
         expected_owner = iot.dateclasses.PersonData(
@@ -238,13 +238,13 @@ class TestParse:
     )
     def test_empty_rows_and_columns_should_be_skipped(self, dir, parser):
         # verify that empty rows and columns after the expected data is ignored
-        workbook = csv_to_workbook(Path(__file__).parent / "data" / dir)
+        workbook = csv_to_workbook(Path(__file__).parent.parent / "data" / dir)
         assert len(list(parser(workbook))) == 1
 
     def test_iprox_five_sensors(self):
         # verify that is possible to import the max number of sensors
         workbook = csv_to_workbook(
-            Path(__file__).parent / "data" / "iprox_five_sensors"
+            Path(__file__).parent.parent / "data" / "iprox_five_sensors"
         )
         assert len(list(import_xlsx.parse_iprox_xlsx(workbook))) == 5
 
@@ -533,7 +533,7 @@ class TestImportSensor:
 
     @pytest.mark.parametrize("source", ["iprox", "bulk"])
     def test_duplicate_references_should_be_rejected(self, source):
-        path = Path(__file__).parent / "data" / f"{source}_duplicate_references"
+        path = Path(__file__).parent.parent / "data" / f"{source}_duplicate_references"
         workbook = csv_to_workbook(path)
         errors = import_xlsx.import_xlsx(workbook)[0]
         assert len(errors) == 2
@@ -650,7 +650,7 @@ class TestValidate:
             validate_person_data(person_data)
 
 
-DATA_DIR = Path(__file__).parent / "data" / "json"
+DATA_DIR = Path(__file__).parent.parent / "data" / "json"
 
 
 @pytest.fixture()

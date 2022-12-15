@@ -3,7 +3,7 @@
 line-length = 88
 # Black will default to double quotes
 skip-string-normalization = true
-exclude = 'migrations'
+exclude = 'migrations|urls.py|tests|settings.py'
 
 [tool.pytest.ini_options]
 addopts = "-v -s --ff --nf --cov --cov-report term-missing --cov-config /app/pyproject.toml"
@@ -22,7 +22,8 @@ omit = [
     "/app/src/main/wsgi.py",
     "/app/src/main/settings.py",
     "/app/src/main/urls.py",
-    "/app/src/main/migrations/*.py"
+    "/app/src/iot/urls.py",
+    "*/migrations/*"
 ]
 
 [tool.coverage.report]
