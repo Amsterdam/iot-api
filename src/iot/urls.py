@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.conf import settings
+
 from django.conf.urls import include
 from django.contrib import admin
 from django.urls import path, re_path
@@ -34,39 +34,18 @@ schema_view = get_schema_view(
 )
 
 
-urlpatterns = [
+urlpatterns = router.urls + [
     re_path(
-        r'^iothings/',
-        include(
-            router.urls
-            + [
-                re_path(
-                    r'^swagger(?P<format>\.json|\.yaml)$',
-                    schema_view.without_ui(cache_timeout=None),
-                    name='schema-json',
-                ),
-                re_path(
-                    r'^swagger/$',
-                    schema_view.with_ui('swagger', cache_timeout=None),
-                    name='schema-swagger-ui',
-                ),
-                re_path(r'^ping/$', views.PingView.as_view(), name='ping'),
-                re_path(r'^oidc/', include('keycloak_oidc.urls')),
-                path('admin/login/', auth.oidc_login),
-                path('admin/', admin.site.urls),
-            ]
-        ),
+        r'^swagger(?P<format>\.json|\.yaml)$',
+        schema_view.without_ui(cache_timeout=None),
+        name='schema-json',
     ),
-    re_path(r'^status/', include('health.urls')),
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=None), name='schema-swagger-ui',),
+    path('ping/', views.PingView.as_view(), name='ping'),
+    path('oidc/', include('keycloak_oidc.urls')),
+    path('admin/login/', auth.oidc_login),
+    path('admin/', admin.site.urls),
+
+    path('status/', include('health.urls')),
 ]
 
-if settings.DEBUG:
-    import debug_toolbar
-
-    urlpatterns.extend(
-        [
-            re_path(r'^__debug__/', include(debug_toolbar.urls)),
-        ]
-    )
-
-admin.autodiscover()

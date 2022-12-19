@@ -60,7 +60,7 @@ LOGIN_REDIRECT_URL_FAILURE = '/iothings/static/403.html'
 
 # APP CONFIGURATION
 # ------------------------------------------------------------------------------
-DJANGO_APPS = (
+DJANGO_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.staticfiles',
     'django.contrib.gis',
@@ -68,10 +68,9 @@ DJANGO_APPS = (
     'django.contrib.sessions',
     'django.contrib.admin',
     'django.contrib.messages',
-    'health',
-)
+]
 
-THIRD_PARTY_APPS = (
+THIRD_PARTY_APPS = [
     'django_extensions',
     'django_filters',
     'datapunt_api',
@@ -81,16 +80,17 @@ THIRD_PARTY_APPS = (
     'rest_framework_gis',
     'keycloak_oidc',  # load after django.contrib.auth!
     'leaflet',
-)
+]
 
-DEBUG_APPS = ('debug_toolbar',)
+DEBUG_APPS = ['debug_toolbar']
+
 
 # Apps specific for this project go here.
-LOCAL_APPS = ('iot',)
+LOCAL_APPS = ['main', 'iot', 'health']
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
-MIDDLEWARE = (
+MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -99,12 +99,12 @@ MIDDLEWARE = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'mozilla_django_oidc.middleware.SessionRefresh',
-)
+]
 
-DEBUG_MIDDLEWARE = (
+DEBUG_MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'pyinstrument.middleware.ProfilerMiddleware',
-)
+]
 
 if DEBUG:
     INSTALLED_APPS += DEBUG_APPS
@@ -131,8 +131,8 @@ AUTHENTICATION_BACKENDS = [
 
 SENSOR_REGISTER_ADMIN_ROLE_NAME = os.environ.get('SENSOR_REGISTER_ADMIN_ROLE_NAME', 'x')
 
-ROOT_URLCONF = "iot.urls"
-WSGI_APPLICATION = "iot.wsgi.application"
+ROOT_URLCONF = "main.urls"
+WSGI_APPLICATION = "main.wsgi.application"
 
 TEMPLATES = [
     {

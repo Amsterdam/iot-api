@@ -61,6 +61,6 @@ services:
       target: tests
     environment:
       <<: *base-app-env
-      DJANGO_SETTINGS_MODULE: "iot.settings"
+      DJANGO_SETTINGS_MODULE: "main.settings"
       OIDC_RP_CLIENT_ID: tests
       OIDC_RP_CLIENT_SECRET: tests
