@@ -1,5 +1,8 @@
 kind: Component
 
+commonLabels:
+  component: api
+
 configMapGenerator:
   - name: app-env
     envs:
@@ -52,5 +55,17 @@ replacements:
           labelSelector: component=api
         fieldPaths:
           - spec.template.spec.volumes
+        options:
+          create: true
+
+  - source:
+      kind: Deployment
+      name: app
+      fieldPath: spec.template.spec.containers.[name=main].securityContext
+    targets:
+      - select:
+          kind: Job
+        fieldPaths:
+          - spec.template.spec.containers.[name=main].securityContext
         options:
           create: true

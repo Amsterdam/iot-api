@@ -15,7 +15,6 @@ patchesStrategicMerge:
   - ingress.yaml
 
 commonLabels:
-  generator: kustomize
   team: cccssront01
   app: sensorenregister
   env: dev
@@ -49,16 +48,5 @@ replacements:
           kind: Job
         fieldPaths:
           - spec.template.spec.tolerations
-        options:
-          create: true
-  - source:
-      kind: Deployment
-      name: app
-      fieldPath: spec.template.spec.containers.[name=main].securityContext
-    targets:
-      - select:
-          kind: Job
-        fieldPaths:
-          - spec.template.spec.containers.[name=main].securityContext
         options:
           create: true

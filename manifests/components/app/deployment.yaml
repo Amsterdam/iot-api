@@ -4,25 +4,13 @@ metadata:
   name: app
 spec:
   selector:
-    matchLabels:
-      component: api
   template:
-    metadata:
-      labels:
-        component: api
-        version: "1"
     spec:
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
 
       automountServiceAccountToken: false
-
-      tolerations:
-        - key: "foo"
-          operator: "Equal"
-          value: "true"
-          effect: "NoSchedule"
 
       containers:
         - name: main
