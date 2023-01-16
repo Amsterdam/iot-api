@@ -20,6 +20,10 @@ commonLabels:
   app: sensorenregister
   env: dev
 
+replicas:
+  - name: app
+    count: 3
+
 patches:
   - target:
       kind: Ingress
