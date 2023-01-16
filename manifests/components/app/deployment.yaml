@@ -28,7 +28,7 @@ spec:
       containers:
         - name: main
           image: localhost:5000/sensorenregister/api:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always # IfNotPresent
           securityContext:
             privileged: false
             allowPrivilegeEscalation: false

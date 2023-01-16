@@ -86,7 +86,7 @@ stages:
                 az acr login -n mainweuacroyh7oqq4sbyjt
 
           - task: AzureCLI@2
-            displayName: "build"
+            displayName: "push"
             env:
               REGISTRY: mainweuacroyh7oqq4sbyjt.azurecr.io
             inputs:
@@ -127,7 +127,7 @@ stages:
               scriptLocation: "inlineScript"
               inlineScript: |
                 pushd manifests/overlays/dev
-                kustomize edit set image localhost:5000/sensorenregister/api=mainweuacroyh7oqq4sbyjt.azurecr.io/sensorenregister/api-dev:$(Build.SourceVersion)
+                kustomize edit set image localhost:5000/sensorenregister/api=mainweuacroyh7oqq4sbyjt.azurecr.io/sensorenregister/api-dev:$(Build.SourceBranchName)
                 kustomize edit set namespace ns-ccc-ssr-ont-01-sensorenregister
                 kustomize build > generated.yaml
                 cat generated.yaml

@@ -2,8 +2,6 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: migrate
-  labels:
-    component: api
 spec:
   backoffLimit: 9
   template:
@@ -12,7 +10,7 @@ spec:
       containers:
         - name: main
           image: localhost:5000/sensorenregister/api:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always # IfNotPresent
           command:
             - python
             - manage.py
