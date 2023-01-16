@@ -1,21 +1,24 @@
 resources:
   - ../../base
 
-commonLabels:
-  generator: kustomize
-  team: cccssront01
-  app: sensorenregister
-  env: dev
-
-patchesStrategicMerge:
-  - deployment.yaml
-  - ingress.yaml
+buildMetadata:
+  - originAnnotations
 
 components:
   - ../../components/app
   - ../../components/ingress
   - ../../components/keyvault
   - ../../components/network
+
+patchesStrategicMerge:
+  - deployment.yaml
+  - ingress.yaml
+
+commonLabels:
+  generator: kustomize
+  team: cccssront01
+  app: sensorenregister
+  env: dev
 
 patches:
   - target:

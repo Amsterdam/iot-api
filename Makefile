@@ -14,7 +14,7 @@ help:                               ## Show this help.
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
 pip-tools:
-	pip install pip-tools
+	pip install -U pip-tools
 
 install: pip-tools                  ## Install requirements and sync venv with expected state as defined in requirements.txt
 	pip-sync requirements_dev.txt
@@ -76,6 +76,3 @@ bash:
 
 bash-test:
 	$(dc) run --rm test bash
-
-env:
-	env | sort

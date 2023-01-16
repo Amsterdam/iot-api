@@ -24,6 +24,7 @@ black
 isort
 ipdb
 ipython
+notebook
 
 # extra package to run runserver_plus
 werkzeug

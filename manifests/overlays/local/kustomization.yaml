@@ -1,23 +1,20 @@
-commonLabels:
-  generator: kustomize
-  team: cccssront01
-  app: sensorenregister
-  env: local
-
-labels:
-  - pairs:
-      team: TAMM
-    includeSelectors: false
-    includeTemplates: true
-
 resources:
   - ../../base
+
+buildMetadata:
+  - originAnnotations
 
 components:
   - ../../components/app
   - ../../components/database
   - ../../components/ingress
   - ../../components/keyvault
+
+commonLabels:
+  generator: kustomize
+  team: cccssront01
+  app: sensorenregister
+  env: local
 
 configMapGenerator:
   - name: app-env
