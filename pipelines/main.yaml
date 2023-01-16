@@ -119,25 +119,6 @@ stages:
     jobs:
       - job: deploy
         steps:
-          - task: Kubernetes@1
-            displayName: "Get initial state"
-            retryCountOnTaskFailure: 10
-            inputs:
-              connectionType: "Kubernetes Service Connection"
-              kubernetesServiceEndpoint: "SCN-K8S-O-SSR"
-              namespace: "ns-ccc-ssr-ont-01-sensorenregister"
-              command: "get"
-              arguments: "deploy,svc,ingress,configmap,secrets,job,cronjob,networkpolicy,secretproviderclass"
-
-          - task: Kubernetes@1
-            displayName: "Delete all"
-            inputs:
-              connectionType: "Kubernetes Service Connection"
-              kubernetesServiceEndpoint: "SCN-K8S-O-SSR"
-              namespace: "ns-ccc-ssr-ont-01-sensorenregister"
-              command: "delete"
-              arguments: "-l generator=kustomize deploy,svc,ingress,configmap,secrets,job,cronjob,networkpolicy,secretproviderclass"
-
           - task: AzureCLI@2
             displayName: "Generate manifests"
             inputs:
@@ -154,13 +135,22 @@ stages:
                 popd
 
           - task: Kubernetes@1
-            displayName: "Dry Run manifests"
+            displayName: "Dry run manifests"
             inputs:
               connectionType: "Kubernetes Service Connection"
               kubernetesServiceEndpoint: "SCN-K8S-O-SSR"
               namespace: "ns-ccc-ssr-ont-01-sensorenregister"
               command: "apply"
               arguments: "--dry-run=client -f manifests/overlays/dev/generated.yaml"
+
+          - task: Kubernetes@1
+            displayName: "Delete immutable jobs"
+            inputs:
+              connectionType: "Kubernetes Service Connection"
+              kubernetesServiceEndpoint: "SCN-K8S-O-SSR"
+              namespace: "ns-ccc-ssr-ont-01-sensorenregister"
+              command: "delete"
+              arguments: "job --all"
 
           - task: Kubernetes@1
             displayName: "Apply manifests"
@@ -170,5 +160,3 @@ stages:
               namespace: "ns-ccc-ssr-ont-01-sensorenregister"
               command: "apply"
               arguments: "-f manifests/overlays/dev/generated.yaml"
-
-  - template: status-stage.yaml

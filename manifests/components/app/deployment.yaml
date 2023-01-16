@@ -13,6 +13,7 @@ spec:
         component: api
         version: "1"
     spec:
+      imagePullPolicy: IfNotPresent
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
