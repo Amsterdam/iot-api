@@ -4,16 +4,17 @@ commonLabels:
   component: api
 
 configMapGenerator:
-  - name: app-env
+  - name: api-env
     envs:
-      - app.env
-  - name: app-config
+      - api.env
+  - name: api-config
     files:
-      - app.ini
+      - api.ini
 
 resources:
   - deployment.yaml
   - service.yaml
+  - ingress.yaml
   - migrate.job.yaml
   - import.job.yaml
 
@@ -21,7 +22,7 @@ resources:
 replacements:
   - source:
       kind: Deployment
-      name: app
+      name: api
       fieldPath: spec.template.spec.containers.[name=main].envFrom
     targets:
       - select:
@@ -34,7 +35,7 @@ replacements:
 
   - source:
       kind: Deployment
-      name: app
+      name: api
       fieldPath: spec.template.spec.containers.[name=main].volumeMounts
     targets:
       - select:
@@ -47,7 +48,7 @@ replacements:
 
   - source:
       kind: Deployment
-      name: app
+      name: api
       fieldPath: spec.template.spec.volumes
     targets:
       - select:
@@ -60,7 +61,7 @@ replacements:
 
   - source:
       kind: Deployment
-      name: app
+      name: api
       fieldPath: spec.template.spec.containers.[name=main].securityContext
     targets:
       - select:

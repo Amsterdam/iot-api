@@ -1,4 +1,0 @@
-kind: Component
-
-resources:
-  - app.ingress.yaml

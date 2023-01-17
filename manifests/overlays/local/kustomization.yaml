@@ -5,10 +5,8 @@ buildMetadata:
   - originAnnotations
 
 components:
-  - ../../components/app
+  - ../../components/api
   - ../../components/database
-  - ../../components/ingress
-  - ../../components/keyvault
 
 commonLabels:
   team: cccssront01
@@ -16,13 +14,13 @@ commonLabels:
   env: local
 
 configMapGenerator:
-  - name: app-env
+  - name: api-env
     behavior: merge
     envs:
-      - app.env
+      - api.env
 
 secretGenerator:
-  - name: app-secrets
+  - name: api-secrets
     literals:
       - DEBUG=true
       - SECRET_KEY=dev
@@ -35,12 +33,11 @@ secretGenerator:
 
 patchesStrategicMerge:
   - deployment.yaml
-  - secretproviderclass.yaml
 
 replacements:
   - source:
       kind: Deployment
-      name: app
+      name: api
       fieldPath: spec.template.spec.initContainers
     targets:
       - select:
@@ -51,21 +48,14 @@ replacements:
         options:
           create: true
 
-patches:
-  - target:
-      kind: Ingress
-      name: app
-    patch: |-
-      - op: add
-        path: "/spec/rules/0/host"
-        value: localhost
-  - target:
-      kind: SecretProviderClass
-      name: secrets
-    patch: |-
-      - op: remove
-        path: "/spec/secretObjects/0"
-        value: localhost
+# patches:
+#   - target:
+#       kind: Ingress
+#       name: api
+#     patch: |-
+#       - op: add
+#         path: "/spec/rules/0/host"
+#         value: localhost
 
 images:
   - name: localhost:5000/sensorenregister/api

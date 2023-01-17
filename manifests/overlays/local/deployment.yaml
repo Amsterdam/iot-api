@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app
+  name: api
 spec:
   replicas: 1
   template:
@@ -16,25 +16,9 @@ spec:
             - database:5432
             - -t
             - "10"
-        # - name: main
-        #   resources:
-        #     limits:
-        #       cpu: 1
-        #       memory: "256Mi"
-        #     requests:
-        #       cpu: 1
-        #       memory: "256Mi"
-        #   command:
-        #     - /app/deploy/wait-for-it.sh
-        #     - database:5432
-        #     - --timeout=30
-        #     - --
-        #     - python
-        #     - manage.py
-        #     - runserver_plus
-        #     - --print-sql
-        #     - 0.0.0.0:8000
-        # command:
-        # - bash
-        # - -c
-        # - python manage.py runserver_plus --print-sql 0.0.0.0:8000
+          volumeMounts:
+            - mountPath: secrets
+              $patch: delete
+      volumes:
+        - name: secrets
+          $patch: delete

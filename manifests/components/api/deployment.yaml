@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app
+  name: api
 spec:
   selector:
   template:
@@ -29,20 +29,14 @@ spec:
               memory: "512Mi"
           envFrom:
             - configMapRef:
-                name: app-env
+                name: api-env
             - secretRef:
-                name: app-secrets
+                name: api-secrets
           volumeMounts:
-            - mountPath: /config
-              name: config
-              readOnly: true
             - mountPath: /secrets
               name: secrets
               readOnly: true
       volumes:
-        - name: config
-          configMap:
-            name: app-config
         - name: secrets
           csi:
             driver: secrets-store.csi.k8s.io

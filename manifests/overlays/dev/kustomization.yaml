@@ -5,8 +5,7 @@ buildMetadata:
   - originAnnotations
 
 components:
-  - ../../components/app
-  - ../../components/ingress
+  - ../../components/api
   - ../../components/keyvault
   - ../../components/network
 
@@ -20,13 +19,13 @@ commonLabels:
   env: dev
 
 replicas:
-  - name: app
+  - name: api
     count: 3
 
 patches:
   - target:
       kind: Ingress
-      name: app
+      name: api
     patch: |-
       - op: add
         path: "/spec/rules/0/host"
@@ -41,7 +40,7 @@ images:
 replacements:
   - source:
       kind: Deployment
-      name: app
+      name: api
       fieldPath: spec.template.spec.tolerations
     targets:
       - select:

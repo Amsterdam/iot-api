@@ -1,6 +1,6 @@
 # This Makefile is based on the Makefile defined in the Python Best Practices repository:
 # https://git.datapunt.amsterdam.nl/Datapunt/python-best-practices/blob/master/dependency_management/
-.PHONY: help pip-tools install requirements update test init manifests
+.PHONY: help pip-tools install requirements update test init manifests deploy
 
 UID:=$(shell id --user)
 GID:=$(shell id --group)
@@ -39,6 +39,10 @@ build:
 
 push: build
 	$(dc) push
+
+ENV = local
+deploy:
+	kustomize build manifests/overlays/${ENV} | kubectl apply -f -
 
 app:
 	$(run) --service-ports app
