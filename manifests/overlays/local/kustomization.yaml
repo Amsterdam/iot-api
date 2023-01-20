@@ -1,9 +1,6 @@
 resources:
   - ../../base
 
-buildMetadata:
-  - originAnnotations
-
 components:
   - ../../components/api
   - ../../components/database
@@ -12,6 +9,14 @@ commonLabels:
   team: cccssront01
   app: sensorenregister
   env: local
+
+buildMetadata:
+  - originAnnotations
+
+patchesStrategicMerge:
+  - deployment.yaml
+  - import.cronjob.yaml
+  - migrate.job.yaml
 
 configMapGenerator:
   - name: api-env
@@ -31,33 +36,7 @@ secretGenerator:
       - OIDC_RP_CLIENT_ID=dev
       - OIDC_RP_CLIENT_SECRET=dev
 
-patchesStrategicMerge:
-  - deployment.yaml
-
-replacements:
-  - source:
-      kind: Deployment
-      name: api
-      fieldPath: spec.template.spec.initContainers
-    targets:
-      - select:
-          kind: Job
-          labelSelector: component=api
-        fieldPaths:
-          - spec.template.spec.initContainers
-        options:
-          create: true
-
-# patches:
-#   - target:
-#       kind: Ingress
-#       name: api
-#     patch: |-
-#       - op: add
-#         path: "/spec/rules/0/host"
-#         value: localhost
-
 images:
-  - name: localhost:5000/sensorenregister/api
-    newName: localhost:5000/sensorenregister/api-dev
+  - name: localhost:15000/sensorenregister/api
+    newName: localhost:15000/sensorenregister/api-dev
     newTag: latest

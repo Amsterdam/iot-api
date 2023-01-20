@@ -117,8 +117,6 @@ cryptography==39.0.0
     #   msal
     #   pyjwt
     #   pyopenssl
-datapunt-keycloak-oidc==0.5.1
-    # via -r ./requirements.txt
 debugpy==1.6.5
     # via ipykernel
 decorator==5.1.1
@@ -130,7 +128,7 @@ defusedxml==0.7.1
     #   -r ./requirements.txt
     #   djangorestframework-xml
     #   nbconvert
-django==3.2.16
+django==4.1.5
     # via
     #   -r ./requirements.txt
     #   django-braces
@@ -203,7 +201,7 @@ factory-boy==3.2.1
     # via
     #   -r requirements_dev.in
     #   pytest-factoryboy
-faker==16.4.0
+faker==16.6.0
     # via
     #   -r requirements_dev.in
     #   factory-boy
@@ -248,7 +246,7 @@ iniconfig==2.0.0
     # via pytest
 ipdb==0.13.11
     # via -r requirements_dev.in
-ipykernel==6.20.1
+ipykernel==6.20.2
     # via
     #   nbclassic
     #   notebook
@@ -326,7 +324,7 @@ jupyterlab-pygments==0.2.2
     # via nbconvert
 markdown==3.4.1
     # via -r ./requirements.txt
-markupsafe==2.1.1
+markupsafe==2.1.2
     # via
     #   -r ./requirements.txt
     #   jinja2
@@ -338,10 +336,8 @@ matplotlib-inline==0.1.6
     #   ipython
 mistune==2.0.4
     # via nbconvert
-mozilla-django-oidc==1.2.4
-    # via
-    #   -r ./requirements.txt
-    #   datapunt-keycloak-oidc
+mozilla-django-oidc==3.0.0
+    # via -r ./requirements.txt
 msal==1.20.0
     # via
     #   -r ./requirements.txt
@@ -363,7 +359,7 @@ nbclassic==0.4.8
     # via notebook
 nbclient==0.7.2
     # via nbconvert
-nbconvert==7.2.7
+nbconvert==7.2.8
     # via
     #   jupyter-server
     #   nbclassic
@@ -389,7 +385,7 @@ oauthlib==3.2.2
     # via
     #   -r ./requirements.txt
     #   requests-oauthlib
-opencensus==0.11.0
+opencensus==0.11.1
     # via
     #   -r ./requirements.txt
     #   opencensus-ext-azure
@@ -397,7 +393,7 @@ opencensus-context==0.1.3
     # via
     #   -r ./requirements.txt
     #   opencensus
-opencensus-ext-azure==1.1.7
+opencensus-ext-azure==1.1.8
     # via -r ./requirements.txt
 openpyxl==3.0.10
     # via -r ./requirements.txt
@@ -428,7 +424,7 @@ platformdirs==2.6.2
     #   jupyter-core
 pluggy==1.0.0
     # via pytest
-portalocker==2.6.0
+portalocker==2.7.0
     # via
     #   -r ./requirements.txt
     #   msal-extensions
@@ -520,7 +516,6 @@ python-json-logger==2.0.4
 pytz==2022.7.1
     # via
     #   -r ./requirements.txt
-    #   django
     #   djangorestframework
     #   drf-yasg
 pyyaml==6.0
@@ -600,7 +595,6 @@ six==1.16.0
     #   flex
     #   google-auth
     #   isodate
-    #   mozilla-django-oidc
     #   python-dateutil
     #   rfc3339-validator
 sniffio==1.3.0
@@ -688,6 +682,8 @@ urllib3==1.26.14
     #   requests
     #   responses
     #   sentry-sdk
+uwsgi==2.0.21
+    # via -r ./requirements.txt
 validate-email==1.3
     # via
     #   -r ./requirements.txt

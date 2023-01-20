@@ -2,9 +2,16 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: api
+  labels:
+    component: api
 spec:
   selector:
+    matchLabels:
+      component: api
   template:
+    metadata:
+      labels:
+        component: api
     spec:
       securityContext:
         runAsNonRoot: true
@@ -14,7 +21,7 @@ spec:
 
       containers:
         - name: main
-          image: localhost:5000/sensorenregister/api:latest
+          image: localhost:15000/sensorenregister/api:latest
           imagePullPolicy: Always # IfNotPresent
           securityContext:
             privileged: false
@@ -27,6 +34,9 @@ spec:
             limits:
               cpu: 1
               memory: "512Mi"
+          env:
+            - name: BASE_URL
+              value: /api
           envFrom:
             - configMapRef:
                 name: api-env
@@ -36,6 +46,17 @@ spec:
             - mountPath: /secrets
               name: secrets
               readOnly: true
+          ports:
+            - name: http
+              containerPort: 8000
+          livenessProbe:
+            initialDelaySeconds: 1
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: http
       volumes:
         - name: secrets
           csi:

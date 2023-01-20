@@ -62,11 +62,9 @@ cryptography==39.0.0
     #   msal
     #   pyjwt
     #   pyopenssl
-datapunt-keycloak-oidc==0.5.1
-    # via -r requirements.in
 defusedxml==0.7.1
     # via djangorestframework-xml
-django==3.2.16
+django==4.1.5
     # via
     #   -r requirements.in
     #   django-braces
@@ -154,10 +152,10 @@ jsonschema==4.17.3
     # via swagger-spec-validator
 markdown==3.4.1
     # via -r requirements.in
-markupsafe==2.1.1
+markupsafe==2.1.2
     # via jinja2
-mozilla-django-oidc==1.2.4
-    # via datapunt-keycloak-oidc
+mozilla-django-oidc==3.0.0
+    # via -r requirements.in
 msal==1.20.0
     # via
     #   azure-identity
@@ -171,17 +169,17 @@ msrest==0.7.1
     #   azure-keyvault-secrets
 oauthlib==3.2.2
     # via requests-oauthlib
-opencensus==0.11.0
+opencensus==0.11.1
     # via opencensus-ext-azure
 opencensus-context==0.1.3
     # via opencensus
-opencensus-ext-azure==1.1.7
+opencensus-ext-azure==1.1.8
     # via -r requirements.in
 openpyxl==3.0.10
     # via -r requirements.in
 packaging==23.0
     # via drf-yasg
-portalocker==2.6.0
+portalocker==2.7.0
     # via msal-extensions
 protobuf==4.21.12
     # via
@@ -211,7 +209,6 @@ pyrsistent==0.19.3
     # via jsonschema
 pytz==2022.7.1
     # via
-    #   django
     #   djangorestframework
     #   drf-yasg
 pyyaml==6.0
@@ -252,7 +249,6 @@ six==1.16.0
     #   flex
     #   google-auth
     #   isodate
-    #   mozilla-django-oidc
 sqlparse==0.4.3
     # via django
 strict-rfc3339==0.7
@@ -274,6 +270,8 @@ urllib3==1.26.14
     # via
     #   requests
     #   sentry-sdk
+uwsgi==2.0.21
+    # via -r requirements.in
 validate-email==1.3
     # via flex
 zipp==3.11.0

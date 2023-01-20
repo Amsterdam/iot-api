@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings
-from django.conf.urls import include, url
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path, re_path
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 from rest_framework.routers import DefaultRouter
 
-from . import auth, views
+from . import views
 
 
 class IoTRouter(DefaultRouter):
@@ -35,30 +34,29 @@ schema_view = get_schema_view(
 
 
 urlpatterns = [
-    url(
-        r'^iothings/',
-        include(
-            router.urls
-            + [
-                url(
-                    r'^swagger(?P<format>\.json|\.yaml)$',
-                    schema_view.without_ui(cache_timeout=0),
-                    name='schema-json',
-                ),
-                url(
-                    r'^swagger/$',
-                    schema_view.with_ui('swagger', cache_timeout=0),
-                    name='schema-swagger-ui',
-                ),
-                url(r'^ping/$', views.PingView.as_view(), name='ping'),
-                url(r'^oidc/', include('keycloak_oidc.urls')),
-                path('admin/login/', auth.oidc_login),
-                path('admin/', admin.site.urls),
-            ]
-        ),
+    path(r'ping/', views.PingView.as_view(), name='ping'),
+    path(r'status/', include('iot.health.urls')),
+]
+
+# API
+urlpatterns += router.urls + [
+    re_path(
+        r'swagger(?P<format>\.json|\.yaml)',
+        schema_view.without_ui(cache_timeout=0),
+        name='schema-json',
     ),
-    url(r'^status/', include('iot.health.urls')),
-    url(r'^$', views.PingView.as_view(), name='ping'),
+    path(
+        r'swagger/',
+        schema_view.with_ui('swagger', cache_timeout=0),
+        name='schema-swagger-ui',
+    ),
+]
+
+# Admin
+urlpatterns += [
+    # path('admin/login/', auth.oidc_login),
+    path('admin/', admin.site.urls),
+    path(r'oidc/', include('mozilla_django_oidc.urls')),
 ]
 
 if settings.DEBUG:
@@ -66,7 +64,7 @@ if settings.DEBUG:
 
     urlpatterns.extend(
         [
-            url(r'^__debug__/', include(debug_toolbar.urls)),
+            path(r'__debug__/', include(debug_toolbar.urls)),
         ]
     )
 

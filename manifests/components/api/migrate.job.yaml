@@ -2,16 +2,40 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: migrate
+  labels:
+    component: migrate
 spec:
-  backoffLimit: 9
+  backoffLimit: 15
   template:
+    metadata:
+      labels:
+        component: migrate
     spec:
       restartPolicy: Never
       containers:
         - name: main
-          image: localhost:5000/sensorenregister/api:latest
+          image: localhost:15000/sensorenregister/api:latest
           imagePullPolicy: Always # IfNotPresent
           command:
             - python
             - manage.py
             - migrate
+
+          securityContext:
+            privileged: false
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+
+          envFrom:
+            - configMapRef:
+                name: api-env
+            - secretRef:
+                name: api-secrets
+
+      volumes:
+        - name: secrets
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: secrets

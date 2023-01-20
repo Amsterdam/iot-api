@@ -1,8 +1,5 @@
 kind: Component
 
-commonLabels:
-  component: api
-
 configMapGenerator:
   - name: api-env
     envs:
@@ -16,57 +13,63 @@ resources:
   - service.yaml
   - ingress.yaml
   - migrate.job.yaml
-  - import.job.yaml
-
+  - import.cronjob.yaml
 # Copy some fields from the deployments to the jobs
-replacements:
-  - source:
-      kind: Deployment
-      name: api
-      fieldPath: spec.template.spec.containers.[name=main].envFrom
-    targets:
-      - select:
-          kind: Job
-          labelSelector: component=api
-        fieldPaths:
-          - spec.template.spec.containers.[name=main].envFrom
-        options:
-          create: true
+# replacements:
+# - source:
+#     kind: Deployment
+#     name: api
+#     fieldPath: spec.template.spec.containers.[name=main].envFrom
+#   targets:
+#     - select:
+#         kind: Job
+#         labelSelector: component=migrate
+#       fieldPaths:
+#         - spec.template.spec.containers.[name=main].envFrom
+#       options:
+#         create: true
+#     - select:
+#         kind: CronJob
+#         labelSelector: component=import
+#       fieldPaths:
+#         - spec.jobTemplate.spec.template.spec.containers.[name=main].envFrom
+#       options:
+#         create: true
 
-  - source:
-      kind: Deployment
-      name: api
-      fieldPath: spec.template.spec.containers.[name=main].volumeMounts
-    targets:
-      - select:
-          kind: Job
-          labelSelector: component=api
-        fieldPaths:
-          - spec.template.spec.containers.[name=main].volumeMounts
-        options:
-          create: true
+# - source:
+#     kind: Deployment
+#     name: api
+#     fieldPath: spec.template.spec.containers.[name=main].volumeMounts
+#   targets:
+#     - select:
+#         kind: Job
+#         # labelSelector: component=api
+#       fieldPaths:
+#         - spec.template.spec.containers.[name=main].volumeMounts
+#       options:
+#         create: true
 
-  - source:
-      kind: Deployment
-      name: api
-      fieldPath: spec.template.spec.volumes
-    targets:
-      - select:
-          kind: Job
-          labelSelector: component=api
-        fieldPaths:
-          - spec.template.spec.volumes
-        options:
-          create: true
+# - source:
+#     kind: Deployment
+#     name: api
+#     fieldPath: spec.template.spec.volumes
+#   targets:
+#     - select:
+#         kind: Job
+#         labelSelector: component=api
+#       fieldPaths:
+#         - spec.template.spec.volumes
+#       options:
+#         create: true
 
-  - source:
-      kind: Deployment
-      name: api
-      fieldPath: spec.template.spec.containers.[name=main].securityContext
-    targets:
-      - select:
-          kind: Job
-        fieldPaths:
-          - spec.template.spec.containers.[name=main].securityContext
-        options:
-          create: true
+# - source:
+#     kind: Deployment
+#     name: api
+#     fieldPath: spec.template.spec.containers.[name=main].securityContext
+#   targets:
+#     - select:
+#         kind: Job
+#       fieldPaths:
+#         - spec.template.spec.containers.[name=main].securityContext
+#       options:
+#         create: true

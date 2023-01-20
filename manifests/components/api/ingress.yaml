@@ -5,16 +5,18 @@ metadata:
   annotations:
     # nginx.ingress.kubernetes.io/ssl-redirect: "false"
     # nginx.ingress.kubernetes.io/use-regex: "true"
-  # nginx.ingress.kubernetes.io/rewrite-target: /$1
+    #
+    # nginx.ingress.kubernetes.io/enable-rewrite-log: "true"
+    # nginx.ingress.kubernetes.io/x-forwarded-prefix: "/foobar"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
   rules:
-    - host: localhost
-      http:
+    - http:
         paths:
           - pathType: Prefix
-            path: /
+            path: /api(/|$)(.*)
             backend:
               service:
                 name: api
                 port:
-                  number: 8000
+                  name: http

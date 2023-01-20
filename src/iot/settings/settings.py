@@ -1,9 +1,9 @@
 import os
 import sys
+from urllib.parse import urljoin
 
 import sentry_sdk
 from azure.identity import ManagedIdentityCredential
-from keycloak_oidc.default_settings import *
 from sentry_sdk.integrations.django import DjangoIntegration
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -34,7 +34,7 @@ X_FRAME_OPTIONS = 'DENY'
 
 ## KEYCLOAK ##
 # External identity provider settings (Keycloak)
-LOGIN_REDIRECT_URL = "/iothings/admin/"
+LOGIN_REDIRECT_URL = "/admin/"
 
 OIDC_DEFAULT_URL = (
     'https://iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect'
@@ -57,7 +57,7 @@ OIDC_OP_JWKS_ENDPOINT = os.environ.get(
 OIDC_OP_LOGOUT_ENDPOINT = LOGOUT_REDIRECT_URL = os.environ.get(
     'OIDC_OP_LOGOUT_ENDPOINT', f'{OIDC_DEFAULT_URL}/logout'
 )
-LOGIN_REDIRECT_URL_FAILURE = '/iothings/static/403.html'
+LOGIN_REDIRECT_URL_FAILURE = '/static/403.html'
 
 # APP CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -69,18 +69,18 @@ DJANGO_APPS = (
     'django.contrib.sessions',
     'django.contrib.admin',
     'django.contrib.messages',
-    'corsheaders',
 )
 
 THIRD_PARTY_APPS = (
+    'corsheaders',
     'django_extensions',
     'django_filters',
     'datapunt_api',
     'drf_yasg',
     'rest_framework',
     'rest_framework_gis',
-    'keycloak_oidc',  # load after django.contrib.auth!
     'leaflet',
+    'mozilla_django_oidc',
 )
 
 DEBUG_APPS = ('debug_toolbar',)
@@ -127,7 +127,7 @@ if DEBUG:
     ]
 
 AUTHENTICATION_BACKENDS = [
-    'iot.auth.OIDCAuthenticationBackend',
+    'mozilla_django_oidc.auth.OIDCAuthenticationBackend',
 ]
 
 SENSOR_REGISTER_ADMIN_ROLE_NAME = os.environ.get('SENSOR_REGISTER_ADMIN_ROLE_NAME', 'x')
@@ -200,10 +200,17 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
+# Network related
+# USE_X_FORWARDED_HOST = True
+BASE_URL = os.getenv('BASE_URL', '')
+FORCE_SCRIPT_NAME = BASE_URL
+
+
 # Static files (CSS, JavaScript, Images) and media files
-STATIC_URL = '/iothings/static/'
-STATIC_ROOT = os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)), 'static')
-MEDIA_URL = '/iothings/media/'
+STATIC_URL = urljoin(f'{BASE_URL}/', 'static/')
+STATIC_ROOT = '/static/'
+
+MEDIA_URL = urljoin(f'{BASE_URL}/', 'media/')
 MEDIA_ROOT = os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)), 'media')
 
 
