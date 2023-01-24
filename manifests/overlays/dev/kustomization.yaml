@@ -10,8 +10,8 @@ components:
   - ../../components/keyvault
   - ../../components/network
 
-patchesStrategicMerge:
-  - deployment.yaml
+# patchesStrategicMerge:
+#   - deployment.yaml
 
 commonLabels:
   team: cccssront01
@@ -23,6 +23,17 @@ replicas:
     count: 1
 
 patches:
+  - target:
+      kind: Deployment
+    patch: |-
+      - op: add
+        path: "/spec/template/spec/tolerations"
+        value:
+          - key: "cccssront01"
+            operator: "Equal"
+            value: "true"
+            effect: "NoSchedule"
+
   - target:
       kind: Ingress
     patch: |-
@@ -40,7 +51,7 @@ patches:
     patch: |-
       - op: replace
         path: "/spec/ingressClassName"
-        value: nginx-external
+        value: nginx-internal
 
   - target:
       kind: Ingress
@@ -48,13 +59,12 @@ patches:
     patch: |-
       - op: replace
         path: "/spec/ingressClassName"
-        value: nginx-external
+        value: nginx-internal
 
 images:
   - name: localhost:15000/sensorenregister/api
     newName: mainweuacroyh7oqq4sbyjt.azurecr.io/sensorenregister/api-dev
     newTag: latest
-    # newTag: plain-text
 
 replacements:
   - source:
@@ -62,13 +72,6 @@ replacements:
       name: api
       fieldPath: spec.template.spec.tolerations
     targets:
-      - select:
-          kind: Deployment
-          name: admin
-        fieldPaths:
-          - spec.template.spec.tolerations
-        options:
-          create: true
       - select:
           kind: Job
         fieldPaths:

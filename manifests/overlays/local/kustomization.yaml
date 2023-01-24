@@ -20,12 +20,6 @@ patchesStrategicMerge:
   - import.cronjob.yaml
   - migrate.job.yaml
 
-configMapGenerator:
-  - name: api-env
-    behavior: merge
-    envs:
-      - config.env
-
 secretGenerator:
   - name: app-secrets
     literals:
@@ -34,6 +28,7 @@ secretGenerator:
       - DATABASE_HOST=database
       - DATABASE_NAME=dev
       - DATABASE_PASSWORD=dev
+      - DATABASE_PORT=5432
       - DATABASE_USER=dev
       - OIDC_RP_CLIENT_ID=dev
       - OIDC_RP_CLIENT_SECRET=dev
