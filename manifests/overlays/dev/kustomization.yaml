@@ -45,6 +45,13 @@ replacements:
       fieldPath: spec.template.spec.tolerations
     targets:
       - select:
+          kind: Deployment
+          name: admin
+        fieldPaths:
+          - spec.template.spec.tolerations
+        options:
+          create: true
+      - select:
           kind: Job
         fieldPaths:
           - spec.template.spec.tolerations
