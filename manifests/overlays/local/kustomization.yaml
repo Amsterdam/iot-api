@@ -3,6 +3,7 @@ resources:
 
 components:
   - ../../components/api
+  - ../../components/admin
   - ../../components/database
 
 commonLabels:
@@ -15,6 +16,7 @@ buildMetadata:
 
 patchesStrategicMerge:
   - deployment.yaml
+  - admin/deployment.yaml
   - import.cronjob.yaml
   - migrate.job.yaml
 
@@ -22,10 +24,10 @@ configMapGenerator:
   - name: api-env
     behavior: merge
     envs:
-      - api.env
+      - config.env
 
 secretGenerator:
-  - name: api-secrets
+  - name: app-secrets
     literals:
       - DEBUG=true
       - SECRET_KEY=dev

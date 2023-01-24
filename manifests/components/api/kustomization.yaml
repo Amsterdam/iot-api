@@ -3,10 +3,7 @@ kind: Component
 configMapGenerator:
   - name: api-env
     envs:
-      - api.env
-  - name: api-config
-    files:
-      - api.ini
+      - config.env
 
 resources:
   - deployment.yaml

@@ -14,6 +14,8 @@ x-app: &base-app
     - database
   environment: &base-app-env
     SECRET_KEY: "insecure"
+    ADMIN_ENABLED: "true"
+    API_ENABLED: "true"
     DEBUG: "true"
     PYTHONBREAKPOINT:
     SENTRY_DSN:
@@ -39,20 +41,16 @@ services:
     volumes:
       - db_data:/data
 
-  app:
+  app: &app
     <<: *base-app
     build:
       context: .
       target: app
-      args:
-        - BUILD_DATE
-        - BUILD_REVISION
-        - BUILD_VERSION
     image: ${REGISTRY:-localhost:15000}/${REPOSITORY:-sensorenregister/api}:${VERSION:-latest}
     command: /app/deploy/docker-run.sh
     environment:
       <<: *base-app-env
-      DEBUG: "false"
+      # DEBUG: "false"
 
   dev:
     <<: *base-app
@@ -60,6 +58,9 @@ services:
     build:
       context: .
       target: dev
+    environment:
+      <<: *base-app-env
+      ADMIN_ENABLED: true
     command: "./manage.py runserver 0.0.0.0:8000"
 
   test:

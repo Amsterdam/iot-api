@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: api
+  name: admin
   labels:
-    component: api
+    component: admin
 spec:
   selector:
     matchLabels:
-      component: api
+      component: admin
   template:
     metadata:
       labels:
-        component: api
+        component: admin
     spec:
       securityContext:
         runAsNonRoot: true
@@ -36,7 +36,7 @@ spec:
               memory: "512Mi"
           envFrom:
             - configMapRef:
-                name: api-env
+                name: admin-env
             - secretRef:
                 name: app-secrets
           volumeMounts:

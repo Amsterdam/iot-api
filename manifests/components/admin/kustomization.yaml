@@ -1,0 +1,11 @@
+kind: Component
+
+resources:
+  - deployment.yaml
+  - service.yaml
+  - ingress.yaml
+
+configMapGenerator:
+  - name: admin-env
+    envs:
+      - config.env

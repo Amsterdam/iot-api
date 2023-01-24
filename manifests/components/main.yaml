@@ -1,0 +1,161 @@
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      name: mobiliteit/templates
+      ref: main
+
+trigger:
+  batch: true
+  branches:
+    include:
+      - main
+  tags:
+    include:
+      - "*.*.*"
+
+variables:
+  # Debugging
+  System.Debug: false
+
+stages:
+  - stage: build
+    pool:
+      vmImage: ubuntu-latest
+    jobs:
+      - job: build
+        variables:
+          registry: mainweuacroyh7oqq4sbyjt.azurecr.io
+        steps:
+          #################################################
+          # Set some variables to be used later
+          #################################################
+          - task: AzureCLI@2
+            displayName: Set variables
+            inputs:
+              azureSubscription: "ARM-CCC-SSR-ont-01"
+              scriptType: pscore
+              scriptLocation: inlineScript
+              inlineScript: |
+                $agentIpAddress=$(dig TXT +short o-o.myaddr.l.google.com `@ns1.google.com | tr -d '"')
+                echo "The (MS-hosted) agent has ipv4: $agentIpAddress\n"
+                echo "##vso[task.setvariable variable=agentIpAddress;]$($agentIpAddress)"
+
+          - task: AzureCLI@2
+            displayName: Add agent IP to firewall
+            inputs:
+              azureSubscription: "ARM-CCC-SSR-ont-01"
+              scriptType: pscore
+              scriptLocation: inlineScript
+              inlineScript: |
+                az acr network-rule `
+                  add -n mainweuacroyh7oqq4sbyjt `
+                  --ip-address $(agentIpAddress)
+
+          # - task: DockerInstaller@0
+          #   inputs:
+          #     dockerVersion: "20.10.21"
+
+          - task: AzureCLI@2
+            displayName: "Build"
+            inputs:
+              azureSubscription: "ARM-CCC-SSR-ont-01"
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+                make build
+
+          - task: AzureCLI@2
+            condition: eq(variables['Build.Reason'], 'PullRequest')
+            displayName: "QA - tests"
+            inputs:
+              azureSubscription: "ARM-CCC-SSR-ont-01"
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+                make test
+
+          - task: AzureCLI@2
+            displayName: "ACR Login"
+            retryCountOnTaskFailure: 10
+            inputs:
+              azureSubscription: "ARM-CCC-SSR-ont-01"
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+                az acr login -n mainweuacroyh7oqq4sbyjt
+
+          - task: AzureCLI@2
+            displayName: "push"
+            env:
+              REGISTRY: mainweuacroyh7oqq4sbyjt.azurecr.io
+            inputs:
+              azureSubscription: "ARM-CCC-SSR-ont-01"
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+                # Build numer
+                VERSION=$(Build.BuildId) make push
+
+                # Git hash
+                VERSION=$(Build.SourceVersion) make push
+
+                # Branch name / Tag name
+                VERSION=$(Build.SourceBranchName) make push
+
+          - task: AzureCLI@2
+            displayName: Remove agent ip from firewall
+            condition: always()
+            inputs:
+              azureSubscription: "ARM-CCC-SSR-ont-01"
+              scriptType: pscore
+              scriptLocation: inlineScript
+              inlineScript: |
+                az acr network-rule `
+                  remove -n mainweuacroyh7oqq4sbyjt `
+                  --ip-address $(agentIpAddress)
+  - stage: deploy
+    pool: TAMM
+    jobs:
+      - job: deploy
+        steps:
+          - task: AzureCLI@2
+            displayName: "Generate manifests"
+            inputs:
+              azureSubscription: "ARM-CCC-SSR-ont-01"
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+                pushd manifests/overlays/dev
+                kustomize edit set image localhost:15000/sensorenregister/api=mainweuacroyh7oqq4sbyjt.azurecr.io/sensorenregister/api-dev:$(Build.SourceBranchName)
+                kustomize edit set namespace ns-ccc-ssr-ont-01-sensorenregister
+                kustomize build > generated.yaml
+                cat generated.yaml
+                popd
+
+          - task: Kubernetes@1
+            displayName: "Dry run manifests"
+            inputs:
+              connectionType: "Kubernetes Service Connection"
+              kubernetesServiceEndpoint: "SCN-K8S-O-SSR"
+              namespace: "ns-ccc-ssr-ont-01-sensorenregister"
+              command: "apply"
+              arguments: "--dry-run=client -f manifests/overlays/dev/generated.yaml"
+
+          - task: Kubernetes@1
+            displayName: "Delete immutable jobs"
+            inputs:
+              connectionType: "Kubernetes Service Connection"
+              kubernetesServiceEndpoint: "SCN-K8S-O-SSR"
+              namespace: "ns-ccc-ssr-ont-01-sensorenregister"
+              command: "delete"
+              arguments: "job --all"
+
+          - task: Kubernetes@1
+            displayName: "Apply manifests"
+            inputs:
+              connectionType: "Kubernetes Service Connection"
+              kubernetesServiceEndpoint: "SCN-K8S-O-SSR"
+              namespace: "ns-ccc-ssr-ont-01-sensorenregister"
+              command: "apply"
+              arguments: "-f manifests/overlays/dev/generated.yaml"

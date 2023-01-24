@@ -6,6 +6,7 @@ buildMetadata:
 
 components:
   - ../../components/api
+  - ../../components/admin
   - ../../components/keyvault
   - ../../components/network
 
