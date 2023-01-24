@@ -58,9 +58,6 @@ services:
     build:
       context: .
       target: dev
-    environment:
-      <<: *base-app-env
-      ADMIN_ENABLED: true
     command: "./manage.py runserver 0.0.0.0:8000"
 
   test:

@@ -50,3 +50,9 @@ replacements:
           - spec.template.spec.tolerations
         options:
           create: true
+      - select:
+          kind: CronJob
+        fieldPaths:
+          - spec.jobTemplate.spec.template.spec.tolerations
+        options:
+          create: true
