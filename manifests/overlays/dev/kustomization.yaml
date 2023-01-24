@@ -12,7 +12,6 @@ components:
 
 patchesStrategicMerge:
   - deployment.yaml
-  - ingress.yaml
 
 commonLabels:
   team: cccssront01
@@ -26,11 +25,30 @@ replicas:
 patches:
   - target:
       kind: Ingress
-      name: api
     patch: |-
       - op: add
         path: "/spec/rules/0/host"
         value: ssr-o.azure.amsterdam.nl
+      - op: replace
+        path: "/spec/tls/0/hosts"
+        value: 
+          - ssr-o.azure.amsterdam.nl
+
+  - target:
+      kind: Ingress
+      name: api
+    patch: |-
+      - op: replace
+        path: "/spec/ingressClassName"
+        value: nginx-external
+
+  - target:
+      kind: Ingress
+      name: admin
+    patch: |-
+      - op: replace
+        path: "/spec/ingressClassName"
+        value: nginx-external
 
 images:
   - name: localhost:15000/sensorenregister/api

@@ -15,3 +15,5 @@ spec:
                 name: admin
                 port:
                   name: http
+  tls:
+    - secretName: certificate

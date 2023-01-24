@@ -20,3 +20,6 @@ spec:
                 name: api
                 port:
                   name: http
+
+  tls:
+    - secretName: certificate

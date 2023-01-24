@@ -5,8 +5,8 @@ metadata:
 spec:
   template:
     spec:
-      nodeSelector:
-        environment: cccssront01
+      # nodeSelector:
+      # environment: cccssront01
       tolerations:
         - key: "cccssront01"
           operator: "Equal"
