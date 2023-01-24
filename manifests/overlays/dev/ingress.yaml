@@ -1,7 +1,19 @@
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: api
+spec:
+  ingressClassName: nginx-internal
+  tls:
+    - hosts:
+        - ssr-o.azure.amsterdam.nl
+      secretName: certificate
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: admin
 spec:
   ingressClassName: nginx-internal
   tls:
