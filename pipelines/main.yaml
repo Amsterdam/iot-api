@@ -29,35 +29,6 @@ stages:
           REGISTRY: saks01weuacrpgpgo5qvmwo.azurecr.io
           REPOSITORY: tamm/sensorenregister/api
         steps:
-          #################################################
-          # Set some variables to be used later
-          #################################################
-          - task: AzureCLI@2
-            displayName: Set variables
-            inputs:
-              azureSubscription: "ARM-CCC-SSR-ont-01"
-              scriptType: pscore
-              scriptLocation: inlineScript
-              inlineScript: |
-                $agentIpAddress=$(dig TXT +short o-o.myaddr.l.google.com `@ns1.google.com | tr -d '"')
-                echo "The (MS-hosted) agent has ipv4: $agentIpAddress\n"
-                echo "##vso[task.setvariable variable=agentIpAddress;]$($agentIpAddress)"
-
-          - task: AzureCLI@2
-            displayName: Add agent IP to firewall
-            inputs:
-              azureSubscription: "ARM-CCC-SSR-ont-01"
-              scriptType: pscore
-              scriptLocation: inlineScript
-              inlineScript: |
-                az acr network-rule `
-                  add -n mainweuacroyh7oqq4sbyjt `
-                  --ip-address $(agentIpAddress)
-
-          # - task: DockerInstaller@0
-          #   inputs:
-          #     dockerVersion: "20.10.21"
-
           - task: AzureCLI@2
             displayName: "Build"
             inputs:
@@ -103,17 +74,6 @@ stages:
                 # Branch name / Tag name
                 VERSION=$(Build.SourceBranchName) make push
 
-          - task: AzureCLI@2
-            displayName: Remove agent ip from firewall
-            condition: always()
-            inputs:
-              azureSubscription: "ARM-CCC-SSR-ont-01"
-              scriptType: pscore
-              scriptLocation: inlineScript
-              inlineScript: |
-                az acr network-rule `
-                  remove -n mainweuacroyh7oqq4sbyjt `
-                  --ip-address $(agentIpAddress)
   - stage: deploy
     pool: TAMM
     jobs:
