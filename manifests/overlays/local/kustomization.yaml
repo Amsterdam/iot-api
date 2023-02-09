@@ -34,6 +34,6 @@ secretGenerator:
       - OIDC_RP_CLIENT_SECRET=dev
 
 images:
-  - name: localhost:15000/sensorenregister/api
-    newName: localhost:15000/sensorenregister/api-dev
+  - name: localhost:5001/sensorenregister/api
+    newName: localhost:5001/sensorenregister/api-dev
     newTag: latest

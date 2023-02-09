@@ -127,7 +127,7 @@ stages:
               scriptLocation: "inlineScript"
               inlineScript: |
                 pushd manifests/overlays/dev
-                kustomize edit set image localhost:15000/sensorenregister/api=mainweuacroyh7oqq4sbyjt.azurecr.io/sensorenregister/api-dev:$(Build.SourceBranchName)
+                kustomize edit set image localhost:5001/sensorenregister/api=mainweuacroyh7oqq4sbyjt.azurecr.io/sensorenregister/api-dev:$(Build.SourceBranchName)
                 kustomize edit set namespace ns-ccc-ssr-ont-01-sensorenregister
                 kustomize build > generated.yaml
                 cat generated.yaml

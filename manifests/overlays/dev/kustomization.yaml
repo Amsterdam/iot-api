@@ -62,7 +62,7 @@ patches:
         value: nginx-internal
 
 images:
-  - name: localhost:15000/sensorenregister/api
+  - name: localhost:5001/sensorenregister/api
     newName: mainweuacroyh7oqq4sbyjt.azurecr.io/sensorenregister/api-dev
     newTag: latest
 
