@@ -14,6 +14,9 @@ trigger:
     include:
       - "*.*.*"
 
+pool:
+  vmImage: ubuntu-latest
+
 variables:
   # Debugging
   System.Debug: false
@@ -24,7 +27,7 @@ stages:
       vmImage: ubuntu-latest
     jobs:
       - job: build
-        pool: ContainerBuilder
+        # pool: ContainerBuilder
         variables:
           REGISTRY: saks01weuacrpgpgo5qvmwo.azurecr.io
           REPOSITORY: tamm/sensorenregister/api
