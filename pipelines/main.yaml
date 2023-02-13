@@ -33,24 +33,12 @@ stages:
           REGISTRY: applicationogp4jqffo3hed.azurecr.io
           REPOSITORY: tamm/sensorenregister/api
         steps:
-          - task: AzureCLI@2
-            displayName: "Build"
-            inputs:
-              azureSubscription: "ARM-CCC-SSR-ont-01"
-              scriptType: "bash"
-              scriptLocation: "inlineScript"
-              inlineScript: |
-                make build
-
-          - task: AzureCLI@2
+          - script: make test
             condition: eq(variables['Build.Reason'], 'PullRequest')
             displayName: "QA - tests"
-            inputs:
-              azureSubscription: "ARM-CCC-SSR-ont-01"
-              scriptType: "bash"
-              scriptLocation: "inlineScript"
-              inlineScript: |
-                make test
+
+          - script: make build
+            displayName: "Build"
 
           - task: AzureCLI@2
             displayName: "ACR Login"
