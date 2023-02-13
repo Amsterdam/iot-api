@@ -10,8 +10,8 @@ components:
   - ../../components/keyvault
   - ../../components/network
 
-# patchesStrategicMerge:
-#   - deployment.yaml
+patchesStrategicMerge:
+  - secretproviderclass.yaml
 
 commonLabels:
   team: cccssront01
