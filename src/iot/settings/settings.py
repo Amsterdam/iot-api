@@ -191,7 +191,6 @@ class DBPassword:
 
 
 if 'azure.com' in DATABASE_HOST:
-    DATABASE_USER += '@' + DATABASE_HOST
     DATABASE_PASSWORD = DBPassword(os.getenv('MANAGED_IDENTITY_CLIENTID'))
 
 DATABASES = {
