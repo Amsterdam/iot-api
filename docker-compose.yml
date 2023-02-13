@@ -54,7 +54,7 @@ services:
 
   dev:
     <<: *base-app
-    image: ${REGISTRY:-localhost:5001}/${REPOSITORY:-sensorenregister/api-dev}:${VERSION:-latest}
+    image: ${REGISTRY:-localhost:5001}/${REPOSITORY:-sensorenregister/api}-dev:${VERSION:-latest}
     build:
       context: .
       target: dev
@@ -62,7 +62,7 @@ services:
 
   test:
     <<: *base-app
-    image: ${REGISTRY:-localhost:5001}/${REPOSITORY:-sensorenregister/api-test}:${VERSION:-latest}
+    image: ${REGISTRY:-localhost:5001}/${REPOSITORY:-sensorenregister/api}-test:${VERSION:-latest}
     build:
       context: .
       target: tests

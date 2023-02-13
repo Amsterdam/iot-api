@@ -30,7 +30,7 @@ stages:
         # pool: ContainerBuilder
         variables:
           # REGISTRY: saks01weuacrpgpgo5qvmwo.azurecr.io
-          REGISTRY: mainweuacroyh7oqq4sbyjt.azurecr.io
+          REGISTRY: applicationogp4jqffo3hed.azurecr.io
           REPOSITORY: tamm/sensorenregister/api
         steps:
           - task: AzureCLI@2
@@ -84,7 +84,7 @@ stages:
       - job: deploy
         variables:
           # REGISTRY: saks01weuacrpgpgo5qvmwo.azurecr.io
-          REGISTRY: mainweuacroyh7oqq4sbyjt.azurecr.io
+          REGISTRY: applicationogp4jqffo3hed.azurecr.io
           REPOSITORY: tamm/sensorenregister/api
         steps:
           - task: AzureCLI@2
@@ -95,7 +95,7 @@ stages:
               scriptLocation: "inlineScript"
               inlineScript: |
                 pushd manifests/overlays/dev
-                kustomize edit set image localhost:5001/sensorenregister/api=${REGISTRY}/${REPOSITORY}:$(Build.SourceBranchName)
+                kustomize edit set image localhost:5001/sensorenregister/api=${REGISTRY}/${REPOSITORY}-dev:$(Build.SourceBranchName)
                 kustomize edit set namespace ns-ccc-ssr-ont-01-sensorenregister
                 kustomize build > generated.yaml
                 cat generated.yaml
