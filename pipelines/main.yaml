@@ -27,10 +27,10 @@ stages:
       vmImage: ubuntu-latest
     jobs:
       - job: build
-        # pool: ContainerBuilder
+        pool: ContainerBuilder
         variables:
-          # REGISTRY: saks01weuacrpgpgo5qvmwo.azurecr.io
-          REGISTRY: applicationogp4jqffo3hed.azurecr.io
+          REGISTRY: saks01weuacrpgpgo5qvmwo.azurecr.io
+          # REGISTRY: applicationogp4jqffo3hed.azurecr.io
           REPOSITORY: tamm/sensorenregister/api
         steps:
           - script: make test
@@ -71,8 +71,8 @@ stages:
     jobs:
       - job: deploy
         variables:
-          # REGISTRY: saks01weuacrpgpgo5qvmwo.azurecr.io
-          REGISTRY: applicationogp4jqffo3hed.azurecr.io
+          REGISTRY: saks01weuacrpgpgo5qvmwo.azurecr.io
+          # REGISTRY: applicationogp4jqffo3hed.azurecr.io
           REPOSITORY: tamm/sensorenregister/api
         steps:
           - task: AzureCLI@2
