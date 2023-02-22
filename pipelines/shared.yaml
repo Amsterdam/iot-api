@@ -40,31 +40,19 @@ stages:
           - script: make build
             displayName: "Build"
 
-          - task: AzureCLI@2
-            displayName: "ACR Login"
-            retryCountOnTaskFailure: 10
-            inputs:
-              azureSubscription: "ARM-CCC-SSR-ont-01"
-              scriptType: "bash"
-              scriptLocation: "inlineScript"
-              inlineScript: |
-                az acr login -n $REGISTRY
+          - script: |
+              az login --identity
+              az acr login -n $(REGISTRY)
 
-          - task: AzureCLI@2
-            displayName: "push"
-            inputs:
-              azureSubscription: "ARM-CCC-SSR-ont-01"
-              scriptType: "bash"
-              scriptLocation: "inlineScript"
-              inlineScript: |
-                # Build numer
-                VERSION=$(Build.BuildId) make push
+          - script: |
+              # Build numer
+              VERSION=$(Build.BuildId) make push
 
-                # Git hash
-                VERSION=$(Build.SourceVersion) make push
+              # Git hash
+              VERSION=$(Build.SourceVersion) make push
 
-                # Branch name / Tag name
-                VERSION=$(Build.SourceBranchName) make push
+              # Branch name / Tag name
+              VERSION=$(Build.SourceBranchName) make push
 
   - stage: deploy
     pool: TAMM

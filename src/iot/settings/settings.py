@@ -3,7 +3,8 @@ import sys
 from urllib.parse import urljoin
 
 import sentry_sdk
-from azure.identity import ManagedIdentityCredential
+from azure.identity import DefaultAzureCredential, ManagedIdentityCredential
+from azure.keyvault.secrets import SecretClient
 from sentry_sdk.integrations.django import DjangoIntegration
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -193,6 +194,66 @@ DATABASE_NAME = os.getenv("DATABASE_NAME", "dev")
 DATABASE_USER = os.getenv("DATABASE_USER", "dev")
 DATABASE_PASSWORD = os.getenv("DATABASE_PASSWORD", "dev")
 DATABASE_PORT = os.getenv("DATABASE_PORT", "5432")
+
+
+import json
+import os
+from pathlib import Path
+
+from azure.core.credentials import AccessToken
+from azure.identity import (
+    AuthenticationRecord,
+    DefaultAzureCredential,
+    DeviceCodeCredential,
+    ManagedIdentityCredential,
+    TokenCachePersistenceOptions,
+)
+from azure.keyvault.secrets import SecretClient
+
+key_vault_name = os.getenv('AZURE_KEYVAULT', '')
+if key_vault_name:
+
+    authentication_record = None
+    cache_file = Path('~/.IdentityService/cache').expanduser()
+    if cache_file.exists():
+        try:
+            with open(cache_file, 'r') as f:
+                record_json = f.read()
+                authentication_record = AuthenticationRecord.deserialize(record_json)
+        except json.decoder.JSONDecodeError as e:
+            print(f"failed to load auth cache: {e}")
+
+    cache_options = TokenCachePersistenceOptions(allow_unencrypted_storage=True)
+    credential = DeviceCodeCredential(
+        additionally_allowed_tenants=['*'],
+        cache_persistence_options=cache_options,
+        authentication_record=authentication_record,
+    )
+
+    if not authentication_record:
+        breakpoint()
+        record = credential.authenticate()
+        record_json = record.serialize()
+
+        with open(cache_file, 'w') as f:
+            f.write(record_json)
+
+    key_vault_url = f"https://{key_vault_name}.vault.azure.net"
+    client = SecretClient(key_vault_url, credential)
+    secrets = [x.name for x in client.list_properties_of_secrets() if x.name]
+    print(secrets)
+
+    wanted = {}
+    for name in secrets:
+        secret = client.get_secret(name)
+        if not secret.properties.enabled:
+            continue
+        if secret.properties.managed:
+            continue
+        wanted[secret.name.replace('-', '_').upper()] = secret.value
+
+    print(wanted)
+    breakpoint()
 
 
 class DBPassword:

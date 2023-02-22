@@ -3,7 +3,7 @@
 # See https://git.datapunt.amsterdam.nl/Datapunt/python-best-practices/blob/master/dependency_management/
 
 # Base website
--r ./requirements.txt
+-r ./requirements.in
 
 # Tools for maintaining requirements.txt:
 pip-tools

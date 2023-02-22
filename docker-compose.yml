@@ -16,6 +16,7 @@ x-app: &base-app
     SECRET_KEY: "insecure"
     ADMIN_ENABLED: "true"
     API_ENABLED: "true"
+    AZURE_KEYVAULT: application-o-gp4jqffo3h
     DEBUG: "true"
     PYTHONBREAKPOINT:
     SENTRY_DSN:
@@ -25,10 +26,12 @@ x-app: &base-app
     - ./src:/app/src
     - ./tests:/app/tests
     - ./deploy:/app/deploy
+    - cache:/home/app/.IdentityService
   entrypoint: /app/deploy/wait-for-it.sh database:5432 --
 
 volumes:
   db_data:
+  cache:
 
 services:
   database:

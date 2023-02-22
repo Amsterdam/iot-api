@@ -22,8 +22,8 @@ install: pip-tools                  ## Install requirements and sync venv with e
 	pip-sync requirements_dev.txt
 
 requirements: pip-tools             ## Upgrade requirements (in requirements.in) to latest versions and compile requirements.txt
-	pip-compile --upgrade --output-file requirements.txt requirements.in
-	pip-compile --upgrade --output-file requirements_dev.txt requirements_dev.in
+	pip-compile --resolver=backtracking --upgrade --output-file requirements.txt requirements.in
+	pip-compile --resolver=backtracking --upgrade --output-file requirements_dev.txt requirements_dev.in
 
 upgrade: requirements install       ## Run 'requirements' and 'install' targets
 
@@ -80,7 +80,7 @@ clean:                              ## Clean docker stuff
 	$(dc) down -v --remove-orphans
 
 bash:
-	$(dc) run --rm dev bash
+	$(run) dev bash
 
 bash-test:
-	$(dc) run --rm test bash
+	$(run) test bash
