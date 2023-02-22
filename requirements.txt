@@ -5,7 +5,9 @@
 #    pip-compile --output-file=requirements.txt requirements.in
 #
 asgiref==3.6.0
-    # via django
+    # via
+    #   django
+    #   django-countries
 attrs==22.2.0
     # via jsonschema
 azure-common==1.1.28
@@ -13,7 +15,7 @@ azure-common==1.1.28
     #   azure-keyvault-certificates
     #   azure-keyvault-keys
     #   azure-keyvault-secrets
-azure-core==1.26.2
+azure-core==1.26.3
     # via
     #   -r requirements.in
     #   azure-identity
@@ -34,7 +36,7 @@ azure-keyvault-keys==4.7.0
     # via azure-keyvault
 azure-keyvault-secrets==4.6.0
     # via azure-keyvault
-cachetools==5.2.1
+cachetools==5.3.0
     # via google-auth
 certifi==2022.12.7
     # via
@@ -53,7 +55,7 @@ coreschema==0.0.4
     # via
     #   coreapi
     #   drf-yasg
-cryptography==39.0.0
+cryptography==39.0.1
     # via
     #   azure-identity
     #   azure-keyvault-keys
@@ -64,7 +66,7 @@ cryptography==39.0.0
     #   pyopenssl
 defusedxml==0.7.1
     # via djangorestframework-xml
-django==4.1.5
+django==4.1.7
     # via
     #   -r requirements.in
     #   django-braces
@@ -77,11 +79,12 @@ django==4.1.5
     #   djangorestframework
     #   drf-yasg
     #   mozilla-django-oidc
+    #   opencensus-ext-django
 django-braces==1.15.0
     # via -r requirements.in
 django-cors-headers==3.13.0
     # via -r requirements.in
-django-countries==7.5
+django-countries==7.5.1
     # via -r requirements.in
 django-extensions==3.2.1
     # via -r requirements.in
@@ -118,7 +121,7 @@ drf-extensions==0.7.1
     # via
     #   -r requirements.in
     #   drf-amsterdam
-drf-yasg==1.21.4
+drf-yasg==1.21.5
     # via -r requirements.in
 et-xmlfile==1.1.0
     # via openpyxl
@@ -126,7 +129,7 @@ flex==6.14.1
     # via -r requirements.in
 google-api-core==2.11.0
     # via opencensus
-google-auth==2.16.0
+google-auth==2.16.1
     # via google-api-core
 googleapis-common-protos==1.58.0
     # via google-api-core
@@ -156,7 +159,7 @@ markupsafe==2.1.2
     # via jinja2
 mozilla-django-oidc==3.0.0
     # via -r requirements.in
-msal==1.20.0
+msal==1.21.0
     # via
     #   azure-identity
     #   msal-extensions
@@ -170,18 +173,22 @@ msrest==0.7.1
 oauthlib==3.2.2
     # via requests-oauthlib
 opencensus==0.11.1
-    # via opencensus-ext-azure
+    # via
+    #   opencensus-ext-azure
+    #   opencensus-ext-django
 opencensus-context==0.1.3
     # via opencensus
 opencensus-ext-azure==1.1.8
     # via -r requirements.in
-openpyxl==3.0.10
+opencensus-ext-django==0.8.0
+    # via -r requirements.in
+openpyxl==3.1.1
     # via -r requirements.in
 packaging==23.0
     # via drf-yasg
 portalocker==2.7.0
     # via msal-extensions
-protobuf==4.21.12
+protobuf==4.22.0
     # via
     #   google-api-core
     #   googleapis-common-protos
@@ -236,7 +243,7 @@ ruamel-yaml==0.17.21
     # via drf-yasg
 ruamel-yaml-clib==0.2.7
     # via ruamel-yaml
-sentry-sdk==1.13.0
+sentry-sdk==1.15.0
     # via -r requirements.in
 six==1.16.0
     # via
@@ -255,7 +262,7 @@ strict-rfc3339==0.7
     # via flex
 swagger-spec-validator==3.0.3
     # via -r requirements.in
-typing-extensions==4.4.0
+typing-extensions==4.5.0
     # via
     #   azure-core
     #   django-countries
@@ -274,7 +281,7 @@ uwsgi==2.0.21
     # via -r requirements.in
 validate-email==1.3
     # via flex
-zipp==3.11.0
+zipp==3.14.0
     # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:

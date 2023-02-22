@@ -55,5 +55,6 @@ sentry-sdk
 # Azure
 azure-identity
 azure-keyvault
+opencensus-ext-django
 opencensus-ext-azure
 azure-core

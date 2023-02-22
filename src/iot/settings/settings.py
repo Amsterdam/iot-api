@@ -106,6 +106,7 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = (
     'django.middleware.security.SecurityMiddleware',
+    'opencensus.ext.django.middleware.OpencensusMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -120,6 +121,25 @@ DEBUG_MIDDLEWARE = (
     # 'debug_toolbar.middleware.DebugToolbarMiddleware',
     # 'pyinstrument.middleware.ProfilerMiddleware',
 )
+AZURE_INSTRUMENTATION_KEY = "InstrumentationKey=4c4500f7-8cec-4b3e-be0f-401246f38eec;IngestionEndpoint=https://westeurope-5.in.applicationinsights.azure.com/;LiveEndpoint=https://westeurope.livediagnostics.monitor.azure.com/"
+
+OPENCENSUS = {
+    'TRACE': {
+        'SAMPLER': 'opencensus.trace.samplers.ProbabilitySampler(rate=1.0)',
+        'EXPORTER': 'opencensus.ext.azure.trace_exporter.AzureExporter(connection_string='
+        + AZURE_INSTRUMENTATION_KEY
+        + ')',  # noqa: E501
+    }
+}
+
+OPENCENSUS = {
+    'TRACE': {
+        'SAMPLER': 'opencensus.trace.samplers.ProbabilitySampler(rate=1)',
+        'EXPORTER': '''opencensus.ext.azure.trace_exporter.AzureExporter(
+            connection_string="InstrumentationKey=4c4500f7-8cec-4b3e-be0f-401246f38eec;IngestionEndpoint=https://westeurope-5.in.applicationinsights.azure.com/;LiveEndpoint=https://westeurope.livediagnostics.monitor.azure.com/"
+        )''',
+    }
+}
 
 if DEBUG:
     INSTALLED_APPS += DEBUG_APPS
@@ -243,13 +263,23 @@ LOGGING = {
         'handlers': ['console'],
     },
     'formatters': {
-        'console': {'format': '%(asctime)s - %(name)s - %(levelname)s - %(message)s'}
+        'console': {'format': '%(asctime)s - %(name)s - %(levelname)s - %(message)s'},
+        'timestamp': {
+            'format': '{asctime} {levelname} {message}',
+            'style': '{',
+        },
     },
     'handlers': {
         'console': {
             'level': 'INFO',
             'class': 'logging.StreamHandler',
             'formatter': 'console',
+        },
+        'azure': {
+            'level': "DEBUG",
+            'class': "opencensus.ext.azure.log_exporter.AzureLogHandler",
+            'connection_string': AZURE_INSTRUMENTATION_KEY,
+            'formatter': 'timestamp',
         },
     },
     'loggers': {
