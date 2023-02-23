@@ -3,15 +3,18 @@ import sys
 from urllib.parse import urljoin
 
 import sentry_sdk
-from azure.identity import DefaultAzureCredential, ManagedIdentityCredential
-from azure.keyvault.secrets import SecretClient
 from sentry_sdk.integrations.django import DjangoIntegration
+
+from .azure_settings import Azure
+
+azure = Azure(key_vault_url=os.getenv('AZURE_KEY_VAULT'))
+
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY')
-DEBUG = os.getenv('DEBUG', 'false').lower() == 'true'
+SECRET_KEY = azure.settings['SECRET_KEY']
+DEBUG = azure.settings.get('DEBUG', 'false').lower() == 'true'
 
 ALLOWED_HOSTS = [
     'api.data.amsterdam.nl',
@@ -26,7 +29,9 @@ ALLOWED_HOSTS = [
 INTERNAL_IPS = ('127.0.0.1', '0.0.0.0')
 CORS_ORIGIN_ALLOW_ALL = True
 
-DATAPUNT_API_URL = os.getenv('DATAPUNT_API_URL', 'https://api.data.amsterdam.nl/')
+DATAPUNT_API_URL = azure.settings.get(
+    'DATAPUNT_API_URL', 'https://api.data.amsterdam.nl/'
+)
 
 # Django security settings
 SECURE_BROWSER_XSS_FILTER = True
@@ -41,11 +46,11 @@ def make_url_path(url_path):
     return (url_path.strip().strip('/') + '/').lstrip('/')
 
 
-API_ENABLED = os.getenv('API_ENABLED', 'true').lower() == 'true'
-API_PATH = make_url_path(os.getenv('API_PATH', 'api'))
+API_ENABLED = azure.settings.get('API_ENABLED', 'true').lower() == 'true'
+API_PATH = make_url_path(azure.settings.get('API_PATH', 'api'))
 
-ADMIN_ENABLED = os.getenv('ADMIN_ENABLED', 'false').lower() == 'true'
-ADMIN_PATH = make_url_path(os.getenv('ADMIN_PATH', 'admin'))
+ADMIN_ENABLED = azure.settings.get('ADMIN_ENABLED', 'false').lower() == 'true'
+ADMIN_PATH = make_url_path(azure.settings.get('ADMIN_PATH', 'admin'))
 
 ## KEYCLOAK ##
 # External identity provider settings (Keycloak)
@@ -55,21 +60,21 @@ OIDC_DEFAULT_URL = (
     'https://iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect'
 )
 
-OIDC_RP_CLIENT_ID = os.environ.get('OIDC_RP_CLIENT_ID')
-OIDC_RP_CLIENT_SECRET = os.environ.get('OIDC_RP_CLIENT_SECRET')
-OIDC_OP_AUTHORIZATION_ENDPOINT = os.environ.get(
+OIDC_RP_CLIENT_ID = azure.settings.get('OIDC_RP_CLIENT_ID')
+OIDC_RP_CLIENT_SECRET = azure.settings.get('OIDC_RP_CLIENT_SECRET')
+OIDC_OP_AUTHORIZATION_ENDPOINT = azure.settings.get(
     'OIDC_OP_AUTHORIZATION_ENDPOINT', f'{OIDC_DEFAULT_URL}/auth'
 )
-OIDC_OP_TOKEN_ENDPOINT = os.environ.get(
+OIDC_OP_TOKEN_ENDPOINT = azure.settings.get(
     'OIDC_OP_TOKEN_ENDPOINT', f'{OIDC_DEFAULT_URL}/token'
 )
-OIDC_OP_USER_ENDPOINT = os.environ.get(
+OIDC_OP_USER_ENDPOINT = azure.settings.get(
     'OIDC_OP_USER_ENDPOINT', f'{OIDC_DEFAULT_URL}/userinfo'
 )
-OIDC_OP_JWKS_ENDPOINT = os.environ.get(
+OIDC_OP_JWKS_ENDPOINT = azure.settings.get(
     'OIDC_OP_JWKS_ENDPOINT', f'{OIDC_DEFAULT_URL}/certs'
 )
-OIDC_OP_LOGOUT_ENDPOINT = LOGOUT_REDIRECT_URL = os.environ.get(
+OIDC_OP_LOGOUT_ENDPOINT = LOGOUT_REDIRECT_URL = azure.settings.get(
     'OIDC_OP_LOGOUT_ENDPOINT', f'{OIDC_DEFAULT_URL}/logout'
 )
 LOGIN_REDIRECT_URL_FAILURE = '/static/403.html'
@@ -122,25 +127,6 @@ DEBUG_MIDDLEWARE = (
     # 'debug_toolbar.middleware.DebugToolbarMiddleware',
     # 'pyinstrument.middleware.ProfilerMiddleware',
 )
-AZURE_INSTRUMENTATION_KEY = "InstrumentationKey=4c4500f7-8cec-4b3e-be0f-401246f38eec;IngestionEndpoint=https://westeurope-5.in.applicationinsights.azure.com/;LiveEndpoint=https://westeurope.livediagnostics.monitor.azure.com/"
-
-OPENCENSUS = {
-    'TRACE': {
-        'SAMPLER': 'opencensus.trace.samplers.ProbabilitySampler(rate=1.0)',
-        'EXPORTER': 'opencensus.ext.azure.trace_exporter.AzureExporter(connection_string='
-        + AZURE_INSTRUMENTATION_KEY
-        + ')',  # noqa: E501
-    }
-}
-
-OPENCENSUS = {
-    'TRACE': {
-        'SAMPLER': 'opencensus.trace.samplers.ProbabilitySampler(rate=1)',
-        'EXPORTER': '''opencensus.ext.azure.trace_exporter.AzureExporter(
-            connection_string="InstrumentationKey=4c4500f7-8cec-4b3e-be0f-401246f38eec;IngestionEndpoint=https://westeurope-5.in.applicationinsights.azure.com/;LiveEndpoint=https://westeurope.livediagnostics.monitor.azure.com/"
-        )''',
-    }
-}
 
 if DEBUG:
     INSTALLED_APPS += DEBUG_APPS
@@ -165,7 +151,9 @@ AUTHENTICATION_BACKENDS = [
     'mozilla_django_oidc.auth.OIDCAuthenticationBackend',
 ]
 
-SENSOR_REGISTER_ADMIN_ROLE_NAME = os.environ.get('SENSOR_REGISTER_ADMIN_ROLE_NAME', 'x')
+SENSOR_REGISTER_ADMIN_ROLE_NAME = azure.settings.get(
+    'SENSOR_REGISTER_ADMIN_ROLE_NAME', 'x'
+)
 
 ROOT_URLCONF = "iot.urls"
 WSGI_APPLICATION = "iot.wsgi.application"
@@ -189,90 +177,15 @@ TEMPLATES = [
 SHELL_PLUS_PRINT_SQL = True
 SHELL_PLUS_PRINT_SQL_TRUNCATE = 10_000
 
-DATABASE_HOST = os.getenv("DATABASE_HOST", "database")
-DATABASE_NAME = os.getenv("DATABASE_NAME", "dev")
-DATABASE_USER = os.getenv("DATABASE_USER", "dev")
-DATABASE_PASSWORD = os.getenv("DATABASE_PASSWORD", "dev")
-DATABASE_PORT = os.getenv("DATABASE_PORT", "5432")
-
-
-import json
-import os
-from pathlib import Path
-
-from azure.core.credentials import AccessToken
-from azure.identity import (
-    AuthenticationRecord,
-    DefaultAzureCredential,
-    DeviceCodeCredential,
-    ManagedIdentityCredential,
-    TokenCachePersistenceOptions,
-)
-from azure.keyvault.secrets import SecretClient
-
-key_vault_name = os.getenv('AZURE_KEYVAULT', '')
-if key_vault_name:
-
-    authentication_record = None
-    cache_file = Path('~/.IdentityService/cache').expanduser()
-    if cache_file.exists():
-        try:
-            with open(cache_file, 'r') as f:
-                record_json = f.read()
-                authentication_record = AuthenticationRecord.deserialize(record_json)
-        except json.decoder.JSONDecodeError as e:
-            print(f"failed to load auth cache: {e}")
-
-    cache_options = TokenCachePersistenceOptions(allow_unencrypted_storage=True)
-    credential = DeviceCodeCredential(
-        additionally_allowed_tenants=['*'],
-        cache_persistence_options=cache_options,
-        authentication_record=authentication_record,
-    )
-
-    if not authentication_record:
-        breakpoint()
-        record = credential.authenticate()
-        record_json = record.serialize()
-
-        with open(cache_file, 'w') as f:
-            f.write(record_json)
-
-    key_vault_url = f"https://{key_vault_name}.vault.azure.net"
-    client = SecretClient(key_vault_url, credential)
-    secrets = [x.name for x in client.list_properties_of_secrets() if x.name]
-    print(secrets)
-
-    wanted = {}
-    for name in secrets:
-        secret = client.get_secret(name)
-        if not secret.properties.enabled:
-            continue
-        if secret.properties.managed:
-            continue
-        wanted[secret.name.replace('-', '_').upper()] = secret.value
-
-    print(wanted)
-    breakpoint()
-
-
-class DBPassword:
-
-    SCOPES = ['https://ossrdbms-aad.database.windows.net']
-
-    def __init__(self, client_id) -> None:
-        self.managed_identity = ManagedIdentityCredential(client_id=client_id)
-
-    def get_azure_token(self):
-        access_token = self.managed_identity.get_token(*self.SCOPES)
-        return access_token.token
-
-    def __str__(self):
-        return self.get_azure_token()
+DATABASE_HOST = azure.settings.get("DATABASE_HOST", "database")
+DATABASE_NAME = azure.settings.get("DATABASE_NAME", "dev")
+DATABASE_USER = azure.settings.get("DATABASE_USER", "dev")
+DATABASE_PASSWORD = azure.settings.get("DATABASE_PASSWORD", "dev")
+DATABASE_PORT = azure.settings.get("DATABASE_PORT", "5432")
 
 
 if 'azure.com' in DATABASE_HOST:
-    DATABASE_PASSWORD = DBPassword(os.getenv('MANAGED_IDENTITY_CLIENTID'))
+    DATABASE_PASSWORD = azure.auth.db_password
 
 DATABASES = {
     "default": {
@@ -296,7 +209,7 @@ USE_TZ = True
 
 # Network related
 # USE_X_FORWARDED_HOST = True
-BASE_URL = os.getenv('BASE_URL', '')
+BASE_URL = azure.settings.get('BASE_URL', '')
 FORCE_SCRIPT_NAME = BASE_URL
 
 
@@ -336,12 +249,6 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'console',
         },
-        'azure': {
-            'level': "DEBUG",
-            'class': "opencensus.ext.azure.log_exporter.AzureLogHandler",
-            'connection_string': AZURE_INSTRUMENTATION_KEY,
-            'formatter': 'timestamp',
-        },
     },
     'loggers': {
         'iot': {
@@ -351,13 +258,32 @@ LOGGING = {
         },
         'django': {
             'handlers': ['console'],
-            'level': os.getenv(
+            'level': azure.settings.get(
                 'DJANGO_LOG_LEVEL', 'ERROR' if 'pytest' in sys.argv[0] else 'INFO'
             ).upper(),
             'propagate': True,
         },
     },
 }
+
+AZURE_INSTRUMENTATION_KEY = azure.settings.get('INSTRUMENTATION_KEY')
+
+if AZURE_INSTRUMENTATION_KEY:
+    OPENCENSUS = {
+        'TRACE': {
+            'SAMPLER': 'opencensus.trace.samplers.ProbabilitySampler(rate=1.0)',
+            'EXPORTER': 'opencensus.ext.azure.trace_exporter.AzureExporter(connection_string='
+            + AZURE_INSTRUMENTATION_KEY
+            + ')',  # noqa: E501
+        }
+    }
+    LOGGING['handlers']['azure'] = {
+        'level': "DEBUG",
+        'class': "opencensus.ext.azure.log_exporter.AzureLogHandler",
+        'connection_string': AZURE_INSTRUMENTATION_KEY,
+        'formatter': 'timestamp',
+    }
+
 
 # Django REST framework settings
 REST_FRAMEWORK = dict(
@@ -397,7 +323,7 @@ IPROX_NUM_SENSORS = 5
 IPROX_SEPARATOR = ';'
 
 # Sentry logging
-sentry_dsn = os.getenv('SENTRY_DSN')
+sentry_dsn = azure.settings.get('SENTRY_DSN')
 if sentry_dsn:
     sentry_sdk.init(
         dsn=sentry_dsn,

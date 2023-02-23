@@ -100,7 +100,7 @@ stages:
               kubernetesServiceEndpoint: "SCN-K8S-O-SSR"
               namespace: "ns-ccc-ssr-ont-01-sensorenregister"
               command: "delete"
-              arguments: "job --all"
+              arguments: "job migrate"
 
           - task: Kubernetes@1
             displayName: "Apply manifests"

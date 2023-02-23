@@ -25,9 +25,8 @@ ARG OIDC_RP_CLIENT_ID=not-used
 ARG OIDC_RP_CLIENT_SECRET=not-used
 RUN DATABASE_ENABLED=false python manage.py collectstatic --no-input
 
-RUN mkdir /home/app/.IdentityService
-RUN chown app:app /home/app/.IdentityService
-VOLUME /home/app/.IdentityService
+RUN mkdir /home/app/.azure
+RUN chown app:app /home/app/.azure
 USER app
 
 CMD ["/app/deploy/docker-run.sh"]
