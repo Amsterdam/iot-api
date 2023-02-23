@@ -26,18 +26,18 @@ class AzureKeyVault:
 
     def get_secrets(self):
         client = SecretClient(self.vault_url, self.auth.credential)
-        secrets = [x.name for x in client.list_properties_of_secrets() if x.name]
+        secrets = [x for x in client.list_properties_of_secrets() if x.name]
 
         wanted = {}
-        for name in secrets:
-            secret = client.get_secret(name)
-            if not secret.properties.enabled:
+        for properties in secrets:
+            if not properties.enabled:
                 continue
-            if secret.properties.managed:
+            if properties.managed:
                 continue
-            if not secret.name:
+            if not properties.name:
                 continue
-            wanted[secret.name.replace('-', '_').upper()] = secret.value
+            secret = client.get_secret(properties.name)
+            wanted[properties.name.replace('-', '_').upper()] = secret.value
 
         return wanted
 
