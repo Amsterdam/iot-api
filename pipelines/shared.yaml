@@ -73,6 +73,12 @@ stages:
                 pushd manifests/overlays/dev
                 kustomize edit set image localhost:5001/sensorenregister/api=${REGISTRY}/${REPOSITORY}-dev:$(Build.SourceBranchName)
                 kustomize edit set namespace ns-ccc-ssr-ont-01-sensorenregister
+
+                kustomize edit add annotation "build-id:$(Build.BuildId)"
+                kustomize edit add annotation "build-time:$(date -u '+%Y%m%d%H%M%S')"
+                kustomize edit add annotation "build-version:$(Build.SourceVersion)"
+                kustomize edit add annotation "build-branch:$(Build.SourceBranchName)"
+
                 kustomize build > generated.yaml
                 cat generated.yaml
                 popd
