@@ -7,7 +7,6 @@ spec:
     spec:
       containers:
         - name: main
-
           command:
             - /app/deploy/wait-for-it.sh
             - database:5432
@@ -17,9 +16,3 @@ spec:
           args:
             - ./manage.py migrate;
               ./manage.py import_api
-          volumeMounts:
-            - mountPath: /secrets
-              $patch: delete
-      volumes:
-        - name: secrets
-          $patch: delete

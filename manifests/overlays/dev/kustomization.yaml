@@ -1,3 +1,6 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
 resources:
   - ../../base
 
@@ -10,8 +13,12 @@ components:
   - ../../components/keyvault
   - ../../components/network
 
-patchesStrategicMerge:
-  - secretproviderclass.yaml
+labels:
+  - includeselectors: true
+    pairs:
+      app: sensorenregister
+      env: dev
+      team: cccssront01
 
 commonLabels:
   team: cccssront01
@@ -23,6 +30,8 @@ replicas:
     count: 1
 
 patches:
+  - path: secretproviderclass.yaml
+
   - target:
       kind: Deployment
     patch: |-

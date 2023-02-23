@@ -31,13 +31,3 @@ spec:
               envFrom:
                 - configMapRef:
                     name: api-env
-                - secretRef:
-                    name: app-secrets
-
-          volumes:
-            - name: secrets
-              csi:
-                driver: secrets-store.csi.k8s.io
-                readOnly: true
-                volumeAttributes:
-                  secretProviderClass: secrets

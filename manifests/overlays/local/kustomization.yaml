@@ -14,11 +14,10 @@ commonLabels:
 buildMetadata:
   - originAnnotations
 
-patchesStrategicMerge:
-  - deployment.yaml
-  - admin/deployment.yaml
-  - import.cronjob.yaml
-  - migrate.job.yaml
+patches:
+  - path: deployment.yaml
+  - path: admin/deployment.yaml
+  - path: migrate.job.yaml
 
 secretGenerator:
   - name: app-secrets
