@@ -34,6 +34,7 @@ configMapGenerator:
     behavior: merge
     literals:
       - AZURE_KEY_VAULT=https://application-o-gp4jqffo3h.vault.azure.net/
+      - MANAGED_IDENTITY_CLIENTID=00d77036-c127-4b38-a581-f170b55d65f0
 
 patches:
   - path: secretproviderclass.yaml
