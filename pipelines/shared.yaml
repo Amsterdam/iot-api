@@ -72,7 +72,7 @@ stages:
               inlineScript: |
                 set -e
                 pushd manifests/overlays/dev
-                kustomize edit set image localhost:5001/sensorenregister/api=${REGISTRY}/${REPOSITORY}-dev:$(Build.SourceBranchName)
+                kustomize edit set image localhost:5001/sensorenregister/api=${REGISTRY}/${REPOSITORY}-dev:$(Build.BuildId)
                 kustomize edit set namespace ns-ccc-ssr-ont-01-sensorenregister
 
                 kustomize edit add annotation "build-id:$(Build.BuildId)"
