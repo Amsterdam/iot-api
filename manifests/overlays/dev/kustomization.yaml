@@ -29,6 +29,12 @@ replicas:
   - name: api
     count: 1
 
+configMapGenerator:
+  - name: api-env
+    behavior: merge
+    literals:
+      - AZURE_KEY_VAULT=https://application-o-gp4jqffo3h.vault.azure.net/
+
 patches:
   - path: secretproviderclass.yaml
 
