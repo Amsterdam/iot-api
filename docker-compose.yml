@@ -16,17 +16,20 @@ x-app: &base-app
     SECRET_KEY: "insecure"
     ADMIN_ENABLED: "true"
     API_ENABLED: "true"
-    AZURE_KEYVAULT: application-o-gp4jqffo3h
     DEBUG: "true"
     PYTHONBREAKPOINT:
     SENTRY_DSN:
     OIDC_RP_CLIENT_ID:
     OIDC_RP_CLIENT_SECRET:
+    AZURE_KEY_VAULT: https://application-o-gp4jqffo3h.vault.azure.net/
+    DATABASE_HOST: application-o-gp4jqffo3h.postgres.database.azure.com
+    DATABASE_USER: EM4W-SSR-o-db-writer
+    DATABASE_NAME: main
   volumes:
     - ./src:/app/src
     - ./tests:/app/tests
     - ./deploy:/app/deploy
-    - cache:/home/app/.IdentityService
+    - cache:/home/app/.azure
   entrypoint: /app/deploy/wait-for-it.sh database:5432 --
 
 volumes:
