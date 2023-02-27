@@ -45,7 +45,5 @@ urlpatterns = router.urls + [
     path('oidc/', include('keycloak_oidc.urls')),
     path('admin/login/', auth.oidc_login),
     path('admin/', admin.site.urls),
-
-    path('status/', include('health.urls')),
 ]
 

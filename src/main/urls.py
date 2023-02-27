@@ -3,7 +3,8 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
-    path('iothings/', include('iot.urls'))
+    path('iothings/', include('iot.urls')),
+    path('status/', include('health.urls')),
 ]
 
 if settings.DEBUG:
