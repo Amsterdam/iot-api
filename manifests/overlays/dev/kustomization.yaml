@@ -77,11 +77,6 @@ patches:
         path: "/spec/ingressClassName"
         value: nginx-internal
 
-images:
-  - name: localhost:5001/sensorenregister/api
-    newName: mainweuacroyh7oqq4sbyjt.azurecr.io/sensorenregister/api-dev
-    newTag: latest
-
 replacements:
   - source:
       kind: Deployment
