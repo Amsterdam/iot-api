@@ -40,6 +40,8 @@ spec:
             - secretRef:
                 name: app-secrets
           volumeMounts:
+            - name: tmp
+              mountPath: /tmp
             - mountPath: /secrets
               name: secrets
               readOnly: true
@@ -55,6 +57,8 @@ spec:
               path: /status/health/
               port: http
       volumes:
+        - name: tmp
+          emptyDir: {}
         - name: secrets
           csi:
             driver: secrets-store.csi.k8s.io
