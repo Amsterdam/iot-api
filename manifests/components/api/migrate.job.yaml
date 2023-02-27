@@ -29,3 +29,9 @@ spec:
           envFrom:
             - configMapRef:
                 name: api-env
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
