@@ -19,9 +19,10 @@ patches:
   - path: admin/deployment.yaml
   - path: migrate.job.yaml
 
-secretGenerator:
-  - name: app-secrets
-    literals:
+configMapGenerator:
+  - name: api-env
+    behavior: merge
+    literals: &api-env
       - DEBUG=true
       - SECRET_KEY=dev
       - DATABASE_HOST=database
@@ -31,6 +32,9 @@ secretGenerator:
       - DATABASE_USER=dev
       - OIDC_RP_CLIENT_ID=dev
       - OIDC_RP_CLIENT_SECRET=dev
+  - name: admin-env
+    behavior: merge
+    literals: *api-env
 
 images:
   - name: localhost:5001/sensorenregister/api
