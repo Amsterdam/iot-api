@@ -177,7 +177,6 @@ def parse_iprox_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
         raise ValidationError(fields)
 
     for row_number, row in enumerate(Values(IPROX_FIELDS, row) for row in rows):
-
         # Don't process an empty row in the excel file
         referentienummer = row.get('Referentienummer') or ''
         if not referentienummer.strip():
@@ -197,7 +196,6 @@ def parse_iprox_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
         reference = row['Referentienummer']
 
         for sensor_index in range(settings.IPROX_NUM_SENSORS):
-
             location_postcode = None
 
             if row['Locatie sensor'] == 'Vast':

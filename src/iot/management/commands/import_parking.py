@@ -38,15 +38,12 @@ def get_neighbourhoods():
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-
         parking_neighbourhood = Polygon()
         parking_neighbourhood_codes = []
 
         neighbourhoods = get_neighbourhoods()
         for parking_zone_polygon in get_parking_zone_polygons():
-
             for neighbourhood_code, neighbourhood_polygon in neighbourhoods.items():
-
                 parking_zone_polygons = (
                     [parking_zone_polygon]
                     if isinstance(parking_zone_polygon, Polygon)

@@ -74,7 +74,6 @@ def import_sensor(
 
     remove_all(device.observation_goals)
     for observation_goal in sensor_data.observation_goals:
-
         # only create a legal_ground if it's not empty string and valid, otherwise make it None.
         legal_ground = (
             None
@@ -152,7 +151,6 @@ def get_center_coordinates(postcode: str, house_number: Union[int, str]) -> Poin
     url = get_address_url(data['results'][0]['naam'], house_number)
 
     while url is not None:
-
         data = requests.get(url).json()
         if not data.get('results'):
             break
@@ -163,7 +161,6 @@ def get_center_coordinates(postcode: str, house_number: Union[int, str]) -> Poin
         # want
         postcode_normalized = normalize_postcode(postcode)
         for result in data['results']:
-
             if 'centroid' not in result:
                 raise ValidationError(postcode, house_number)
 
