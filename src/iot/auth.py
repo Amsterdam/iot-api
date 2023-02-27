@@ -20,7 +20,6 @@ class OIDCAuthenticationBackend(keycloak_oidc.auth.OIDCAuthenticationBackend):
         will be removed from the user.
         """
         with transaction.atomic():
-
             user.groups.clear()
             user.is_staff = False
             user.is_superuser = False
