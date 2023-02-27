@@ -272,9 +272,7 @@ if AZURE_INSTRUMENTATION_KEY:
     OPENCENSUS = {
         'TRACE': {
             'SAMPLER': 'opencensus.trace.samplers.ProbabilitySampler(rate=1.0)',
-            'EXPORTER': 'opencensus.ext.azure.trace_exporter.AzureExporter(connection_string='
-            + AZURE_INSTRUMENTATION_KEY
-            + ')',  # noqa: E501
+            'EXPORTER': f"opencensus.ext.azure.trace_exporter.AzureExporter(connection_string='{AZURE_INSTRUMENTATION_KEY}')",
         }
     }
     LOGGING['handlers']['azure'] = {
@@ -283,6 +281,7 @@ if AZURE_INSTRUMENTATION_KEY:
         'connection_string': AZURE_INSTRUMENTATION_KEY,
         'formatter': 'timestamp',
     }
+    LOGGING['root']['handlers'] = ['azure', 'console']
 
 
 # Django REST framework settings
