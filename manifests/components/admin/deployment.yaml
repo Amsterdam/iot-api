@@ -37,8 +37,6 @@ spec:
           envFrom:
             - configMapRef:
                 name: admin-env
-            - secretRef:
-                name: app-secrets
           volumeMounts:
             - name: tmp
               mountPath: /tmp
