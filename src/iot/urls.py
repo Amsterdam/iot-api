@@ -7,7 +7,7 @@ from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 from rest_framework.routers import DefaultRouter
 
-from . import views
+from . import auth, views
 
 urlpatterns = [
     # path(r'', views.PingView.as_view(), name='ping'),
@@ -62,7 +62,7 @@ if settings.API_ENABLED:
 if settings.ADMIN_ENABLED:
     urlpatterns.extend(
         [
-            # path('admin/login/', auth.oidc_login),
+            path('admin/login/', auth.oidc_login),
             path(settings.ADMIN_PATH, admin.site.urls),
             path(r'oidc/', include('mozilla_django_oidc.urls')),
         ]

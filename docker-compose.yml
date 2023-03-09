@@ -21,7 +21,7 @@ x-app: &base-app
     SENTRY_DSN:
     OIDC_RP_CLIENT_ID:
     OIDC_RP_CLIENT_SECRET:
-    AZURE_KEY_VAULT: https://application-o-gp4jqffo3h.vault.azure.net/
+    AZURE_KEY_VAULT: https://ssr-o-gp4jqffo3heda.vault.azure.net/
     DATABASE_HOST: application-o-gp4jqffo3h.postgres.database.azure.com
     DATABASE_USER: EM4W-SSR-o-db-writer
     DATABASE_NAME: main
@@ -64,6 +64,9 @@ services:
     build:
       context: .
       target: dev
+    environment:
+      <<: *base-app-env
+      DJANGO_SETTINGS_MODULE: "iot.settings.settings"
     command: "./manage.py runserver 0.0.0.0:8000"
 
   test:

@@ -52,32 +52,21 @@ API_PATH = make_url_path(azure.settings.get('API_PATH', 'api'))
 ADMIN_ENABLED = azure.settings.get('ADMIN_ENABLED', 'false').lower() == 'true'
 ADMIN_PATH = make_url_path(azure.settings.get('ADMIN_PATH', 'admin'))
 
-## KEYCLOAK ##
-# External identity provider settings (Keycloak)
+## OpenId Connect settings ##
+LOGIN_URL = 'oidc_authentication_init'
 LOGIN_REDIRECT_URL = "/admin/"
+LOGOUT_REDIRECT_URL = "/api/"
+LOGIN_REDIRECT_URL_FAILURE = '/static/403.html'
 
-OIDC_DEFAULT_URL = (
-    'https://iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect'
-)
-
+OIDC_BASE_URL = azure.settings.get('OIDC_BASE_URL')
 OIDC_RP_CLIENT_ID = azure.settings.get('OIDC_RP_CLIENT_ID')
 OIDC_RP_CLIENT_SECRET = azure.settings.get('OIDC_RP_CLIENT_SECRET')
-OIDC_OP_AUTHORIZATION_ENDPOINT = azure.settings.get(
-    'OIDC_OP_AUTHORIZATION_ENDPOINT', f'{OIDC_DEFAULT_URL}/auth'
-)
-OIDC_OP_TOKEN_ENDPOINT = azure.settings.get(
-    'OIDC_OP_TOKEN_ENDPOINT', f'{OIDC_DEFAULT_URL}/token'
-)
-OIDC_OP_USER_ENDPOINT = azure.settings.get(
-    'OIDC_OP_USER_ENDPOINT', f'{OIDC_DEFAULT_URL}/userinfo'
-)
-OIDC_OP_JWKS_ENDPOINT = azure.settings.get(
-    'OIDC_OP_JWKS_ENDPOINT', f'{OIDC_DEFAULT_URL}/certs'
-)
-OIDC_OP_LOGOUT_ENDPOINT = LOGOUT_REDIRECT_URL = azure.settings.get(
-    'OIDC_OP_LOGOUT_ENDPOINT', f'{OIDC_DEFAULT_URL}/logout'
-)
-LOGIN_REDIRECT_URL_FAILURE = '/static/403.html'
+OIDC_OP_AUTHORIZATION_ENDPOINT = f'{OIDC_BASE_URL}/oauth2/v2.0/authorize'
+OIDC_OP_TOKEN_ENDPOINT = f'{OIDC_BASE_URL}/oauth2/v2.0/token'
+OIDC_OP_USER_ENDPOINT = 'https://graph.microsoft.com/oidc/userinfo'
+OIDC_OP_JWKS_ENDPOINT = f'{OIDC_BASE_URL}/discovery/v2.0/keys'
+OIDC_OP_LOGOUT_ENDPOINT = f'{OIDC_BASE_URL}/oauth2/v2.0/logout'
+OIDC_RP_SIGN_ALGO = 'RS256'
 
 # APP CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -148,7 +137,7 @@ if DEBUG:
     # ]
 
 AUTHENTICATION_BACKENDS = [
-    'mozilla_django_oidc.auth.OIDCAuthenticationBackend',
+    'iot.auth.OIDCAuthenticationBackend',
 ]
 
 SENSOR_REGISTER_ADMIN_ROLE_NAME = azure.settings.get(
@@ -252,12 +241,10 @@ LOGGING = {
     },
     'loggers': {
         'iot': {
-            'level': 'WARNING',
-            'handlers': ['console'],
+            'level': 'INFO',
             'propagate': True,
         },
         'django': {
-            'handlers': ['console'],
             'level': azure.settings.get(
                 'DJANGO_LOG_LEVEL', 'ERROR' if 'pytest' in sys.argv[0] else 'INFO'
             ).upper(),
@@ -292,7 +279,6 @@ REST_FRAMEWORK = dict(
     UNAUTHENTICATED_TOKEN={},
     DEFAULT_AUTHENTICATION_CLASSES=(
         'mozilla_django_oidc.contrib.drf.OIDCAuthentication',
-        # 'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ),
     DEFAULT_PAGINATION_CLASS=('datapunt_api.pagination.HALPagination',),
