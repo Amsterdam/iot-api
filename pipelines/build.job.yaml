@@ -1,0 +1,15 @@
+parameters:
+  # Registry to push
+  - name: registry
+    type: string
+
+  # connection
+  - name: serviceConnection
+    type: string
+
+jobs:
+  - job: build
+    displayName: build job
+    steps:
+      - script: echo $(foo)
+        displayName: build step

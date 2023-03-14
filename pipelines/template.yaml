@@ -1,0 +1,25 @@
+trigger:
+  batch: true
+  branches:
+    include:
+      - main
+  tags:
+    include:
+      - "*.*.*"
+
+parameters:
+  # connection
+  - name: serviceConnection
+    type: string
+
+  - name: registry
+    default: saks01weuacrpgpgo5qvmwo.azurecr.io
+
+variables:
+  foo: bar
+
+stages:
+  - stage: dev
+    jobs:
+      - template: build.job.yaml
+      - template: deploy.job.yaml
