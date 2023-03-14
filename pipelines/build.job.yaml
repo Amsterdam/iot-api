@@ -32,4 +32,8 @@ jobs:
     pool: ${{ parameters.pool }}
     displayName: Build
     steps:
+      - script: |
+          az login --identity
+          az acr login -n $(REGISTRY)
+
       - ${{ parameters.steps }}
