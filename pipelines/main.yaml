@@ -23,6 +23,7 @@ extends:
         steps:
           - script: make test
           - script: make build
+          - script: make build
       deploy:
         pool: TAMM
     test:

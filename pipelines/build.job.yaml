@@ -38,6 +38,8 @@ jobs:
       version: $(Build.SourceVersion)
     steps:
       - script: env | sort
+
+      # Login using the local system identity
       - script: |
           az login --identity
           az acr login -n $(REGISTRY)
