@@ -17,20 +17,20 @@ parameters:
 jobs:
   - template: build.job.yaml
     parameters:
-      name: build
+      # Base params
       serviceConnection: ${{ parameters.serviceConnection }}
       registry: ${{ parameters.registry }}
 
-      ${{ if parameters.build.pool }}:
-        pool: ${{ parameters.build.pool }}
+      # Overwrite with user params
+      ${{ insert }}: ${{ parameters.build }}
 
   - template: deploy.job.yaml
     parameters:
-      name: deploy
+      # Base params
       serviceConnection: ${{ parameters.serviceConnection }}
       registry: ${{ parameters.registry }}
 
-      dependsOn: build
+      # Overwrite with user params
+      ${{ insert }}: ${{ parameters.deploy }}
 
-      ${{ if parameters.deploy.pool }}:
-        pool: ${{ parameters.deploy.pool }}
+      dependsOn: build

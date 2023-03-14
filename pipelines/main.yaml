@@ -20,7 +20,9 @@ extends:
     dev:
       serviceConnection: ARM-CCC-SSR-ont-01
       build:
-        pool: ContainerBuilder
+        steps:
+          - script: make test
+          - script: make build
       deploy:
         pool: TAMM
     test:

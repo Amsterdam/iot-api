@@ -2,6 +2,7 @@ parameters:
   # job name
   - name: name
     type: string
+    default: build
 
   # Container registry to work with
   - name: registry
@@ -14,13 +15,16 @@ parameters:
   # Agent pool to use
   - name: pool
     type: object
-    # default: ContainerBuilder
-    default:
-      vmImage: ubuntu-latest
+    default: ContainerBuilder
 
   - name: dependsOn
     type: object
     default: []
+
+  - name: steps
+    type: object
+    default:
+      - script: make test
 
 jobs:
   - job: ${{ parameters.name }}
@@ -28,5 +32,4 @@ jobs:
     pool: ${{ parameters.pool }}
     displayName: Build
     steps:
-      - script: echo build
-        displayName: build step
+      - ${{ parameters.steps }}

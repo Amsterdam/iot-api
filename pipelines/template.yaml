@@ -12,14 +12,10 @@ stages:
     jobs:
       - template: template.stage.yaml
         parameters:
-          serviceConnection: ${{ parameters.dev.serviceConnection }}
-          build: ${{ parameters.dev.build }}
-          deploy: ${{ parameters.dev.deploy }}
+          ${{ insert }}: ${{ parameters.dev }}
 
   - stage: test
     jobs:
       - template: template.stage.yaml
         parameters:
-          serviceConnection: ${{ parameters.test.serviceConnection }}
-          build: ${{ parameters.test.build }}
-          deploy: ${{ parameters.test.deploy }}
+          ${{ insert }}: ${{ parameters.test }}

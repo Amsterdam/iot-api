@@ -2,6 +2,7 @@ parameters:
   # job name
   - name: name
     type: string
+    default: deploy
 
   # Container registry to work with
   - name: registry
@@ -21,11 +22,14 @@ parameters:
     type: object
     default: []
 
+  - name: steps
+    type: object
+    default: []
+
 jobs:
   - job: ${{ parameters.name }}
     dependsOn: ${{ parameters.dependsOn }}
     pool: ${{ parameters.pool }}
     displayName: Deploy
     steps:
-      - script: echo deploy
-        displayName: deploy step
+      - ${{ parameters.steps }}
