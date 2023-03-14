@@ -74,7 +74,7 @@ test: lint                          ## Execute tests
 qa: lint test                      ## Execute all QA tools
 
 pdb:
-	$(run) test pytest /app/tests/$(APP) --pdb $(ARGS)
+	$(run) test pytest /app/tests/$(APP) --pdb --pdbcls=IPython.terminal.debugger:TerminalPdb $(ARGS)
 
 clean:                              ## Clean docker stuff
 	$(dc) down -v --remove-orphans
