@@ -17,8 +17,13 @@ parameters:
     default:
       vmImage: ubuntu-latest
 
+  - name: dependsOn
+    type: object
+    default: []
+
 jobs:
   - job: ${{ parameters.name }}
+    dependsOn: ${{ parameters.dependsOn }}
     pool: ${{ parameters.pool }}
     displayName: Deploy
     steps:

@@ -30,5 +30,7 @@ jobs:
       serviceConnection: ${{ parameters.serviceConnection }}
       registry: ${{ parameters.registry }}
 
+      dependsOn: build
+
       ${{ if parameters.deploy.pool }}:
         pool: ${{ parameters.deploy.pool }}
