@@ -186,7 +186,7 @@ DATABASES = {
         "HOST": DATABASE_HOST,
         "CONN_MAX_AGE": 20,
         "PORT": DATABASE_PORT,
-        'OPTIONS': {'sslmode': 'allow'},
+        'OPTIONS': {'sslmode': 'allow', 'connect_timeout': 5},
     },
 }
 
