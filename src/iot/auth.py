@@ -16,12 +16,7 @@ def oidc_login(request, **kwargs):
 class OIDCAuthenticationBackend(mozilla_django_oidc.auth.OIDCAuthenticationBackend):
     def create_user(self, claims):
         user = super(OIDCAuthenticationBackend, self).create_user(claims)
-
-        user.first_name = claims.get('given_name', '')
-        user.last_name = claims.get('family_name', '')
-        user.save()
-        self.update_groups(user, claims)
-        return user
+        return self.update_user(user, claims)
 
     def update_user(self, user, claims):
         user.first_name = claims.get('given_name', '')
