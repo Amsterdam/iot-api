@@ -25,13 +25,19 @@ parameters:
     type: object
     default:
       - script: make test
+      - script: make build
+      - script: make push
 
 jobs:
   - job: ${{ parameters.name }}
     dependsOn: ${{ parameters.dependsOn }}
     pool: ${{ parameters.pool }}
     displayName: Build
+    variables:
+      registry: ${{ parameters.registry }}
+      version: $(Build.SourceVersion)
     steps:
+      - script: env | sort
       - script: |
           az login --identity
           az acr login -n $(REGISTRY)
