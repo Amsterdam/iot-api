@@ -1,32 +1,25 @@
-trigger:
-  batch: true
-  branches:
-    include:
-      - main
-  tags:
-    include:
-      - "*.*.*"
-
 parameters:
-  # connection
-  - name: serviceConnection
-    type: string
+  - name: dev
+    type: object
+    default: {}
 
-  - name: registry
-    default: saks01weuacrpgpgo5qvmwo.azurecr.io
-
-variables:
-  - name: foo
-    value: bar
+  - name: test
+    type: object
+    default: {}
 
 stages:
   - stage: dev
     jobs:
-      - template: build.job.yaml
+      - template: template.stage.yaml
         parameters:
-          serviceConnection: ${{ parameters.serviceConnection }}
-          registry: ${{ parameters.registry }}
-      - template: deploy.job.yaml
+          serviceConnection: ${{ parameters.dev.serviceConnection }}
+          build: ${{ parameters.dev.build }}
+          deploy: ${{ parameters.dev.deploy }}
+
+  - stage: test
+    jobs:
+      - template: template.stage.yaml
         parameters:
-          serviceConnection: ${{ parameters.serviceConnection }}
-          registry: ${{ parameters.registry }}
+          serviceConnection: ${{ parameters.test.serviceConnection }}
+          build: ${{ parameters.test.build }}
+          deploy: ${{ parameters.test.deploy }}

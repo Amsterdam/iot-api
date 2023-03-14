@@ -1,15 +1,27 @@
 parameters:
-  # Registry to push
+  # job name
+  - name: name
+    type: string
+
+  # Container registry to work with
   - name: registry
     type: string
 
-  # connection
+  # Service connection to talk to azure
   - name: serviceConnection
     type: string
 
+  # Agent pool to use
+  - name: pool
+    type: object
+    # default: ContainerBuilder
+    default:
+      vmImage: ubuntu-latest
+
 jobs:
-  - job: build
-    displayName: build job
+  - job: ${{ parameters.name }}
+    pool: ${{ parameters.pool }}
+    displayName: Build
     steps:
-      - script: echo $(foo)
+      - script: echo build
         displayName: build step

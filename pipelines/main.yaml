@@ -5,22 +5,26 @@ resources:
       name: mobiliteit/templates
       ref: main
 
-# trigger:
-#   batch: true
-#   branches:
-#     include:
-#       - main
-#   tags:
-#     include:
-#       - "*.*.*"
-
-variables:
-  System.Debug: false
+trigger:
+  batch: true
+  branches:
+    include:
+      - main
+  tags:
+    include:
+      - "*.*.*"
 
 extends:
   template: template.yaml
   parameters:
-    serviceConnection: ARM-CCC-SSR-ont-01
+    dev:
+      serviceConnection: ARM-CCC-SSR-ont-01
+      build:
+        pool: ContainerBuilder
+      deploy:
+        pool: TAMM
+    test:
+      serviceConnection: ARM-CCC-SSR-test-01
 # stages:
 #   - stage: dev
 #     jobs:
