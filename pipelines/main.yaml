@@ -29,6 +29,13 @@ extends:
         pool: TAMM
         namespace: ns-ccc-ssr-ont-01-sensorenregister
         kubernetesServiceConnection: "SCN-K8S-O-SSR"
+        steps:
+          - script: kubectl get pod
+          - script: make manifests > generated.yaml
+            env:
+              ENV: dev
+          - script: cat generated.yaml
+          - script: kubectl apply -f generated.yaml
     test:
       serviceConnection: ARM-CCC-SSR-test-01
       deploy:

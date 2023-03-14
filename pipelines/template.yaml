@@ -13,9 +13,11 @@ stages:
       - template: template.stage.yaml
         parameters:
           ${{ insert }}: ${{ parameters.dev }}
+          environment: dev
 
   - stage: test
     jobs:
       - template: template.stage.yaml
         parameters:
           ${{ insert }}: ${{ parameters.test }}
+          environment: test

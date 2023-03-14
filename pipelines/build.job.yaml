@@ -17,6 +17,13 @@ parameters:
     type: object
     default: ContainerBuilder
 
+  - name: variables
+    type: object
+    default: {}
+
+  - name: environment
+    type: string
+
   - name: dependsOn
     type: object
     default: []
@@ -36,6 +43,7 @@ jobs:
     variables:
       registry: ${{ parameters.registry }}
       version: $(Build.SourceVersion)
+      ${{ insert }}: ${{ parameters.variables}}
     steps:
       - script: env | sort
 

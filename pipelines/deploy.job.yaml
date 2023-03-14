@@ -26,20 +26,30 @@ parameters:
     default:
       vmImage: ubuntu-latest
 
+  - name: variables
+    type: object
+    default: {}
+
+  - name: environment
+    type: string
+
   - name: dependsOn
     type: object
     default: []
 
   - name: steps
     type: object
-    default:
-      - script: kubectl get pod
+    default: []
 
 jobs:
   - job: ${{ parameters.name }}
     dependsOn: ${{ parameters.dependsOn }}
     pool: ${{ parameters.pool }}
     displayName: Deploy
+    variables:
+      registry: ${{ parameters.registry }}
+      version: $(Build.SourceVersion)
+      ${{ insert }}: ${{ parameters.variables}}
     steps:
       - task: Kubernetes@1
         displayName: "login"
