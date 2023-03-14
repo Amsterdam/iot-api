@@ -71,10 +71,11 @@ class AzureAuth:
         return self._credential
 
     def get_credential(self):
+        credential = None
         client_id = os.getenv('MANAGED_IDENTITY_CLIENTID')
         if client_id:
             credential = ManagedIdentityCredential(client_id=client_id)
-        else:
+        elif os.isatty(0):
             account = subprocess.run(
                 shlex.split('az account show'),
                 check=False,
