@@ -1,10 +1,9 @@
+import mozilla_django_oidc.auth
 from django.conf import settings
 from django.contrib.auth.models import Group
 from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-
-import mozilla_django_oidc.auth
 
 
 def oidc_login(request, **kwargs):
@@ -45,4 +44,3 @@ class OIDCAuthenticationBackend(mozilla_django_oidc.auth.OIDCAuthenticationBacke
         if user and user.is_staff:
             return user
         return None
-

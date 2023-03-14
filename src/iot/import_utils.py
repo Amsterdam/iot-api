@@ -60,7 +60,6 @@ def get_center_coordinates(postcode: str, house_number: Union[int, str]) -> Poin
     url = get_address_url(data['results'][0]['naam'], house_number)
 
     while url is not None:
-
         data = requests.get(url).json()
         if not data.get('results'):
             break
@@ -71,7 +70,6 @@ def get_center_coordinates(postcode: str, house_number: Union[int, str]) -> Poin
         # want
         postcode_normalized = normalize_postcode(postcode)
         for result in data['results']:
-
             if 'centroid' not in result:
                 raise PostcodeSearchException(postcode, house_number)
 
@@ -335,7 +333,6 @@ def parse_iprox_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
         raise InvalidIproxFields(fields)
 
     for row_number, row in enumerate(Values(IPROX_FIELDS, row) for row in rows):
-
         # Don't process an empty row in the excel file
         referentienummer = row.get('Referentienummer') or ''
         if not referentienummer.strip():
@@ -354,7 +351,6 @@ def parse_iprox_xlsx(workbook: Workbook) -> Generator[SensorData, None, None]:
         reference = row['Referentienummer']
 
         for sensor_index in range(settings.IPROX_NUM_SENSORS):
-
             location_postcode = None
 
             if row['Locatie sensor'] == 'Vast':
@@ -823,7 +819,6 @@ def import_sensor(
         device.themes.add(theme)
 
     for observation_goal in sensor_data.observation_goals:
-
         # only create a legal_ground if it's not empty string and valid, otherwise make it None.
         legal_ground = (
             None

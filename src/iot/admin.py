@@ -31,7 +31,6 @@ class FileForm(forms.Form):
 
 @staff_member_required
 def import_xlsx_view(request, message_user, redirect_to):
-
     if request.method == "POST":
         file = request.FILES["selecteer_bestand"]
         num_created = 0
@@ -125,7 +124,6 @@ def send_messages_to_user(request, message_user, num_created, num_updated, error
 
 @admin.register(models.Device)
 class DeviceAdmin(LeafletGeoAdmin):
-
     change_list_template = "devices_change_list.html"
     list_display = (
         'reference',

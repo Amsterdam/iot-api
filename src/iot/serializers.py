@@ -13,7 +13,6 @@ class PersonSerializer(HALSerializer):
 
 
 class ObservationGoalSerializer(HALSerializer):
-
     legal_ground = serializers.StringRelatedField()
 
     class Meta:
@@ -22,7 +21,6 @@ class ObservationGoalSerializer(HALSerializer):
 
 
 class ProjectSerializer(HALSerializer):
-
     # converts the string list to a list.
     path = serializers.ListField(child=serializers.StringRelatedField())
 
