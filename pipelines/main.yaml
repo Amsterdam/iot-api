@@ -21,13 +21,20 @@ extends:
       serviceConnection: ARM-CCC-SSR-ont-01
       build:
         steps:
-          - script: make test
-          - script: make build
-          - script: make push
+          - script: ls
+          # - script: make test
+          # - script: make build
+          # - script: make push
       deploy:
         pool: TAMM
+        namespace: ns-ccc-ssr-ont-01-sensorenregister
+        kubernetesServiceConnection: "SCN-K8S-O-SSR"
     test:
       serviceConnection: ARM-CCC-SSR-test-01
+      deploy:
+        pool: TAMM
+        namespace: ns-ccc-ssr-test-01-sensorenregister
+        kubernetesServiceConnection: "SCN-K8S-O-SSR"
 # stages:
 #   - stage: dev
 #     jobs:

@@ -12,6 +12,14 @@ parameters:
   - name: serviceConnection
     type: string
 
+  # Service connection to talk to kubernetes
+  - name: kubernetesServiceConnection
+    type: string
+
+  # Kubernetes namespace to use
+  - name: namespace
+    type: string
+
   # Agent pool to use
   - name: pool
     type: object
@@ -24,7 +32,8 @@ parameters:
 
   - name: steps
     type: object
-    default: []
+    default:
+      - script: kubectl get pod
 
 jobs:
   - job: ${{ parameters.name }}
@@ -32,4 +41,28 @@ jobs:
     pool: ${{ parameters.pool }}
     displayName: Deploy
     steps:
+      - task: Kubernetes@1
+        displayName: "login"
+        inputs:
+          connectionType: "Kubernetes Service Connection"
+          kubernetesServiceEndpoint: ${{ parameters.kubernetesServiceConnection }}
+          namespace: ${{ parameters.namespace }}
+          command: "login"
+
+      - script: |
+          kubectl config set-context deploy --namespace=${{ parameters.namespace }}
+          kubectl config use-context deploy
+          kubectl config view
+
+      # - script: kubectl config view
+      # - script: kubectl config set-context --current --namespace=${{ parameters.namespace }}
       - ${{ parameters.steps }}
+
+      - task: Kubernetes@1
+        displayName: "get pods"
+        inputs:
+          connectionType: "Kubernetes Service Connection"
+          kubernetesServiceEndpoint: ${{ parameters.kubernetesServiceConnection }}
+          namespace: ${{ parameters.namespace }}
+          command: "get"
+          arguments: "pods"
