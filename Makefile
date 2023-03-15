@@ -11,6 +11,7 @@ manage = $(run) dev python manage.py
 pytest = $(run) test pytest $(ARGS)
 
 ENV ?= local
+manifests = kustomize build manifests/overlays/${ENV}
 
 help:                               ## Show this help.
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
@@ -43,13 +44,20 @@ push: build
 	$(dc) push
 
 deploy:
-	kustomize build manifests/overlays/${ENV} | kubectl apply -f -
+	# Print for debugging purpose
+	$(manifests)
+	# Validate it works with a dry run
+	$(manifests) | kubectl apply --dry-run -f -
+	# Delete immutable job
+	kubectl delete job -l component=migrate
+	# Apply the new manifest
+	$(manifests) | kubectl apply -f -
 
 undeploy:
-	kustomize build manifests/overlays/${ENV} | kubectl delete -f -
+	$(manifests) | kubectl delete -f -
 
 manifests:
-	@kustomize build manifests/overlays/${ENV}
+	@$(manifests)
 
 app:
 	$(run) --service-ports app
