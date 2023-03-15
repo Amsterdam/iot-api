@@ -19,12 +19,11 @@ extends:
   parameters:
     dev:
       serviceConnection: ARM-CCC-SSR-ont-01
-      build:
-        steps:
-          - script: ls
-          # - script: make test
-          # - script: make build
-          # - script: make push
+      # build:
+      # steps:
+      # - script: make test
+      # - script: make build
+      # - script: make push
       deploy:
         pool: TAMM
         namespace: ns-ccc-ssr-ont-01-sensorenregister
