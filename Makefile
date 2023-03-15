@@ -49,7 +49,7 @@ undeploy:
 	kustomize build manifests/overlays/${ENV} | kubectl delete -f -
 
 manifests:
-	kustomize build manifests/overlays/${ENV}
+	@kustomize build manifests/overlays/${ENV}
 
 app:
 	$(run) --service-ports app
