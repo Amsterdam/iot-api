@@ -49,6 +49,7 @@ jobs:
     variables:
       registry: ${{ parameters.registry }}
       version: $(Build.SourceVersion)
+      env: ${{ parameters.environment }}
       ${{ insert }}: ${{ parameters.variables}}
     steps:
       - task: Kubernetes@1

@@ -32,8 +32,6 @@ extends:
         steps:
           - script: kubectl get pod
           - script: make manifests > generated.yaml
-            env:
-              ENV: dev
           - script: cat generated.yaml
           - script: kubectl apply -f generated.yaml
     test:

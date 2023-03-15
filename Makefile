@@ -10,7 +10,7 @@ run = $(dc) run --rm -u ${UID}:${GID}
 manage = $(run) dev python manage.py
 pytest = $(run) test pytest $(ARGS)
 
-ENV = local
+ENV ?= local
 
 help:                               ## Show this help.
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
