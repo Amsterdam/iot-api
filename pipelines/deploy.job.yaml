@@ -39,7 +39,17 @@ parameters:
 
   - name: steps
     type: object
-    default: []
+    default:
+      - script: make deploy
+        displayName: make deploy
+      - script: kubectl get all
+        displayName: kubectl get all
+      - script: kubectl describe all
+        displayName: kubectl describe all
+      - script: kubectl get ingress
+        displayName: kubectl get ingress
+      - script: kubectl describe ingress
+        displayName: kubectl describe ingress
 
 jobs:
   - job: ${{ parameters.name }}
@@ -63,17 +73,5 @@ jobs:
       - script: |
           kubectl config set-context deploy --namespace=${{ parameters.namespace }}
           kubectl config use-context deploy
-          kubectl config view
 
-      # - script: kubectl config view
-      # - script: kubectl config set-context --current --namespace=${{ parameters.namespace }}
       - ${{ parameters.steps }}
-
-      - task: Kubernetes@1
-        displayName: "get pods"
-        inputs:
-          connectionType: "Kubernetes Service Connection"
-          kubernetesServiceEndpoint: ${{ parameters.kubernetesServiceConnection }}
-          namespace: ${{ parameters.namespace }}
-          command: "get"
-          arguments: "pods"
