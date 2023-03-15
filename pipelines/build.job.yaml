@@ -28,6 +28,12 @@ parameters:
     type: object
     default: []
 
+  - name: preSteps
+    type: object
+    default:
+      - script: env | sort
+        displayName: Show ENV vars
+
   - name: steps
     type: object
     default:
@@ -37,6 +43,10 @@ parameters:
         displayName: make build
       - script: make push
         displayName: make push
+
+  - name: postSteps
+    type: object
+    default: []
 
 jobs:
   - job: ${{ parameters.name }}
@@ -56,4 +66,12 @@ jobs:
           az login --identity
           az acr login -n $(REGISTRY)
 
+      - script: ""
+        displayName: -- preSteps --
+      - ${{ parameters.preSteps }}
+      - script: ""
+        displayName: -- steps --
       - ${{ parameters.steps }}
+      - script: ""
+        displayName: -- postSteps --
+      - ${{ parameters.postSteps }}

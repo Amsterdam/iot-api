@@ -37,11 +37,21 @@ parameters:
     type: object
     default: []
 
+  - name: preSteps
+    type: object
+    default:
+      - script: kubectl get all
+        displayName: kubectl get all
+
   - name: steps
     type: object
     default:
       - script: make deploy
         displayName: make deploy
+
+  - name: postSteps
+    type: object
+    default:
       - script: kubectl get all
         displayName: kubectl get all
       - script: kubectl describe all
@@ -77,4 +87,12 @@ jobs:
           kubectl config use-context deploy
         displayName: Setup kubectl
 
+      - script: ""
+        displayName: -- preSteps --
+      - ${{ parameters.preSteps }}
+      - script: ""
+        displayName: -- steps --
       - ${{ parameters.steps }}
+      - script: ""
+        displayName: -- postSteps --
+      - ${{ parameters.postSteps }}
