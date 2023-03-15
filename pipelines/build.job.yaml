@@ -57,9 +57,15 @@ jobs:
       registry: ${{ parameters.registry }}
       version: $(Build.SourceVersion)
       env: ${{ parameters.environment }}
-      ${{ insert }}: ${{ parameters.variables}}
     steps:
-      - script: env | sort
+      - pwsh: |
+          $json = '${{ convertToJson(parameters.variables) }}'
+          $vars = $json | ConvertFrom-Json -AsHashtable
+
+          foreach($var in $vars.GetEnumerator()) {
+            echo "##vso[task.setvariable variable=$($var.Name)]$($var.Value)"
+          }
+        displayName: Set variables
 
       # Login using the local system identity
       - script: |

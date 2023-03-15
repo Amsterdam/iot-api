@@ -14,17 +14,31 @@ trigger:
     include:
       - "*.*.*"
 
+variables:
+  # Debugging
+  System.Debug: false
+
 extends:
   template: template.yaml
   parameters:
     dev:
       serviceConnection: ARM-CCC-SSR-ont-01
-      # build:
-      # steps:
+      variables:
+        TEST_FOO: stage
+        TEST_VAR_STAGE: dev
+      build:
+        variables:
+          TEST_FOO: build
+          TEST_BUID_STAGE: dev
+        steps:
+          - script: ls
       # - script: make test
       # - script: make build
       # - script: make push
       deploy:
+        variables:
+          TEST_FOO: deploy
+          TEST_DEPLOY_STAGE: dev
         pool: TAMM
         namespace: ns-ccc-ssr-ont-01-sensorenregister
         kubernetesServiceConnection: "SCN-K8S-O-SSR"
@@ -33,9 +47,22 @@ extends:
         #       make deploy
     test:
       serviceConnection: ARM-CCC-SSR-test-01
+      variables:
+        TEST_FOO: stage
+        TEST_VAR_STAGE: test
+      build:
+        variables:
+          TEST_FOO: build
+          TEST_BUID_STAGE: test
+        steps:
+          - script: ls
       deploy:
+        variables:
+          TEST_FOO: deploy
+          TEST_DEPLOY_STAGE: test
+          ENV: dev
         pool: TAMM
-        namespace: ns-ccc-ssr-test-01-sensorenregister
+        namespace: ns-ccc-ssr-ont-01-sensorenregister
         kubernetesServiceConnection: "SCN-K8S-O-SSR"
 # stages:
 #   - stage: dev

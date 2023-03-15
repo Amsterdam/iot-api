@@ -72,8 +72,16 @@ jobs:
       registry: ${{ parameters.registry }}
       version: $(Build.SourceVersion)
       env: ${{ parameters.environment }}
-      ${{ insert }}: ${{ parameters.variables}}
     steps:
+      - pwsh: |
+          $json = '${{ convertToJson(parameters.variables) }}'
+          $vars = $json | ConvertFrom-Json -AsHashtable
+
+          foreach($var in $vars.GetEnumerator()) {
+            echo "##vso[task.setvariable variable=$($var.Name)]$($var.Value)"
+          }
+        displayName: Set variables
+
       - task: Kubernetes@1
         displayName: "login"
         inputs:

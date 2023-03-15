@@ -30,7 +30,6 @@ jobs:
       # Base params
       serviceConnection: ${{ parameters.serviceConnection }}
       registry: ${{ parameters.registry }}
-      variables: ${{ parameters.variables }}
 
       # Overwrite with user params
       ${{ insert }}: ${{ parameters.build }}
@@ -42,7 +41,6 @@ jobs:
       # Base params
       serviceConnection: ${{ parameters.serviceConnection }}
       registry: ${{ parameters.registry }}
-      variables: ${{ parameters.variables }}
 
       # Overwrite with user params
       ${{ insert }}: ${{ parameters.deploy }}

@@ -9,6 +9,8 @@ parameters:
 
 stages:
   - stage: dev
+    ${{ if parameters.dev.variables }}:
+      variables: ${{ parameters.dev.variables }}
     jobs:
       - template: template.stage.yaml
         parameters:
@@ -17,6 +19,8 @@ stages:
 
   - ${{ if parameters.test.serviceConnection }}:
       - stage: test
+        ${{ if parameters.test.variables }}:
+          variables: ${{ parameters.test.variables }}
         jobs:
           - template: template.stage.yaml
             parameters:
