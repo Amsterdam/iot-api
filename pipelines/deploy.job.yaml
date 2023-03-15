@@ -50,6 +50,8 @@ parameters:
         displayName: kubectl get ingress
       - script: kubectl describe ingress
         displayName: kubectl describe ingress
+      - script: timeout 10 kubectl get events -w
+        displayName: kubectl get events -w
 
 jobs:
   - job: ${{ parameters.name }}
