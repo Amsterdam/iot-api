@@ -31,12 +31,12 @@ extends:
         # steps:
         #   - script: |
         #       make deploy
-    # test:
-    #   serviceConnection: ARM-CCC-SSR-test-01
-    #   deploy:
-    #     pool: TAMM
-    #     namespace: ns-ccc-ssr-test-01-sensorenregister
-    #     kubernetesServiceConnection: "SCN-K8S-O-SSR"
+    test:
+      serviceConnection: ARM-CCC-SSR-test-01
+      deploy:
+        pool: TAMM
+        namespace: ns-ccc-ssr-test-01-sensorenregister
+        kubernetesServiceConnection: "SCN-K8S-O-SSR"
 # stages:
 #   - stage: dev
 #     jobs:
