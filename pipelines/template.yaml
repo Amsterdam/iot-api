@@ -15,9 +15,10 @@ stages:
           ${{ insert }}: ${{ parameters.dev }}
           environment: dev
 
-  - stage: test
-    jobs:
-      - template: template.stage.yaml
-        parameters:
-          ${{ insert }}: ${{ parameters.test }}
-          environment: test
+  - ${{ if parameters.test.serviceConnection }}:
+      - stage: test
+        jobs:
+          - template: template.stage.yaml
+            parameters:
+              ${{ insert }}: ${{ parameters.test }}
+              environment: test
