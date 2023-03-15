@@ -32,8 +32,11 @@ parameters:
     type: object
     default:
       - script: make test
+        displayName: make test
       - script: make build
+        displayName: make build
       - script: make push
+        displayName: make push
 
 jobs:
   - job: ${{ parameters.name }}

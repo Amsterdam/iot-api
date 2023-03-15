@@ -73,5 +73,6 @@ jobs:
       - script: |
           kubectl config set-context deploy --namespace=${{ parameters.namespace }}
           kubectl config use-context deploy
+        displayName: Setup kubectl
 
       - ${{ parameters.steps }}
