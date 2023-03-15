@@ -1,9 +1,9 @@
-resources:
-  repositories:
-    - repository: templates
-      type: git
-      name: mobiliteit/templates
-      ref: main
+# resources:
+#   repositories:
+#     - repository: templates
+#       type: git
+#       name: tamm/templates
+#       ref: main
 
 trigger:
   batch: true
