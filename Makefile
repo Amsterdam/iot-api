@@ -48,20 +48,28 @@ push: build
 	$(dc) push
 
 deploy:
+	# Modify some settings with environment values
+	pushd manifests/overlays/${ENV}; \
+	kustomize edit set image "*/sensorenregister/api=${REGISTRY}/${REPOSITORY}:${VERSION}";
+
+	# Generate the combined manifests
+	kustomize build manifests/overlays/${ENV} > generated.yaml;
+
 	# Print for debugging purpose
-	$(manifests)
+	cat generated.yaml
 	# Validate it works with a dry run
-	$(manifests) | kubectl apply --dry-run=client -f -
+	kubectl apply --dry-run=client -f generated.yaml
 	# Delete immutable job
 	kubectl delete job -l component=migrate
 	# Apply the new manifest
-	$(manifests) | kubectl apply -f -
-
-undeploy:
-	$(manifests) | kubectl delete -f -
+	# kubectl apply -f generated.yaml
 
 manifests:
-	@$(manifests)
+	pushd manifests/overlays/${ENV}; \
+	cp kustomization.yaml kustomization.yaml.bak; \
+	kustomize edit set image "*/sensorenregister/api=${REGISTRY}/${REPOSITORY}:${VERSION}"; \
+	kustomize build; \
+	mv kustomization.yaml.bak kustomization.yaml;
 
 app:
 	$(run) --service-ports app

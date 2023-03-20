@@ -1,42 +1,57 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
 resources:
-  - ../../base
+- ../../base
 
 components:
-  - ../../components/api
-  - ../../components/admin
-  - ../../components/database
+- ../../components/api
+- ../../components/admin
+- ../../components/database
 
 commonLabels:
-  team: cccssront01
   app: sensorenregister
   env: local
+  team: cccssront01
 
 buildMetadata:
-  - originAnnotations
+- originAnnotations
 
 patches:
-  - path: deployment.yaml
-  - path: admin/deployment.yaml
-  - path: migrate.job.yaml
+- path: deployment.yaml
+- path: admin/deployment.yaml
+- path: migrate.job.yaml
 
 configMapGenerator:
-  - name: api-env
-    behavior: merge
-    literals: &api-env
-      - DEBUG=true
-      - SECRET_KEY=dev
-      - DATABASE_HOST=database
-      - DATABASE_NAME=dev
-      - DATABASE_PASSWORD=dev
-      - DATABASE_PORT=5432
-      - DATABASE_USER=dev
-      - OIDC_RP_CLIENT_ID=dev
-      - OIDC_RP_CLIENT_SECRET=dev
-  - name: admin-env
-    behavior: merge
-    literals: *api-env
+- behavior: merge
+  literals:
+  - DEBUG=true
+  - SECRET_KEY=dev
+  - DATABASE_HOST=database
+  - DATABASE_NAME=dev
+  - DATABASE_PASSWORD=dev
+  - DATABASE_PORT=5432
+  - DATABASE_USER=dev
+  - OIDC_RP_CLIENT_ID=dev
+  - OIDC_RP_CLIENT_SECRET=dev
+  name: api-env
+- behavior: merge
+  literals:
+  - DEBUG=true
+  - SECRET_KEY=dev
+  - DATABASE_HOST=database
+  - DATABASE_NAME=dev
+  - DATABASE_PASSWORD=dev
+  - DATABASE_PORT=5432
+  - DATABASE_USER=dev
+  - OIDC_RP_CLIENT_ID=dev
+  - OIDC_RP_CLIENT_SECRET=dev
+  name: admin-env
 
 images:
-  - name: localhost:5001/sensorenregister/api
-    newName: localhost:5001/sensorenregister/api-dev
-    newTag: latest
+- name: '*/sensorenregister/api'
+  newName: localhost:5001/sensorenregister/api
+  newTag: latest
+- name: saks01weuacrpgpgo5qvmwo.azurecr.io/sensorenregister/api
+  newName: localhost:5001/sensorenregister/api
+  newTag: latest

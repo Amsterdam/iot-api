@@ -1,24 +1,26 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
+namespace: ns-ccc-ssr-ont-01-sensorenregister
+
 resources:
-- ../../base
+  - ../../base
 
 buildMetadata:
-- originAnnotations
+  - originAnnotations
 
 components:
-- ../../components/api
-- ../../components/admin
-- ../../components/keyvault
-- ../../components/network
+  - ../../components/api
+  - ../../components/admin
+  - ../../components/keyvault
+  - ../../components/network
 
 labels:
-- includeSelectors: true
-  pairs:
-    app: sensorenregister
-    env: dev
-    team: cccssront01
+  - includeSelectors: true
+    pairs:
+      app: sensorenregister
+      env: dev
+      team: cccssront01
 
 commonLabels:
   app: sensorenregister
@@ -26,76 +28,68 @@ commonLabels:
   team: cccssront01
 
 replicas:
-- count: 1
-  name: api
+  - count: 1
+    name: api
 
 configMapGenerator:
-- behavior: merge
-  literals:
-  - AZURE_KEY_VAULT=https://application-o-gp4jqffo3h.vault.azure.net/
-  - MANAGED_IDENTITY_CLIENTID=00d77036-c127-4b38-a581-f170b55d65f0
-  name: api-env
-- behavior: merge
-  literals:
-  - AZURE_KEY_VAULT=https://application-o-gp4jqffo3h.vault.azure.net/
-  - MANAGED_IDENTITY_CLIENTID=00d77036-c127-4b38-a581-f170b55d65f0
-  name: admin-env
-
-
-
-
+  - behavior: merge
+    literals:
+      - AZURE_KEY_VAULT=https://application-o-gp4jqffo3h.vault.azure.net/
+      - MANAGED_IDENTITY_CLIENTID=00d77036-c127-4b38-a581-f170b55d65f0
+    name: api-env
+  - behavior: merge
+    literals:
+      - AZURE_KEY_VAULT=https://application-o-gp4jqffo3h.vault.azure.net/
+      - MANAGED_IDENTITY_CLIENTID=00d77036-c127-4b38-a581-f170b55d65f0
+    name: admin-env
 
 patches:
-- path: secretproviderclass.yaml
-- patch: |-
-    - op: add
-      path: "/spec/template/spec/tolerations"
-      value:
-        - key: "cccssront01"
-          operator: "Equal"
-          value: "true"
-          effect: "NoSchedule"
-  target:
-    kind: Deployment
-- patch: "- op: add\n  path: \"/spec/rules/0/host\"\n  value: ssr-o.azure.amsterdam.nl\n-
-    op: replace\n  path: \"/spec/tls/0/hosts\"\n  value: \n    - ssr-o.azure.amsterdam.nl"
-  target:
-    kind: Ingress
-- patch: |-
-    - op: replace
-      path: "/spec/ingressClassName"
-      value: nginx-internal
-  target:
-    kind: Ingress
-    name: api
-- patch: |-
-    - op: replace
-      path: "/spec/ingressClassName"
-      value: nginx-internal
-  target:
-    kind: Ingress
-    name: admin
+  - path: secretproviderclass.yaml
+  - patch: |-
+      - op: add
+        path: "/spec/template/spec/tolerations"
+        value:
+          - key: "cccssront01"
+            operator: "Equal"
+            value: "true"
+            effect: "NoSchedule"
+    target:
+      kind: Deployment
+  - patch:
+      "- op: add\n  path: \"/spec/rules/0/host\"\n  value: ssr-o.azure.amsterdam.nl\n-
+      op: replace\n  path: \"/spec/tls/0/hosts\"\n  value: \n    - ssr-o.azure.amsterdam.nl"
+    target:
+      kind: Ingress
+  - patch: |-
+      - op: replace
+        path: "/spec/ingressClassName"
+        value: nginx-internal
+    target:
+      kind: Ingress
+      name: api
+  - patch: |-
+      - op: replace
+        path: "/spec/ingressClassName"
+        value: nginx-internal
+    target:
+      kind: Ingress
+      name: admin
 
 replacements:
-- source:
-    fieldPath: spec.template.spec.tolerations
-    kind: Deployment
-    name: api
-  targets:
-  - fieldPaths:
-    - spec.template.spec.tolerations
-    options:
-      create: true
-    select:
-      kind: Job
-  - fieldPaths:
-    - spec.jobTemplate.spec.template.spec.tolerations
-    options:
-      create: true
-    select:
-      kind: CronJob
-
-images:
-- name: localhost:5001/sensorenregister/api
-  newName: saks01weuacrpgpgo5qvmwo.azurecr.io/sensorenregister/api-dev
-  newTag: "1337"
+  - source:
+      fieldPath: spec.template.spec.tolerations
+      kind: Deployment
+      name: api
+    targets:
+      - fieldPaths:
+          - spec.template.spec.tolerations
+        options:
+          create: true
+        select:
+          kind: Job
+      - fieldPaths:
+          - spec.jobTemplate.spec.template.spec.tolerations
+        options:
+          create: true
+        select:
+          kind: CronJob
