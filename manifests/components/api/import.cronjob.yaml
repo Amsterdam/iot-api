@@ -6,6 +6,8 @@ metadata:
     component: import
 spec:
   schedule: "0 * * * *"
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 6
   jobTemplate:
     spec:
       template:
