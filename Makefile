@@ -13,6 +13,10 @@ pytest = $(run) test pytest $(ARGS)
 ENV ?= local
 manifests = kustomize build manifests/overlays/${ENV}
 
+REGISTRY ?= localhost:5001
+REPOSITORY ?= sensorenregister/api
+VERSION ?= latest
+
 help:                               ## Show this help.
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
@@ -47,7 +51,7 @@ deploy:
 	# Print for debugging purpose
 	$(manifests)
 	# Validate it works with a dry run
-	$(manifests) | kubectl apply --dry-run -f -
+	$(manifests) | kubectl apply --dry-run=client -f -
 	# Delete immutable job
 	kubectl delete job -l component=migrate
 	# Apply the new manifest

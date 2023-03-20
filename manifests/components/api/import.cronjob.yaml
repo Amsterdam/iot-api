@@ -18,7 +18,7 @@ spec:
           restartPolicy: Never
           containers:
             - name: main
-              image: localhost:5001/sensorenregister/api:latest
+              image: saks01weuacrpgpgo5qvmwo.azurecr.io/sensorenregister/api:latest
               imagePullPolicy: Always # IfNotPresent
               command:
                 - python
