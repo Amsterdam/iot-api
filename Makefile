@@ -49,7 +49,7 @@ push: build
 
 deploy:
 	# Modify some settings with environment values
-	pushd manifests/overlays/${ENV}; \
+	cd manifests/overlays/${ENV}; \
 	kustomize edit set image "*/sensorenregister/api=${REGISTRY}/${REPOSITORY}:${VERSION}";
 
 	# Generate the combined manifests
