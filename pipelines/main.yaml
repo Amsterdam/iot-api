@@ -18,8 +18,15 @@ variables:
   # Debugging
   System.Debug: false
 
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      name: tamm/templates
+      ref: main
+
 extends:
-  template: template.yaml
+  template: pipelines/aks/template.yaml@templates
   parameters:
     dev:
       serviceConnection: ARM-CCC-SSR-ont-01
