@@ -62,14 +62,7 @@ deploy:
 	# Delete immutable job
 	kubectl delete job -l component=migrate
 	# Apply the new manifest
-	# kubectl apply -f generated.yaml
-
-manifests:
-	pushd manifests/overlays/${ENV}; \
-	cp kustomization.yaml kustomization.yaml.bak; \
-	kustomize edit set image "*/sensorenregister/api=${REGISTRY}/${REPOSITORY}:${VERSION}"; \
-	kustomize build; \
-	mv kustomization.yaml.bak kustomization.yaml;
+	kubectl apply -f generated.yaml
 
 app:
 	$(run) --service-ports app
