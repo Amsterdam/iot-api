@@ -37,8 +37,8 @@ extends:
         variables:
           TEST_FOO: build
           TEST_BUID_STAGE: dev
-        steps:
-          - script: ls
+        # steps:
+        # - script: ls
       # - script: make test
       # - script: make build
       # - script: make push
