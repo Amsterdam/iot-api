@@ -55,9 +55,20 @@ patches:
             effect: "NoSchedule"
     target:
       kind: Deployment
-  - patch:
-      "- op: add\n  path: \"/spec/rules/0/host\"\n  value: ssr-o.azure.amsterdam.nl\n-
-      op: replace\n  path: \"/spec/tls/0/hosts\"\n  value: \n    - ssr-o.azure.amsterdam.nl"
+  # - patch: |-
+  #     - op: add
+  #       path: "/spec/rules/0/host"
+  #       value: ssr-o.azure.amsterdam.nl
+  #         - op: replace
+  #           path: "/spec/tls/0/hosts"
+  #           value:
+  #             - ssr-o.azure.amsterdam.nl"
+  #   target:
+  #     kind: Ingress
+  - patch: |-
+      - op: add
+        path: "/spec/rules/0/host"
+        value: ssr-o.azure.amsterdam.nl
     target:
       kind: Ingress
   - patch: |-
