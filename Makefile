@@ -50,10 +50,10 @@ push: build
 deploy:
 	kubectl delete job -l component=migrate
 	helm upgrade backend --install \
-		manifests/helm/application -f \
-		manifests/helm/application/values.yaml -f \
-		manifests/helm/values.yaml -f \
-		manifests/helm/env/${ENVIRONMENT}.yaml \
+		manifests/helm/application \
+		-f manifests/helm/application/values.yaml \
+		-f manifests/helm/values.yaml \
+		-f manifests/helm/env/${ENVIRONMENT}.yaml \
 		--set image.registry=${REGISTRY} \
 		--set image.repository=${REPOSITORY} \
 		--set image.tag=${VERSION} \

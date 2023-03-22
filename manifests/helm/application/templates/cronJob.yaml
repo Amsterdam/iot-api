@@ -35,6 +35,8 @@ spec:
 
           containers:
           - name: main
+            image: {{ list $image.registry $image.repository | join "/" }}:{{ $image.tag }}
+            imagePullPolicy: {{ $.Values.image.imagePullPolicy | default "IfNotPresent"}}
 
             {{- with .resources}}
             resources:
@@ -46,8 +48,6 @@ spec:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
 
-            image: {{ list $image.registry $image.repository | join "/" }}:{{ $image.tag }}
-            imagePullPolicy: {{ $.Values.image.imagePullPolicy | default "IfNotPresent"}}
 
             {{- $env := merge ($values.env | default dict) $.Values.env }}
             {{ if $env }}
@@ -66,11 +66,13 @@ spec:
               {{- end }}
             {{- end }}
 
+            {{- with .secrets }}
             volumeMounts:
-            {{- range .secrets }}
+            {{- range . }}
               - name: {{ . }}
                 mountPath: /mnt/secrets/{{ . | replace "-" "_" }}
                 readOnly: true
+            {{- end }}
             {{- end }}
 
           volumes:
