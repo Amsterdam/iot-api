@@ -9,7 +9,7 @@ trigger:
 
 variables:
   # Debugging
-  System.Debug: false
+  System.Debug: true
 
 resources:
   repositories:
@@ -24,7 +24,14 @@ extends:
     name: ssr-backend
     dev:
       serviceConnection: ARM-CCC-SSR-ont-01
+      variables:
+        TEST_OVERWRITE: dev
+      build:
+        variables:
+          TEST_OVERWRITE_JOB: build
       deploy:
+        variables:
+          TEST_OVERWRITE_JOB: deploy
         pool: TAMM
         namespace: ns-ccc-ssr-ont-01-sensorenregister
         kubernetesServiceConnection: "SCN-K8S-O-SSR"

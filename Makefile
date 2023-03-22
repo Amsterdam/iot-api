@@ -85,7 +85,7 @@ lint:                               ## Execute lint checks
 	$(run) test black --diff --check /app/src/$(APP) /app/tests/$(APP)
 
 test: lint                          ## Execute tests
-	$(run) test pytest /app/tests/$(APP) $(ARGS)
+	$(run) test pytest --junitxml=junit-results.xml --cov=. --cov-report=xml /app/tests/$(APP) $(ARGS)
 
 qa: lint test                      ## Execute all QA tools
 
