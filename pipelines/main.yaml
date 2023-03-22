@@ -21,7 +21,7 @@ resources:
 extends:
   template: pipelines/aks/template.yaml@templates
   parameters:
-    # name: ssr-backend
+    name: ssr-backend
     dev:
       serviceConnection: ARM-CCC-SSR-ont-01
       deploy:
