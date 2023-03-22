@@ -1,0 +1,42 @@
+# these values are overridden by pipeline-templates/deploy.yml but
+# these defaults are useful for debugging on minikube or kind
+name: my-cronjob
+identity: my-identity
+keyvaultName: root-keyvault
+tenantId: my-tenant
+
+image:
+  repository: "my-repository"
+  tag: "my-tag"
+
+env: {}
+
+secrets:
+  test:
+    keyvaultName: my-keyvault
+    secrets:
+      - my-little-secret
+  other:
+    secrets:
+      - my-other-secret
+
+cronJobs:
+  test:
+    image:
+      registry: "my-registry"
+      repository: "my-repository"
+      tag: "my-override"
+    enabled: true
+    schedule: "* * * * *"
+    secrets:
+      - test
+      - other
+
+deployments:
+  test:
+    enabled: true
+    env:
+      LOOP: True
+    secrets:
+      - test
+      - other

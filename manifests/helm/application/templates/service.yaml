@@ -1,0 +1,25 @@
+
+{{- $root := . -}}
+{{- $fullName := include "helm.fullname" $ -}}
+{{- $labels := include "helm.labels" $ -}}
+{{- $selectorLabels := include "helm.selectorLabels" $ -}}
+
+{{- range $manifestName, $values := $.Values.services }}
+{{- if ne $values.enabled false }}
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ $manifestName }}-{{ $fullName }}"
+  labels:
+    {{- $labels | nindent 4 }}
+spec:
+  type: {{ $values.type | default "ClusterIP" }}
+  ports: {{ $values.ports | toYaml | nindent 4 }}
+  selector: 
+    {{- $selectorLabels | nindent 4 }}
+    {{- $values.selector | toYaml | nindent 4 }}
+
+{{- end }}
+{{- end }}

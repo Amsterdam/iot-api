@@ -1,0 +1,17 @@
+name:
+identity:
+keyvaultName:
+tenantId:
+
+image:
+  registry:
+  repository:
+  tag: latest
+
+env: {}
+
+secrets: {}
+
+cronJobs: {}
+
+deployments: {}

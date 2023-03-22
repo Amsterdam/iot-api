@@ -1,0 +1,106 @@
+name: ssr
+# identity: my-identity
+keyVaultName: ssr-o-gp4jqffo3heda
+tenantId: 72fca1b1-2c2e-4376-a445-294d80196804
+keyVaultIdentity: 00d77036-c127-4b38-a581-f170b55d65f0
+
+image:
+  registry: saks01weuacrpgpgo5qvmwo.azurecr.io
+  repository: sensorenregister/api
+  tag: latest
+
+env: {}
+
+nodepool: cccssront01
+
+tolerations: []
+
+secrets:
+  certificate:
+    tls:
+      - sensorenregister
+  backend:
+    secrets:
+      - secret-key
+
+jobs:
+  migrate:
+    secrets:
+      - backend
+
+cronJobs:
+  import:
+    schedule: "0 * * * *"
+    secrets:
+      - backend
+
+deployments:
+  api:
+    labels:
+      component: api
+      foo: bar
+    env:
+      BASE_URL: /api
+      ADMIN_ENABLED: false
+      API_ENABLED: true
+      API_PATH: /
+    resources:
+      requests:
+        cpu: 1
+        memory: "512Mi"
+      limits:
+        cpu: 1
+        memory: "512Mi"
+    secrets:
+      - backend
+
+  admin:
+    labels:
+      component: api
+    env:
+      BASE_URL: /admin
+      ADMIN_ENABLED: true
+      API_ENABLED: false
+      ADMIN_PATH: /
+    ports:
+      - port: 80
+        name: http
+    secrets:
+      - backend
+
+services:
+  api:
+    selector:
+      component: api
+    ports:
+      - port: 80
+        targetPort: http
+  admin:
+    selector:
+      component: admin
+    ports:
+      - port: 80
+        targetPort: http
+
+ingress:
+  api:
+    className: nginx-external
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: /$2
+    paths:
+      - path: /api(/|$)(.*)
+        pathType: Prefix
+        service: api
+        port: 80
+    tls:
+      certificate: sensorenregister
+  admin:
+    className: nginx-internal
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: /$2
+    paths:
+      - path: /admin(/|$)(.*)
+        service: admin
+        port: 80
+    tls:
+      certificate: sensorenregister

@@ -1,0 +1,53 @@
+{{- $root := . -}}
+{{- $fullName := include "helm.fullname" $ -}}
+{{- $labels := include "helm.labels" $ -}}
+
+{{- range $manifestName, $values := $.Values.ingress }}
+{{- if ne $values.enabled false }}
+---
+
+{{/* {{- $svcPort := $values.service.port -}} */}}
+{{- if and .className (not (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion)) }}
+  {{- if not (hasKey .annotations "kubernetes.io/ingress.class") }}
+  {{- $_ := set .annotations "kubernetes.io/ingress.class" .className}}
+  {{- end }}
+{{- end }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: "{{ $manifestName }}-{{ $fullName }}"
+  labels:
+    {{- include "helm.labels" $root | nindent 4 }}
+  {{- with .annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  ingressClassName: {{ .className }}
+  {{- if .host }}
+  {{- with .tls }}
+  tls:
+    - hosts:
+        - {{ $values.host | quote }}
+      secretName: {{ .certificate }}
+  {{- end }}
+  {{- end }}
+  rules:
+    - {{ if .host -}}
+      host: {{ .host | quote }}
+      {{ end -}}
+      http:
+        paths:
+          {{- range .paths }}
+          - path: {{ .path }}
+            pathType: {{ .pathType | default "Prefix" }}
+            backend:
+              service:
+                name: {{ required "Ingress path needs a service" .service }}
+                port:
+                  number: {{ .port }}
+          {{- end }}
+
+{{- end }}
+{{- end }}
+

@@ -1,0 +1,103 @@
+{{- $fullName := include "helm.fullname" $ -}}
+{{- $labels := include "helm.labels" $ -}}
+{{- $selectorLabels := include "helm.selectorLabels" $ -}}
+
+{{- range $manifestName, $values := .Values.deployments }}
+{{- if ne .enabled false }}
+{{- $image := merge (.image | default dict) $.Values.image }}
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ $manifestName }}-{{ $fullName }}"
+  labels:
+    {{- $labels | nindent 4 }}
+    {{- with .labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  selector:
+    matchLabels:
+      {{- $selectorLabels | nindent 6 }}
+      {{- with .labels }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
+  template:
+    metadata:
+      labels:
+        {{- $selectorLabels | nindent 8 }}
+        {{- with .labels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        deployedAt: {{ now | unixEpoch | quote }}
+    spec:
+      tolerations:
+        - key: {{ $.Values.nodepool }}
+          operator: "Equal"
+          value: "true"
+          effect: "NoSchedule"
+        {{- with $.Values.tolerations }}
+        {{- . | toYaml | nindent 8 }}
+        {{- end }}
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+      restartPolicy: Always
+      containers:
+      - name: main
+
+        image: {{ list $image.registry $image.repository | join "/" }}:{{ $image.tag }}
+        imagePullPolicy: {{ $.Values.image.imagePullPolicy | default "IfNotPresent" }}
+
+        securityContext:
+          privileged: false
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+
+        {{- with .resources}}
+        resources:
+          {{- toYaml . | nindent 10}}
+        {{- end }}
+
+        {{- if .ports }}
+        ports:
+          {{- range .ports }}
+          - containerPort: {{ .port }}
+            name: {{ .name }}
+          {{- end }}
+        {{- end }}
+
+        env:
+          {{- $env := merge (.env | default dict) $.Values.env }}
+          {{- range $name, $value := $env }}
+          - name: {{ $name | upper | replace "-" "_" }}
+            value: {{ $value | quote }}
+          {{- end }}
+
+        {{- if .secrets }}
+        envFrom:
+          {{- range .secrets }}
+          - secretRef:
+              name: {{ . }}
+          {{- end }}
+        {{- end }}
+
+        volumeMounts:
+        {{- range .secrets }}
+          - name: {{ . }}
+            mountPath: /mnt/secrets/{{ . | replace "-" "_" }}
+            readOnly: true
+        {{- end }}
+
+      volumes:
+      {{- range .secrets }}
+        - name: {{ . }}
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: {{ . }}
+      {{- end }}
+{{- end }}
+{{- end }}
