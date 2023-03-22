@@ -17,8 +17,7 @@ tolerations: []
 
 secrets:
   certificate:
-    tls:
-      - sensorenregister
+    tls: sensorenregister
   backend:
     secrets:
       - secret-key
