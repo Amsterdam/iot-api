@@ -10,6 +10,7 @@ spec:
   failedJobsHistoryLimit: 6
   jobTemplate:
     spec:
+      backoffLimit: 5
       template:
         metadata:
           labels:

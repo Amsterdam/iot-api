@@ -5,7 +5,7 @@ metadata:
   labels:
     component: migrate
 spec:
-  backoffLimit: 15
+  backoffLimit: 5
   template:
     metadata:
       labels:
