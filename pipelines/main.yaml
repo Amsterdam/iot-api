@@ -1,10 +1,3 @@
-# resources:
-#   repositories:
-#     - repository: templates
-#       type: git
-#       name: tamm/templates
-#       ref: main
-
 trigger:
   batch: true
   branches:
@@ -28,45 +21,17 @@ resources:
 extends:
   template: pipelines/aks/template.yaml@templates
   parameters:
+    # name: ssr-backend
     dev:
       serviceConnection: ARM-CCC-SSR-ont-01
-      variables:
-        TEST_FOO: stage
-        TEST_VAR_STAGE: dev
-      build:
-        variables:
-          TEST_FOO: build
-          TEST_BUID_STAGE: dev
-        # steps:
-        # - script: ls
-      # - script: make test
-      # - script: make build
-      # - script: make push
       deploy:
-        variables:
-          TEST_FOO: deploy
-          TEST_DEPLOY_STAGE: dev
         pool: TAMM
         namespace: ns-ccc-ssr-ont-01-sensorenregister
         kubernetesServiceConnection: "SCN-K8S-O-SSR"
-        # steps:
-        #   - script: |
-        #       make deploy
     test:
       serviceConnection: ARM-CCC-SSR-test-01
-      variables:
-        TEST_FOO: stage
-        TEST_VAR_STAGE: test
-      build:
-        variables:
-          TEST_FOO: build
-          TEST_BUID_STAGE: test
-        steps:
-          - script: ls
       deploy:
         variables:
-          TEST_FOO: deploy
-          TEST_DEPLOY_STAGE: test
           ENV: dev
         pool: TAMM
         namespace: ns-ccc-ssr-ont-01-sensorenregister

@@ -10,8 +10,8 @@ run = $(dc) run --rm -u ${UID}:${GID}
 manage = $(run) dev python manage.py
 pytest = $(run) test pytest $(ARGS)
 
-ENV ?= local
-manifests = kustomize build manifests/overlays/${ENV}
+ENVIRONMENT ?= local
+manifests = kustomize build manifests/overlays/${ENVIRONMENT}
 
 REGISTRY ?= localhost:5001
 REPOSITORY ?= sensorenregister/api
@@ -49,11 +49,11 @@ push: build
 
 deploy:
 	# Modify some settings with environment values
-	cd manifests/overlays/${ENV}; \
+	cd manifests/overlays/${ENVIRONMENT}; \
 	kustomize edit set image "*/sensorenregister/api=${REGISTRY}/${REPOSITORY}:${VERSION}";
 
 	# Generate the combined manifests
-	kustomize build manifests/overlays/${ENV} > generated.yaml;
+	kustomize build manifests/overlays/${ENVIRONMENT} > generated.yaml;
 
 	# Print for debugging purpose
 	cat generated.yaml
