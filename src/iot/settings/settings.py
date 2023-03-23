@@ -13,8 +13,8 @@ azure = Azure(key_vault_url=os.getenv('AZURE_KEY_VAULT'))
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = azure.settings['SECRET_KEY']
-DEBUG = azure.settings.get('DEBUG', 'false').lower() == 'true'
+SECRET_KEY = os.environ['SECRET_KEY']
+DEBUG = os.getenv('DEBUG', 'false').lower() == 'true'
 
 ALLOWED_HOSTS = [
     'api.data.amsterdam.nl',
@@ -29,9 +29,7 @@ ALLOWED_HOSTS = [
 INTERNAL_IPS = ('127.0.0.1', '0.0.0.0')
 CORS_ORIGIN_ALLOW_ALL = True
 
-DATAPUNT_API_URL = azure.settings.get(
-    'DATAPUNT_API_URL', 'https://api.data.amsterdam.nl/'
-)
+DATAPUNT_API_URL = os.getenv('DATAPUNT_API_URL', 'https://api.data.amsterdam.nl/')
 
 # Django security settings
 SECURE_BROWSER_XSS_FILTER = True
@@ -47,11 +45,11 @@ def make_url_path(url_path):
     return (url_path.strip().strip('/') + '/').lstrip('/')
 
 
-API_ENABLED = azure.settings.get('API_ENABLED', 'true').lower() == 'true'
-API_PATH = make_url_path(azure.settings.get('API_PATH', 'api'))
+API_ENABLED = os.getenv('API_ENABLED', 'true').lower() == 'true'
+API_PATH = make_url_path(os.getenv('API_PATH', 'api'))
 
-ADMIN_ENABLED = azure.settings.get('ADMIN_ENABLED', 'false').lower() == 'true'
-ADMIN_PATH = make_url_path(azure.settings.get('ADMIN_PATH', 'admin'))
+ADMIN_ENABLED = os.getenv('ADMIN_ENABLED', 'false').lower() == 'true'
+ADMIN_PATH = make_url_path(os.getenv('ADMIN_PATH', 'admin'))
 
 ## OpenId Connect settings ##
 LOGIN_URL = 'oidc_authentication_init'
@@ -59,9 +57,9 @@ LOGIN_REDIRECT_URL = "/admin/"
 LOGOUT_REDIRECT_URL = "/api/"
 LOGIN_REDIRECT_URL_FAILURE = '/static/403.html'
 
-OIDC_BASE_URL = azure.settings.get('OIDC_BASE_URL')
-OIDC_RP_CLIENT_ID = azure.settings.get('OIDC_RP_CLIENT_ID')
-OIDC_RP_CLIENT_SECRET = azure.settings.get('OIDC_RP_CLIENT_SECRET')
+OIDC_BASE_URL = os.getenv('OIDC_BASE_URL')
+OIDC_RP_CLIENT_ID = os.getenv('OIDC_RP_CLIENT_ID')
+OIDC_RP_CLIENT_SECRET = os.getenv('OIDC_RP_CLIENT_SECRET')
 OIDC_OP_AUTHORIZATION_ENDPOINT = f'{OIDC_BASE_URL}/oauth2/v2.0/authorize'
 OIDC_OP_TOKEN_ENDPOINT = f'{OIDC_BASE_URL}/oauth2/v2.0/token'
 OIDC_OP_USER_ENDPOINT = 'https://graph.microsoft.com/oidc/userinfo'
@@ -141,9 +139,7 @@ AUTHENTICATION_BACKENDS = [
     'iot.auth.OIDCAuthenticationBackend',
 ]
 
-SENSOR_REGISTER_ADMIN_ROLE_NAME = azure.settings.get(
-    'SENSOR_REGISTER_ADMIN_ROLE_NAME', 'x'
-)
+SENSOR_REGISTER_ADMIN_ROLE_NAME = os.getenv('SENSOR_REGISTER_ADMIN_ROLE_NAME', 'x')
 
 ROOT_URLCONF = "iot.urls"
 WSGI_APPLICATION = "iot.wsgi.application"
@@ -167,11 +163,11 @@ TEMPLATES = [
 SHELL_PLUS_PRINT_SQL = True
 SHELL_PLUS_PRINT_SQL_TRUNCATE = 10_000
 
-DATABASE_HOST = azure.settings.get("DATABASE_HOST", "database")
-DATABASE_NAME = azure.settings.get("DATABASE_NAME", "dev")
-DATABASE_USER = azure.settings.get("DATABASE_USER", "dev")
-DATABASE_PASSWORD = azure.settings.get("DATABASE_PASSWORD", "dev")
-DATABASE_PORT = azure.settings.get("DATABASE_PORT", "5432")
+DATABASE_HOST = os.getenv("DATABASE_HOST", "database")
+DATABASE_NAME = os.getenv("DATABASE_NAME", "dev")
+DATABASE_USER = os.getenv("DATABASE_USER", "dev")
+DATABASE_PASSWORD = os.getenv("DATABASE_PASSWORD", "dev")
+DATABASE_PORT = os.getenv("DATABASE_PORT", "5432")
 
 
 if 'azure.com' in DATABASE_HOST:
@@ -199,7 +195,7 @@ USE_TZ = True
 
 # Network related
 # USE_X_FORWARDED_HOST = True
-BASE_URL = azure.settings.get('BASE_URL', '')
+BASE_URL = os.getenv('BASE_URL', '')
 FORCE_SCRIPT_NAME = BASE_URL
 
 
@@ -246,7 +242,7 @@ LOGGING = {
             'propagate': True,
         },
         'django': {
-            'level': azure.settings.get(
+            'level': os.getenv(
                 'DJANGO_LOG_LEVEL', 'ERROR' if 'pytest' in sys.argv[0] else 'INFO'
             ).upper(),
             'propagate': True,
@@ -254,7 +250,7 @@ LOGGING = {
     },
 }
 
-AZURE_INSTRUMENTATION_KEY = azure.settings.get('INSTRUMENTATION_KEY')
+AZURE_INSTRUMENTATION_KEY = os.getenv('INSTRUMENTATION_KEY')
 
 if AZURE_INSTRUMENTATION_KEY:
     OPENCENSUS = {
@@ -309,7 +305,7 @@ IPROX_NUM_SENSORS = 5
 IPROX_SEPARATOR = ';'
 
 # Sentry logging
-sentry_dsn = azure.settings.get('SENTRY_DSN')
+sentry_dsn = os.getenv('SENTRY_DSN')
 if sentry_dsn:
     sentry_sdk.init(
         dsn=sentry_dsn,

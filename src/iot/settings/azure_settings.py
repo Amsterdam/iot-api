@@ -72,7 +72,7 @@ class AzureAuth:
 
     def get_credential(self):
         credential = None
-        client_id = os.getenv('MANAGED_IDENTITY_CLIENTID')
+        client_id = os.getenv('AZURE_MANAGED_IDENTITY_CLIENTID')
         if client_id:
             credential = ManagedIdentityCredential(client_id=client_id)
         elif os.isatty(0):
@@ -90,6 +90,8 @@ class AzureAuth:
                 )
 
             credential = DefaultAzureCredential(managed_identity_client_id=None)
+        else:
+            raise Exception('cannot connect to azure')
 
         return credential
 

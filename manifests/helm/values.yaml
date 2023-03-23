@@ -11,7 +11,7 @@ image:
 
 env:
   AZURE_KEY_VAULT: "https://ssr-o-gp4jqffo3heda.vault.azure.net/"
-  MANAGED_IDENTITY_CLIENTID: 00d77036-c127-4b38-a581-f170b55d65f0
+  AZURE_MANAGED_IDENTITY_CLIENTID: 00d77036-c127-4b38-a581-f170b55d65f0
 
 nodepool: ""
 
