@@ -27,6 +27,19 @@ secrets:
       - database-user
 
 jobs:
+  certificate-init:
+    labels:
+      component: certificate
+    mountSecrets:
+      - certificate
+    command:
+      - bash
+    args:
+      - -c
+      - |
+        ls -lah /mnt/secrets
+        cat /mnt/secrets/**/*
+
   migrate:
     labels:
       component: migrate
@@ -35,9 +48,10 @@ jobs:
         mountPath: /tmp
         spec:
           emptyDir: {}
+    mountSecrets:
+      - certificate
     secrets:
       - backend
-      - certificate
     command:
       - python
       - manage.py

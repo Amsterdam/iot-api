@@ -93,13 +93,15 @@ Create the name of the service account to use
 Volumes
 */}}
 {{- define "pod.volumes" -}}
-{{- if or .secrets .volumes }}
+{{- $mountSecrets := .mountSecrets | default list }}
+{{- $secrets := concat (.secrets | default list) $mountSecrets }}
+{{- if or $secrets .volumes }}
 volumes:
 {{- range .volumes }}
   - name: {{ .name }}
     {{- toYaml .spec | nindent 4}}
 {{- end }}
-{{- range .secrets }}
+{{- range $secrets }}
   - name: {{ . }}
     csi:
       driver: secrets-store.csi.k8s.io
@@ -114,13 +116,15 @@ volumes:
 Volumes
 */}}
 {{- define "container.volumeMounts" -}}
-{{- if or .secrets .volumes }}
+{{- $mountSecrets := .mountSecrets | default list }}
+{{- $secrets := concat (.secrets | default list) $mountSecrets }}
+{{- if or $secrets .volumes }}
 volumeMounts:
 {{- range .volumes }}
   - name: {{ .name }}
     mountPath: {{ .mountPath }}
 {{- end }}
-{{- range .secrets }}
+{{- range $secrets }}
   - name: {{ . }}
     mountPath: /mnt/secrets/{{ . | replace "-" "_" }}
     readOnly: true
@@ -146,9 +150,9 @@ env:
 envFrom
 */}}
 {{- define "container.envFrom" -}}
-{{- if or .secrets }}
+{{- with .secrets }}
 envFrom:
-{{- range .secrets }}
+{{- range . }}
   - secretRef: 
       name: {{ . }}
 {{- end }}
@@ -229,5 +233,8 @@ container.command
 {{- define "container.command" -}}
 {{- with .command }}
 command: {{ toYaml . | nindent 2 }}
+{{- end }}
+{{- with .args }}
+args: {{ toYaml . | nindent 2 }}
 {{- end }}
 {{- end }}
