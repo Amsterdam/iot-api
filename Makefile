@@ -55,8 +55,8 @@ push: build
 	$(dc) push
 
 deploy: manifests
-	kubectl delete job -l component=migrate
-	@helm upgrade --install backend $(HELM_ARGS)
+	kubectl delete deploy,service,ingress,cronjob,job,cm,secretproviderclass --all
+	helm upgrade --install backend $(HELM_ARGS)
 
 manifests:
 	@helm template backend $(HELM_ARGS)
