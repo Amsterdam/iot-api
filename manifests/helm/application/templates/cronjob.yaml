@@ -3,6 +3,7 @@
 {{- range $manifestName, $values := $.Values.cronJobs }}
 {{- if ne .enabled false }}
 {{- $context := dict "local" . "root" $ -}}
+{{- $annotations := include "resource.annotations" $context }}
 {{- $labels := include "resource.labels" $context }}
 {{- $selectorLabels := include "resource.selectorLabels" $context }}
 ---
@@ -11,8 +12,10 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: "{{ $manifestName }}-{{ $fullName }}"
-  labels:
-    {{- $labels | nindent 4 }}
+  labels: {{ $labels | nindent 4 }}
+  {{- with $annotations }}
+  annotations: {{ . | nindent 4 }}
+  {{- end }}
 spec:
   schedule: {{ $values.schedule | quote }}
   # default 300 seconds == 5 minutes
@@ -39,6 +42,7 @@ spec:
           containers:
           - name: main
             {{- include "container.image" (dict "image" .image "root" $) | nindent 12 }}
+            {{- include "container.command" . | nindent 12 }}
 
             {{- include "container.resources" . | nindent 12 }}
             {{- include "container.securityContext" . | nindent 12 }}

@@ -32,6 +32,7 @@ spec:
       containers:
       - name: main
         {{- include "container.image" (dict "image" .image "root" $) | nindent 8 }}
+        {{- include "container.command" . | nindent 8 }}
         {{- include "container.ports" . | nindent 8 }}
         {{- include "container.resources" . | nindent 8 }}
         {{- include "container.securityContext" . | nindent 8 }}

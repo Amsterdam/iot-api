@@ -222,3 +222,12 @@ container.image
 image: {{ list $image.registry $image.repository | join "/" }}:{{ $image.tag }}
 imagePullPolicy: {{ $image.imagePullPolicy | default "IfNotPresent" }}
 {{- end }}
+
+{{/*
+container.command
+*/}}
+{{- define "container.command" -}}
+{{- with .command }}
+command: {{ toYaml . | nindent 2 }}
+{{- end }}
+{{- end }}

@@ -59,7 +59,7 @@ deploy: manifests
 	helm upgrade --install backend $(HELM_ARGS)
 
 manifests:
-	@helm template backend $(HELM_ARGS)
+	@helm template backend $(HELM_ARGS) $(ARGS)
 
 deploy/kustomize:
 	# Modify some settings with environment values

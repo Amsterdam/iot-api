@@ -3,6 +3,7 @@
 {{- range $manifestName, $values := $.Values.jobs }}
 {{- if ne .enabled false }}
 {{- $context := dict "local" . "root" $ -}}
+{{- $annotations := include "resource.annotations" $context }}
 {{- $labels := include "resource.labels" $context }}
 {{- $selectorLabels := include "resource.selectorLabels" $context }}
 ---
@@ -11,8 +12,10 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: "{{ $manifestName }}-{{ $fullName }}"
-  labels:
-    {{- $labels | nindent 4 }}
+  labels: {{ $labels | nindent 4 }}
+  {{- with $annotations }}
+  annotations: {{ . | nindent 4 }}
+  {{- end }}
 spec:
   backoffLimit: {{ .backoffLimit | default 5 }}
   template:
@@ -21,13 +24,13 @@ spec:
         {{- $selectorLabels | nindent 8 }}
     spec:
       restartPolicy: OnFailure
-
       {{- include "pod.tolerations" $ | nindent 6 }}
       {{- include "pod.securityContext" $ | nindent 6 }}
 
       containers:
       - name: main
         {{- include "container.image" (dict "image" .image "root" $) | nindent 8 }}
+        {{- include "container.command" . | nindent 8 }}
         {{- include "container.resources" . | nindent 8 }}
         {{- include "container.securityContext" . | nindent 8 }}
         {{- include "container.env" (dict "env" .env "root" $) | nindent 8 }}

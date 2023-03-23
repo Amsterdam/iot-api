@@ -32,6 +32,10 @@ jobs:
           emptyDir: {}
     secrets:
       - backend
+    command:
+      - python
+      - manage.py
+      - migrate
 
 cronJobs:
   import:
@@ -42,6 +46,10 @@ cronJobs:
     schedule: "0 * * * *"
     secrets:
       - backend
+    command:
+      - python
+      - manage.py
+      - import_api
 
 deployments:
   api:
