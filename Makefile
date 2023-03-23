@@ -11,7 +11,14 @@ manage = $(run) dev python manage.py
 pytest = $(run) test pytest $(ARGS)
 
 ENVIRONMENT ?= local
-manifests = kustomize build manifests/overlays/${ENVIRONMENT}
+HELM_UPGRADE = helm upgrade backend $(HELM_ARGS)
+HELM_ARGS = manifests/helm/application \
+	-f manifests/helm/application/values.yaml \
+	-f manifests/helm/values.yaml \
+	-f manifests/helm/env/${ENVIRONMENT}.yaml \
+	--set image.registry=${REGISTRY} \
+	--set image.repository=${REPOSITORY} \
+	--set image.tag=${VERSION}
 
 REGISTRY ?= localhost:5001
 REPOSITORY ?= sensorenregister/api
@@ -47,28 +54,12 @@ build:
 push: build
 	$(dc) push
 
-deploy:
+deploy: manifests
 	kubectl delete job -l component=migrate
-	helm upgrade backend --install \
-		manifests/helm/application \
-		-f manifests/helm/application/values.yaml \
-		-f manifests/helm/values.yaml \
-		-f manifests/helm/env/${ENVIRONMENT}.yaml \
-		--set image.registry=${REGISTRY} \
-		--set image.repository=${REPOSITORY} \
-		--set image.tag=${VERSION} \
-		--debug $(ARGS)
+	@helm upgrade --install backend $(HELM_ARGS)
 
 manifests:
-	helm template backend \
-		manifests/helm/application \
-		-f manifests/helm/application/values.yaml \
-		-f manifests/helm/values.yaml \
-		-f manifests/helm/env/${ENVIRONMENT}.yaml \
-		--set image.registry=${REGISTRY} \
-		--set image.repository=${REPOSITORY} \
-		--set image.tag=${VERSION} \
-		--debug $(ARGS)
+	@helm template backend $(HELM_ARGS)
 
 deploy/kustomize:
 	# Modify some settings with environment values
