@@ -94,7 +94,7 @@ Volumes
 */}}
 {{- define "pod.volumes" -}}
 {{- $mountSecrets := .mountSecrets | default list }}
-{{- $secrets := concat (.secrets | default list) $mountSecrets }}
+{{- $secrets := concat (.secrets | default list) $mountSecrets | uniq }}
 {{- if or $secrets .volumes }}
 volumes:
 {{- range .volumes }}
@@ -117,7 +117,7 @@ Volumes
 */}}
 {{- define "container.volumeMounts" -}}
 {{- $mountSecrets := .mountSecrets | default list }}
-{{- $secrets := concat (.secrets | default list) $mountSecrets }}
+{{- $secrets := concat (.secrets | default list) $mountSecrets | uniq }}
 {{- if or $secrets .volumes }}
 volumeMounts:
 {{- range .volumes }}
