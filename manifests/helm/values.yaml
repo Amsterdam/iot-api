@@ -22,9 +22,14 @@ secrets:
   backend:
     secrets:
       - secret-key
+      - database-host
+      - database-name
+      - database-user
 
 jobs:
   migrate:
+    labels:
+      component: migrate
     volumes:
       - name: tmp
         mountPath: /tmp
@@ -32,6 +37,7 @@ jobs:
           emptyDir: {}
     secrets:
       - backend
+      - certificate
     command:
       - python
       - manage.py
@@ -40,7 +46,7 @@ jobs:
 cronJobs:
   import:
     labels:
-      component: api
+      component: import
     selectorLabels:
       cow: moo
     schedule: "0 * * * *"

@@ -56,7 +56,7 @@ push: build
 
 deploy: manifests
 	kubectl delete deploy,service,ingress,cronjob,job,cm,secretproviderclass --all
-	helm upgrade --install backend $(HELM_ARGS)
+	helm upgrade --install --atomic backend $(HELM_ARGS)
 
 manifests:
 	@helm template backend $(HELM_ARGS) $(ARGS)
