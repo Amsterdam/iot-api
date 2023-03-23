@@ -1,44 +1,38 @@
 {{- $fullName := include "helm.fullname" $ -}}
 
-{{- range $manifestName, $values := .Values.deployments }}
+{{- range $manifestName, $values := $.Values.jobs }}
 {{- if ne .enabled false }}
 {{- $context := dict "local" . "root" $ -}}
-{{- $annotations := include "resource.annotations" $context }}
 {{- $labels := include "resource.labels" $context }}
 {{- $selectorLabels := include "resource.selectorLabels" $context }}
 ---
 
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: batch/v1
+kind: Job
 metadata:
   name: "{{ $manifestName }}-{{ $fullName }}"
-  labels: {{ $labels | nindent 4 }}
-  {{- with $annotations }}
-  annotations: {{ . | nindent 4 }}
-  {{- end }}
+  labels:
+    {{- $labels | nindent 4 }}
 spec:
-  selector:
-    matchLabels:
-      {{- $selectorLabels | nindent 6 }}
+  backoffLimit: {{ .backoffLimit | default 5 }}
   template:
     metadata:
       labels:
-        {{- $labels | nindent 8 }}
+        {{- $selectorLabels | nindent 8 }}
     spec:
-      restartPolicy: Always
+      restartPolicy: OnFailure
+
       {{- include "pod.tolerations" $ | nindent 6 }}
       {{- include "pod.securityContext" $ | nindent 6 }}
 
       containers:
       - name: main
         {{- include "container.image" (dict "image" .image "root" $) | nindent 8 }}
-        {{- include "container.ports" . | nindent 8 }}
         {{- include "container.resources" . | nindent 8 }}
         {{- include "container.securityContext" . | nindent 8 }}
         {{- include "container.env" (dict "env" .env "root" $) | nindent 8 }}
         {{- include "container.envFrom" . | nindent 8 }}
         {{- include "container.volumeMounts" . | nindent 8 }}
-        
       {{- include "pod.volumes" . | nindent 6 }}
-{{- end }}
-{{- end }}
+{{ end }}
+{{ end }}

@@ -9,9 +9,10 @@ image:
   repository: sensorenregister/api
   tag: latest
 
-env: {}
+env:
+  GLOBAL_ENV: 42
 
-nodepool: cccssront01
+nodepool: ""
 
 tolerations: []
 
@@ -24,11 +25,20 @@ secrets:
 
 jobs:
   migrate:
+    volumes:
+      - name: tmp
+        mountPath: /tmp
+        spec:
+          emptyDir: {}
     secrets:
       - backend
 
 cronJobs:
   import:
+    labels:
+      component: api
+    selectorLabels:
+      cow: moo
     schedule: "0 * * * *"
     secrets:
       - backend
@@ -36,8 +46,9 @@ cronJobs:
 deployments:
   api:
     labels:
+      cow: moo
+    selectorLabels:
       component: api
-      foo: bar
     env:
       BASE_URL: /api
       ADMIN_ENABLED: false
@@ -50,12 +61,22 @@ deployments:
       limits:
         cpu: 1
         memory: "512Mi"
+    ports:
+      - port: 80
+        name: http
     secrets:
       - backend
+    volumes:
+      - name: tmp
+        mountPath: /tmp
+        spec:
+          emptyDir: {}
 
   admin:
     labels:
-      component: api
+      cow: moo
+    selectorLabels:
+      component: admin
     env:
       BASE_URL: /admin
       ADMIN_ENABLED: true

@@ -4,6 +4,8 @@ keyVaultIdentity: 00d77036-c127-4b38-a581-f170b55d65f0
 image:
   tag: latest
 
+nodepool: cccssront01
+
 secrets:
   certificate:
     keyVaultName: shared-o-ftytfsr6vuduo

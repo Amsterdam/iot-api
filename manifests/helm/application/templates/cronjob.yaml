@@ -1,0 +1,50 @@
+{{- $fullName := include "helm.fullname" $ -}}
+
+{{- range $manifestName, $values := $.Values.cronJobs }}
+{{- if ne .enabled false }}
+{{- $context := dict "local" . "root" $ -}}
+{{- $labels := include "resource.labels" $context }}
+{{- $selectorLabels := include "resource.selectorLabels" $context }}
+---
+
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: "{{ $manifestName }}-{{ $fullName }}"
+  labels:
+    {{- $labels | nindent 4 }}
+spec:
+  schedule: {{ $values.schedule | quote }}
+  # default 300 seconds == 5 minutes
+  startingDeadlineSeconds: {{ $values.startingDeadlineSeconds | default 300 }}
+  successfulJobsHistoryLimit: {{ $values.successfulJobsHistoryLimit | default 3 }}
+  failedJobsHistoryLimit:  {{ $values.failedJobsHistoryLimit | default 3 }}
+  concurrencyPolicy: {{ $values.concurrencyPolicy | default "Forbid" }}
+  jobTemplate:
+    metadata:
+      labels:
+        {{- $selectorLabels | nindent 8 }}
+    spec:
+      backoffLimit: {{ .backoffLimit | default 5 }}
+      template:
+        metadata:
+          labels:
+            {{- $labels | nindent 12 }}
+        spec:
+          restartPolicy: OnFailure
+
+          {{- include "pod.tolerations" $ | nindent 10 }}
+          {{- include "pod.securityContext" $ | nindent 10 }}
+
+          containers:
+          - name: main
+            {{- include "container.image" (dict "image" .image "root" $) | nindent 12 }}
+
+            {{- include "container.resources" . | nindent 12 }}
+            {{- include "container.securityContext" . | nindent 12 }}
+            {{- include "container.env" (dict "env" .env "root" $) | nindent 12 }}
+            {{- include "container.envFrom" . | nindent 12 }}
+            {{- include "container.volumeMounts" . | nindent 12 }}
+          {{- include "pod.volumes" . | nindent 10 }}
+{{ end }}
+{{ end }}

@@ -1,9 +1,13 @@
 {{- $root := . -}}
 {{- $fullName := include "helm.fullname" $ -}}
-{{- $labels := include "helm.labels" $ -}}
 
 {{- range $manifestName, $values := $.Values.ingress }}
 {{- if ne $values.enabled false }}
+
+{{- $context := dict "local" . "root" $ -}}
+{{- $annotations := include "resource.annotations" $context }}
+{{- $labels := include "resource.labels" $context }}
+{{- $selectorLabels := include "resource.selectorLabels" $context }}
 ---
 
 {{/* {{- $svcPort := $values.service.port -}} */}}
@@ -17,10 +21,10 @@ kind: Ingress
 metadata:
   name: "{{ $manifestName }}-{{ $fullName }}"
   labels:
-    {{- include "helm.labels" $root | nindent 4 }}
-  {{- with .annotations }}
-  annotations:
-    {{- toYaml . | nindent 4 }}
+    {{- $labels | nindent 4 }}
+  {{- with $annotations }}
+  annotations: 
+    {{- . | nindent 4 }}
   {{- end }}
 spec:
   ingressClassName: {{ .className }}
@@ -39,7 +43,7 @@ spec:
       http:
         paths:
           {{- range .paths }}
-          - path: {{ .path }}
+          - path: {{ .path | quote }}
             pathType: {{ .pathType | default "Prefix" }}
             backend:
               service:

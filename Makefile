@@ -57,7 +57,18 @@ deploy:
 		--set image.registry=${REGISTRY} \
 		--set image.repository=${REPOSITORY} \
 		--set image.tag=${VERSION} \
-		--debug
+		--debug $(ARGS)
+
+manifests:
+	helm template backend \
+		manifests/helm/application \
+		-f manifests/helm/application/values.yaml \
+		-f manifests/helm/values.yaml \
+		-f manifests/helm/env/${ENVIRONMENT}.yaml \
+		--set image.registry=${REGISTRY} \
+		--set image.repository=${REPOSITORY} \
+		--set image.tag=${VERSION} \
+		--debug $(ARGS)
 
 deploy/kustomize:
 	# Modify some settings with environment values
