@@ -141,7 +141,7 @@ ingress:
         service: api
         port: 8000
     tls:
-      certificate: sensorenregister
+      certificate: certificate
   admin:
     className: nginx-internal
     # annotations:
@@ -154,4 +154,4 @@ ingress:
         service: admin
         port: 8000
     tls:
-      certificate: sensorenregister
+      certificate: certificate
