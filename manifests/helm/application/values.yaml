@@ -1,17 +1,27 @@
 name:
-identity:
-keyvaultName:
+
 tenantId:
+keyVaultName:
+keyVaultIdentity:
 
 image:
   registry:
   repository:
   tag: latest
 
+# nodepool that will be used as toleration
+nodepool: ""
+
+labels: {}
+tolerations: []
+
 env: {}
 
+# Resources
+network: {}
 secrets: {}
-
+jobs: {}
 cronJobs: {}
-
 deployments: {}
+services: {}
+ingress: {}
