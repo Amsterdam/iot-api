@@ -21,7 +21,7 @@ spec:
   template:
     metadata:
       labels:
-        {{- $selectorLabels | nindent 8 }}
+        {{- $labels | nindent 8 }}
     spec:
       restartPolicy: OnFailure
       {{- include "pod.tolerations" $ | nindent 6 }}

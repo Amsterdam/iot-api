@@ -24,9 +24,6 @@ spec:
   failedJobsHistoryLimit:  {{ $values.failedJobsHistoryLimit | default 3 }}
   concurrencyPolicy: {{ $values.concurrencyPolicy | default "Forbid" }}
   jobTemplate:
-    metadata:
-      labels:
-        {{- $selectorLabels | nindent 8 }}
     spec:
       backoffLimit: {{ .backoffLimit | default 5 }}
       template:

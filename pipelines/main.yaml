@@ -29,13 +29,16 @@ extends:
         namespace: ns-ccc-ssr-ont-01-sensorenregister
         kubernetesServiceConnection: "SCN-K8S-O-SSR"
         preSteps:
-          - script: |
-              helm env
-              helm list
-              helm history backend
-              helm status backend
-              helm get all backend
-              kubectl delete job --all
+          - script: helm env
+            displayName: helm env
+          - script: helm list
+            displayName: helm list
+          - script: helm history backend
+            displayName: helm history
+          - script: helm status backend
+            displayName: helm status
+          - script: helm get all backend
+            displayName: helm get all
     test:
       serviceConnection: ARM-CCC-SSR-test-01
       deploy:
