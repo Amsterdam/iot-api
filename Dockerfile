@@ -6,7 +6,6 @@ RUN apt-get update \
   postgresql-client-13 \
   gdal-bin \
   libgdal-dev \
-  netcat \
   && rm -rf /var/lib/apt/lists/* /var/cache/debconf/*-old \
   && pip install --upgrade pip \
   && useradd --user-group -m app
@@ -34,6 +33,15 @@ CMD ["/app/deploy/docker-run.sh"]
 
 # stage 2, dev
 FROM app as dev
+
+RUN apt-get update \
+  && apt-get autoremove -y \
+  && apt-get install --no-install-recommends -y \
+  netcat \
+  && rm -rf /var/lib/apt/lists/* /var/cache/debconf/*-old \
+  && pip install --upgrade pip \
+  && useradd --user-group -m app
+
 
 USER root
 WORKDIR /app/install
