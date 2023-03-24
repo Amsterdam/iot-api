@@ -12,7 +12,7 @@ RUN apt-get update \
 
 WORKDIR /app/install
 COPY requirements.txt requirements.txt
-RUN pip install -r requirements.txt
+RUN pip install -r requirements.txt && pip cache purge
 
 COPY deploy /app/deploy
 
@@ -37,7 +37,7 @@ FROM app as dev
 USER root
 WORKDIR /app/install
 ADD requirements_dev.txt requirements_dev.txt
-RUN pip install -r requirements_dev.txt
+RUN pip install -r requirements_dev.txt && pip cache purge
 
 WORKDIR /app/src
 USER app
