@@ -13,7 +13,6 @@ pytest = $(run) test pytest $(ARGS)
 ENVIRONMENT ?= local
 HELM_UPGRADE = helm upgrade backend $(HELM_ARGS)
 HELM_ARGS = manifests/helm/application \
-	-f manifests/helm/application/values.yaml \
 	-f manifests/helm/values.yaml \
 	-f manifests/helm/env/${ENVIRONMENT}.yaml \
 	--set image.registry=${REGISTRY} \
