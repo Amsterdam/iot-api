@@ -19,6 +19,5 @@ secrets:
 ingress:
   api:
     host: ssr-o.azure.amsterdam.nl
-
   admin:
     host: ssr-o.azure.amsterdam.nl

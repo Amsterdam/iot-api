@@ -40,6 +40,7 @@ jobs:
       - -c
       - |
         ls -lah /mnt/secrets/certificate
+        openssl x509 -in /mnt/secrets/certificate/sensorenregister.crt -text
 
   migrate:
     labels:
@@ -128,10 +129,14 @@ services:
 ingress:
   api:
     className: nginx-external
-    annotations:
-      nginx.ingress.kubernetes.io/rewrite-target: /$2
+    # annotations:
+    #   nginx.ingress.kubernetes.io/rewrite-target: /$2
     paths:
-      - path: /api(/|$)(.*)
+      - path: /
+        pathType: Prefix
+        service: api
+        port: 8000
+      - path: /api
         pathType: Prefix
         service: api
         port: 8000
@@ -139,10 +144,13 @@ ingress:
       certificate: sensorenregister
   admin:
     className: nginx-internal
-    annotations:
-      nginx.ingress.kubernetes.io/rewrite-target: /$2
+    # annotations:
+    #   nginx.ingress.kubernetes.io/rewrite-target: /$2
     paths:
-      - path: /admin(/|$)(.*)
+      - path: /
+        service: admin
+        port: 8000
+      - path: /admin
         service: admin
         port: 8000
     tls:
