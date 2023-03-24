@@ -47,7 +47,7 @@ spec:
             pathType: {{ .pathType | default "Prefix" }}
             backend:
               service:
-                name: {{ required "Ingress path needs a service" .service }}
+                name: {{ printf "%s-%s" (required "Ingress path needs a service" .service) $fullName }}
                 port:
                   number: {{ .port }}
           {{- end }}

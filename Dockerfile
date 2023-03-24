@@ -34,16 +34,13 @@ CMD ["/app/deploy/docker-run.sh"]
 # stage 2, dev
 FROM app as dev
 
+USER root
 RUN apt-get update \
   && apt-get autoremove -y \
   && apt-get install --no-install-recommends -y \
   netcat \
-  && rm -rf /var/lib/apt/lists/* /var/cache/debconf/*-old \
-  && pip install --upgrade pip \
-  && useradd --user-group -m app
+  && rm -rf /var/lib/apt/lists/* /var/cache/debconf/*-old
 
-
-USER root
 WORKDIR /app/install
 ADD requirements_dev.txt requirements_dev.txt
 RUN pip install -r requirements_dev.txt && pip cache purge
