@@ -1,21 +1,11 @@
 name: ssr
-# identity: my-identity
-keyVaultName: ssr-o-gp4jqffo3heda
+
 tenantId: 72fca1b1-2c2e-4376-a445-294d80196804
-keyVaultIdentity: 00d77036-c127-4b38-a581-f170b55d65f0
 
 image:
   registry: saks01weuacrpgpgo5qvmwo.azurecr.io
   repository: sensorenregister/api
   tag: latest
-
-env:
-  AZURE_KEY_VAULT: "https://ssr-o-gp4jqffo3heda.vault.azure.net/"
-  AZURE_MANAGED_IDENTITY_CLIENTID: 00d77036-c127-4b38-a581-f170b55d65f0
-
-nodepool: ""
-
-tolerations: []
 
 labels:
   app: sensorenregister
@@ -23,9 +13,6 @@ labels:
 network:
   allow-ingress:
     selector: app == 'sensorenregister'
-    # types:
-    #   - Ingress
-    #   - Egress
     ingress:
       - action: Allow
     egress:
