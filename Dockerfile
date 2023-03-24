@@ -6,6 +6,7 @@ RUN apt-get update \
   postgresql-client-13 \
   gdal-bin \
   libgdal-dev \
+  netcat \
   && rm -rf /var/lib/apt/lists/* /var/cache/debconf/*-old \
   && pip install --upgrade pip \
   && useradd --user-group -m app
