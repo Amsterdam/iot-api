@@ -1,7 +1,7 @@
 {{- $root := . -}}
 {{- $fullName := include "helm.fullname" $ -}}
 
-{{- range $manifestName, $values := $.Values.services }}
+{{- range $manifestName, $values := $.Values.network }}
 {{- if ne $values.enabled false }}
 
 {{- $context := dict "local" . "root" $ -}}
@@ -9,9 +9,8 @@
 {{- $labels := include "resource.labels" $context }}
 {{- $selectorLabels := include "resource.selectorLabels" $context }}
 ---
-
-apiVersion: v1
-kind: Service
+apiVersion: projectcalico.org/v3
+kind: NetworkPolicy
 metadata:
   name: "{{ $manifestName }}-{{ $fullName }}"
   labels: {{ $labels | nindent 4 }}
@@ -19,11 +18,15 @@ metadata:
   annotations: {{ . | nindent 4 }}
   {{- end }}
 spec:
-  type: {{ .type | default "ClusterIP" }}
-  ports: {{ .ports | toYaml | nindent 4 }}
-  selector: 
-    {{- $selectorLabels | nindent 4 }}
-    {{- .selector | toYaml | nindent 4 }}
-
+  selector: {{ .selector }}
+  {{- with .types }}
+  types: {{ toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .ingress }}
+  ingress: {{ toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .egress }}
+  egress: {{ toYaml . | nindent 4 }}
+  {{- end }}
 {{- end }}
 {{- end }}

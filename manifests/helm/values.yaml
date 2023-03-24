@@ -17,6 +17,20 @@ nodepool: ""
 
 tolerations: []
 
+labels:
+  app: ssr
+
+network:
+  allow-ingress:
+    selector: app == 'sensorenregister'
+    # types:
+    #   - Ingress
+    #   - Egress
+    ingress:
+      - action: Allow
+    egress:
+      - action: Allow
+
 secrets:
   certificate:
     tls: sensorenregister
