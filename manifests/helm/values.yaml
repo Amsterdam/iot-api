@@ -18,7 +18,7 @@ nodepool: ""
 tolerations: []
 
 labels:
-  app: ssr
+  app: sensorenregister
 
 network:
   allow-ingress:
@@ -75,8 +75,6 @@ cronJobs:
   import:
     labels:
       component: import
-    selectorLabels:
-      cow: moo
     schedule: "0 * * * *"
     secrets:
       - backend
@@ -87,8 +85,6 @@ cronJobs:
 
 deployments:
   api:
-    labels:
-      cow: moo
     selectorLabels:
       component: api
     env:
@@ -115,8 +111,6 @@ deployments:
           emptyDir: {}
 
   admin:
-    labels:
-      cow: moo
     selectorLabels:
       component: admin
     env:
