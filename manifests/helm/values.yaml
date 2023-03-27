@@ -27,6 +27,9 @@ secrets:
       - database-host
       - database-name
       - database-user
+      - oidc-base-url
+      - oidc-rp-client-id
+      - oidc-rp-client-secret
 
 jobs:
   certificate-init:
