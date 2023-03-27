@@ -10,7 +10,7 @@ from rest_framework.routers import DefaultRouter
 from . import auth, views
 
 urlpatterns = [
-    path(r'', views.RootView.as_view(), name='root'),
+    # path(r'', views.RootView.as_view(), name='root'),
     path(r'status/', include('iot.health.urls')),
 ]
 

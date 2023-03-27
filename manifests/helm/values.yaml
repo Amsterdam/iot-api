@@ -74,10 +74,10 @@ deployments:
     selectorLabels:
       component: api
     env:
-      # BASE_URL: /api
+      BASE_URL: /api
       ADMIN_ENABLED: false
       API_ENABLED: true
-      API_PATH: /api
+      API_PATH: /
     resources:
       requests:
         cpu: 1
@@ -102,7 +102,7 @@ deployments:
     env:
       BASE_URL: /admin
       ADMIN_ENABLED: true
-      API_ENABLED: false
+      API_ENABLED: true
       ADMIN_PATH: /
     ports:
       - port: 8000
@@ -125,15 +125,6 @@ services:
         targetPort: http
 
 ingress:
-  frontend-internal:
-    className: nginx-internal
-    paths:
-      - path: /
-        pathType: Prefix
-        service: api
-        port: 8000
-    tls:
-      certificate: certificate
   frontend-external:
     className: nginx-external
     paths:
@@ -143,23 +134,40 @@ ingress:
         port: 8000
     tls:
       certificate: certificate
-  api:
-    className: nginx-external
-    # annotations:
-    #   nginx.ingress.kubernetes.io/rewrite-target: /
+
+  frontend-internal:
+    className: nginx-internal
     paths:
-      - path: /api
+      - path: /
         pathType: Prefix
         service: api
         port: 8000
     tls:
       certificate: certificate
-  admin:
-    className: nginx-internal
-    # annotations:
-    #   nginx.ingress.kubernetes.io/rewrite-target: /$2
+
+  backend-external:
+    className: nginx-external
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: /$2
     paths:
-      - path: /admin
+      - path: /api(/|$)(.*)
+        service: api
+        port: 8000
+      - path: /admin(/|$)(.*)
+        service: admin
+        port: 8000
+    tls:
+      certificate: certificate
+
+  backend-internal:
+    className: nginx-internal
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: /$2
+    paths:
+      - path: /api(/|$)(.*)
+        service: api
+        port: 8000
+      - path: /admin(/|$)(.*)
         service: admin
         port: 8000
     tls:
