@@ -3,12 +3,15 @@ import sys
 from urllib.parse import urljoin
 
 import sentry_sdk
+from opencensus.trace import config_integration
 from sentry_sdk.integrations.django import DjangoIntegration
 
 from .azure_settings import Azure
 
 azure = Azure(key_vault_url=os.getenv('AZURE_KEY_VAULT'))
 
+
+config_integration.trace_integrations(['requests', 'logging', 'postgresql'])
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -247,7 +250,8 @@ if AZURE_INSTRUMENTATION_KEY:
         'connection_string': AZURE_INSTRUMENTATION_KEY,
         'formatter': 'timestamp',
     }
-    LOGGING['django']['handlers'] = ['azure', 'console']
+    LOGGING['loggers']['django']['handlers'] = ['azure', 'console']
+    LOGGING['loggers']['iot']['handlers'] = ['azure', 'console']
     LOGGING['root']['handlers'] = ['azure', 'console']
 
 
