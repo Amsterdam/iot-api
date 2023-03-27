@@ -5,6 +5,7 @@ image:
   repository: sensorenregister/api-dev
 
 nodepool: cccssront01
+host: ssr-o.azure.amsterdam.nl
 
 env:
   AZURE_KEY_VAULT: "https://ssr-o-gp4jqffo3heda.vault.azure.net/"
@@ -15,9 +16,3 @@ secrets:
     keyVaultName: shared-o-ftytfsr6vuduo
   backend:
     keyVaultName: ssr-o-gp4jqffo3heda
-
-ingress:
-  api:
-    host: ssr-o.azure.amsterdam.nl
-  admin:
-    host: ssr-o.azure.amsterdam.nl

@@ -12,6 +12,9 @@ image:
 # nodepool that will be used as toleration
 nodepool: ""
 
+# Default host
+host: ""
+
 labels: {}
 tolerations: []
 

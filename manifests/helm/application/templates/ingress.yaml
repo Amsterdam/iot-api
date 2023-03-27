@@ -8,6 +8,7 @@
 {{- $annotations := include "resource.annotations" $context }}
 {{- $labels := include "resource.labels" $context }}
 {{- $selectorLabels := include "resource.selectorLabels" $context }}
+{{- $host := .host | default $.Values.host}}
 ---
 
 {{/* {{- $svcPort := $values.service.port -}} */}}
@@ -28,17 +29,17 @@ metadata:
   {{- end }}
 spec:
   ingressClassName: {{ .className }}
-  {{- if .host }}
+  {{- if $host }}
   {{- with .tls }}
   tls:
     - hosts:
-        - {{ $values.host | quote }}
+        - {{ $host | quote }}
       secretName: {{ .certificate }}
   {{- end }}
   {{- end }}
   rules:
-    - {{ if .host -}}
-      host: {{ .host | quote }}
+    - {{ if $host -}}
+      host: {{ $host | quote }}
       {{ end -}}
       http:
         paths:
