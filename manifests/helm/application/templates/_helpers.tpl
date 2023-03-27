@@ -136,13 +136,31 @@ volumeMounts:
 env
 */}}
 {{- define "container.env" -}}
-{{- $env := merge (.env | default dict) .root.Values.env }}
-{{ with $env }}
+{{- $env := merge (.local.env | default dict) .root.Values.env }}
+
+{{- if or $env .local.secrets }}
 env:
+
+{{- with $env }}
   {{- range $name, $value := . }}
   - name: {{ $name | upper | replace "-" "_" }}
     value: {{ $value | quote }}
   {{- end }}
+{{- end }}
+
+{{- with .local.secrets }}
+{{- range . }}
+{{- $secretName := . }}
+{{- range (get $.root.Values.secrets $secretName).secrets }}
+  - name: {{ . | upper | replace "-" "_" }}
+    valueFrom:
+      secretKeyRef:
+        name: {{ $secretName }}
+        key: {{ . | quote }}
+{{- end }}
+{{- end }}
+{{- end }}
+
 {{- end }}
 {{- end }}
 

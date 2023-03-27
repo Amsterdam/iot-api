@@ -33,7 +33,7 @@ spec:
         {{- include "container.command" . | nindent 8 }}
         {{- include "container.resources" . | nindent 8 }}
         {{- include "container.securityContext" . | nindent 8 }}
-        {{- include "container.env" (dict "env" .env "root" $) | nindent 8 }}
+        {{- include "container.env" $context | nindent 8 }}
         {{- include "container.envFrom" . | nindent 8 }}
         {{- include "container.volumeMounts" . | nindent 8 }}
       {{- include "pod.volumes" . | nindent 6 }}
