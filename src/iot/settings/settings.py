@@ -51,22 +51,6 @@ API_PATH = make_url_path(os.getenv('API_PATH', 'api'))
 ADMIN_ENABLED = os.getenv('ADMIN_ENABLED', 'false').lower() == 'true'
 ADMIN_PATH = make_url_path(os.getenv('ADMIN_PATH', 'admin'))
 
-## OpenId Connect settings ##
-LOGIN_URL = 'oidc_authentication_init'
-LOGIN_REDIRECT_URL = "/admin/"
-LOGOUT_REDIRECT_URL = "/api/"
-LOGIN_REDIRECT_URL_FAILURE = '/static/403.html'
-
-OIDC_BASE_URL = os.getenv('OIDC_BASE_URL')
-OIDC_RP_CLIENT_ID = os.getenv('OIDC_RP_CLIENT_ID')
-OIDC_RP_CLIENT_SECRET = os.getenv('OIDC_RP_CLIENT_SECRET')
-OIDC_OP_AUTHORIZATION_ENDPOINT = f'{OIDC_BASE_URL}/oauth2/v2.0/authorize'
-OIDC_OP_TOKEN_ENDPOINT = f'{OIDC_BASE_URL}/oauth2/v2.0/token'
-OIDC_OP_USER_ENDPOINT = 'https://graph.microsoft.com/oidc/userinfo'
-OIDC_OP_JWKS_ENDPOINT = f'{OIDC_BASE_URL}/discovery/v2.0/keys'
-OIDC_OP_LOGOUT_ENDPOINT = f'{OIDC_BASE_URL}/oauth2/v2.0/logout'
-OIDC_RP_SIGN_ALGO = 'RS256'
-
 # APP CONFIGURATION
 # ------------------------------------------------------------------------------
 DJANGO_APPS = (
@@ -88,7 +72,6 @@ THIRD_PARTY_APPS = (
     'rest_framework',
     'rest_framework_gis',
     'leaflet',
-    'mozilla_django_oidc',
 )
 
 DEBUG_APPS = ()
@@ -108,7 +91,6 @@ MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'mozilla_django_oidc.middleware.SessionRefresh',
 )
 
 DEBUG_MIDDLEWARE = (
@@ -275,7 +257,6 @@ REST_FRAMEWORK = dict(
     UNAUTHENTICATED_USER={},
     UNAUTHENTICATED_TOKEN={},
     DEFAULT_AUTHENTICATION_CLASSES=(
-        'mozilla_django_oidc.contrib.drf.OIDCAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ),
     DEFAULT_PAGINATION_CLASS=('datapunt_api.pagination.HALPagination',),
@@ -303,6 +284,29 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 # In the IPROX formuler the user can register 5 sensors at a time
 IPROX_NUM_SENSORS = 5
 IPROX_SEPARATOR = ';'
+
+if ADMIN_ENABLED:
+    THIRD_PARTY_APPS += ('mozilla_django_oidc',)
+    MIDDLEWARE += ('mozilla_django_oidc.middleware.SessionRefresh',)
+    REST_FRAMEWORK['DEFAULT_AUTHENTICATION_CLASSES'] += (
+        'mozilla_django_oidc.contrib.drf.OIDCAuthentication',
+    )
+    ## OpenId Connect settings ##
+    LOGIN_URL = 'oidc_authentication_init'
+    LOGIN_REDIRECT_URL = "/admin/"
+    LOGOUT_REDIRECT_URL = "/api/"
+    LOGIN_REDIRECT_URL_FAILURE = '/static/403.html'
+
+    OIDC_BASE_URL = os.getenv('OIDC_BASE_URL')
+    OIDC_RP_CLIENT_ID = os.getenv('OIDC_RP_CLIENT_ID')
+    OIDC_RP_CLIENT_SECRET = os.getenv('OIDC_RP_CLIENT_SECRET')
+    OIDC_OP_AUTHORIZATION_ENDPOINT = f'{OIDC_BASE_URL}/oauth2/v2.0/authorize'
+    OIDC_OP_TOKEN_ENDPOINT = f'{OIDC_BASE_URL}/oauth2/v2.0/token'
+    OIDC_OP_USER_ENDPOINT = 'https://graph.microsoft.com/oidc/userinfo'
+    OIDC_OP_JWKS_ENDPOINT = f'{OIDC_BASE_URL}/discovery/v2.0/keys'
+    OIDC_OP_LOGOUT_ENDPOINT = f'{OIDC_BASE_URL}/oauth2/v2.0/logout'
+    OIDC_RP_SIGN_ALGO = 'RS256'
+
 
 # Sentry logging
 sentry_dsn = os.getenv('SENTRY_DSN')
