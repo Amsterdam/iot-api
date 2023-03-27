@@ -14,7 +14,7 @@ anyio==3.6.2
     # via jupyter-server
 applicationinsights==0.11.10
     # via azure-cli-telemetry
-argcomplete==2.1.1
+argcomplete==2.1.2
     # via
     #   azure-cli-core
     #   knack
@@ -163,7 +163,7 @@ azure-keyvault-administration==4.0.0b3
     # via azure-cli
 azure-keyvault-keys==4.8.0b2
     # via azure-cli
-azure-keyvault-secrets==4.6.0
+azure-keyvault-secrets==4.7.0
     # via -r ./requirements.in
 azure-loganalytics==0.1.1
     # via azure-cli
@@ -387,7 +387,7 @@ backcall==0.2.0
     # via ipython
 bcrypt==4.0.1
     # via paramiko
-beautifulsoup4==4.11.2
+beautifulsoup4==4.12.0
     # via nbconvert
 black==23.1.0
     # via -r requirements_dev.in
@@ -420,7 +420,7 @@ click==8.1.3
     #   pip-tools
 colorama==0.4.6
     # via azure-cli
-comm==0.1.2
+comm==0.1.3
     # via ipykernel
 coreapi==2.3.3
     # via drf-yasg
@@ -428,9 +428,9 @@ coreschema==0.0.4
     # via
     #   coreapi
     #   drf-yasg
-coverage[toml]==7.2.1
+coverage[toml]==7.2.2
     # via pytest-cov
-cryptography==39.0.2
+cryptography==40.0.1
     # via
     #   adal
     #   azure-cli-core
@@ -489,7 +489,7 @@ django-extensions==3.2.1
     # via -r ./requirements.in
 django-extra-fields==3.0.2
     # via -r ./requirements.in
-django-filter==22.1
+django-filter==23.1
     # via -r ./requirements.in
 django-leaflet==0.28.3
     # via -r ./requirements.in
@@ -534,7 +534,7 @@ factory-boy==3.2.1
     # via
     #   -r requirements_dev.in
     #   pytest-factoryboy
-faker==17.6.0
+faker==18.3.1
     # via
     #   -r requirements_dev.in
     #   factory-boy
@@ -547,9 +547,9 @@ fqdn==1.5.1
     # via jsonschema
 google-api-core==2.11.0
     # via opencensus
-google-auth==2.16.2
+google-auth==2.16.3
     # via google-api-core
-googleapis-common-protos==1.58.0
+googleapis-common-protos==1.59.0
     # via google-api-core
 graypy==2.1.0
     # via -r ./requirements.in
@@ -561,7 +561,7 @@ idna==3.4
     #   jsonschema
     #   requests
     #   urllib3
-importlib-metadata==6.0.0
+importlib-metadata==6.1.0
     # via
     #   jupyter-client
     #   markdown
@@ -576,7 +576,7 @@ invoke==1.7.3
     # via fabric
 ipdb==0.13.13
     # via -r requirements_dev.in
-ipykernel==6.21.3
+ipykernel==6.22.0
     # via
     #   nbclassic
     #   notebook
@@ -592,6 +592,7 @@ ipython-genutils==0.2.0
 isodate==0.6.1
     # via
     #   azure-keyvault-keys
+    #   azure-keyvault-secrets
     #   msrest
 isoduration==20.11.0
     # via jsonschema
@@ -627,14 +628,14 @@ jsonschema[format-nongpl]==4.17.3
     #   jupyter-events
     #   nbformat
     #   swagger-spec-validator
-jupyter-client==8.0.3
+jupyter-client==8.1.0
     # via
     #   ipykernel
     #   jupyter-server
     #   nbclassic
     #   nbclient
     #   notebook
-jupyter-core==5.2.0
+jupyter-core==5.3.0
     # via
     #   ipykernel
     #   jupyter-client
@@ -646,7 +647,7 @@ jupyter-core==5.2.0
     #   notebook
 jupyter-events==0.6.3
     # via jupyter-server
-jupyter-server==2.4.0
+jupyter-server==2.5.0
     # via
     #   nbclassic
     #   notebook-shim
@@ -656,7 +657,7 @@ jupyterlab-pygments==0.2.2
     # via nbconvert
 knack==0.10.1
     # via azure-cli-core
-markdown==3.4.1
+markdown==3.4.3
     # via -r ./requirements.in
 markupsafe==2.1.2
     # via
@@ -687,7 +688,6 @@ msrest==0.7.1
     #   azure-graphrbac
     #   azure-keyvault
     #   azure-keyvault-administration
-    #   azure-keyvault-secrets
     #   azure-loganalytics
     #   azure-mgmt-advisor
     #   azure-mgmt-apimanagement
@@ -780,7 +780,7 @@ nbconvert==7.2.10
     #   jupyter-server
     #   nbclassic
     #   notebook
-nbformat==5.7.3
+nbformat==5.8.0
     # via
     #   jupyter-server
     #   nbclassic
@@ -802,11 +802,14 @@ opencensus==0.11.2
     # via
     #   opencensus-ext-azure
     #   opencensus-ext-django
+    #   opencensus-ext-postgresql
 opencensus-context==0.1.3
     # via opencensus
 opencensus-ext-azure==1.1.9
     # via -r ./requirements.in
 opencensus-ext-django==0.8.0
+    # via -r ./requirements.in
+opencensus-ext-postgresql==0.1.3
     # via -r ./requirements.in
 openpyxl==3.1.2
     # via -r ./requirements.in
@@ -833,7 +836,7 @@ parso==0.8.3
     # via jedi
 pathlib2==2.3.7.post1
     # via fabric
-pathspec==0.11.0
+pathspec==0.11.1
     # via black
 pexpect==4.8.0
     # via ipython
@@ -843,7 +846,7 @@ pip-tools==6.12.3
     # via -r requirements_dev.in
 pkginfo==1.9.6
     # via azure-cli-core
-platformdirs==3.1.1
+platformdirs==3.2.0
     # via
     #   black
     #   jupyter-core
@@ -870,7 +873,9 @@ psutil==5.9.4
     #   ipykernel
     #   opencensus-ext-azure
 psycopg2-binary==2.9.5
-    # via -r ./requirements.in
+    # via
+    #   -r ./requirements.in
+    #   opencensus-ext-postgresql
 ptyprocess==0.7.0
     # via
     #   pexpect
@@ -887,7 +892,7 @@ pycparser==2.21
     # via cffi
 pygelf==0.4.2
     # via -r ./requirements.in
-pygithub==1.58.0
+pygithub==1.58.1
     # via azure-cli
 pygments==2.14.0
     # via
@@ -910,7 +915,7 @@ pynacl==1.5.0
     #   azure-cli
     #   paramiko
     #   pygithub
-pyopenssl==23.0.0
+pyopenssl==23.1.0
     # via
     #   azure-cli-core
     #   josepy
@@ -948,7 +953,7 @@ python-dateutil==2.8.2
     #   jupyter-client
 python-json-logger==2.0.7
     # via jupyter-events
-pytz==2022.7.1
+pytz==2023.2
     # via
     #   djangorestframework
     #   drf-yasg
@@ -959,7 +964,7 @@ pyyaml==6.0
     #   knack
     #   responses
     #   swagger-spec-validator
-pyzmq==25.0.1
+pyzmq==25.0.2
     # via
     #   ipykernel
     #   jupyter-client
@@ -1015,7 +1020,7 @@ send2trash==1.8.0
     #   jupyter-server
     #   nbclassic
     #   notebook
-sentry-sdk==1.16.0
+sentry-sdk==1.17.0
     # via -r ./requirements.in
 six==1.16.0
     # via
@@ -1024,7 +1029,6 @@ six==1.16.0
     #   azure-core
     #   azure-cosmos
     #   azure-identity
-    #   azure-keyvault-secrets
     #   bleach
     #   djangorestframework-csv
     #   flex
@@ -1098,6 +1102,7 @@ typing-extensions==4.5.0
     # via
     #   azure-core
     #   azure-keyvault-keys
+    #   azure-keyvault-secrets
     #   black
     #   django-countries
     #   pytest-factoryboy
@@ -1124,7 +1129,7 @@ validate-email==1.3
     # via flex
 wcwidth==0.2.6
     # via prompt-toolkit
-webcolors==1.12
+webcolors==1.13
     # via jsonschema
 webencodings==0.5.1
     # via
