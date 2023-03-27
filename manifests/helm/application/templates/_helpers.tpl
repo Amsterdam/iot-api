@@ -168,13 +168,6 @@ env:
 envFrom
 */}}
 {{- define "container.envFrom" -}}
-{{- with .secrets }}
-envFrom:
-{{- range . }}
-  - secretRef: 
-      name: {{ . }}
-{{- end }}
-{{- end }}
 {{- end }}
 
 {{/*
