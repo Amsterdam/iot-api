@@ -31,6 +31,7 @@ secrets:
       - oidc-base-url
       - oidc-rp-client-id
       - oidc-rp-client-secret
+      - instrumentation-key
 
 jobs:
   certificate-init:
