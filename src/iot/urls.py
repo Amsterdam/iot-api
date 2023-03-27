@@ -63,8 +63,8 @@ if settings.ADMIN_ENABLED:
     urlpatterns.extend(
         [
             path(settings.ADMIN_PATH + 'login/', auth.oidc_login),
+            path(settings.ADMIN_PATH + 'oidc/', include('mozilla_django_oidc.urls')),
             path(settings.ADMIN_PATH, admin.site.urls),
-            path(r'oidc/', include('mozilla_django_oidc.urls')),
         ]
     )
 
