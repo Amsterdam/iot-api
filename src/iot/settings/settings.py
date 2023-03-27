@@ -247,6 +247,7 @@ if AZURE_INSTRUMENTATION_KEY:
         'connection_string': AZURE_INSTRUMENTATION_KEY,
         'formatter': 'timestamp',
     }
+    LOGGING['django']['handlers'] = ['azure', 'console']
     LOGGING['root']['handlers'] = ['azure', 'console']
 
 
