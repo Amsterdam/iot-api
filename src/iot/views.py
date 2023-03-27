@@ -22,7 +22,7 @@ class IotRootView(routers.APIRootView):
     """
 
 
-class PingView(views.APIView):
+class RootView(views.APIView):
     throttle_classes = ()
     authentication_classes = ()
     permission_classes = ()
