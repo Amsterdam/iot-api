@@ -113,6 +113,11 @@ deployments:
         name: http
     secrets:
       - backend
+    volumes:
+      - name: tmp
+        mountPath: /tmp
+        spec:
+          emptyDir: {}
 
 services:
   api:
