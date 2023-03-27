@@ -107,7 +107,7 @@ deployments:
     env:
       BASE_URL: /admin
       ADMIN_ENABLED: true
-      API_ENABLED: true
+      API_ENABLED: false
       ADMIN_PATH: /
     ports:
       - port: 8000
