@@ -19,7 +19,7 @@ network:
       - action: Allow
 
 secrets:
-  ssr-tls:
+  certificate:
     tls: sensorenregister
   backend:
     secrets:
@@ -33,14 +33,14 @@ jobs:
     labels:
       component: certificate
     mountSecrets:
-      - ssr-tls
+      - certificate
     command:
       - bash
     args:
       - -c
       - |
-        ls -lah /mnt/secrets/ssr-tls
-        openssl x509 -in /mnt/secrets/ssr-tls/sensorenregister.crt -text
+        ls -lah /mnt/secrets/certificate
+        openssl x509 -in /mnt/secrets/certificate/sensorenregister.crt -text
 
   migrate:
     labels:
@@ -125,27 +125,42 @@ services:
         targetPort: http
 
 ingress:
-  api:
-    className: nginx-external
-    # annotations:
-    #   nginx.ingress.kubernetes.io/rewrite-target: /
+  frontend-internal:
+    className: nginx-internal
     paths:
       - path: /
         pathType: Prefix
         service: api
         port: 8000
     tls:
-      certificate: ssr-tls
+      certificate: certificate
+  frontend-external:
+    className: nginx-external
+    paths:
+      - path: /
+        pathType: Prefix
+        service: api
+        port: 8000
+    tls:
+      certificate: certificate
+  api:
+    className: nginx-external
+    # annotations:
+    #   nginx.ingress.kubernetes.io/rewrite-target: /
+    paths:
+      - path: /api
+        pathType: Prefix
+        service: api
+        port: 8000
+    tls:
+      certificate: certificate
   admin:
     className: nginx-internal
     # annotations:
     #   nginx.ingress.kubernetes.io/rewrite-target: /$2
     paths:
-      - path: /
-        service: admin
-        port: 8000
       - path: /admin
         service: admin
         port: 8000
     tls:
-      certificate: ssr-tls
+      certificate: certificate
