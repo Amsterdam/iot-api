@@ -50,6 +50,8 @@ WORKDIR /app/install
 ADD requirements_dev.txt requirements_dev.txt
 RUN pip install -r requirements_dev.txt && pip cache purge
 
+WORKDIR /app/src
+
 # stage 3, tests
 FROM dev as tests
 
