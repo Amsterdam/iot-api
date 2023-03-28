@@ -209,10 +209,6 @@ LOGGING = {
     },
     'formatters': {
         'console': {'format': '%(asctime)s - %(name)s - %(levelname)s - %(message)s'},
-        'timestamp': {
-            'format': '{asctime} {levelname} {message}',
-            'style': '{',
-        },
     },
     'handlers': {
         'console': {
