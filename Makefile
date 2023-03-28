@@ -39,8 +39,11 @@ upgrade: requirements install       ## Run 'requirements' and 'install' targets
 migrations:                         ## Make migrations
 	$(manage) makemigrations $(ARGS)
 
-migrate:                            ## Migrate
+migrate:
 	$(manage) migrate
+
+import:
+	$(manage) import_api
 
 urls:
 	$(manage) show_urls

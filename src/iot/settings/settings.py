@@ -86,7 +86,6 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = (
     'django.middleware.security.SecurityMiddleware',
-    'opencensus.ext.django.middleware.OpencensusMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -94,6 +93,7 @@ MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'opencensus.ext.django.middleware.OpencensusMiddleware',
 )
 
 DEBUG_MIDDLEWARE = (
@@ -239,7 +239,7 @@ if APPLICATIONINSIGHTS_CONNECTION_STRING:
     OPENCENSUS = {
         'TRACE': {
             'SAMPLER': 'opencensus.trace.samplers.ProbabilitySampler(rate=1)',
-            'EXPORTER': f'''opencensus.ext.azure.trace_exporter.AzureExporter(connection_string='{APPLICATIONINSIGHTS_CONNECTION_STRING}')''',
+            'EXPORTER': f"opencensus.ext.azure.trace_exporter.AzureExporter(connection_string='{APPLICATIONINSIGHTS_CONNECTION_STRING}')",
         }
     }
     LOGGING['handlers']['azure'] = {
@@ -249,8 +249,6 @@ if APPLICATIONINSIGHTS_CONNECTION_STRING:
     }
     LOGGING['loggers']['django']['handlers'] = ['azure', 'console']
     LOGGING['loggers']['iot']['handlers'] = ['azure', 'console']
-    LOGGING['root']['handlers'] = ['azure', 'console']
-
 
 # Django REST framework settings
 REST_FRAMEWORK = dict(

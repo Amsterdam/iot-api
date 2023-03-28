@@ -1,4 +1,4 @@
-FROM python:3.11 as base
+FROM python:3.11 as app
 
 RUN apt-get update \
   && apt-get autoremove -y \
@@ -16,28 +16,23 @@ RUN pip install -r requirements.txt && pip cache purge
 
 COPY deploy /app/deploy
 
+WORKDIR /app/src
+COPY src .
+COPY pyproject.toml /app
+
 ARG SECRET_KEY=not-used
 ARG OIDC_RP_CLIENT_ID=not-used
 ARG OIDC_RP_CLIENT_SECRET=not-used
-# RUN DATABASE_ENABLED=false python manage.py collectstatic --no-input
+RUN DATABASE_ENABLED=false python manage.py collectstatic --no-input
 
 RUN mkdir /home/app/.azure
 RUN chown app:app /home/app/.azure
-
-WORKDIR /app/src
-ONBUILD COPY src .
-ONBUILD COPY pyproject.toml /app
-ONBUILD RUN DATABASE_ENABLED=false python manage.py collectstatic --no-input
-ONBUILD RUN chown -R app:app /app /static
-ONBUILD USER app
+USER app
 
 CMD ["/app/deploy/docker-run.sh"]
 
 # stage 2, dev
-FROM base as app
-
-# stage 2, dev
-FROM base as dev
+FROM app as dev
 
 USER root
 RUN apt-get update \
@@ -51,6 +46,10 @@ ADD requirements_dev.txt requirements_dev.txt
 RUN pip install -r requirements_dev.txt && pip cache purge
 
 WORKDIR /app/src
+USER app
+
+# CMD ["./manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["/app/deploy/docker-run.sh"]
 
 # stage 3, tests
 FROM dev as tests
