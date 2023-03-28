@@ -22,10 +22,10 @@ x-app: &base-app
     OIDC_BASE_URL:
     OIDC_RP_CLIENT_ID:
     OIDC_RP_CLIENT_SECRET:
-    AZURE_KEY_VAULT: https://ssr-o-gp4jqffo3heda.vault.azure.net/
-    DATABASE_HOST: ssr-o-gp4jqffo3heda.postgres.database.azure.com
-    DATABASE_USER: EM4W-SSR-o-db-writer
-    DATABASE_NAME: main
+    # AZURE_KEY_VAULT: https://ssr-o-gp4jqffo3heda.vault.azure.net/
+    # DATABASE_HOST: ssr-o-gp4jqffo3heda.postgres.database.azure.com
+    # DATABASE_USER: EM4W-SSR-o-db-writer
+    # DATABASE_NAME: main
   volumes:
     - ./src:/app/src
     - ./tests:/app/tests
