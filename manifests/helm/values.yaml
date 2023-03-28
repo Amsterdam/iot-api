@@ -31,7 +31,7 @@ secrets:
       - oidc-base-url
       - oidc-rp-client-id
       - oidc-rp-client-secret
-      - instrumentation-key
+      - applicationinsights-connection-string
 
 jobs:
   certificate-init:

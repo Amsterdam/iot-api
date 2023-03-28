@@ -235,20 +235,19 @@ LOGGING = {
     },
 }
 
-AZURE_INSTRUMENTATION_KEY = os.getenv('INSTRUMENTATION_KEY')
+APPLICATIONINSIGHTS_CONNECTION_STRING = os.getenv('INSTRUMENTATION_KEY')
 
-if AZURE_INSTRUMENTATION_KEY:
+if APPLICATIONINSIGHTS_CONNECTION_STRING:
     OPENCENSUS = {
         'TRACE': {
             'SAMPLER': 'opencensus.trace.samplers.ProbabilitySampler(rate=1.0)',
-            'EXPORTER': f"opencensus.ext.azure.trace_exporter.AzureExporter(connection_string='{AZURE_INSTRUMENTATION_KEY}')",
+            'EXPORTER': f"opencensus.ext.azure.trace_exporter.AzureExporter(connection_string='{APPLICATIONINSIGHTS_CONNECTION_STRING}')",
         }
     }
     LOGGING['handlers']['azure'] = {
         'level': "DEBUG",
         'class': "opencensus.ext.azure.log_exporter.AzureLogHandler",
-        'connection_string': AZURE_INSTRUMENTATION_KEY,
-        'formatter': 'timestamp',
+        'connection_string': APPLICATIONINSIGHTS_CONNECTION_STRING,
     }
     LOGGING['loggers']['django']['handlers'] = ['azure', 'console']
     LOGGING['loggers']['iot']['handlers'] = ['azure', 'console']
