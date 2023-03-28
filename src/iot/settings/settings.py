@@ -231,13 +231,15 @@ LOGGING = {
     },
 }
 
-APPLICATIONINSIGHTS_CONNECTION_STRING = os.getenv('INSTRUMENTATION_KEY')
+APPLICATIONINSIGHTS_CONNECTION_STRING = os.getenv(
+    'APPLICATIONINSIGHTS_CONNECTION_STRING'
+)
 
 if APPLICATIONINSIGHTS_CONNECTION_STRING:
     OPENCENSUS = {
         'TRACE': {
-            'SAMPLER': 'opencensus.trace.samplers.ProbabilitySampler(rate=1.0)',
-            'EXPORTER': f"opencensus.ext.azure.trace_exporter.AzureExporter(connection_string='{APPLICATIONINSIGHTS_CONNECTION_STRING}')",
+            'SAMPLER': 'opencensus.trace.samplers.ProbabilitySampler(rate=1)',
+            'EXPORTER': f'''opencensus.ext.azure.trace_exporter.AzureExporter(connection_string='{APPLICATIONINSIGHTS_CONNECTION_STRING}')''',
         }
     }
     LOGGING['handlers']['azure'] = {
