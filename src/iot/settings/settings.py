@@ -204,7 +204,7 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'root': {
-        'level': 'INFO',
+        'level': 'DEBUG',
         'handlers': ['console'],
     },
     'formatters': {
@@ -219,6 +219,10 @@ LOGGING = {
     },
     'loggers': {
         'iot': {
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'opencensus': {
             'level': 'INFO',
             'propagate': True,
         },
@@ -239,7 +243,7 @@ if APPLICATIONINSIGHTS_CONNECTION_STRING:
     OPENCENSUS = {
         'TRACE': {
             'SAMPLER': 'opencensus.trace.samplers.ProbabilitySampler(rate=1)',
-            'EXPORTER': f"opencensus.ext.azure.trace_exporter.AzureExporter(connection_string='{APPLICATIONINSIGHTS_CONNECTION_STRING}')",
+            # 'EXPORTER': f"opencensus.ext.azure.trace_exporter.AzureExporter(connection_string='{APPLICATIONINSIGHTS_CONNECTION_STRING}')",
         }
     }
     LOGGING['handlers']['azure'] = {
