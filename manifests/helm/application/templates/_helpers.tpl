@@ -234,7 +234,7 @@ readOnlyRootFilesystem: true
 container.resources
 */}}
 {{- define "container.resources" -}}
-{{- with .resources }}
+{{- with .local.resources }}
 {{- toYaml . }}
 {{- end }}
 {{- end }}
@@ -243,11 +243,9 @@ container.resources
 container.ports
 */}}
 {{- define "container.ports" -}}
-{{- with .ports }}
-{{- range . }}
+{{- range .local.ports }}
 - containerPort: {{ .port }}
   name: {{ .name }}
-{{- end }}
 {{- end }}
 {{- end }}
 
@@ -282,7 +280,7 @@ container.command
 {{- include "container.command" . }}
 
 {{- with include "container.ports" . }}
-ports: {{- . | nindent 2}}
+ports: {{- . | trim | nindent 2}}
 {{- end }}
 
 {{- with include "container.resources" . }}
@@ -294,7 +292,7 @@ securityContext: {{- . | nindent 2}}
 {{- end }}
 
 {{- with include "container.env" . }}
-env: {{- . | nindent 2}}
+env: {{- . | trim | nindent 2}}
 {{- end }}
 
 {{- with include "container.envFrom" . }}
