@@ -93,41 +93,64 @@ Create the name of the service account to use
 Volumes
 */}}
 {{- define "pod.volumes" -}}
-{{- $mountSecrets := .mountSecrets | default list }}
-{{- $secrets := concat (.secrets | default list) $mountSecrets | mustUniq }}
-{{- if or $secrets .volumes }}
-volumes:
-{{- range .volumes }}
-  - name: {{ .name }}
-    {{- toYaml .spec | nindent 4}}
+{{- $fullName := (include "helm.fullname" .root ) }}
+{{- range .local.volumes -}}
+- name: {{ .name }}
+{{- toYaml .spec | nindent 2}}
 {{- end }}
-{{- range $secrets }}
-  - name: {{ . }}
-    csi:
-      driver: secrets-store.csi.k8s.io
-      readOnly: true
-      volumeAttributes:
-        secretProviderClass: {{ . }}
-{{- end }}
-{{- end }}
+{{- include "pod.secretVolumes" . }}
 {{- end }}
 
 {{/*
 Volumes
 */}}
-{{- define "container.volumeMounts" -}}
-{{- $mountSecrets := .mountSecrets | default list }}
-{{- $secrets := concat (.secrets | default list) $mountSecrets | mustUniq }}
-{{- if or $secrets .volumes }}
-volumeMounts:
-{{- range .volumes }}
-  - name: {{ .name }}
-    mountPath: {{ .mountPath }}
-{{- end }}
+{{- define "pod.secretVolumes" -}}
+{{- $mountSecrets := .local.mountSecrets | default list }}
+{{- $secrets := concat (.local.secrets | default list) $mountSecrets | mustUniq }}
+{{- $fullName := (include "helm.fullname" .root ) }}
 {{- range $secrets }}
-  - name: {{ . }}
-    mountPath: /mnt/secrets/{{ . | replace "-" "_" }}
+{{- $secret := get $.root.Values.secrets . }}
+{{- if eq $secret.type "keyvault" }}
+- name: "{{ . }}"
+  csi:
+    driver: secrets-store.csi.k8s.io
     readOnly: true
+    volumeAttributes:
+      secretProviderClass: "{{ . }}-{{ $fullName }}"
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{/*
+Container volumeMounts
+*/}}
+{{- define "container.volumeMounts" -}}
+{{- include "container.volumes" . | indent 2 }}
+{{- include "container.secretVolumes" . | indent 2 }}
+{{- end }}
+
+{{/*
+Container manual volumes
+*/}}
+{{- define "container.volumes" -}}
+{{- range .local.volumes -}}
+- name: {{ .name }}
+  mountPath: {{ .mountPath }}
+{{- end }}
+{{- end }}
+
+{{/*
+Volumes secret volume mounts
+*/}}
+{{- define "container.secretVolumes" -}}
+{{- $mountSecrets := .local.mountSecrets | default list }}
+{{- $secrets := concat (.local.secrets | default list) $mountSecrets | mustUniq }}
+{{- range $secrets }}
+{{- $secret := get $.root.Values.secrets . }}
+{{- if eq $secret.type "keyvault" }}
+- name: {{ . }}
+  mountPath: /mnt/secrets/{{ . | replace "-" "_" }}
+  readOnly: true
 {{- end }}
 {{- end }}
 {{- end }}
@@ -137,26 +160,28 @@ env
 */}}
 {{- define "container.env" -}}
 {{- $env := merge (.local.env | default dict) .root.Values.env }}
-
 {{- if or $env .local.secrets }}
-env:
-
 {{- with $env }}
-  {{- range $name, $value := . }}
-  - name: {{ $name | upper | replace "-" "_" }}
-    value: {{ $value | quote }}
-  {{- end }}
+{{- range $name, $value := . }}
+- name: {{ $name | upper | replace "-" "_" }}
+  value: {{ $value | quote }}
+{{- end }}
 {{- end }}
 
 {{- with .local.secrets }}
 {{- range . }}
 {{- $secretName := . }}
-{{- range (get $.root.Values.secrets $secretName).secrets }}
-  - name: {{ . | upper | replace "-" "_" }}
-    valueFrom:
-      secretKeyRef:
-        name: {{ $secretName }}
-        key: {{ . | quote }}
+{{- $secret := get $.root.Values.secrets $secretName }}
+{{- range $secret.secrets }}
+{{- $key := . }}
+{{- if eq $secret.type "opaque" }}
+{{- $key = .name }}
+{{- end }}
+- name: {{ $key | upper | replace "-" "_" }}
+  valueFrom:
+    secretKeyRef:
+      name: {{ $secretName }}
+      key: {{ $key | quote }}
 {{- end }}
 {{- end }}
 {{- end }}
@@ -168,41 +193,41 @@ env:
 envFrom
 */}}
 {{- define "container.envFrom" -}}
+{{- with .envFrom }}
+{{- toYaml .local.envFrom }}
+{{- end }}
 {{- end }}
 
 {{/*
 tolerations
 */}}
 {{- define "pod.tolerations" -}}
-{{- if .Values.nodepool }}
-tolerations:
-  - key: {{ .Values.nodepool }}
-    operator: "Equal"
-    value: "true"
-    effect: "NoSchedule"
+{{- if .Values.nodepool -}}
+- key: {{ .Values.nodepool }}
+  operator: "Equal"
+  value: "true"
+  effect: "NoSchedule"
 {{- end }}
-  {{- with .Values.tolerations }}
-  {{- . | toYaml | nindent 8 }}
-  {{- end }}
+{{- with .Values.tolerations }}
+{{- . | toYaml }}
+{{- end }}
 {{- end }}
 
 {{/*
 pod.securityContext
 */}}
 {{- define "pod.securityContext" -}}
-securityContext:
-  runAsNonRoot: true
-  runAsUser: 1000
+runAsNonRoot: true
+runAsUser: 1000
 {{- end }}
 
 {{/*
 container.securityContext
 */}}
 {{- define "container.securityContext" -}}
-securityContext:
-  privileged: false
-  allowPrivilegeEscalation: false
-  readOnlyRootFilesystem: true
+privileged: false
+allowPrivilegeEscalation: false
+readOnlyRootFilesystem: true
 {{- end }}
 
 {{/*
@@ -210,8 +235,7 @@ container.resources
 */}}
 {{- define "container.resources" -}}
 {{- with .resources }}
-resources:
-  {{- toYaml . | nindent 2 }}
+{{- toYaml . }}
 {{- end }}
 {{- end }}
 
@@ -220,11 +244,10 @@ container.ports
 */}}
 {{- define "container.ports" -}}
 {{- with .ports }}
-ports:
-  {{- range . }}
-  - containerPort: {{ .port }}
-    name: {{ .name }}
-  {{- end }}
+{{- range . }}
+- containerPort: {{ .port }}
+  name: {{ .name }}
+{{- end }}
 {{- end }}
 {{- end }}
 
@@ -232,7 +255,7 @@ ports:
 container.image
 */}}
 {{- define "container.image" -}}
-{{- $image := merge (.image | default dict) .root.Values.image }}
+{{- $image := merge (.local.image | default dict) .root.Values.image }}
 {{- $repository := required "A repository configuration is required" $image.repository }}
 image: {{ list $image.registry $image.repository | join "/" }}:{{ $image.tag }}
 imagePullPolicy: {{ $image.imagePullPolicy | default "IfNotPresent" }}
@@ -242,10 +265,44 @@ imagePullPolicy: {{ $image.imagePullPolicy | default "IfNotPresent" }}
 container.command
 */}}
 {{- define "container.command" -}}
-{{- with .command }}
+{{- with .local.command }}
 command: {{ toYaml . | nindent 2 }}
 {{- end }}
-{{- with .args }}
+{{- with .local.args }}
 args: {{ toYaml . | nindent 2 }}
 {{- end }}
+{{- end }}
+
+
+{{/*
+container.command
+*/}}
+{{- define "container" -}}
+{{- include "container.image" . }}
+{{- include "container.command" . }}
+
+{{- with include "container.ports" . }}
+ports: {{- . | nindent 2}}
+{{- end }}
+
+{{- with include "container.resources" . }}
+resources: {{- . | nindent 2}}
+{{- end }}
+
+{{- with include "container.securityContext" . }}
+securityContext: {{- . | nindent 2}}
+{{- end }}
+
+{{- with include "container.env" . }}
+env: {{- . | nindent 2}}
+{{- end }}
+
+{{- with include "container.envFrom" . }}
+envFrom: {{- . | nindent 2}}
+{{- end }}
+
+{{- with include "container.volumeMounts" . }}
+volumeMounts: {{- . | nindent 2}}
+{{- end }}
+
 {{- end }}

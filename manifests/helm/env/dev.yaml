@@ -12,7 +12,6 @@ env:
   AZURE_MANAGED_IDENTITY_CLIENTID: 00d77036-c127-4b38-a581-f170b55d65f0
 
 secrets:
-  certificate:
-    keyVaultName: shared-o-ftytfsr6vuduo
-  backend:
-    keyVaultName: ssr-o-gp4jqffo3heda
+  keyvault:
+    certificate:
+      keyVaultName: shared-o-ftytfsr6vuduo

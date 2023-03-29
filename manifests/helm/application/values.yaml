@@ -20,6 +20,8 @@ tolerations: []
 
 env: {}
 
+keyvault: {}
+
 # Resources
 network: {}
 secrets: {}

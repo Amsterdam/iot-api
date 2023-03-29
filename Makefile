@@ -67,11 +67,11 @@ manifests:
 
 deploy/kustomize:
 	# Modify some settings with environment values
-	cd manifests/overlays/${ENVIRONMENT}; \
+	cd manifests/kustomize/overlays/${ENVIRONMENT}; \
 	kustomize edit set image "*/sensorenregister/api=${REGISTRY}/${REPOSITORY}:${VERSION}";
 
 	# Generate the combined manifests
-	kustomize build manifests/overlays/${ENVIRONMENT} > generated.yaml;
+	kustomize build manifests/kustomize/overlays/${ENVIRONMENT} > generated.yaml;
 
 	# Print for debugging purpose
 	cat generated.yaml

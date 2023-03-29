@@ -35,17 +35,13 @@ CMD ["/app/deploy/docker-run.sh"]
 FROM app as dev
 
 USER root
-RUN gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69 \
-  && echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | tee /etc/apt/sources.list.d/k6.list \
-  && apt-get update \
+RUN apt-get update \
   && apt-get autoremove -y \
   && apt-get install --no-install-recommends -y \
   netcat \
-  k6 \
-  && rm -rf /var/lib/apt/lists/* /var/cache/debconf/*-old
+  && rm -rf /var/lib/apt/lists/* /var/cache/debconf/*-old \
 
-
-WORKDIR /app/install
+  WORKDIR /app/install
 ADD requirements_dev.txt requirements_dev.txt
 RUN pip install -r requirements_dev.txt && pip cache purge
 

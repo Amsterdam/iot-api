@@ -24,18 +24,14 @@ spec:
         {{- $labels | nindent 8 }}
     spec:
       restartPolicy: OnFailure
-      {{- include "pod.tolerations" $ | nindent 6 }}
-      {{- include "pod.securityContext" $ | nindent 6 }}
+      tolerations: {{- include "pod.tolerations" $ | nindent 8 }}
+      securityContext:
+        {{- include "pod.securityContext" $context | nindent 8 }}
 
       containers:
       - name: main
-        {{- include "container.image" (dict "image" .image "root" $) | nindent 8 }}
-        {{- include "container.command" . | nindent 8 }}
-        {{- include "container.resources" . | nindent 8 }}
-        {{- include "container.securityContext" . | nindent 8 }}
-        {{- include "container.env" $context | nindent 8 }}
-        {{- include "container.envFrom" . | nindent 8 }}
-        {{- include "container.volumeMounts" . | nindent 8 }}
-      {{- include "pod.volumes" . | nindent 6 }}
+        {{- include "container" $context | nindent 8 }}
+    volumes:
+      {{- include "pod.volumes" $context | nindent 6 }}
 {{ end }}
 {{ end }}

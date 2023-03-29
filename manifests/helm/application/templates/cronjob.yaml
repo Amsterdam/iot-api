@@ -33,19 +33,14 @@ spec:
         spec:
           restartPolicy: OnFailure
 
-          {{- include "pod.tolerations" $ | nindent 10 }}
-          {{- include "pod.securityContext" $ | nindent 10 }}
+          tolerations: {{- include "pod.tolerations" $ | nindent 12 }}
+          securityContext:
+            {{- include "pod.securityContext" $ | nindent 12 }}
 
           containers:
           - name: main
-            {{- include "container.image" (dict "image" .image "root" $) | nindent 12 }}
-            {{- include "container.command" . | nindent 12 }}
-
-            {{- include "container.resources" . | nindent 12 }}
-            {{- include "container.securityContext" . | nindent 12 }}
-            {{- include "container.env" $context | nindent 12 }}
-            {{- include "container.envFrom" . | nindent 12 }}
-            {{- include "container.volumeMounts" . | nindent 12 }}
-          {{- include "pod.volumes" . | nindent 10 }}
+            {{- include "container" $context | nindent 12 }}
+          volumes:
+            {{- include "pod.volumes" $context | nindent 12 }}
 {{ end }}
 {{ end }}
