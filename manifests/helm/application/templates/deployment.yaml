@@ -11,7 +11,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: "{{ $manifestName }}-{{ $fullName }}"
+  name: {{ printf "%s-%s" $manifestName $fullName }}
   labels: {{ $labels | nindent 4 }}
   {{- with $annotations }}
   annotations: {{ . | nindent 4 }}
