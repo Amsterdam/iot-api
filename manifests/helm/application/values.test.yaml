@@ -10,6 +10,11 @@ deployments:
       component: api
     image:
       repository: sensorenregister/api
+    command:
+      - python
+    args:
+      - manage.py
+      - runserver
 
 services:
   api:

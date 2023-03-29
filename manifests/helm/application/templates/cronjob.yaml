@@ -39,8 +39,9 @@ spec:
 
           containers:
           - name: main
-            {{- include "container" $context | nindent 12 }}
-          volumes:
-            {{- include "pod.volumes" $context | nindent 12 }}
+            {{- include "container" $context | indent 12 }}
+          {{- with include "pod.volumes" $context }}
+          volumes: {{- . | nindent 12 }}
+          {{- end }}
 {{ end }}
 {{ end }}

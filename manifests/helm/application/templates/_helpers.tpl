@@ -94,9 +94,9 @@ Volumes
 */}}
 {{- define "pod.volumes" -}}
 {{- $fullName := (include "helm.fullname" .root ) }}
-{{- range .local.volumes -}}
+{{- range .local.volumes }}
 - name: {{ .name }}
-{{- toYaml .spec | nindent 2}}
+  {{- toYaml .spec | nindent 2}}
 {{- end }}
 {{- include "pod.secretVolumes" . }}
 {{- end }}
@@ -125,8 +125,8 @@ Volumes
 Container volumeMounts
 */}}
 {{- define "container.volumeMounts" -}}
-{{- include "container.volumes" . | indent 2 }}
-{{- include "container.secretVolumes" . | indent 2 }}
+{{- include "container.volumes" . }}
+{{- include "container.secretVolumes" . }}
 {{- end }}
 
 {{/*
