@@ -52,6 +52,11 @@ services:
       PGDATA: /data
     volumes:
       - db_data:/data
+    healthcheck:
+      test: pg_isready -U dev -d dev
+      interval: 10s
+      timeout: 1s
+      retries: 5
 
   app: &app
     <<: *base-app
@@ -63,6 +68,28 @@ services:
     environment:
       <<: *base-app-env
       # DEBUG: "false"
+    healthcheck:
+      test: curl -f http://localhost:8000/status/health
+      interval: 10s
+      timeout: 1s
+      retries: 5
+    depends_on:
+      database:
+        condition: service_healthy
+
+  migrate:
+    <<: *base-app
+    command: ./manage.py migrate
+    depends_on:
+      database:
+        condition: service_healthy
+
+  import:
+    <<: *base-app
+    command: ./manage.py import_api
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
 
   dev:
     <<: *base-app
@@ -91,3 +118,14 @@ services:
       DATABASE_USER: dev
       DATABASE_NAME: dev
       DATABASE_PASSWORD: dev
+
+  k6:
+    image: loadimpact/k6
+    volumes:
+      - ./k6.js:/home/k6/k6.js
+    command: run k6.js
+    depends_on:
+      app:
+        condition: service_healthy
+      import:
+        condition: service_completed_successfully
