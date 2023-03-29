@@ -159,6 +159,7 @@ Volumes secret volume mounts
 env
 */}}
 {{- define "container.env" -}}
+{{- $fullName := (include "helm.fullname" .root ) }}
 {{- $env := merge (.local.env | default dict) .root.Values.env }}
 {{- if or $env .local.secrets }}
 {{- with $env }}
@@ -180,7 +181,7 @@ env
 - name: {{ $key | upper | replace "-" "_" }}
   valueFrom:
     secretKeyRef:
-      name: {{ $secretName }}
+      name: {{ printf "%s-%s" $secretName $fullName }}
       key: {{ $key | quote }}
 {{- end }}
 {{- end }}
