@@ -105,6 +105,9 @@ lint:                               ## Execute lint checks
 test: lint                          ## Execute tests
 	$(run) test pytest --junitxml=junit-results.xml --cov=. --cov-report=xml /app/tests/$(APP) $(ARGS)
 
+k6:
+	$(run) k6
+
 qa: lint test                      ## Execute all QA tools
 
 pdb:
