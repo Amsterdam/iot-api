@@ -163,9 +163,6 @@ ingress:
       - path: /api(/|$)(.*)
         service: api
         port: 8000
-      - path: /admin(/|$)(.*)
-        service: admin
-        port: 8000
     tls:
       certificate: certificate
 
