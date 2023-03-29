@@ -10,8 +10,6 @@ x-app: &base-app
   build:
     context: .
     target: app
-  depends_on:
-    - database
   environment: &base-app-env
     SECRET_KEY: "insecure"
     ADMIN_ENABLED: "true"
@@ -36,7 +34,10 @@ x-app: &base-app
     - ./tests:/app/tests
     - ./deploy:/app/deploy
     - cache:/home/app/.azure
-  entrypoint: /app/deploy/wait-for-it.sh database:5432 --
+  # entrypoint: /app/deploy/wait-for-it.sh database:5432 --
+  depends_on:
+    database:
+      condition: service_healthy
 
 volumes:
   db_data:
@@ -73,16 +74,10 @@ services:
       interval: 10s
       timeout: 1s
       retries: 5
-    depends_on:
-      database:
-        condition: service_healthy
 
   migrate:
     <<: *base-app
     command: ./manage.py migrate
-    depends_on:
-      database:
-        condition: service_healthy
 
   import:
     <<: *base-app

@@ -1,9 +1,9 @@
 import http from "k6/http";
 import { check, group, sleep } from "k6";
 
-export default function () {
-  let response = http.get("http://localhost/iothings/devices/");
-  let checkRes = check(response, {
+export default function() {
+  let response = http.get("http://app:8000/api/devices/");
+  check(response, {
     "http2 is used": (r) => r.proto === "HTTP/2.0",
     "status is 200": (r) => r.status === 200,
     "content is present": (r) => r.body.indexOf("results") !== -1,
@@ -11,12 +11,13 @@ export default function () {
 }
 
 export let options = {
-  vus: 1,
   stages: [
-    { duration: "10s", target: 5 },
-    { duration: "10s", target: 10 },
-    { duration: "10s", target: 35 },
-    { duration: "10s", target: 0 },
+    // { duration: "10s", target: 20 },
+    // { duration: "10s", target: 40 },
+    // { duration: "10s", target: 60 },
+    // { duration: "10s", target: 80 },
+    { duration: "10s", target: 50 },
+    // { duration: "10s", target: 0 },
   ],
   thresholds: {
     http_req_duration: ["p(95)<500"],
