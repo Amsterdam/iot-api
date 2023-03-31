@@ -153,8 +153,7 @@ ingress:
         pathType: Prefix
         service: api
         port: 8000
-    tls:
-      certificate: certificate
+    tls: certificate
 
   frontend-internal:
     className: nginx-internal
@@ -163,8 +162,7 @@ ingress:
         pathType: Prefix
         service: api
         port: 8000
-    tls:
-      certificate: certificate
+    tls: certificate
 
   backend-external:
     className: nginx-external
@@ -174,8 +172,7 @@ ingress:
       - path: /api(/|$)(.*)
         service: api
         port: 8000
-    tls:
-      certificate: certificate
+    tls: certificate
 
   backend-internal:
     className: nginx-internal
@@ -188,5 +185,4 @@ ingress:
       - path: /admin(/|$)(.*)
         service: admin
         port: 8000
-    tls:
-      certificate: certificate
+    tls: certificate
