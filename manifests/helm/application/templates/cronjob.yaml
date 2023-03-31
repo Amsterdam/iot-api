@@ -32,10 +32,12 @@ spec:
             {{- $labels | nindent 12 }}
         spec:
           restartPolicy: OnFailure
-
-          tolerations: {{- include "pod.tolerations" $ | nindent 12 }}
-          securityContext:
-            {{- include "pod.securityContext" $ | nindent 12 }}
+          {{- with include "pod.tolerations" $context }}
+          tolerations: {{- . | trim | nindent 12}}
+          {{- end }}
+          {{- with include "pod.securityContext" $context }}
+          securityContext: {{- . | trim | nindent 12}}
+          {{- end }}
 
           containers:
           - name: main

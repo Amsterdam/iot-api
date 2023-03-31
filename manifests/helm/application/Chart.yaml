@@ -1,8 +1,7 @@
 apiVersion: v2
 name: application
 description: >
-  A helm chart for deploying an application that may consist of
-  multiple deployments or cronjobs
+  A generic helm chart for deploying an application
 
 # A chart can be either an 'application' or a 'library' chart.
 #

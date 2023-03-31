@@ -8,7 +8,7 @@
 {{- $annotations := include "resource.annotations" $context }}
 {{- $labels := include "resource.labels" $context }}
 {{- $selectorLabels := include "resource.selectorLabels" $context }}
-{{- $host := .host | default $.Values.host}}
+{{- $host := required "Ingress must have a host" (.host | default $.Values.host)}}
 ---
 
 {{/* {{- $svcPort := $values.service.port -}} */}}
@@ -28,22 +28,23 @@ metadata:
     {{- . | nindent 4 }}
   {{- end }}
 spec:
-  ingressClassName: {{ .className }}
+  ingressClassName: {{ .className | default "nginx-internal" }}
   {{- if $host }}
   {{- with .tls }}
   tls:
     - hosts:
         - {{ $host | quote }}
-      secretName: {{ printf "%s-%s" .certificate $fullName }}
+      secretName: {{ printf "%s-%s" . $fullName }}
   {{- end }}
   {{- end }}
   rules:
     - {{ if $host -}}
       host: {{ $host | quote }}
       {{ end -}}
+      {{- with .paths }}
       http:
         paths:
-          {{- range .paths }}
+          {{- range . }}
           - path: {{ .path | quote }}
             pathType: {{ .pathType | default "Prefix" }}
             backend:
@@ -52,6 +53,7 @@ spec:
                 port:
                   number: {{ .port }}
           {{- end }}
+      {{- end }}
 
 {{- end }}
 {{- end }}

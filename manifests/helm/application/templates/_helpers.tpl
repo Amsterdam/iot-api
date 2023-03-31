@@ -110,7 +110,7 @@ Volumes
 {{- $fullName := (include "helm.fullname" .root ) }}
 {{- range $secrets }}
 {{- $secret := get $.root.Values.secrets . }}
-{{- if eq $secret.type "keyvault" }}
+{{- if eq (lower $secret.type) "keyvault" }}
 - name: "{{ . }}"
   csi:
     driver: secrets-store.csi.k8s.io
@@ -125,15 +125,15 @@ Volumes
 Container volumeMounts
 */}}
 {{- define "container.volumeMounts" -}}
-{{- include "container.volumes" . }}
 {{- include "container.secretVolumes" . }}
+{{- include "container.volumes" . }}
 {{- end }}
 
 {{/*
 Container manual volumes
 */}}
 {{- define "container.volumes" -}}
-{{- range .local.volumes -}}
+{{- range .local.volumes }}
 - name: {{ .name }}
   mountPath: {{ .mountPath }}
 {{- end }}
@@ -147,7 +147,7 @@ Volumes secret volume mounts
 {{- $secrets := concat (.local.secrets | default list) $mountSecrets | mustUniq }}
 {{- range $secrets }}
 {{- $secret := get $.root.Values.secrets . }}
-{{- if eq $secret.type "keyvault" }}
+{{- if eq (lower $secret.type) "keyvault" }}
 - name: {{ . }}
   mountPath: /mnt/secrets/{{ . | replace "-" "_" }}
   readOnly: true
@@ -178,10 +178,10 @@ env
 {{- if eq $secret.type "opaque" }}
 {{- $key = .name }}
 {{- end }}
-- name: {{ $key | upper | replace "-" "_" }}
+- name: {{ $key | upper | replace "-" "_" | quote }}
   valueFrom:
     secretKeyRef:
-      name: {{ printf "%s-%s" $secretName $fullName }}
+      name: {{ printf "%s-%s" $secretName $fullName | quote }}
       key: {{ $key | quote }}
 {{- end }}
 {{- end }}
@@ -203,13 +203,16 @@ envFrom
 tolerations
 */}}
 {{- define "pod.tolerations" -}}
-{{- if .Values.nodepool -}}
-- key: {{ .Values.nodepool }}
+{{- with .root.Values.nodepool -}}
+- key: {{ . | quote }}
   operator: "Equal"
   value: "true"
   effect: "NoSchedule"
 {{- end }}
-{{- with .Values.tolerations }}
+{{- with .root.Values.tolerations }}
+{{- . | toYaml }}
+{{- end }}
+{{- with .local.tolerations }}
 {{- . | toYaml }}
 {{- end }}
 {{- end }}
@@ -218,17 +221,20 @@ tolerations
 pod.securityContext
 */}}
 {{- define "pod.securityContext" -}}
-runAsNonRoot: true
-runAsUser: 1000
+{{- $context := merge (.local.securityContext | default dict) .root.Values.securityContext }}
+{{- with $context.pod }}
+{{- . | toYaml }}
+{{- end }}
 {{- end }}
 
 {{/*
 container.securityContext
 */}}
 {{- define "container.securityContext" -}}
-privileged: false
-allowPrivilegeEscalation: false
-readOnlyRootFilesystem: true
+{{- $context := merge (.local.securityContext | default dict) .root.Values.securityContext }}
+{{- with $context.container }}
+{{- . | toYaml }}
+{{- end }}
 {{- end }}
 
 {{/*
@@ -256,7 +262,7 @@ container.image
 {{- define "container.image" -}}
 {{- $image := merge (.local.image | default dict) .root.Values.image }}
 {{- $repository := required "A repository configuration is required" $image.repository }}
-image: {{ list $image.registry $image.repository | join "/" }}:{{ $image.tag }}
+image: {{ printf "%s:%s" (list $image.registry $image.repository | join "/") $image.tag | quote }}
 imagePullPolicy: {{ $image.imagePullPolicy | default "IfNotPresent" }}
 {{- end }}
 

@@ -1,62 +1,21 @@
-name: my-app
-
 image:
-  registry: shared-acr.azure.io
-  tag: 1.2.3
+  repository: foo
 
-deployments:
-  api:
-    labels:
-      component: api
-    image:
-      repository: sensorenregister/api
-    command:
-      - python
-    args:
-      - manage.py
-      - runserver
+tenantId: 72fca1b1-2c2e-4376-a445-294d80196804
+keyVaultName: my-kv
+keyVaultIdentity: 00d77036-c127-4b38-a581-f170b55d65f0
 
-services:
-  api:
-    selector:
-      component: api
-# name: my-cronjob
-# identity: my-identity
-# keyvaultName: root-keyvault
-# tenantId: my-tenant
+nodepool: cccssront01
 
-# image:
-#   repository: "my-repository"
-#   tag: "my-tag"
+jobs:
+  migrate:
+    secrets:
+      - supersecret
 
-# env: {}
-
-# secrets:
-#   test:
-#     keyvaultName: my-keyvault
-#     secrets:
-#       - my-little-secret
-#   other:
-#     secrets:
-#       - my-other-secret
-
-# cronJobs:
-#   test:
-#     image:
-#       registry: "my-registry"
-#       repository: "my-repository"
-#       tag: "my-override"
-#     enabled: true
-#     schedule: "* * * * *"
-#     secrets:
-#       - test
-#       - other
-
-# deployments:
-#   test:
-#     enabled: true
-#     env:
-#       LOOP: True
-#     secrets:
-#       - test
-#       - other
+secrets:
+  supersecret:
+    type: keyvault
+    secrets:
+      - secret-key
+      - oidc-client-id
+      - oidc-client-secret

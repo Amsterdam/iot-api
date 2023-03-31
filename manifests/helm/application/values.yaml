@@ -1,11 +1,20 @@
-name:
+name: my-app
 
 tenantId:
 keyVaultName:
 keyVaultIdentity:
 
+securityContext:
+  pod:
+    runAsNonRoot: true
+    runAsUser: 1000
+  container:
+    privileged: false
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+
 image:
-  registry:
+  registry: saks01weuacrpgpgo5qvmwo.azurecr.io
   repository:
   tag: latest
 
@@ -23,10 +32,13 @@ env: {}
 keyvault: {}
 
 # Resources
-network: {}
 secrets: {}
 jobs: {}
 cronJobs: {}
 deployments: {}
 services: {}
 ingress: {}
+
+# Network policies
+# https://docs.tigera.io/calico/latest/reference/resources/networkpolicy
+network: {}

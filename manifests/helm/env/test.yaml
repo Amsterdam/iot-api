@@ -1,0 +1,16 @@
+keyVaultName: ssr-t-zryvqlwvrfmge
+keyVaultIdentity: d1a45eca-b417-4da4-8603-32a8e7291591
+
+image:
+  repository: sensorenregister/api-dev
+
+nodepool: cccssrtst01
+host: ssr-t.azure.amsterdam.nl
+
+env:
+  AZURE_KEY_VAULT: "https://ssr-t-zryvqlwvrfmge.vault.azure.net/"
+  AZURE_MANAGED_IDENTITY_CLIENTID: d1a45eca-b417-4da4-8603-32a8e7291591
+
+secrets:
+  certificate:
+    keyVaultName: shared-t-vfstn5vergsqw
