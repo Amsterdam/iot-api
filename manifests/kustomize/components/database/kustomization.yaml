@@ -1,6 +1,0 @@
-kind: Component
-
-resources:
-  - deployment.yaml
-  - service.yaml
-  - storage.yaml

@@ -1,4 +1,0 @@
-kind: Component
-
-resources:
-  - networkpolicy.yaml
