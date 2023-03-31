@@ -45,5 +45,5 @@ extends:
         variables:
           ENV: test
         pool: TAMM
-        namespace: ns-ccc-ssr-test-01-sensorenregister
+        namespace: ns-ccc-ssr-tst-01-sensorenregister
         kubernetesServiceConnection: SCN-K8S-ns-ccc-ssr-tst-01-sensorenregister
