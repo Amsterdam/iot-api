@@ -262,7 +262,7 @@ container.image
 {{- define "container.image" -}}
 {{- $image := merge (.local.image | default dict) .root.Values.image }}
 {{- $repository := required "A repository configuration is required" $image.repository }}
-image: {{ printf "%s:%s" (list $image.registry $image.repository | join "/") $image.tag }}
+image: {{ printf "%s:%s" (list $image.registry $image.repository | join "/") $image.tag | quote }}
 imagePullPolicy: {{ $image.imagePullPolicy | default "IfNotPresent" }}
 {{- end }}
 
