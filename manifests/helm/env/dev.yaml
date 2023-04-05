@@ -1,16 +1,24 @@
+# Default keyvault for getting secrets
 keyVaultName: ssr-o-gp4jqffo3heda
+
+# Identity AppID (clientId) used to authenticate with the keyvault
 keyVaultIdentity: 00d77036-c127-4b38-a581-f170b55d65f0
 
 image:
   repository: sensorenregister/api-dev
 
+# We must select the nodepool to run the pods on
 nodepool: cccssront01
+
+# Default host for the ingress resources
 host: ssr-o.azure.amsterdam.nl
 
+# Some default environment variables to inject in all containers
 env:
   AZURE_KEY_VAULT: "https://ssr-o-gp4jqffo3heda.vault.azure.net/"
   AZURE_MANAGED_IDENTITY_CLIENTID: 00d77036-c127-4b38-a581-f170b55d65f0
 
+# Specify the keyvault that has the certificate
 secrets:
   certificate:
     keyVaultName: shared-o-ftytfsr6vuduo
