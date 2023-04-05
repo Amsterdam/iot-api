@@ -20,8 +20,8 @@ spec:
   schedule: {{ $values.schedule | quote }}
   # default 300 seconds == 5 minutes
   startingDeadlineSeconds: {{ $values.startingDeadlineSeconds | default 300 }}
-  successfulJobsHistoryLimit: {{ $values.successfulJobsHistoryLimit | default 3 }}
-  failedJobsHistoryLimit:  {{ $values.failedJobsHistoryLimit | default 3 }}
+  successfulJobsHistoryLimit: {{ $values.successfulJobsHistoryLimit | default 1 }}
+  failedJobsHistoryLimit:  {{ $values.failedJobsHistoryLimit | default 1 }}
   concurrencyPolicy: {{ $values.concurrencyPolicy | default "Forbid" }}
   jobTemplate:
     spec:
