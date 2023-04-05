@@ -37,19 +37,20 @@ secrets:
 
 jobs:
   certificate-init:
+    annotations:
+      helm.sh/hook: post-install,post-upgrade
     labels:
       component: certificate
     mountSecrets:
       - certificate
     command:
-      - bash
+      - sleep
     args:
-      - -c
-      - |
-        ls -lah /mnt/secrets/certificate
-        openssl x509 -in /mnt/secrets/certificate/sensorenregister.crt -text
+      - "1"
 
   migrate:
+    annotations:
+      helm.sh/hook: post-install,post-upgrade
     labels:
       component: migrate
     volumes:
