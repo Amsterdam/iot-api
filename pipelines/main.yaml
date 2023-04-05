@@ -28,17 +28,6 @@ extends:
         pool: TAMM
         namespace: ns-ccc-ssr-ont-01-sensorenregister
         kubernetesServiceConnection: SCN-K8S-ns-ccc-ssr-ont-01-sensorenregister
-        preSteps:
-          - script: helm env
-            displayName: helm env
-          - script: helm list
-            displayName: helm list
-          - script: helm history backend
-            displayName: helm history
-          - script: helm status backend
-            displayName: helm status
-          - script: helm get all backend
-            displayName: helm get all
     test:
       serviceConnection: ARM-CCC-SSR-test-01
       deploy:
