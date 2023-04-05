@@ -91,6 +91,8 @@ deployments:
       ADMIN_ENABLED: false
       API_ENABLED: true
       API_PATH: /
+    autoscale:
+      cpu: 70
     resources:
       requests:
         cpu: 1
