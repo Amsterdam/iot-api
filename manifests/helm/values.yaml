@@ -138,24 +138,6 @@ services:
         targetPort: http
 
 ingress:
-  frontend-external:
-    className: nginx-external
-    paths:
-      - path: /
-        pathType: Prefix
-        service: api
-        port: 8000
-    tls: certificate
-
-  frontend-internal:
-    className: nginx-internal
-    paths:
-      - path: /
-        pathType: Prefix
-        service: api
-        port: 8000
-    tls: certificate
-
   backend-external:
     className: nginx-external
     annotations:
