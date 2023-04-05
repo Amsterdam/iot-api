@@ -72,6 +72,11 @@ cronJobs:
     schedule: "0 * * * *"
     secrets:
       - backend
+    volumes:
+      - name: tmp
+        mountPath: /tmp
+        spec:
+          emptyDir: {}
     command:
       - python
       - manage.py
