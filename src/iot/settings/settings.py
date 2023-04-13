@@ -31,6 +31,7 @@ ALLOWED_HOSTS = [
 
 INTERNAL_IPS = ('127.0.0.1', '0.0.0.0')
 CORS_ORIGIN_ALLOW_ALL = True
+DEFAULT_IMPORT_TIMEOUT = 5
 
 DATAPUNT_API_URL = os.getenv('DATAPUNT_API_URL', 'https://api.data.amsterdam.nl/')
 

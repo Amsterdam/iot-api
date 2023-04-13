@@ -52,7 +52,7 @@ def get_center_coordinates(postcode: str, house_number: Union[int, str]) -> Poin
              the house number on that street.
     """
     url = get_postcode_url(postcode)
-    data = requests.get(url).json()
+    data = requests.get(url, timeout=settings.DEFAULT_IMPORT_TIMEOUT).json()
 
     if not data or not data.get('results') or 'naam' not in data['results'][0]:
         raise PostcodeSearchException(postcode, house_number)
@@ -60,7 +60,7 @@ def get_center_coordinates(postcode: str, house_number: Union[int, str]) -> Poin
     url = get_address_url(data['results'][0]['naam'], house_number)
 
     while url is not None:
-        data = requests.get(url).json()
+        data = requests.get(url, timeout=settings.DEFAULT_IMPORT_TIMEOUT).json()
         if not data.get('results'):
             break
 

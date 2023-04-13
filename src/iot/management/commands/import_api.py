@@ -1,4 +1,5 @@
 import requests
+from django.conf import settings
 from django.core.management.base import BaseCommand
 
 from iot import import_utils_apis
@@ -51,7 +52,9 @@ class Command(BaseCommand):
                 api
             ]  # get the url that belongs to the api.
 
-            response = requests.get(url=api_url)
+            response = requests.get(
+                url=api_url, timeout=settings.DEFAULT_IMPORT_TIMEOUT
+            )
             # check if response is 200 and content type is json, if not, return
             if (
                 response.status_code != 200
