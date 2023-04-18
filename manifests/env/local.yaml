@@ -14,7 +14,7 @@ jobs:
     enabled: false
 
 persistentVolumeClaims:
-  foo:
+  data:
     resources:
       requests:
         storage: 1Gi
@@ -38,7 +38,7 @@ deployments:
     volumes:
       - name: data
         mountPath: /data
-        persistentVolumeClaim: foo
+        persistentVolumeClaim: data
 
 services:
   database:

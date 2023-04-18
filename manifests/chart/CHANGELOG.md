@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/Amsterdam/helm-application/compare/1.2.3...1.3.0) (2023-04-18)
+
+
+### Features
+
+* **storage:** Added persistent volume claim manifest ([d4c2cbe](https://github.com/Amsterdam/helm-application/commit/d4c2cbe92281dfa8d8d81a82eda931815cef3aaf))
+
 ## [1.2.3](https://github.com/Amsterdam/helm-application/compare/1.2.2...1.2.3) (2023-04-18)
 
 

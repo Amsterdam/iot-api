@@ -9,6 +9,12 @@ keyVaultIdentity: keyvault-identity
 
 nodepool: nodepool
 
+persistentVolumeClaims:
+  data:
+    resources:
+      requests:
+        storage: 1Gi
+
 jobs:
   migrate:
     ttlSecondsAfterFinished: 300
@@ -28,6 +34,10 @@ deployments:
       memory: 90
       min: 3
       max: 8
+    volumes:
+      - name: data
+        mountPath: /data
+        persistentVolumeClaim: data
 
 secrets:
   simple:
