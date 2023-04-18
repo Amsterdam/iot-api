@@ -96,7 +96,13 @@ Volumes
 {{- $fullName := (include "helm.fullname" .root ) }}
 {{- range .local.volumes }}
 - name: {{ .name }}
-  {{- toYaml .spec | nindent 2}}
+{{- with .persistentVolumeClaim }}
+  persistentVolumeClaim:
+    claimName: {{ printf "%s-%s" . $fullName }}
+{{- end }}
+{{- with .spec }}
+  {{- toYaml . | nindent 2}}
+{{- end }}
 {{- end }}
 {{- include "pod.secretVolumes" . }}
 {{- end }}
@@ -160,7 +166,7 @@ env
 */}}
 {{- define "container.env" -}}
 {{- $fullName := (include "helm.fullname" .root ) }}
-{{- $env := merge (.local.env | default dict) .root.Values.env }}
+{{- $env := mergeOverwrite (deepCopy .root.Values.env) (.local.env | default dict) }}
 {{- if or $env .local.secrets }}
 {{- with $env }}
 {{- range $name, $value := . }}
@@ -221,7 +227,7 @@ tolerations
 pod.securityContext
 */}}
 {{- define "pod.securityContext" -}}
-{{- $context := merge (.local.securityContext | default dict) .root.Values.securityContext }}
+{{- $context := mergeOverwrite (deepCopy .root.Values.securityContext) (.local.securityContext | default dict) }}
 {{- with $context.pod }}
 {{- . | toYaml }}
 {{- end }}
@@ -231,7 +237,7 @@ pod.securityContext
 container.securityContext
 */}}
 {{- define "container.securityContext" -}}
-{{- $context := merge (.local.securityContext | default dict) .root.Values.securityContext }}
+{{- $context := mergeOverwrite (deepCopy .root.Values.securityContext) (.local.securityContext | default dict)}}
 {{- with $context.container }}
 {{- . | toYaml }}
 {{- end }}
@@ -260,7 +266,7 @@ container.ports
 container.image
 */}}
 {{- define "container.image" -}}
-{{- $image := merge (.local.image | default dict) .root.Values.image }}
+{{- $image := mergeOverwrite (deepCopy .root.Values.image) (.local.image | default dict) }}
 {{- $repository := required "A repository configuration is required" $image.repository }}
 image: {{ printf "%s:%s" (list $image.registry $image.repository | join "/") $image.tag | quote }}
 imagePullPolicy: {{ $image.imagePullPolicy | default "IfNotPresent" }}

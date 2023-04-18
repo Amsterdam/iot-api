@@ -17,6 +17,9 @@ metadata:
   annotations: {{ . | nindent 4 }}
   {{- end }}
 spec:
+  {{- with .ttlSecondsAfterFinished }}
+  ttlSecondsAfterFinished: {{ . }}
+  {{- end }}
   backoffLimit: {{ .backoffLimit | default 5 }}
   template:
     metadata:

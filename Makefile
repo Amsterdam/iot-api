@@ -12,9 +12,9 @@ pytest = $(run) test pytest $(ARGS)
 
 ENVIRONMENT ?= local
 HELM_UPGRADE = helm upgrade backend $(HELM_ARGS)
-HELM_ARGS = manifests/helm/application \
-	-f manifests/helm/values.yaml \
-	-f manifests/helm/env/${ENVIRONMENT}.yaml \
+HELM_ARGS = manifests/chart \
+	-f manifests/values.yaml \
+	-f manifests/env/${ENVIRONMENT}.yaml \
 	--set image.tag=${VERSION}
 
 REGISTRY ?= localhost:5001
@@ -55,32 +55,15 @@ push: build
 	$(dc) push
 
 deploy: manifests
-	# kubectl delete deploy,service,ingress,cronjob,job,cm,secretproviderclass --all
-	# Jobs are immutable
-	# attempt to fix this with a helm hook that deletes itself
-	# kubectl delete networkpolicy.projectcalico -l app=sensorenregister
-	# kubectl delete job -l 'component in (migrate, certificate)'
 	helm upgrade --install --atomic backend $(HELM_ARGS)
 
 manifests:
 	@helm template backend $(HELM_ARGS) $(ARGS)
 
-deploy/kustomize:
-	# Modify some settings with environment values
-	cd manifests/kustomize/overlays/${ENVIRONMENT}; \
-	kustomize edit set image "*/sensorenregister/api=${REGISTRY}/${REPOSITORY}:${VERSION}";
-
-	# Generate the combined manifests
-	kustomize build manifests/kustomize/overlays/${ENVIRONMENT} > generated.yaml;
-
-	# Print for debugging purpose
-	cat generated.yaml
-	# Validate it works with a dry run
-	kubectl apply --dry-run=client -f generated.yaml
-	# Delete immutable job
-	kubectl delete job -l component=migrate
-	# Apply the new manifest
-	kubectl apply -f generated.yaml
+update-chart:
+	rm -rf manifests/chart
+	git clone --branch 1.3.0 --depth 1 git@github.com:Amsterdam/helm-application.git manifests/chart
+	rm -rf manifests/chart/.git
 
 app:
 	$(run) --service-ports app

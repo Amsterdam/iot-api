@@ -14,7 +14,7 @@ securityContext:
     readOnlyRootFilesystem: true
 
 image:
-  registry: saks01weuacrpgpgo5qvmwo.azurecr.io
+  registry:
   repository:
   tag: latest
 

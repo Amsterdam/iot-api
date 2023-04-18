@@ -1,0 +1,43 @@
+image:
+  registry: myregistry.com
+  repository: repository
+  tag: 1.2.3
+
+tenantId: tenant-id
+keyVaultName: keyvault-name
+keyVaultIdentity: keyvault-identity
+
+nodepool: nodepool
+
+jobs:
+  migrate:
+    ttlSecondsAfterFinished: 300
+    secrets:
+      - supersecret
+
+cronJobs:
+  import:
+    ttlSecondsAfterFinished: 180
+
+deployments:
+  app:
+    labels:
+      component: app
+    autoscale:
+      cpu: 70
+      memory: 90
+      min: 3
+      max: 8
+
+secrets:
+  simple:
+    type: opaque
+    secrets:
+      - name: foo
+        value: bar
+  supersecret:
+    type: keyvault
+    secrets:
+      - secret1
+      - secret2
+      - secret3

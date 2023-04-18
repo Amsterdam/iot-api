@@ -1,0 +1,101 @@
+# Changelog
+
+## [1.2.3](https://github.com/Amsterdam/helm-application/compare/1.2.2...1.2.3) (2023-04-18)
+
+
+### Bug Fixes
+
+* **helpers:** Make sure we deepcopy before we merge to not override the original ([31deed8](https://github.com/Amsterdam/helm-application/commit/31deed85ad801183b39a11b9aa3aa80a196b01bd))
+
+## [1.2.2](https://github.com/Amsterdam/helm-application/compare/1.2.1...1.2.2) (2023-04-18)
+
+
+### Bug Fixes
+
+* **helpers:** We now merge using mergeoverwrite in order to allow a null value to delete the default value ([87354ca](https://github.com/Amsterdam/helm-application/commit/87354ca6903f18301c25afb426e66a18cf4ddbf2))
+
+## [1.2.1](https://github.com/Amsterdam/helm-application/compare/1.2.0...1.2.1) (2023-04-18)
+
+
+### Bug Fixes
+
+* **secrets:** Allow for secrets to be disabled ([1ac4681](https://github.com/Amsterdam/helm-application/commit/1ac4681f89d5e04b4964979b8e243e03820fed40))
+
+## [1.2.0](https://github.com/Amsterdam/helm-application/compare/1.1.0...1.2.0) (2023-04-05)
+
+
+### Features
+
+* **cicd:** Updated github actions to run tests on PR, release-please on merge in main and publishing charts on tags ([895ae27](https://github.com/Amsterdam/helm-application/commit/895ae27741e5041e126859c160cb9a334cb131ae))
+* **job:** Added ttlSecondsAfterFinished as an option ([33c68cb](https://github.com/Amsterdam/helm-application/commit/33c68cb249f16ad6bf8c767a7986579917100571))
+
+
+### Bug Fixes
+
+* **cicd:** Update actions for releasing ([4e1b79c](https://github.com/Amsterdam/helm-application/commit/4e1b79c5e97476c05036b4fd7de11120746073f4))
+
+## [1.2.0](https://github.com/Amsterdam/helm-application/compare/1.1.0...1.2.0) (2023-04-05)
+
+
+### Features
+
+* **cicd:** Updated github actions to run tests on PR, release-please on merge in main and publishing charts on tags ([8d4c1ac](https://github.com/Amsterdam/helm-application/commit/8d4c1acf4ad2d295c05136b172679ae73122db75))
+* **job:** Added ttlSecondsAfterFinished as an option ([33c68cb](https://github.com/Amsterdam/helm-application/commit/33c68cb249f16ad6bf8c767a7986579917100571))
+
+
+### Bug Fixes
+
+* **cicd:** Dont tag with the v prefix ([cb96de7](https://github.com/Amsterdam/helm-application/commit/cb96de7007e26bc3f827a12caf22597bc05bc7d3))
+* **cicd:** Fix names of github actions ([3b9e884](https://github.com/Amsterdam/helm-application/commit/3b9e8846721f8c109c85318faaf0ce9ca29291d8))
+
+## [1.4.0](https://github.com/Amsterdam/helm-application/compare/v1.3.0...1.4.0) (2023-04-05)
+
+
+### Features
+
+* **cicd:** Updated github actions to run tests on PR, release-please on merge in main and publishing charts on tags ([4a34567](https://github.com/Amsterdam/helm-application/commit/4a3456743c6c3b75f77103aefa55667749b22c50))
+* **job:** Added ttlSecondsAfterFinished as an option ([33c68cb](https://github.com/Amsterdam/helm-application/commit/33c68cb249f16ad6bf8c767a7986579917100571))
+
+
+### Bug Fixes
+
+* **cicd:** Dont tag with the v prefix ([a9731c5](https://github.com/Amsterdam/helm-application/commit/a9731c5b232f1000363f0fe2573f226f467a502b))
+* **cicd:** Fix names of github actions ([590bb62](https://github.com/Amsterdam/helm-application/commit/590bb621891b575c260ecc46b8eec92629809b29))
+* **cicd:** Let the push target rely on the build target ([fa27df3](https://github.com/Amsterdam/helm-application/commit/fa27df32229387975d53de2c5b44496cc51ba156))
+* **cicd:** Only publish full semver ([4e88ef1](https://github.com/Amsterdam/helm-application/commit/4e88ef1e6fd097bb6607ffc76ecbd8cec36fdace))
+
+## [1.3.0](https://github.com/Amsterdam/helm-application/compare/v1.2.1...1.3.0) (2023-04-05)
+
+
+### Features
+
+* **cicd:** Updated github actions to run tests on PR, release-please on merge in main and publishing charts on tags ([4a34567](https://github.com/Amsterdam/helm-application/commit/4a3456743c6c3b75f77103aefa55667749b22c50))
+* **job:** Added ttlSecondsAfterFinished as an option ([33c68cb](https://github.com/Amsterdam/helm-application/commit/33c68cb249f16ad6bf8c767a7986579917100571))
+
+
+### Bug Fixes
+
+* **cicd:** Dont tag with the v prefix ([a9731c5](https://github.com/Amsterdam/helm-application/commit/a9731c5b232f1000363f0fe2573f226f467a502b))
+* **cicd:** Fix names of github actions ([590bb62](https://github.com/Amsterdam/helm-application/commit/590bb621891b575c260ecc46b8eec92629809b29))
+* **cicd:** Let the push target rely on the build target ([fa27df3](https://github.com/Amsterdam/helm-application/commit/fa27df32229387975d53de2c5b44496cc51ba156))
+
+## [1.2.1](https://github.com/Amsterdam/helm-application/compare/1.2.0...1.2.1) (2023-04-05)
+
+
+### Bug Fixes
+
+* **cicd:** Fix names of github actions ([590bb62](https://github.com/Amsterdam/helm-application/commit/590bb621891b575c260ecc46b8eec92629809b29))
+* **cicd:** Let the push target rely on the build target ([fa27df3](https://github.com/Amsterdam/helm-application/commit/fa27df32229387975d53de2c5b44496cc51ba156))
+
+## [1.2.0](https://github.com/Amsterdam/helm-application/compare/1.1.0...1.2.0) (2023-04-05)
+
+
+### Features
+
+* **cicd:** Updated github actions to run tests on PR, release-please on merge in main and publishing charts on tags ([4a34567](https://github.com/Amsterdam/helm-application/commit/4a3456743c6c3b75f77103aefa55667749b22c50))
+* **job:** Added ttlSecondsAfterFinished as an option ([33c68cb](https://github.com/Amsterdam/helm-application/commit/33c68cb249f16ad6bf8c767a7986579917100571))
+
+
+### Bug Fixes
+
+* **cicd:** Dont tag with the v prefix ([a9731c5](https://github.com/Amsterdam/helm-application/commit/a9731c5b232f1000363f0fe2573f226f467a502b))

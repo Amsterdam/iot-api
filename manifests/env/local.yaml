@@ -1,0 +1,79 @@
+image:
+  registry: localhost:5000
+  repository: sensorenregister/api-dev
+
+# Default host for the ingress resources
+host: localhost
+
+network:
+  allow-ingress:
+    enabled: false
+
+jobs:
+  certificate-init:
+    enabled: false
+
+persistentVolumeClaims:
+  foo:
+    resources:
+      requests:
+        storage: 1Gi
+
+deployments:
+  database:
+    labels:
+      component: database
+    image:
+      registry: null
+      repository: postgis/postgis
+      tag: 14-3.3
+    env:
+      POSTGRES_DB: dev
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: dev
+      PGDATA: /data
+    securityContext:
+      pod: null
+      container: null
+    volumes:
+      - name: data
+        mountPath: /data
+        persistentVolumeClaim: foo
+
+services:
+  database:
+    selector:
+      component: database
+    ports:
+      - port: 5432
+        targetPort: 5432
+
+ingress:
+  backend-external:
+    enabled: false
+  backend-internal:
+    className: nginx
+    tls: null
+
+secrets:
+  certificate:
+    enabled: false
+  backend:
+    type: opaque
+    secrets:
+      - name: secret-key
+        value: dev
+      - name: database-host
+        value: database-backend
+      - name: database-name
+        value: dev
+      - name: database-user
+        value: dev
+      - name: oidc-base-url
+        value: dev
+      - name: oidc-rp-client-id
+        value: dev
+      - name: oidc-rp-client-secret
+        value: dev
+      - name: applicationinsights-connection-string
+        value: ""

@@ -64,7 +64,7 @@ services:
     build:
       context: .
       target: app
-    image: ${REGISTRY:-localhost:5001}/${REPOSITORY:-sensorenregister/api}:${VERSION:-latest}
+    image: ${REGISTRY:-localhost:5000}/${REPOSITORY:-sensorenregister/api}:${VERSION:-latest}
     command: /app/deploy/docker-run.sh
     environment:
       <<: *base-app-env
@@ -88,7 +88,7 @@ services:
 
   dev:
     <<: *base-app
-    image: ${REGISTRY:-localhost:5001}/${REPOSITORY:-sensorenregister/api}-dev:${VERSION:-latest}
+    image: ${REGISTRY:-localhost:5000}/${REPOSITORY:-sensorenregister/api}-dev:${VERSION:-latest}
     build:
       context: .
       target: dev
@@ -99,7 +99,7 @@ services:
 
   test:
     <<: *base-app
-    image: ${REGISTRY:-localhost:5001}/${REPOSITORY:-sensorenregister/api}-test:${VERSION:-latest}
+    image: ${REGISTRY:-localhost:5000}/${REPOSITORY:-sensorenregister/api}-test:${VERSION:-latest}
     build:
       context: .
       target: tests
