@@ -51,7 +51,7 @@ spec:
               service:
                 name: {{ printf "%s-%s" (required "Ingress path needs a service" .service) $fullName }}
                 port:
-                  number: {{ .port }}
+                  number: {{ required "Ingress path needs a port" .port }}
           {{- end }}
       {{- end }}
 

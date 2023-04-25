@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1](https://github.com/Amsterdam/helm-application/compare/1.3.0...1.3.1) (2023-04-24)
+
+
+### Bug Fixes
+
+* **cicd:** Added unittests ([bccd727](https://github.com/Amsterdam/helm-application/commit/bccd72779a8f7e93b3d58b1425f3e66241d62038))
+
 ## [1.3.0](https://github.com/Amsterdam/helm-application/compare/1.2.3...1.3.0) (2023-04-18)
 
 

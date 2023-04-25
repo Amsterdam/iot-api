@@ -1,0 +1,50 @@
+suite: Deployments
+release:
+  name: test
+templates:
+  - deployment.yaml
+tests:
+  - it: should give an error if no repository
+    set:
+      deployments:
+        app: {}
+    asserts:
+      - failedTemplate:
+          errorMessage: "A repository configuration is required"
+
+  - it: should have release name as postfix
+    set:
+      image:
+        repository: defaultrepo
+      deployments:
+        app: {}
+    asserts:
+      - isKind:
+          of: Deployment
+      - matchRegex:
+          path: metadata.name
+          pattern: -test$
+
+  - it: should use default image parameters
+    set:
+      image:
+        repository: defaultrepo
+      deployments:
+        app: {}
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: defaultrepo:latest
+
+  - it: should use override image parameters
+    set:
+      image:
+        repository: defaultrepo
+      deployments:
+        app:
+          image:
+            repository: overriderepo
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: overriderepo:latest

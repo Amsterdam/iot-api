@@ -1,0 +1,50 @@
+suite: Cronjobs
+release:
+  name: test
+templates:
+  - job.yaml
+tests:
+  - it: should give an error if no repository
+    set:
+      jobs:
+        app: {}
+    asserts:
+      - failedTemplate:
+          errorMessage: "A repository configuration is required"
+
+  - it: should have release name as postfix
+    set:
+      image:
+        repository: defaultrepo
+      jobs:
+        app: {}
+    asserts:
+      - isKind:
+          of: Job
+      - matchRegex:
+          path: metadata.name
+          pattern: -test$
+
+  - it: should use default image parameters
+    set:
+      image:
+        repository: defaultrepo
+      jobs:
+        app: {}
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: defaultrepo:latest
+
+  - it: should use override image parameters
+    set:
+      image:
+        repository: defaultrepo
+      jobs:
+        app:
+          image:
+            repository: overriderepo
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: overriderepo:latest
