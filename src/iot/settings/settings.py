@@ -153,10 +153,11 @@ DATABASE_NAME = os.getenv("DATABASE_NAME", "dev")
 DATABASE_USER = os.getenv("DATABASE_USER", "dev")
 DATABASE_PASSWORD = os.getenv("DATABASE_PASSWORD", "dev")
 DATABASE_PORT = os.getenv("DATABASE_PORT", "5432")
-
+DATABASE_OPTIONS = {'sslmode': 'allow', 'connect_timeout': 5}
 
 if 'azure.com' in DATABASE_HOST:
     DATABASE_PASSWORD = azure.auth.db_password
+    DATABASE_OPTIONS['sslmode'] = 'require'
 
 DATABASES = {
     "default": {
