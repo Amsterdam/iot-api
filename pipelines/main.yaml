@@ -34,3 +34,7 @@ extends:
       pool: TAMM
       namespace: ns-ccc-ssr-acc-01-sensorenregister
       kubernetesServiceConnection: SCN-K8S-ns-ccc-ssr-acc-01-sensorenregister
+    prod:
+      pool: TAMM
+      namespace: ns-ccc-ssr-prd-01-sensorenregister
+      kubernetesServiceConnection: SCN-K8S-ns-ccc-ssr-prd-01-sensorenregister
