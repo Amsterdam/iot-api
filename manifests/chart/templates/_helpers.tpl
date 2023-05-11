@@ -112,9 +112,14 @@ Volumes
 */}}
 {{- define "pod.secretVolumes" -}}
 {{- $mountSecrets := .local.mountSecrets | default list }}
-{{- $secrets := concat (.local.secrets | default list) $mountSecrets | mustUniq }}
+{{- $secrets := concat (.local.secrets | default list) $mountSecrets }}
+
+{{- range .local.containers }}
+{{- $secrets = concat $secrets (.secrets | default list) }}
+{{- end }}
+
 {{- $fullName := (include "helm.fullname" .root ) }}
-{{- range $secrets }}
+{{- range $secrets | mustUniq }}
 {{- $secret := get $.root.Values.secrets . }}
 {{- if eq (lower $secret.type) "keyvault" }}
 - name: "{{ . }}"
@@ -166,7 +171,7 @@ env
 */}}
 {{- define "container.env" -}}
 {{- $fullName := (include "helm.fullname" .root ) }}
-{{- $env := mergeOverwrite (deepCopy .root.Values.env) (.local.env | default dict) }}
+{{- $env := merge (.local.env | default dict) .root.Values.env }}
 {{- if or $env .local.secrets }}
 {{- with $env }}
 {{- range $name, $value := . }}
@@ -178,12 +183,15 @@ env
 {{- with .local.secrets }}
 {{- range . }}
 {{- $secretName := . }}
-{{- $secret := get $.root.Values.secrets $secretName }}
-{{- range $secret.secrets }}
-{{- $key := . }}
-{{- if eq $secret.type "opaque" }}
-{{- $key = .name }}
-{{- end }}
+{{- $secret := required (printf "Secret %s does not exist" $secretName) (get $.root.Values.secrets $secretName) }}
+{{- range $key, $value := $secret.secrets }}
+{{/*
+If its a simple opaque secret its in the format of key:value
+Else its a list
+*/}}
+{{- if not (eq $secret.type "opaque") }}
+{{- $key = . }}
+{{- end -}}
 - name: {{ $key | upper | replace "-" "_" | quote }}
   valueFrom:
     secretKeyRef:
@@ -227,8 +235,8 @@ tolerations
 pod.securityContext
 */}}
 {{- define "pod.securityContext" -}}
-{{- $context := mergeOverwrite (deepCopy .root.Values.securityContext) (.local.securityContext | default dict) }}
-{{- with $context.pod }}
+{{- $context := mergeOverwrite .root.Values.securityContext.pod (.local.securityContext | default dict)  }}
+{{- with $context }}
 {{- . | toYaml }}
 {{- end }}
 {{- end }}
@@ -237,8 +245,8 @@ pod.securityContext
 container.securityContext
 */}}
 {{- define "container.securityContext" -}}
-{{- $context := mergeOverwrite (deepCopy .root.Values.securityContext) (.local.securityContext | default dict)}}
-{{- with $context.container }}
+{{- $context := mergeOverwrite (.root.Values.securityContext.container) (.local.securityContext | default dict) }}
+{{- with $context }}
 {{- . | toYaml }}
 {{- end }}
 {{- end }}
@@ -266,7 +274,7 @@ container.ports
 container.image
 */}}
 {{- define "container.image" -}}
-{{- $image := mergeOverwrite (deepCopy .root.Values.image) (.local.image | default dict) }}
+{{- $image := deepCopy (.local.image | default dict) | mergeOverwrite (.root.Values.image | deepCopy) }}
 {{- $repository := required "A repository configuration is required" $image.repository }}
 image: {{ printf "%s:%s" (list $image.registry $image.repository | join "/") $image.tag | quote }}
 imagePullPolicy: {{ $image.imagePullPolicy | default "IfNotPresent" }}
@@ -286,7 +294,23 @@ args: {{ toYaml . | nindent 2 }}
 
 
 {{/*
-container.command
+containers
+*/}}
+{{- define "pod.containers" -}}
+{{- $context := . -}}
+
+{{- range .local.containers }}
+{{- $picked := pick $context.local "resources" "env" "secrets" "image" }}
+{{- $containerContext := dict "local" (merge . $picked) "root" $context.root }}
+- name: {{ .name }}
+{{- include "container" $containerContext | indent 2 }}
+{{- end }}
+
+{{- end }}
+
+
+{{/*
+container
 */}}
 {{- define "container" -}}
 {{- include "container.image" . }}

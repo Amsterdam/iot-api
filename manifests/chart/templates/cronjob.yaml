@@ -42,9 +42,10 @@ spec:
           securityContext: {{- . | trim | nindent 12}}
           {{- end }}
 
-          containers:
-          - name: main
-            {{- include "container" $context | indent 12 }}
+          {{- with include "pod.containers" $context }}
+          containers: {{- . |  indent 12 }}
+          {{- end }}
+
           {{- with include "pod.volumes" $context }}
           volumes: {{- . | nindent 12 }}
           {{- end }}

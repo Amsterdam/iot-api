@@ -1,107 +1,106 @@
-suite: SecretsProviderClass KeyVault
+suite: Ingress
 release:
   name: test
 templates:
-  - secretproviderclass.yaml
+  - ingress.yaml
 tests:
+  - it: should give an error if no host
+    set:
+      ingress:
+        my-ingress: {}
+    asserts:
+      - failedTemplate:
+          errorMessage: "Ingress must have a host"
+
   - it: should have release name as postfix
     set:
-      secrets:
-        my-secrets:
-          type: keyVault
+      ingress:
+        my-ingress:
+          host: example.com
     asserts:
       - isKind:
-          of: SecretProviderClass
+          of: Ingress
       - equal:
           path: metadata.name
-          value: my-secrets-test
+          value: my-ingress-test
 
-  - it: should support keyvault secrets using secretproviderclass
+  - it: should use default host
     set:
-      keyVaultName: default-kv
-      secrets:
-        my-secrets:
-          type: keyvault
-          secrets:
-            - secret1
-            - secret2
+      host: default.domain.com
+      ingress:
+        my-ingress: {}
     asserts:
-      - hasDocuments:
-          count: 1
-      - lengthEqual:
-          path: spec.secretObjects
-          count: 1
+      - equal:
+          path: spec.rules[0].host
+          value: default.domain.com
+
+  - it: should use ingress specific host
+    set:
+      host: default.domain.com
+      ingress:
+        my-ingress:
+          host: my.domain.com
+    asserts:
+      - equal:
+          path: spec.rules[0].host
+          value: my.domain.com
+
+  - it: should require a service when using paths
+    set:
+      ingress:
+        my-ingress:
+          host: my.domain.com
+          paths:
+            - path: /api
+    asserts:
+      - failedTemplate:
+          errorMessage: "Ingress path needs a service"
+
+  - it: should require a port when using paths
+    set:
+      ingress:
+        my-ingress:
+          host: my.domain.com
+          paths:
+            - path: /api
+              service: api-service
+    asserts:
+      - failedTemplate:
+          errorMessage: "Ingress path needs a port"
+
+  - it: should support paths
+    set:
+      ingress:
+        my-ingress:
+          host: my.domain.com
+          paths:
+            - path: /api
+              service: api-service
+              port: 8000
+    asserts:
       - isSubset:
-          path: spec.secretObjects[0]
+          path: spec.rules[0].http.paths[0]
           content:
-            secretName: my-secrets-test
-            type: Opaque
-      - equal:
-          path: spec.secretObjects[0].data
-          value:
-            - key: secret1
-              objectName: secret1
-            - key: secret2
-              objectName: secret2
+            path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: api-service-test
+                port:
+                  number: 8000
 
+  - it: should support path type
+    set:
+      ingress:
+        my-ingress:
+          host: my.domain.com
+          paths:
+            - path: /api
+              pathType: Exact
+              service: api-service
+              port: 8000
+    asserts:
       - isSubset:
-          path: spec.parameters
+          path: spec.rules[0].http.paths[0]
           content:
-            objects: |
-              array:
-                - |
-                  objectName: "secret1"
-                  objectType: secret
-                - |
-                  objectName: "secret2"
-                  objectType: secret
-
-      - equal:
-          path: spec.parameters.keyvaultName
-          value: default-kv
-
-  - it: should should use the default keyVaultName
-    set:
-      keyVaultName: default-kv
-      secrets:
-        my-secrets:
-          type: keyvault
-    asserts:
-      - equal:
-          path: spec.parameters.keyvaultName
-          value: default-kv
-
-  - it: should should be possible to override the keyVaultName
-    set:
-      keyVaultName: default-kv
-      secrets:
-        my-secrets:
-          type: keyvault
-          keyVaultName: my-kv
-    asserts:
-      - equal:
-          path: spec.parameters.keyvaultName
-          value: my-kv
-
-  - it: should should use the default tenantId
-    set:
-      tenantId: default-tenant-id
-      secrets:
-        my-secrets:
-          type: keyvault
-    asserts:
-      - equal:
-          path: spec.parameters.tenantId
-          value: default-tenant-id
-
-  - it: should should be possible to override the tenant id
-    set:
-      tenantId: default-tenant-id
-      secrets:
-        my-secrets:
-          type: keyvault
-          tenantId: my-tenant-id
-    asserts:
-      - equal:
-          path: spec.parameters.tenantId
-          value: my-tenant-id
+            pathType: Exact

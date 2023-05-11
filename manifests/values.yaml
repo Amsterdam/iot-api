@@ -41,12 +41,14 @@ jobs:
       helm.sh/hook: post-install,post-upgrade
     labels:
       component: certificate
-    mountSecrets:
+    secrets:
       - certificate
-    command:
-      - sleep
-    args:
-      - "1"
+    containers:
+      - name: main
+        command:
+          - sleep
+        args:
+          - "1"
 
   migrate:
     annotations:
@@ -55,32 +57,40 @@ jobs:
       component: migrate
     volumes:
       - name: tmp
-        mountPath: /tmp
         spec:
           emptyDir: {}
-    secrets:
-      - backend
-    command:
-      - python
-      - manage.py
-      - migrate
+    containers:
+      - name: main
+        volumes:
+          - name: tmp
+            mountPath: /tmp
+        secrets:
+          - backend
+        command:
+          - python
+          - manage.py
+          - migrate
 
 cronJobs:
   import:
     labels:
       component: import
     schedule: "0 * * * *"
-    secrets:
-      - backend
     volumes:
       - name: tmp
-        mountPath: /tmp
         spec:
           emptyDir: {}
-    command:
-      - python
-      - manage.py
-      - import_api
+    containers:
+      - name: main
+        secrets:
+          - backend
+        volumes:
+          - name: tmp
+            mountPath: /tmp
+        command:
+          - python
+          - manage.py
+          - import_api
 
 deployments:
   api:
@@ -100,16 +110,20 @@ deployments:
       limits:
         cpu: 1
         memory: "512Mi"
-    ports:
-      - port: 8000
-        name: http
-    secrets:
-      - backend
     volumes:
       - name: tmp
-        mountPath: /tmp
         spec:
           emptyDir: {}
+    containers:
+      - name: main
+        secrets:
+          - backend
+        volumes:
+          - name: tmp
+            mountPath: /tmp
+        ports:
+          - port: 8000
+            name: http
 
   admin:
     selectorLabels:
@@ -119,16 +133,20 @@ deployments:
       ADMIN_ENABLED: true
       API_ENABLED: false
       ADMIN_PATH: /
-    ports:
-      - port: 8000
-        name: http
-    secrets:
-      - backend
     volumes:
       - name: tmp
-        mountPath: /tmp
         spec:
           emptyDir: {}
+    containers:
+      - name: main
+        secrets:
+          - backend
+        volumes:
+          - name: tmp
+            mountPath: /tmp
+        ports:
+          - port: 8000
+            name: http
 
 services:
   api:

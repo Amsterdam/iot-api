@@ -7,7 +7,9 @@ tests:
   - it: should give an error if no repository
     set:
       jobs:
-        app: {}
+        app:
+          containers:
+            - name: main
     asserts:
       - failedTemplate:
           errorMessage: "A repository configuration is required"
@@ -25,26 +27,50 @@ tests:
           path: metadata.name
           pattern: -test$
 
-  - it: should use default image parameters
-    set:
-      image:
-        repository: defaultrepo
-      jobs:
-        app: {}
-    asserts:
-      - equal:
-          path: spec.template.spec.containers[0].image
-          value: defaultrepo:latest
-
   - it: should use override image parameters
     set:
       image:
+        registry: defaultregistry
         repository: defaultrepo
+        tag: "latest"
       jobs:
-        app:
-          image:
-            repository: overriderepo
+        aaa:
+          containers:
+            - name: main
+              image:
+                registry: myregistry
+        bbb:
+          containers:
+            - name: main
+              image:
+                repository: myrepo
+        ccc:
+          containers:
+            - name: main
+              image:
+                tag: mytag
+        ddd:
+          containers:
+            - name: main
     asserts:
+      - hasDocuments:
+          count: 4
       - equal:
           path: spec.template.spec.containers[0].image
-          value: overriderepo:latest
+          value: myregistry/defaultrepo:latest
+        documentIndex: 0
+
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: defaultregistry/myrepo:latest
+        documentIndex: 1
+
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: defaultregistry/defaultrepo:mytag
+        documentIndex: 2
+
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: defaultregistry/defaultrepo:latest
+        documentIndex: 3

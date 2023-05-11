@@ -1,5 +1,36 @@
 # Changelog
 
+## [1.4.3](https://github.com/Amsterdam/helm-application/compare/1.4.2...1.4.3) (2023-05-10)
+
+
+### Bug Fixes
+
+* **pod:** Added uniq filter to make sure we dont end up with duplicate volumes ([4b0a6df](https://github.com/Amsterdam/helm-application/commit/4b0a6df623cbe5aa30411661eab89d1aa01d83f9))
+* **pod:** Image should now be inherited properly from the deployment and global definition ([cbc2e7a](https://github.com/Amsterdam/helm-application/commit/cbc2e7a693b94b405c37d865ef212724b205d876))
+* **pods:** Securitycontext values (bools) could not be changed within deployments ([2b3f80c](https://github.com/Amsterdam/helm-application/commit/2b3f80c9fc07f068ed9086e599a842bcaf92dec5))
+
+## [1.4.2](https://github.com/Amsterdam/helm-application/compare/1.4.1...1.4.2) (2023-05-10)
+
+
+### Bug Fixes
+
+* **deployment:** Inherit secrets in the containers that are defined on the resources ([44a3368](https://github.com/Amsterdam/helm-application/commit/44a336849c4f3112baa55b51e848cfefdc9ac945))
+
+## [1.4.1](https://github.com/Amsterdam/helm-application/compare/1.4.0...1.4.1) (2023-05-10)
+
+
+### Bug Fixes
+
+* **deployment:** Allow env vars defined on deployment level, they will be used as default for all containers, same for resources ([ff8a59d](https://github.com/Amsterdam/helm-application/commit/ff8a59da174398631ba0e0cc3baf717b679c90b6))
+
+## [1.4.0](https://github.com/Amsterdam/helm-application/compare/1.3.1...1.4.0) (2023-05-10)
+
+
+### Features
+
+* **deployment:** Made it possible to have multiple containers per pod ([5bd0f13](https://github.com/Amsterdam/helm-application/commit/5bd0f13a0caa4e5fb3dc17a4c37c3456030863fb))
+* **secrets:** Allow for easier simple secret manipulation with --set by using key value instead of a list[map] ([30f6565](https://github.com/Amsterdam/helm-application/commit/30f6565ce5045a3fcbbfd9fb64c5fb572658cc1b))
+
 ## [1.3.1](https://github.com/Amsterdam/helm-application/compare/1.3.0...1.3.1) (2023-04-24)
 
 

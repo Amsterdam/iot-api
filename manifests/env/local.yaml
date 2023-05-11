@@ -27,18 +27,24 @@ deployments:
       registry: null
       repository: postgis/postgis
       tag: 14-3.3
+    securityContext:
+      runAsNonRoot: false
+      runAsUser: null
     env:
       POSTGRES_DB: dev
       POSTGRES_USER: dev
       POSTGRES_PASSWORD: dev
       PGDATA: /data
-    securityContext:
-      pod: null
-      container: null
     volumes:
       - name: data
-        mountPath: /data
         persistentVolumeClaim: data
+    containers:
+      - name: main
+        securityContext:
+          readOnlyRootFilesystem: false
+        volumes:
+          - name: data
+            mountPath: /data
 
 services:
   database:
@@ -61,19 +67,11 @@ secrets:
   backend:
     type: opaque
     secrets:
-      - name: secret-key
-        value: dev
-      - name: database-host
-        value: database-backend
-      - name: database-name
-        value: dev
-      - name: database-user
-        value: dev
-      - name: oidc-base-url
-        value: dev
-      - name: oidc-rp-client-id
-        value: dev
-      - name: oidc-rp-client-secret
-        value: dev
-      - name: applicationinsights-connection-string
-        value: ""
+      secret-key: dev
+      database-host: database-backend
+      database-name: dev
+      database-user: dev
+      oidc-base-url: dev
+      oidc-rp-client-id: dev
+      oidc-rp-client-secret: dev
+      applicationinsights-connection-string: ""
