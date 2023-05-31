@@ -18,6 +18,10 @@ network:
     egress:
       - action: Allow
 
+serviceAccount: app
+serviceAccounts:
+  app: {}
+
 secrets:
   certificate:
     type: keyvault

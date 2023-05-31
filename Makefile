@@ -55,14 +55,15 @@ push: build
 	$(dc) push
 
 deploy: manifests
-	helm upgrade --install --atomic backend $(HELM_ARGS) $(ARGS)
+	# helm upgrade --install --atomic backend $(HELM_ARGS) $(ARGS)
+	helm upgrade --install backend $(HELM_ARGS) $(ARGS)
 
 manifests:
 	@helm template backend $(HELM_ARGS) $(ARGS)
 
 update-chart:
 	rm -rf manifests/chart
-	git clone --branch 1.4.3 --depth 1 git@github.com:Amsterdam/helm-application.git manifests/chart
+	git clone --branch main --depth 1 git@github.com:Amsterdam/helm-application.git manifests/chart
 	rm -rf manifests/chart/.git
 
 app:

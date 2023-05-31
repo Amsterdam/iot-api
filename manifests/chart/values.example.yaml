@@ -5,9 +5,22 @@ image:
 
 tenantId: tenant-id
 keyVaultName: keyvault-name
-keyVaultIdentity: keyvault-identity
 
+# Use keyVaultIdentity in order to use the classic VM identity
+keyVaultIdentity: my-vm-identity
+# For newer setups use the workloadIdentity
+workloadIdentity: workload-identity-client-id
+
+host: my.domain.com
 nodepool: nodepool
+
+# The default serviceaccount to use
+serviceAccount: app
+
+serviceAccounts:
+  app: 
+    workloadIdentity: override-identity-client-id
+    enableWorkloadIdentity: true
 
 persistentVolumeClaims:
   data:
@@ -83,6 +96,7 @@ deployments:
       - name: tmp
         spec:
           emptyDir: {}
+    serviceAccount: app
     containers:
       - name: main
         resources:
@@ -105,8 +119,6 @@ deployments:
             mountPath: /data
         secrets:
           - vault
-        securityContext:
-          privileged: true
 
 secrets:
   simple:
@@ -120,3 +132,21 @@ secrets:
       - secret1
       - secret2
       - secret3
+
+services:
+  app:
+    selector:
+      component: app
+    ports:
+      - port: 8000
+        targetPort: http
+
+ingress:
+  app-external:
+    className: nginx
+    paths:
+      - path: /
+        pathType: Prefix
+        service: app
+        port: 8000
+    tls: certificate
