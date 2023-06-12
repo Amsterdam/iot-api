@@ -16,8 +16,7 @@ resources:
     - repository: templates
       type: git
       name: tamm/templates
-      # ref: refs/tags/1.1.0
-      ref: feature/postgresql-subnet-delegation
+      ref: refs/tags/1.1.0
 
 extends:
   template: pipelines/aks/template.yaml@templates

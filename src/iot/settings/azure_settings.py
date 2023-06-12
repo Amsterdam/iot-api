@@ -3,7 +3,7 @@ import shlex
 import subprocess
 from subprocess import PIPE
 
-from azure.identity import DefaultAzureCredential, ManagedIdentityCredential
+from azure.identity import DefaultAzureCredential, WorkloadIdentityCredential
 from azure.keyvault.secrets import SecretClient
 
 
@@ -72,9 +72,14 @@ class AzureAuth:
 
     def get_credential(self):
         credential = None
-        client_id = os.getenv('AZURE_MANAGED_IDENTITY_CLIENTID')
-        if client_id:
-            credential = ManagedIdentityCredential(client_id=client_id)
+        federated_token_file = os.getenv('AZURE_FEDERATED_TOKEN_FILE')
+        if federated_token_file:
+            # This relies on environment variables that get injected.
+            # AZURE_AUTHORITY_HOST:       (Injected by the webhook)
+            # AZURE_CLIENT_ID:            (Injected by the webhook)
+            # AZURE_TENANT_ID:            (Injected by the webhook)
+            # AZURE_FEDERATED_TOKEN_FILE: (Injected by the webhook)
+            credential = WorkloadIdentityCredential()
         elif os.isatty(0):
             account = subprocess.run(
                 shlex.split('az account show'),
@@ -107,7 +112,7 @@ class AzureAuth:
                 access_token = self.credential.get_token(*self.scopes)
                 return access_token.token
 
-        scopes = ['https://ossrdbms-aad.database.windows.net']
+        scopes = ['https://ossrdbms-aad.database.windows.net/.default']
         return DynamicString(self.credential, scopes)
 
 
