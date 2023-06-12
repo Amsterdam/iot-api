@@ -74,6 +74,26 @@ jobs:
           - python
           - manage.py
           - migrate
+  import:
+    annotations:
+      helm.sh/hook: post-install,post-upgrade
+    labels:
+      component: import
+    volumes:
+      - name: tmp
+        spec:
+          emptyDir: {}
+    containers:
+      - name: main
+        volumes:
+          - name: tmp
+            mountPath: /tmp
+        secrets:
+          - backend
+        command:
+          - python
+          - manage.py
+          - import_api
 
 cronJobs:
   import:
