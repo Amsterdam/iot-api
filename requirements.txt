@@ -4,13 +4,13 @@
 #
 #    pip-compile --output-file=requirements.txt requirements.in
 #
-asgiref==3.6.0
+asgiref==3.7.2
     # via
     #   django
     #   django-countries
 attrs==23.1.0
     # via jsonschema
-certifi==2022.12.7
+certifi==2023.5.7
     # via requests
 cffi==1.15.1
     # via cryptography
@@ -24,7 +24,7 @@ coreschema==0.0.4
     # via
     #   coreapi
     #   drf-yasg
-cryptography==40.0.2
+cryptography==41.0.1
     # via
     #   josepy
     #   mozilla-django-oidc
@@ -33,7 +33,7 @@ datapunt-keycloak-oidc==0.5.1
     # via -r requirements.in
 defusedxml==0.7.1
     # via djangorestframework-xml
-django==3.2.18
+django==3.2.19
     # via
     #   -r requirements.in
     #   django-braces
@@ -48,17 +48,17 @@ django==3.2.18
     #   mozilla-django-oidc
 django-braces==1.15.0
     # via -r requirements.in
-django-cors-headers==3.14.0
+django-cors-headers==4.0.0
     # via -r requirements.in
 django-countries==7.5.1
     # via -r requirements.in
-django-extensions==3.2.1
+django-extensions==3.2.3
     # via -r requirements.in
 django-extra-fields==3.0.2
     # via -r requirements.in
-django-filter==23.1
+django-filter==23.2
     # via -r requirements.in
-django-leaflet==0.28.3
+django-leaflet==0.29.0
     # via -r requirements.in
 django-multiselectfield==0.1.12
     # via -r requirements.in
@@ -111,7 +111,7 @@ jsonschema==4.17.3
     # via swagger-spec-validator
 markdown==3.4.3
     # via -r requirements.in
-markupsafe==2.1.2
+markupsafe==2.1.3
     # via jinja2
 mozilla-django-oidc==1.2.4
     # via datapunt-keycloak-oidc
@@ -125,9 +125,9 @@ pycparser==2.21
     # via cffi
 pygelf==0.4.2
     # via -r requirements.in
-pygments==2.15.0
+pygments==2.15.1
     # via -r requirements.in
-pyopenssl==23.1.1
+pyopenssl==23.2.0
     # via josepy
 pyrsistent==0.19.3
     # via jsonschema
@@ -142,27 +142,29 @@ pyyaml==6.0
     #   swagger-spec-validator
 raven==6.10.0
     # via -r requirements.in
-requests==2.28.2
+requests==2.31.0
     # via
     #   coreapi
     #   flex
     #   mozilla-django-oidc
 rfc3987==1.3.8
     # via flex
-ruamel-yaml==0.17.21
+ruamel-yaml==0.17.31
     # via drf-yasg
+ruamel-yaml-clib==0.2.7
+    # via ruamel-yaml
 six==1.16.0
     # via
     #   djangorestframework-csv
     #   flex
     #   mozilla-django-oidc
-sqlparse==0.4.3
+sqlparse==0.4.4
     # via django
 strict-rfc3339==0.7
     # via flex
 swagger-spec-validator==3.0.3
     # via -r requirements.in
-typing-extensions==4.5.0
+typing-extensions==4.6.3
     # via
     #   django-countries
     #   swagger-spec-validator
@@ -172,7 +174,7 @@ uritemplate==4.1.1
     # via
     #   coreapi
     #   drf-yasg
-urllib3==1.26.15
+urllib3==2.0.3
     # via requests
 validate-email==1.3
     # via flex
