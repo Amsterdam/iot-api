@@ -64,13 +64,18 @@ ingress:
 secrets:
   certificate:
     enabled: false
-  backend:
+
+  database:
     type: opaque
     secrets:
-      secret-key: dev
       database-host: database-backend
       database-name: dev
       database-user: dev
+
+  vault:
+    type: opaque
+    secrets:
+      secret-key: dev
       oidc-base-url: dev
       oidc-rp-client-id: dev
       oidc-rp-client-secret: dev

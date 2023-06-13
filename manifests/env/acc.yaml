@@ -14,3 +14,10 @@ host: ssr-a.azure.amsterdam.nl
 secrets:
   certificate:
     keyVaultName: shared-a-agmsxwldmihra
+
+  database:
+    type: opaque
+    secrets:
+      database-host: ssr-a-cew3vovh44e7u.postgres.database.azure.com
+      database-name: main
+      database-user: ssr-app-a

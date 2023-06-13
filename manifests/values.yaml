@@ -27,13 +27,10 @@ secrets:
     type: keyvault
     tls: sensorenregister
 
-  backend:
+  vault:
     type: keyvault
     secrets:
       - secret-key
-      - database-host
-      - database-name
-      - database-user
       - oidc-base-url
       - oidc-rp-client-id
       - oidc-rp-client-secret
@@ -56,7 +53,8 @@ jobs:
           - name: tmp
             mountPath: /tmp
         secrets:
-          - backend
+          - database
+          - vault
         command:
           - python
           - manage.py
@@ -91,7 +89,8 @@ jobs:
           - name: tmp
             mountPath: /tmp
         secrets:
-          - backend
+          - database
+          - vault
         command:
           - python
           - manage.py
@@ -109,7 +108,8 @@ cronJobs:
     containers:
       - name: main
         secrets:
-          - backend
+          - database
+          - vault
         volumes:
           - name: tmp
             mountPath: /tmp
@@ -143,7 +143,8 @@ deployments:
     containers:
       - name: main
         secrets:
-          - backend
+          - database
+          - vault
         volumes:
           - name: tmp
             mountPath: /tmp
@@ -166,7 +167,8 @@ deployments:
     containers:
       - name: main
         secrets:
-          - backend
+          - database
+          - vault
         volumes:
           - name: tmp
             mountPath: /tmp

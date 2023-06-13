@@ -17,3 +17,10 @@ host: ssr-o.azure.amsterdam.nl
 secrets:
   certificate:
     keyVaultName: shared-o-ftytfsr6vuduo
+
+  database:
+    type: opaque
+    secrets:
+      database-host: ssr-o-gp4jqffo3heda.postgres.database.azure.com
+      database-name: main
+      database-user: ssr-app-o

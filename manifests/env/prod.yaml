@@ -17,9 +17,13 @@ nodepool: cccssrprd01
 host: ssr.azure.amsterdam.nl
 
 # Specify the keyvault that has the certificate
-#
-# cli:
-# az keyvault list --subscription CCC-SSR-prd-01 --resource-group shared-p-rg --query '[0].{secrets: {certificate: {keyVaultName: name}}}' -o yaml
 secrets:
   certificate:
     keyVaultName: shared-p-3pkvqbyjo6py2
+
+  database:
+    type: opaque
+    secrets:
+      database-host: ssr-p-qcczjdu7seqow.postgres.database.azure.com
+      database-name: main
+      database-user: ssr-app-p

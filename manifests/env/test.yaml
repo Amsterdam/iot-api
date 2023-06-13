@@ -17,3 +17,10 @@ host: ssr-t.azure.amsterdam.nl
 secrets:
   certificate:
     keyVaultName: shared-t-vfstn5vergsqw
+
+  database:
+    type: opaque
+    secrets:
+      database-host: ssr-t-zryvqlwvrfmge.postgres.database.azure.com
+      database-name: main
+      database-user: ssr-app-t
