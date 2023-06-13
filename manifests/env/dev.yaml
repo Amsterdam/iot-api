@@ -1,7 +1,7 @@
 # Default keyvault for getting secrets
 keyVaultName: ssr-o-gp4jqffo3heda
 
-# Identity AppID (clientId) used to authenticate with the keyvault
+# Managed identity (clientId) for workload identity with
 workloadIdentity: 8c7e6a5c-11c4-49de-9404-570045dac6ac
 
 image:

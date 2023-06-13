@@ -1,8 +1,8 @@
 # Default keyvault for getting secrets
 keyVaultName: ssr-a-cew3vovh44e7u
 
-# Identity AppID (clientId) used to authenticate with the keyvault
-keyVaultIdentity: f6671fe7-624f-44c6-bbae-b7934ef3b9e6
+# Managed identity (clientId) for workload identity with
+workloadIdentity: 518dcdc5-520a-4da7-9dc2-80cfd03f2c6f
 
 # We must select the nodepool to run the pods on
 nodepool: cccssracc01
