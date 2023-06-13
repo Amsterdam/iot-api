@@ -114,7 +114,7 @@ tests:
           type: keyvault
     asserts:
       - equal:
-          path: spec.parameters.clientId
+          path: spec.parameters.clientID
           value: default-client-id
 
   - it: should be possible to set a workload identity for a specific secret
@@ -126,7 +126,7 @@ tests:
           workloadIdentity: my-client-id
     asserts:
       - equal:
-          path: spec.parameters.clientId
+          path: spec.parameters.clientID
           value: my-client-id
 
   - it: if workload identity is configured, dont use vm identity
@@ -139,8 +139,9 @@ tests:
     asserts:
       - notExists:
           path: spec.parameters.userAssignedIdentityID
-      - notExists:
+      - equal:
           path: spec.parameters.useVMManagedIdentity
+          value: "false"
 
   - it: if workload identity is not configured, use vm identity
     set:

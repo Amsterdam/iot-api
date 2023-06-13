@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.5.1](https://github.com/Amsterdam/helm-application/compare/1.5.0...1.5.1) (2023-06-13)
+
+
+### Bug Fixes
+
+* **workload identity:** Added label to the pods in order to use workload identity ([40a2545](https://github.com/Amsterdam/helm-application/commit/40a25459044e3a1f0776e79e20ade28c269054e0))
+* **workload identity:** When using workload identity, explicitly disable pod identity and vm identity ([35cc212](https://github.com/Amsterdam/helm-application/commit/35cc212882f19a5dc7170328cf5078d11d46bec5))
+
 ## [1.5.0](https://github.com/Amsterdam/helm-application/compare/1.4.3...1.5.0) (2023-05-31)
 
 
