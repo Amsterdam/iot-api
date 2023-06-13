@@ -16,11 +16,6 @@ nodepool: cccssrprd01
 # Default host for the ingress resources
 host: ssr.azure.amsterdam.nl
 
-# Some default environment variables to inject in all containers
-env:
-  AZURE_KEY_VAULT: "https://ssr-p-qcczjdu7seqow.vault.azure.net/"
-  AZURE_MANAGED_IDENTITY_CLIENTID: 2f0607d5-c2cd-4d3a-a3e8-b24a10a52d19
-
 # Specify the keyvault that has the certificate
 #
 # cli:

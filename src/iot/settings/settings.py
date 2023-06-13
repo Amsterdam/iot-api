@@ -8,7 +8,7 @@ from sentry_sdk.integrations.django import DjangoIntegration
 
 from .azure_settings import Azure
 
-azure = Azure(key_vault_url=os.getenv('AZURE_KEY_VAULT'))
+azure = Azure()
 
 
 config_integration.trace_integrations(['requests', 'logging', 'postgresql'])

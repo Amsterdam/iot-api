@@ -21,10 +21,6 @@ x-app: &base-app
     OIDC_RP_CLIENT_ID:
     OIDC_RP_CLIENT_SECRET:
     APPLICATIONINSIGHTS_CONNECTION_STRING:
-    # AZURE_KEY_VAULT: https://ssr-o-gp4jqffo3heda.vault.azure.net/
-    # DATABASE_HOST: ssr-o-gp4jqffo3heda.postgres.database.azure.com
-    # DATABASE_USER: EM4W-SSR-o-db-writer
-    # DATABASE_NAME: main
     DATABASE_HOST: database
     DATABASE_USER: dev
     DATABASE_NAME: dev
@@ -108,7 +104,6 @@ services:
       DJANGO_SETTINGS_MODULE: "iot.settings.settings"
       OIDC_RP_CLIENT_ID: tests
       OIDC_RP_CLIENT_SECRET: tests
-      AZURE_KEY_VAULT: ""
       DATABASE_HOST: database
       DATABASE_USER: dev
       DATABASE_NAME: dev

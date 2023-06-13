@@ -4,59 +4,6 @@ import subprocess
 from subprocess import PIPE
 
 from azure.identity import DefaultAzureCredential, WorkloadIdentityCredential
-from azure.keyvault.secrets import SecretClient
-
-
-class SettingNotFound(Exception):
-    pass
-
-
-class AzureKeyVault:
-    def __init__(self, auth, vault_url):
-        self.auth = auth
-        self.vault_url = vault_url
-        self._secrets = {}
-
-    @property
-    def secrets(self):
-        if not self._secrets and self.vault_url:
-            self._secrets = self.get_secrets()
-
-        return self._secrets
-
-    def get_secrets(self):
-        client = SecretClient(self.vault_url, self.auth.credential)
-        secrets = [x for x in client.list_properties_of_secrets() if x.name]
-
-        wanted = {}
-        for properties in secrets:
-            if not properties.enabled:
-                continue
-            if properties.managed:
-                continue
-            if not properties.name:
-                continue
-            secret = client.get_secret(properties.name)
-            wanted[properties.name.replace('-', '_').upper()] = secret.value
-
-        return wanted
-
-    def get(self, name, default=None, use_environ=True, use_default=True):
-        if use_environ and name in os.environ:
-            return os.environ[name]
-
-        if name in self.secrets:
-            return self.secrets[name]
-
-        if use_default:
-            return default
-
-        raise SettingNotFound(
-            f"Setting '{name}' was not found and no default was specified"
-        )
-
-    def __getitem__(self, name):
-        return self.get(name, use_default=False)
 
 
 class AzureAuth:
@@ -117,6 +64,5 @@ class AzureAuth:
 
 
 class Azure:
-    def __init__(self, key_vault_url=None) -> None:
+    def __init__(self) -> None:
         self.auth = AzureAuth()
-        self.settings = AzureKeyVault(self.auth, key_vault_url)
