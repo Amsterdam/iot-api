@@ -47,6 +47,13 @@ jobs:
       - name: tmp
         spec:
           emptyDir: {}
+    resources:
+      requests:
+        cpu: 100m
+        memory: "256Mi"
+      limits:
+        cpu: 2
+        memory: "512Mi"
     containers:
       - name: main
         volumes:
@@ -83,6 +90,13 @@ jobs:
       - name: tmp
         spec:
           emptyDir: {}
+    resources:
+      requests:
+        cpu: 100m
+        memory: "256Mi"
+      limits:
+        cpu: 2
+        memory: "512Mi"
     containers:
       - name: main
         volumes:
