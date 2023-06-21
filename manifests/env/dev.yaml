@@ -2,13 +2,7 @@
 keyVaultName: ssr-o-gp4jqffo3heda
 
 # Managed identity (clientId) for workload identity with
-workloadIdentity: 8c7e6a5c-11c4-49de-9404-570045dac6ac
-
-serviceAccounts:
-  api:
-    workloadIdentity: c29b1a7f-b0a3-4b61-af95-bdcdb438ee00
-  admin:
-    workloadIdentity: 0c01c56d-3ac6-4ed7-8547-adc72e8e2070
+workloadIdentity: 0289e90a-b691-4a9b-b747-4d5da9e2b546
 
 image:
   repository: sensorenregister/api-dev
@@ -29,4 +23,4 @@ secrets:
     secrets:
       database-host: ssr-o-gp4jqffo3heda.postgres.database.azure.com
       database-name: main
-      database-user: ssr-app-o
+      database-user: ssr-backend-o

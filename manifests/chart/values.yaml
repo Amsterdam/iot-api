@@ -36,10 +36,15 @@ keyvault: {}
 secrets: {}
 jobs: {}
 cronJobs: {}
-serviceAccounts: {}
 deployments: {}
 services: {}
 ingress: {}
+
+# Default serviceaccount
+serviceAccount: default
+serviceAccounts:
+  default:
+    enableWorkloadIdentity: true
 
 # Network policies
 # https://docs.tigera.io/calico/latest/reference/resources/networkpolicy

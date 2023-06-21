@@ -1,22 +1,14 @@
-FROM python:3.11-alpine as app
+FROM python:3.11 as app
 
-RUN apk add linux-headers postgresql-dev postgis geos-dev gdal-dev build-base --no-cache
-RUN adduser -D app
-
-ENV PYTHONUNBUFFERED 1
-
-# # Update package lists and install postgresql-client-13
-# RUN apt-get update && apt-get install -y postgresql-client-13
-
-# RUN apt-get update \
-#   && apt-get autoremove -y \
-#   && apt-get install --no-install-recommends -y \
-#   postgresql-client-13 \
-#   gdal-bin \
-#   libgdal-dev \
-#   && rm -rf /var/lib/apt/lists/* /var/cache/debconf/*-old \
-#   && pip install --upgrade pip \
-#   && useradd --user-group -m app
+RUN apt-get update \
+  && apt-get autoremove -y \
+  && apt-get install --no-install-recommends -y \
+  postgresql-client-15 \
+  gdal-bin \
+  libgdal-dev \
+  && rm -rf /var/lib/apt/lists/* /var/cache/debconf/*-old \
+  && pip install --upgrade pip \
+  && useradd --user-group -m app
 
 ENV VIRTUAL_ENV=/opt/venv
 RUN python3 -m venv $VIRTUAL_ENV
@@ -47,12 +39,11 @@ CMD ["/app/deploy/docker-run.sh"]
 FROM app as dev
 
 USER root
-RUN apk add --no-cache netcat-openbsd
-# RUN apt-get update \
-#   && apt-get autoremove -y \
-#   && apt-get install --no-install-recommends -y \
-#   netcat \
-#   && rm -rf /var/lib/apt/lists/* /var/cache/debconf/*-old
+RUN apt-get update \
+  && apt-get autoremove -y \
+  && apt-get install --no-install-recommends -y \
+  netcat-openbsd \
+  && rm -rf /var/lib/apt/lists/* /var/cache/debconf/*-old
 
 WORKDIR /app/install
 ADD requirements_dev.txt requirements_dev.txt
