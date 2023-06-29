@@ -2,7 +2,7 @@
 keyVaultName: ssr-t-zryvqlwvrfmge
 
 # Managed identity (clientId) for workload identity with
-workloadIdentity: 07c8037d-cb3c-424f-9d22-e3a61bc5df94
+workloadIdentity: 9d8e9499-c457-4701-9bb5-f40b77312bfc
 
 image:
   repository: sensorenregister/api-dev
@@ -23,4 +23,4 @@ secrets:
     secrets:
       database-host: ssr-t-zryvqlwvrfmge.postgres.database.azure.com
       database-name: main
-      database-user: ssr-app-t
+      database-user: ssr-backend-t

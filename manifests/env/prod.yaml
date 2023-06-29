@@ -2,7 +2,7 @@
 keyVaultName: ssr-p-qcczjdu7seqow
 
 # Managed identity (clientId) for workload identity with
-workloadIdentity: 7e56e46d-0419-47f2-b5ad-5ec8cfb8b472
+workloadIdentity: e931656b-4f44-4ae5-9d10-3dbd6c1b458a
 
 # We must select the nodepool to run the pods on
 nodepool: cccssrprd01
@@ -20,4 +20,4 @@ secrets:
     secrets:
       database-host: ssr-p-qcczjdu7seqow.postgres.database.azure.com
       database-name: main
-      database-user: ssr-app-p
+      database-user: ssr-backend-p
