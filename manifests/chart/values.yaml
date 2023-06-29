@@ -22,12 +22,10 @@ image:
 # nodepool that will be used as toleration
 nodepool: ""
 
-# Default host
+# Default values used by many resources
 host: ""
-
 labels: {}
 tolerations: []
-
 env: {}
 
 keyvault: {}
