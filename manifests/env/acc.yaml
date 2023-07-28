@@ -1,0 +1,23 @@
+# Default keyvault for getting secrets
+keyVaultName: ssr-a-cew3vovh44e7u
+
+# Managed identity (clientId) for workload identity with
+workloadIdentity: 328f93cb-6bb9-4801-be92-109b3aa2e3d6
+
+# We must select the nodepool to run the pods on
+nodepool: cccssracc01
+
+# Default host for the ingress resources
+host: ssr-a.azure.amsterdam.nl
+
+# Specify the keyvault that has the certificate
+secrets:
+  certificate:
+    keyVaultName: shared-a-agmsxwldmihra
+
+  database:
+    type: opaque
+    secrets:
+      database-host: ssr-a-cew3vovh44e7u.postgres.database.azure.com
+      database-name: main
+      database-user: ssr-backend-a

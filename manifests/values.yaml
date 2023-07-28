@@ -1,0 +1,225 @@
+name: ssr
+
+tenantId: 72fca1b1-2c2e-4376-a445-294d80196804
+
+image:
+  registry: saks01weuacrpgpgo5qvmwo.azurecr.io
+  repository: sensorenregister/api
+  tag: latest
+
+labels:
+  app: sensorenregister
+
+network:
+  allow-ingress:
+    selector: app == 'sensorenregister'
+    ingress:
+      - action: Allow
+    egress:
+      - action: Allow
+
+secrets:
+  certificate:
+    type: keyvault
+    tls: sensorenregister
+
+  vault:
+    type: keyvault
+    secrets:
+      - secret-key
+      - oidc-base-url
+      - oidc-rp-client-id
+      - oidc-rp-client-secret
+      - applicationinsights-connection-string
+
+jobs:
+  migrate:
+    annotations:
+      helm.sh/hook: post-install,post-upgrade
+      helm.sh/hook-weight: "-5"
+    labels:
+      component: migrate
+    volumes:
+      - name: tmp
+        spec:
+          emptyDir: {}
+    resources:
+      requests:
+        cpu: 100m
+        memory: "256Mi"
+      limits:
+        cpu: 2
+        memory: "512Mi"
+    containers:
+      - name: main
+        volumes:
+          - name: tmp
+            mountPath: /tmp
+        secrets:
+          - database
+          - vault
+        command:
+          - python
+          - manage.py
+          - migrate
+
+  certificate-init:
+    annotations:
+      helm.sh/hook: post-install,post-upgrade
+    labels:
+      component: certificate
+    secrets:
+      - certificate
+    containers:
+      - name: main
+        command:
+          - sleep
+        args:
+          - "1"
+
+  import:
+    annotations:
+      helm.sh/hook: post-install,post-upgrade
+    labels:
+      component: import
+    volumes:
+      - name: tmp
+        spec:
+          emptyDir: {}
+    resources:
+      requests:
+        cpu: 100m
+        memory: "256Mi"
+      limits:
+        cpu: 2
+        memory: "512Mi"
+    containers:
+      - name: main
+        volumes:
+          - name: tmp
+            mountPath: /tmp
+        secrets:
+          - database
+          - vault
+        command:
+          - python
+          - manage.py
+          - import_api
+
+cronJobs:
+  import:
+    labels:
+      component: import
+    schedule: "0 * * * *"
+    volumes:
+      - name: tmp
+        spec:
+          emptyDir: {}
+    containers:
+      - name: main
+        secrets:
+          - database
+          - vault
+        volumes:
+          - name: tmp
+            mountPath: /tmp
+        command:
+          - python
+          - manage.py
+          - import_api
+
+deployments:
+  api:
+    selectorLabels:
+      component: api
+    env:
+      BASE_URL: /api
+      ADMIN_ENABLED: false
+      API_ENABLED: true
+      API_PATH: /
+    autoscale:
+      cpu: 70
+    resources:
+      requests:
+        cpu: 1
+        memory: "512Mi"
+      limits:
+        cpu: 1
+        memory: "512Mi"
+    volumes:
+      - name: tmp
+        spec:
+          emptyDir: {}
+    containers:
+      - name: main
+        secrets:
+          - database
+          - vault
+        volumes:
+          - name: tmp
+            mountPath: /tmp
+        ports:
+          - port: 8000
+            name: http
+
+  admin:
+    selectorLabels:
+      component: admin
+    env:
+      BASE_URL: /admin
+      ADMIN_ENABLED: true
+      API_ENABLED: false
+      ADMIN_PATH: /
+    volumes:
+      - name: tmp
+        spec:
+          emptyDir: {}
+    containers:
+      - name: main
+        secrets:
+          - database
+          - vault
+        volumes:
+          - name: tmp
+            mountPath: /tmp
+        ports:
+          - port: 8000
+            name: http
+
+services:
+  api:
+    selector:
+      component: api
+    ports:
+      - port: 8000
+        targetPort: http
+  admin:
+    selector:
+      component: admin
+    ports:
+      - port: 8000
+        targetPort: http
+
+ingress:
+  backend-external:
+    className: nginx-external
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: /$2
+    paths:
+      - path: /api(/|$)(.*)
+        service: api
+        port: 8000
+    tls: certificate
+
+  backend-internal:
+    className: nginx-internal
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: /$2
+    paths:
+      - path: /api(/|$)(.*)
+        service: api
+        port: 8000
+      - path: /admin(/|$)(.*)
+        service: admin
+        port: 8000
+    tls: certificate

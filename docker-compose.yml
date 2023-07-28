@@ -1,29 +1,48 @@
 version: "3.5"
 
+networks:
+  default:
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: 1400
+
 x-app: &base-app
   build:
     context: .
     target: app
-  depends_on:
-    - database
   environment: &base-app-env
     SECRET_KEY: "insecure"
+    ADMIN_ENABLED: "true"
+    API_ENABLED: "true"
     DEBUG: "true"
+    PYTHONBREAKPOINT:
+    SENTRY_DSN:
+    OIDC_BASE_URL:
     OIDC_RP_CLIENT_ID:
     OIDC_RP_CLIENT_SECRET:
+    APPLICATIONINSIGHTS_CONNECTION_STRING:
+    DATABASE_HOST: database
+    DATABASE_USER: dev
+    DATABASE_NAME: dev
+    DATABASE_PASSWORD: dev
   volumes:
     - ./src:/app/src
     - ./tests:/app/tests
     - ./deploy:/app/deploy
+    - cache:/home/app/.azure
     - ./pyproject.toml:/app/pyproject.toml
   entrypoint: /app/deploy/wait-for-it.sh database:5432 --
+  depends_on:
+    database:
+      condition: service_healthy
 
 volumes:
   db_data:
+  cache:
 
 services:
   database:
-    image: amsterdam/postgres11
+    image: postgis/postgis:14-3.3
     environment:
       POSTGRES_DB: dev
       POSTGRES_USER: dev
@@ -31,31 +50,53 @@ services:
       PGDATA: /data
     volumes:
       - db_data:/data
+    healthcheck:
+      test: pg_isready -U dev -d dev
+      interval: 10s
+      timeout: 1s
+      retries: 5
 
-  app:
+  app: &app
     <<: *base-app
     build:
       context: .
       target: app
-      args:
-        - BUILD_DATE
-        - BUILD_REVISION
-        - BUILD_VERSION
-    image: docker-registry.data.amsterdam.nl/datapunt/iothings-api:${VERSION:-latest}
+    image: ${REGISTRY:-localhost:5000}/${REPOSITORY:-sensorenregister/api}:${VERSION:-latest}
     command: /app/deploy/docker-run.sh
     environment:
       <<: *base-app-env
-      DEBUG: "false"
+      # DEBUG: "false"
+    healthcheck:
+      test: curl -f http://localhost:8000/status/health
+      interval: 10s
+      timeout: 1s
+      retries: 5
+
+  migrate:
+    <<: *base-app
+    command: ./manage.py migrate
+
+  import:
+    <<: *base-app
+    command: ./manage.py import_api
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
 
   dev:
     <<: *base-app
+    image: ${REGISTRY:-localhost:5000}/${REPOSITORY:-sensorenregister/api}-dev:${VERSION:-latest}
     build:
       context: .
       target: dev
-    command: python manage.py runserver_plus --print-sql 0.0.0.0:8000
+    environment:
+      <<: *base-app-env
+      DJANGO_SETTINGS_MODULE: "iot.settings.settings"
+    command: "./manage.py runserver 0.0.0.0:8000"
 
   test:
     <<: *base-app
+    image: ${REGISTRY:-localhost:5000}/${REPOSITORY:-sensorenregister/api}-test:${VERSION:-latest}
     build:
       context: .
       target: tests
@@ -64,3 +105,18 @@ services:
       DJANGO_SETTINGS_MODULE: "main.settings"
       OIDC_RP_CLIENT_ID: tests
       OIDC_RP_CLIENT_SECRET: tests
+      DATABASE_HOST: database
+      DATABASE_USER: dev
+      DATABASE_NAME: dev
+      DATABASE_PASSWORD: dev
+
+  k6:
+    image: loadimpact/k6
+    volumes:
+      - ./k6.js:/home/k6/k6.js
+    command: run k6.js
+    depends_on:
+      app:
+        condition: service_healthy
+      import:
+        condition: service_completed_successfully

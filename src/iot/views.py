@@ -19,13 +19,16 @@ class IotRootView(routers.APIRootView):
     """
 
 
-class PingView(views.APIView):
+class RootView(views.APIView):
     throttle_classes = ()
     authentication_classes = ()
     permission_classes = ()
 
     def get(self, request):
-        return Response({'date': timezone.now()})
+        data = {k: v for k, v in request.META.items() if k.startswith('HTTP_')}
+        data['REMOTE_ADDR'] = request.META.get('REMOTE_ADDR')
+        data['HTTP_X_FORWARDED_FOR'] = request.META.get('HTTP_X_FORWARDED_FOR')
+        return Response(data)
 
 
 class DevicesViewSet(DatapuntViewSet):

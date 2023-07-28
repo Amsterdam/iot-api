@@ -1,0 +1,45 @@
+trigger:
+  batch: true
+  branches:
+    include:
+      - main
+  tags:
+    include:
+      - "*.*.*"
+
+variables:
+  # Debugging
+  System.Debug: true
+
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      name: tamm/templates
+      ref: refs/tags/1.1.2
+
+extends:
+  template: pipelines/aks/template.yaml@templates
+  parameters:
+    name: ssr-backend
+    # build:
+    #   pool:
+    #     name: ContainerBuilder
+    #     demands: 
+    #     - Agent.Name -equals ContainerBuildAgent-p0000HI
+    dev:
+      pool: TAMM
+      namespace: ns-ccc-ssr-ont-01-sensorenregister
+      kubernetesServiceConnection: SCN-K8S-ns-ccc-ssr-ont-01-sensorenregister
+    test:
+      pool: TAMM
+      namespace: ns-ccc-ssr-tst-01-sensorenregister
+      kubernetesServiceConnection: SCN-K8S-ns-ccc-ssr-tst-01-sensorenregister
+    acc:
+      pool: TAMM
+      namespace: ns-ccc-ssr-acc-01-sensorenregister
+      kubernetesServiceConnection: SCN-K8S-ns-ccc-ssr-acc-01-sensorenregister
+    prod:
+      pool: TAMM
+      namespace: ns-ccc-ssr-prd-01-sensorenregister
+      kubernetesServiceConnection: SCN-K8S-ns-ccc-ssr-prd-01-sensorenregister
