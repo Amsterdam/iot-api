@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from datapunt_api.rest import DatapuntViewSet
-from django.utils import timezone
 from rest_framework import routers, views
 from rest_framework.response import Response
 
