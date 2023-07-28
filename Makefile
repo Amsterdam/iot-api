@@ -30,9 +30,9 @@ pip-tools:
 install: pip-tools                  ## Install requirements and sync venv with expected state as defined in requirements.txt
 	pip-sync requirements_dev.txt
 
-requirements: pip-tools             ## Upgrade requirements (in requirements.in) to latest versions and compile requirements.txt
-	pip-compile --resolver=backtracking --upgrade --output-file requirements.txt requirements.in
-	pip-compile --resolver=backtracking --upgrade --output-file requirements_dev.txt requirements_dev.in
+requirements:              ## Upgrade requirements (in requirements.in) to latest versions and compile requirements.txt
+	pip-compile --resolver=backtracking --upgrade --output-file requirements.txt  --allow-unsafe requirements.in
+	pip-compile --resolver=backtracking --upgrade --output-file requirements_dev.txt  --allow-unsafe requirements_dev.in
 
 upgrade: requirements install       ## Run 'requirements' and 'install' targets
 
