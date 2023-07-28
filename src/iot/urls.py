@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-
 from django.conf import settings
-from django.conf.urls import include
 from django.contrib import admin
 from django.urls import include, path, re_path
 from drf_yasg import openapi

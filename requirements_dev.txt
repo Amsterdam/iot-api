@@ -449,8 +449,6 @@ cryptography==41.0.2
     #   paramiko
     #   pyjwt
     #   pyopenssl
-datapunt-keycloak-oidc==0.5.1
-    # via -r ./requirements.in
 debugpy==1.6.7
     # via ipykernel
 decorator==5.1.1
@@ -685,10 +683,8 @@ matplotlib-inline==0.1.6
     #   ipython
 mistune==3.0.1
     # via nbconvert
-mozilla-django-oidc==1.2.4
-    # via
-    #   -r ./requirements.in
-    #   datapunt-keycloak-oidc
+mozilla-django-oidc==3.0.0
+    # via -r ./requirements.in
 msal[broker]==1.22.0
     # via
     #   azure-cli-core
@@ -785,7 +781,7 @@ nbformat==5.9.1
     #   jupyter-server
     #   nbclient
     #   nbconvert
-nest-asyncio==1.5.6
+nest-asyncio==1.5.7
     # via ipykernel
 notebook==7.0.0
     # via -r requirements_dev.in
@@ -1037,7 +1033,6 @@ six==1.16.0
     #   google-auth
     #   isodate
     #   javaproperties
-    #   mozilla-django-oidc
     #   msrestazure
     #   pathlib2
     #   python-dateutil

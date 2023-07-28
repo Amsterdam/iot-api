@@ -72,17 +72,6 @@ services:
       timeout: 1s
       retries: 5
 
-  migrate:
-    <<: *base-app
-    command: ./manage.py migrate
-
-  import:
-    <<: *base-app
-    command: ./manage.py import_api
-    depends_on:
-      migrate:
-        condition: service_completed_successfully
-
   dev:
     <<: *base-app
     image: ${REGISTRY:-localhost:5000}/${REPOSITORY:-sensorenregister/api}-dev:${VERSION:-latest}
@@ -91,7 +80,7 @@ services:
       target: dev
     environment:
       <<: *base-app-env
-      DJANGO_SETTINGS_MODULE: "iot.settings.settings"
+      DJANGO_SETTINGS_MODULE: "iot.settings"
     command: "./manage.py runserver 0.0.0.0:8000"
 
   test:
@@ -109,14 +98,3 @@ services:
       DATABASE_USER: dev
       DATABASE_NAME: dev
       DATABASE_PASSWORD: dev
-
-  k6:
-    image: loadimpact/k6
-    volumes:
-      - ./k6.js:/home/k6/k6.js
-    command: run k6.js
-    depends_on:
-      app:
-        condition: service_healthy
-      import:
-        condition: service_completed_successfully

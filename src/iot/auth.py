@@ -1,4 +1,6 @@
 import mozilla_django_oidc.auth
+from django.conf import settings
+from django.contrib.auth.models import Group
 from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.urls import reverse

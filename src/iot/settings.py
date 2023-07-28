@@ -10,9 +10,6 @@ from .azure_settings import Azure
 
 azure = Azure()
 
-# This import enables the OIDC login. Without this import, users cannot log in to the admin portal!
-# The "noqa" comment prevents Flake from removing this import as an unused import.
-from keycloak_oidc.default_settings import *  # noqa
 
 config_integration.trace_integrations(['requests', 'logging', 'postgresql'])
 
@@ -84,11 +81,11 @@ THIRD_PARTY_APPS = [
 DEBUG_APPS = ()
 
 # Apps specific for this project go here.
-LOCAL_APPS = ['main', 'iot', 'health']
+LOCAL_APPS = ['iot']
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
-MIDDLEWARE = [
+MIDDLEWARE = (
     'django.middleware.security.SecurityMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -98,12 +95,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'opencensus.ext.django.middleware.OpencensusMiddleware',
-]
+)
 
-DEBUG_MIDDLEWARE = [
+DEBUG_MIDDLEWARE = (
     # 'debug_toolbar.middleware.DebugToolbarMiddleware',
     # 'pyinstrument.middleware.ProfilerMiddleware',
-]
+)
 
 if DEBUG:
     INSTALLED_APPS += DEBUG_APPS
@@ -130,8 +127,8 @@ AUTHENTICATION_BACKENDS = [
 
 SENSOR_REGISTER_ADMIN_ROLE_NAME = os.getenv('SENSOR_REGISTER_ADMIN_ROLE_NAME', 'x')
 
-ROOT_URLCONF = "main.urls"
-WSGI_APPLICATION = "main.wsgi.application"
+ROOT_URLCONF = "iot.urls"
+WSGI_APPLICATION = "iot.wsgi.application"
 
 TEMPLATES = [
     {

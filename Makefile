@@ -48,6 +48,9 @@ import:
 urls:
 	$(manage) show_urls
 
+urls:
+	$(manage) createsuperuser
+
 build:
 	$(dc) build
 
@@ -87,7 +90,7 @@ lint:                               ## Execute lint checks
 	$(run) test isort --diff --check /app/src/$(APP) /app/tests/$(APP)
 	$(run) test black --diff --check /app/src/$(APP) /app/tests/$(APP)
 
-test: lint                          ## Execute tests
+test:                               ## Execute tests
 	$(run) test pytest --junitxml=junit-results.xml --cov=. --cov-report=xml /app/tests/$(APP) $(ARGS)
 
 k6:
