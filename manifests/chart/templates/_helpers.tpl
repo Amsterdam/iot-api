@@ -93,15 +93,6 @@ Create the name of the service account to use
 Volumes
 */}}
 {{- define "pod.volumes" -}}
-{{- include "pod.persistentVolumes" . }}
-{{- include "pod.secretVolumes" . }}
-{{- include "pod.configVolumes" . }}
-{{- end }}
-
-{{/*
-Pod persistent volumes
-*/}}
-{{- define "pod.persistentVolumes" -}}
 {{- $fullName := (include "helm.fullname" .root ) }}
 {{- range .local.volumes }}
 - name: {{ .name }}
@@ -113,13 +104,15 @@ Pod persistent volumes
   {{- toYaml . | nindent 2}}
 {{- end }}
 {{- end }}
+{{- include "pod.secretVolumes" . }}
 {{- end }}
 
 {{/*
-Pod secret volumes
+Volumes
 */}}
 {{- define "pod.secretVolumes" -}}
-{{- $secrets := .local.secrets | default list }}
+{{- $mountSecrets := .local.mountSecrets | default list }}
+{{- $secrets := concat (.local.secrets | default list) $mountSecrets }}
 
 {{- range .local.containers }}
 {{- $secrets = concat $secrets (.secrets | default list) }}
@@ -135,30 +128,7 @@ Pod secret volumes
     readOnly: true
     volumeAttributes:
       secretProviderClass: "{{ . }}-{{ $fullName }}"
-{{- else }}
-- name: "{{ . }}"
-  secret:
-    secretName: {{ printf "%s-%s" . $fullName | quote }}
 {{- end }}
-{{- end }}
-{{- end }}
-
-{{/*
-Pod config volumes
-*/}}
-{{- define "pod.configVolumes" -}}
-{{- $configMaps := .local.configMaps | default list }}
-
-{{- range .local.containers }}
-{{- $configMaps = concat $configMaps (.configMaps | default list) }}
-{{- end }}
-
-{{- $fullName := (include "helm.fullname" .root ) }}
-{{- range $configMaps | mustUniq }}
-{{- $configMap := get $.root.Values.configMaps . }}
-- name: "{{ . }}"
-  configMap:
-    name: {{ printf "%s-%s" . $fullName | quote }}
 {{- end }}
 {{- end }}
 
@@ -167,7 +137,6 @@ Container volumeMounts
 */}}
 {{- define "container.volumeMounts" -}}
 {{- include "container.secretVolumes" . }}
-{{- include "container.configMapVolumes" . }}
 {{- include "container.volumes" . }}
 {{- end }}
 
@@ -178,7 +147,6 @@ Container manual volumes
 {{- range .local.volumes }}
 - name: {{ .name }}
   mountPath: {{ .mountPath }}
-  readOnly: {{ .readOnly | default false }}
 {{- end }}
 {{- end }}
 
@@ -186,25 +154,15 @@ Container manual volumes
 Volumes secret volume mounts
 */}}
 {{- define "container.secretVolumes" -}}
-{{- $secrets := .local.secrets | default list }}
+{{- $mountSecrets := .local.mountSecrets | default list }}
+{{- $secrets := concat (.local.secrets | default list) $mountSecrets | mustUniq }}
 {{- range $secrets }}
 {{- $secret := get $.root.Values.secrets . }}
+{{- if eq (lower $secret.type) "keyvault" }}
 - name: {{ . }}
-  mountPath: {{ printf "/mnt/secrets/%s" . | quote }}
+  mountPath: /mnt/secrets/{{ . | replace "-" "_" }}
   readOnly: true
 {{- end }}
-{{- end }}
-
-{{/*
-ConfigMap volumeMounts
-*/}}
-{{- define "container.configMapVolumes" -}}
-{{- $configMaps := .local.configMaps | default list }}
-{{- range $configMaps }}
-{{- $configMap := get $.root.Values.configMaps . }}
-- name: {{ . }}
-  mountPath: {{ printf "/mnt/configs/%s" . | quote }}
-  readOnly: true
 {{- end }}
 {{- end }}
 
@@ -214,6 +172,7 @@ env
 {{- define "container.env" -}}
 {{- $fullName := (include "helm.fullname" .root ) }}
 {{- $env := merge (.local.env | default dict) .root.Values.env }}
+{{- if or $env .local.secrets }}
 {{- with $env }}
 {{- range $name, $value := . }}
 - name: {{ $name | upper | replace "-" "_" }}
@@ -238,24 +197,11 @@ Else its a list
     secretKeyRef:
       name: {{ printf "%s-%s" $secretName $fullName | quote }}
       key: {{ $key | quote }}
-{{- end }} 
-{{- end }}
-{{- end }}
-
-{{- with .local.configMaps }}
-{{- range . }}
-{{- $configMapName := . }}
-{{- $configMap := required (printf "ConfigMap %s does not exist" $configMapName) (get $.root.Values.configMaps $configMapName) }}
-{{- range $key, $value := $configMap.data }}
-- name: {{ $key | upper | replace "-" "_" | quote }}
-  valueFrom:
-    configMapKeyRef:
-      name: {{ printf "%s-%s" $configMapName $fullName | quote }}
-      key: {{ $key | quote }}
 {{- end }}
 {{- end }}
 {{- end }}
 
+{{- end }}
 {{- end }}
 
 {{/*
@@ -299,7 +245,7 @@ tolerations
 pod.securityContext
 */}}
 {{- define "pod.securityContext" -}}
-{{- $context := deepCopy (.local.securityContext | default dict) | mergeOverwrite (.root.Values.securityContext.pod | deepCopy)  }}
+{{- $context := mergeOverwrite .root.Values.securityContext.pod (.local.securityContext | default dict)  }}
 {{- with $context }}
 {{- . | toYaml }}
 {{- end }}
@@ -309,7 +255,7 @@ pod.securityContext
 container.securityContext
 */}}
 {{- define "container.securityContext" -}}
-{{- $context := deepCopy (.local.securityContext | default dict) | mergeOverwrite (.root.Values.securityContext.container | deepCopy)  }}
+{{- $context := mergeOverwrite (.root.Values.securityContext.container) (.local.securityContext | default dict) }}
 {{- with $context }}
 {{- . | toYaml }}
 {{- end }}
@@ -364,7 +310,7 @@ containers
 {{- $context := . -}}
 
 {{- range .local.containers }}
-{{- $picked := pick $context.local "resources" "env" "secrets" "configMaps" "image" }}
+{{- $picked := pick $context.local "resources" "env" "secrets" "image" }}
 {{- $containerContext := dict "local" (merge . $picked) "root" $context.root }}
 - name: {{ .name }}
 {{- include "container" $containerContext | indent 2 }}

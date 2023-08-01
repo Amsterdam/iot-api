@@ -32,7 +32,6 @@ keyvault: {}
 
 # Resources
 secrets: {}
-configMaps: {}
 jobs: {}
 cronJobs: {}
 deployments: {}

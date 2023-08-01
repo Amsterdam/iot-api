@@ -1,18 +1,5 @@
 # Changelog
 
-## [1.7.0](https://github.com/Amsterdam/helm-application/compare/1.6.1...1.7.0) (2023-07-20)
-
-
-### Features
-
-* **configmaps:** Added configmaps functionality ([f79e999](https://github.com/Amsterdam/helm-application/commit/f79e999147895e7084862b8da9397e3f14cdfd0c))
-
-
-### Bug Fixes
-
-* **securityContext:** security context was in some cases merged without copy causing subsequent containers to have the same context ([a7b4a1c](https://github.com/Amsterdam/helm-application/commit/a7b4a1c3557c468601a76e4e6f77d4e9bd49262c))
-* **unittests:** Added more coverage for mounting secrets through volumes. fixes [#41](https://github.com/Amsterdam/helm-application/issues/41) ([a722bba](https://github.com/Amsterdam/helm-application/commit/a722bbac4baa7fa49c2070bfbe9b7becd5ec7b60))
-
 ## [1.6.1](https://github.com/Amsterdam/helm-application/compare/1.6.0...1.6.1) (2023-06-29)
 
 

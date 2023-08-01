@@ -88,13 +88,6 @@ A generic helm chart for deploying an application
 | `persistentVolumeClaims.<key>.accessModes`      | Contains the desired access modes the volume should have                                                                                                                                    | `ReadWriteOnce` |
 | `persistentVolumeClaims.<key>.resources`        | Represents the minimum resources the volume should have. [More info](https://kubernetes.io/docs/concepts/storage/persistent-volumes#resources)                                              | `nil`           |
 
-### ConfigMaps parameters
-
-| Name                    | Description                                                                                                                                        | Value |
-| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
-| `configMaps`            | `map` of the [ConfigMaps](https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/config-map-v1/) that should be deployed |       |
-| `configMaps.<key>.data` | `map` of data to deploy in the configmap                                                                                                           | `[]`  |
-
 ### Secrets parameters
 
 | Name                    | Description                                                                                                                                 | Value |
