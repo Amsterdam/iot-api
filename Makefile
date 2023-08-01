@@ -65,7 +65,7 @@ manifests:
 
 update-chart:
 	rm -rf manifests/chart
-	git clone --branch 1.6.1 --depth 1 git@github.com:Amsterdam/helm-application.git manifests/chart
+	git clone --branch 1.7.0 --depth 1 git@github.com:Amsterdam/helm-application.git manifests/chart
 	rm -rf manifests/chart/.git
 
 app:
