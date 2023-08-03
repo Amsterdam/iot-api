@@ -18,7 +18,7 @@ HELM_ARGS = manifests/chart \
 	--set image.tag=${VERSION}
 
 REGISTRY ?= localhost:5000
-REPOSITORY ?= opdrachten/sensorenregister
+REPOSITORY ?= opdrachten/sensorenregister-api
 VERSION ?= latest
 
 help:                               ## Show this help.

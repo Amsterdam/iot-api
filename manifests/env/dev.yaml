@@ -5,7 +5,7 @@ keyVaultName: sensorenregister-o-b2lva
 workloadIdentity: 03341363-cc33-4976-ae16-27f763f014fd
 
 image:
-  repository: sensorenregister/api-dev
+  repository: opdrachten/sensorenregister-api-dev
 
 # We must select the nodepool to run the pods on
 nodepool: cccopdront01

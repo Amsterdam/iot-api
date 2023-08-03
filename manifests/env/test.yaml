@@ -5,7 +5,7 @@ keyVaultName: ssr-t-zryvqlwvrfmge
 workloadIdentity: 9d8e9499-c457-4701-9bb5-f40b77312bfc
 
 image:
-  repository: sensorenregister/api-dev
+  repository: opdrachten/sensorenregister-api-dev
 
 # We must select the nodepool to run the pods on
 nodepool: cccssrtst01

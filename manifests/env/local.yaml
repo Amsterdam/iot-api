@@ -1,6 +1,6 @@
 image:
   registry: localhost:5000
-  repository: sensorenregister/api-dev
+  repository: opdrachten/sensorenregister-api-dev
 
 # Default host for the ingress resources
 host: localhost
