@@ -2,7 +2,7 @@
 keyVaultName: ssr-t-zryvqlwvrfmge
 
 # Managed identity (clientId) for workload identity with
-workloadIdentity: 9d8e9499-c457-4701-9bb5-f40b77312bfc
+workloadIdentity: 2c3043ce-bc3d-4358-9c0c-6220105d7574
 
 image:
   repository: opdrachten/sensorenregister-api-dev
@@ -11,12 +11,12 @@ image:
 nodepool: cccssrtst01
 
 # Default host for the ingress resources
-host: ssr-t.azure.amsterdam.nl
+host: sensorenregister.opdr-t.azure.amsterdam.nl
 
 # Specify the keyvault that has the certificate
 secrets:
   certificate:
-    keyVaultName: shared-t-vfstn5vergsqw
+    keyVaultName: shared-t-ddxsibl3lrdai
 
   database:
     type: opaque

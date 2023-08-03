@@ -2,7 +2,7 @@
 keyVaultName: sensorenregister-o-b2lva
 
 # Managed identity (clientId) for workload identity with
-workloadIdentity: 03341363-cc33-4976-ae16-27f763f014fd
+workloadIdentity: f48f64e4-bd5f-4331-920b-0a3443343e4f
 
 image:
   repository: opdrachten/sensorenregister-api-dev
