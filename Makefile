@@ -5,21 +5,22 @@
 UID:=$(shell id --user)
 GID:=$(shell id --group)
 
+ENVIRONMENT ?= local
+VERSION ?= latest
+REGISTRY ?= localhost:5001
+REPOSITORY ?= sensorenregister/api
+
 dc = docker compose
 run = $(dc) run --rm -u ${UID}:${GID}
 manage = $(run) dev python manage.py
 pytest = $(run) test pytest $(ARGS)
 
-ENVIRONMENT ?= local
-HELM_UPGRADE = helm upgrade backend $(HELM_ARGS)
 HELM_ARGS = manifests/chart \
 	-f manifests/values.yaml \
 	-f manifests/env/${ENVIRONMENT}.yaml \
-	--set image.tag=${VERSION}
+	--set image.tag=${VERSION}\
+	--set image.registry=${REGISTRY}
 
-REGISTRY ?= localhost:5001
-REPOSITORY ?= sensorenregister/api
-VERSION ?= latest
 
 help:                               ## Show this help.
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
@@ -58,10 +59,10 @@ push: build
 	$(dc) push
 
 deploy: manifests
-	helm upgrade --install backend $(HELM_ARGS) $(ARGS)
+	helm upgrade --install ssr-backend $(HELM_ARGS) $(ARGS)
 
 manifests:
-	@helm template backend $(HELM_ARGS) $(ARGS)
+	@helm template ssr-backend $(HELM_ARGS) $(ARGS)
 
 update-chart:
 	rm -rf manifests/chart
