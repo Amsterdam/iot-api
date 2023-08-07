@@ -1,26 +1,34 @@
+tenantId: 72fca1b1-2c2e-4376-a445-294d80196804  # Global
+
 # Default keyvault for getting secrets
-keyVaultName: ssr-o-gp4jqffo3heda
+keyVaultName: sensorenregister-o-b2lva  # App specific
 
-# Managed identity (clientId) for workload identity with
-workloadIdentity: 0289e90a-b691-4a9b-b747-4d5da9e2b546
+# Identity AppID (clientId) used to authenticate with the keyvault
+keyVaultIdentity: 03341363-cc33-4976-ae16-27f763f014fd  # Environment specific
 
-image:
-  repository: sensorenregister/api-dev
+# Service account to use
+serviceAccount: app
+
+serviceAccounts:
+  app:
+    enableWorkloadIdentity: false
 
 # We must select the nodepool to run the pods on
-nodepool: cccssront01
+nodepool: cccopdront01  # Environment specific
 
 # Default host for the ingress resources
-host: ssr-o.azure.amsterdam.nl
+host: sensorenregister.opdr-o.azure.amsterdam.nl  # App specific
+
+# Some default environment variables to inject in all containers
+env:
+  AZURE_KEY_VAULT: "https://sensorenregister-o-b2lva.vault.azure.net/"  # App specific
+  AZURE_MANAGED_IDENTITY_CLIENTID: 03341363-cc33-4976-ae16-27f763f014fd  # Environment specific
 
 # Specify the keyvault that has the certificate
 secrets:
   certificate:
-    keyVaultName: shared-o-ftytfsr6vuduo
+    keyVaultName: shared-o-yhqbd6yktpphi  # Environment specific
 
-  database:
-    type: opaque
-    secrets:
-      database-host: ssr-o-gp4jqffo3heda.postgres.database.azure.com
-      database-name: main
-      database-user: ssr-backend-o
+ingress:
+  app:
+    className: nginx-internal  # App specific
