@@ -27,10 +27,6 @@ extends:
       namespace: ns-ccc-opdr-ont-01-sensorenregister
       kubernetesServiceConnection: SCN-K8S-ns-ccc-opdr-ont-01-sensorenregister
       preSteps:
-        - script: helm uninstall sensorenregister || true
-          displayName: Remove previous installation
-        - script: helm uninstall backend || true
-          displayName: Remove previous installation
         - script: helm uninstall ssr-backend || true
           displayName: Remove previous installation
     test:

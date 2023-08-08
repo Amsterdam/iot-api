@@ -26,7 +26,6 @@ secrets:
   vault:
     type: keyvault
     secrets:
-      - secret-key
       - oidc-base-url
       - oidc-rp-client-id
       - oidc-rp-client-secret
