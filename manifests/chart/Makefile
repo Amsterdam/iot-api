@@ -1,5 +1,5 @@
 VERSION ?= 0.0.0
-HELM_UNITTEST_VERSION ?= 0.3.2
+HELM_UNITTEST_VERSION ?= 0.3.3
 
 UID:=$(shell id --user)
 GID:=$(shell id --group)

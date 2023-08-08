@@ -3,8 +3,11 @@ tenantId: 72fca1b1-2c2e-4376-a445-294d80196804  # Global
 # Default keyvault for getting secrets
 keyVaultName: sensorenregister-t-kbroh  # App specific
 
-# Identity AppID (clientId) used to authenticate with the keyvault
-keyVaultIdentity: 42fbed0f-0af4-440d-8e5a-35a2c46aa314  # Environment specific
+# Managed identity (clientId) for workload identity with
+workloadIdentity: 2c3043ce-bc3d-4358-9c0c-6220105d7574
+
+image:
+  repository: opdrachten/sensorenregister-api-dev
 
 # We must select the nodepool to run the pods on
 nodepool: cccopdrtst01  # Environment specific

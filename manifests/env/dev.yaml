@@ -3,15 +3,11 @@ tenantId: 72fca1b1-2c2e-4376-a445-294d80196804  # Global
 # Default keyvault for getting secrets
 keyVaultName: sensorenregister-o-b2lva  # App specific
 
-# Identity AppID (clientId) used to authenticate with the keyvault
-keyVaultIdentity: 03341363-cc33-4976-ae16-27f763f014fd  # Environment specific
+# Managed identity (clientId) for workload identity with
+workloadIdentity: f48f64e4-bd5f-4331-920b-0a3443343e4f
 
-# Service account to use
-serviceAccount: app
-
-serviceAccounts:
-  app:
-    enableWorkloadIdentity: false
+image:
+  repository: opdrachten/sensorenregister-api-dev
 
 # We must select the nodepool to run the pods on
 nodepool: cccopdront01  # Environment specific
