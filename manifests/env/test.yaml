@@ -24,6 +24,12 @@ env:
 secrets:
   certificate:
     keyVaultName: shared-t-ddxsibl3lrdai  # Environment specific
+  database:
+    type: opaque
+    secrets:
+      database-host: sensorenregister-t-kbroh.postgres.database.azure.com
+      database-name: main
+      database-user: sensorenregister-app-t
 
 ingress:
   app:
