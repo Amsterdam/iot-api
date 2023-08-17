@@ -26,9 +26,6 @@ extends:
       pool: Opdrachten
       namespace: ns-ccc-opdr-ont-01-sensorenregister
       kubernetesServiceConnection: SCN-K8S-ns-ccc-opdr-ont-01-sensorenregister
-      preSteps:
-        - script: helm status ssr-backend || true
-          displayName: Check helm status
     test:
       pool: Opdrachten
       namespace: ns-ccc-opdr-tst-01-sensorenregister
