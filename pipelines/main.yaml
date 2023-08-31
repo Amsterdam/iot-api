@@ -22,6 +22,10 @@ extends:
   template: pipelines/aks/template.yaml@templates
   parameters:
     name: sensorenregister-backend
+    build:
+      analyzeImages:
+      - opdrachten/sensorenregister-api-dev
+      - opdrachten/sensorenregister-api-test
     dev:
       pool: Opdrachten
       namespace: ns-ccc-opdr-ont-01-sensorenregister
