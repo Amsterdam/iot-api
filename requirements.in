@@ -38,7 +38,6 @@ openpyxl
 psycopg2-binary
 
 # Datapunt packages
-# datapunt-keycloak-oidc
 mozilla-django-oidc
 
 # Logging
