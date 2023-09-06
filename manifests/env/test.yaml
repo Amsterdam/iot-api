@@ -7,7 +7,7 @@ keyVaultName: sensorenregister-t-kbroh  # App specific
 workloadIdentity: 2c3043ce-bc3d-4358-9c0c-6220105d7574
 
 image:
-  repository: opdrachten/sensorenregister-api-dev
+  repository: opdrachten/sensorenregister-api
 
 # We must select the nodepool to run the pods on
 nodepool: cccopdrtst01  # Environment specific
