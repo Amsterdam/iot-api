@@ -68,13 +68,4 @@ if settings.ADMIN_ENABLED:
         ]
     )
 
-# if settings.DEBUG:
-# import debug_toolbar
-
-# urlpatterns.extend(
-#     [
-#         path(r'__debug__/', include(debug_toolbar.urls)),
-#     ]
-# )
-
 admin.autodiscover()
