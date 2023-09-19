@@ -15,11 +15,6 @@ nodepool: cccopdrtst01  # Environment specific
 # Default host for the ingress resources
 host: sensorenregister.opdr-t.azure.amsterdam.nl  # App specific
 
-# Some default environment variables to inject in all containers
-env:
-  AZURE_KEY_VAULT: "https://sensorenregister-t-kbroh.vault.azure.net/"  # App specific
-  AZURE_MANAGED_IDENTITY_CLIENTID: 42fbed0f-0af4-440d-8e5a-35a2c46aa314  # Environment specific
-
 # Specify the keyvault that has the certificate
 secrets:
   certificate:
