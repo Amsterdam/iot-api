@@ -21,7 +21,11 @@ resources:
 extends:
   template: pipelines/aks/template.yaml@templates
   parameters:
-    name: ssr-backend
+    name: sensorenregister-backend
+    build:
+      analyzeImages:
+      - opdrachten/sensorenregister-api-dev
+      - opdrachten/sensorenregister-api-test
     dev:
       pool: Opdrachten
       namespace: ns-ccc-opdr-ont-01-sensorenregister
@@ -30,3 +34,7 @@ extends:
       pool: Opdrachten
       namespace: ns-ccc-opdr-tst-01-sensorenregister
       kubernetesServiceConnection: SCN-K8S-ns-ccc-opdr-tst-01-sensorenregister
+    acc:
+      pool: Opdrachten
+      namespace: ns-ccc-opdr-acc-01-sensorenregister
+      kubernetesServiceConnection: SCN-K8S-ns-ccc-opdr-acc-01-sensorenregister

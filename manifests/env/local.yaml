@@ -9,7 +9,6 @@ jobs:
   certificate-init:
     enabled: false
 
-
 ingress:
   app:
     className: nginx

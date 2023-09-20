@@ -15,15 +15,16 @@ nodepool: cccopdront01  # Environment specific
 # Default host for the ingress resources
 host: sensorenregister.opdr-o.azure.amsterdam.nl  # App specific
 
-# Some default environment variables to inject in all containers
-env:
-  AZURE_KEY_VAULT: "https://sensorenregister-o-b2lva.vault.azure.net/"  # App specific
-  AZURE_MANAGED_IDENTITY_CLIENTID: 03341363-cc33-4976-ae16-27f763f014fd  # Environment specific
-
 # Specify the keyvault that has the certificate
 secrets:
   certificate:
     keyVaultName: shared-o-yhqbd6yktpphi  # Environment specific
+  database:
+    type: opaque
+    secrets:
+      database-host: sensorenregister-o-b2lva.postgres.database.azure.com
+      database-name: main
+      database-user: sensorenregister-app-o
 
   database:
     type: opaque

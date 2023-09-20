@@ -1,0 +1,31 @@
+tenantId: 72fca1b1-2c2e-4376-a445-294d80196804  # Global
+
+# Default keyvault for getting secrets
+keyVaultName: sensorenregister-a-mgoll  # App specific
+
+# Managed identity (clientId) for workload identity with
+workloadIdentity: b3c7be84-c9b0-4623-aa5a-36453b246030
+
+image:
+  repository: opdrachten/sensorenregister-api
+
+# We must select the nodepool to run the pods on
+nodepool: cccopdracc01  # Environment specific
+
+# Default host for the ingress resources
+host: sensorenregister.opdr-a.azure.amsterdam.nl  # App specific
+
+# Specify the keyvault that has the certificate
+secrets:
+  certificate:
+    keyVaultName: shared-a-uibe5ahqv3cwo  # Environment specific
+  database:
+    type: opaque
+    secrets:
+      database-host: sensorenregister-a-mgoll.postgres.database.azure.com
+      database-name: main
+      database-user: sensorenregister-app-a
+
+ingress:
+  app:
+    className: nginx-external  # App specific

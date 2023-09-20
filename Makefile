@@ -92,7 +92,7 @@ lint:                               ## Execute lint checks
 	$(run) test black --diff --check /app/src/$(APP) /app/tests/$(APP)
 
 test:                               ## Execute tests
-	$(run) test pytest $(ARGS)
+	$(run) test pytest --junitxml=junit-results.xml --cov=. --cov-report=xml /app/tests/$(APP) $(ARGS)
 
 k6:
 	$(run) k6

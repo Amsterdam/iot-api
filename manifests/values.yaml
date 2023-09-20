@@ -141,7 +141,7 @@ deployments:
       cpu: 70
     resources:
       requests:
-        cpu: 1
+        cpu: 200m
         memory: "512Mi"
       limits:
         cpu: 1
