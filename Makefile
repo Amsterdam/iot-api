@@ -92,12 +92,10 @@ lint:                               ## Execute lint checks
 	$(run) test black --diff --check /app/src/$(APP) /app/tests/$(APP)
 
 test:                               ## Execute tests
-	echo 1
+	$(run) test pytest $(ARGS)
 
 k6:
 	$(run) k6
-
-qa: lint test                      ## Execute all QA tools
 
 pdb:
 	$(run) test pytest /app/tests/$(APP) --pdb --pdbcls=IPython.terminal.debugger:TerminalPdb $(ARGS)
