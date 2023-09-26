@@ -34,7 +34,3 @@ extends:
       pool: Opdrachten
       namespace: ns-ccc-opdr-tst-01-sensorenregister
       kubernetesServiceConnection: SCN-K8S-ns-ccc-opdr-tst-01-sensorenregister
-    acc:
-      pool: Opdrachten
-      namespace: ns-ccc-opdr-acc-01-sensorenregister
-      kubernetesServiceConnection: SCN-K8S-ns-ccc-opdr-acc-01-sensorenregister
