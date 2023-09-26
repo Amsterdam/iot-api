@@ -97,8 +97,6 @@ test:                               ## Execute tests
 k6:
 	$(run) k6
 
-qa: lint test                      ## Execute all QA tools
-
 pdb:
 	$(run) test pytest /app/tests/$(APP) --pdb --pdbcls=IPython.terminal.debugger:TerminalPdb $(ARGS)
 
