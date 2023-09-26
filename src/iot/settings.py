@@ -306,6 +306,7 @@ OIDC_OP_USER_ENDPOINT = 'https://graph.microsoft.com/oidc/userinfo'
 OIDC_OP_JWKS_ENDPOINT = f'{OIDC_BASE_URL}/discovery/v2.0/keys'
 OIDC_OP_LOGOUT_ENDPOINT = f'{OIDC_BASE_URL}/oauth2/v2.0/logout'
 OIDC_RP_SIGN_ALGO = 'RS256'
+OIDC_AUTH_REQUEST_EXTRA_PARAMS = {'prompt': 'select_account'}
 
 # Only enabled the plugin if admin is enabled
 if ADMIN_ENABLED:
