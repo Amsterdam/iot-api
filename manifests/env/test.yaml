@@ -26,13 +26,6 @@ secrets:
       database-name: main
       database-user: sensorenregister-app-t
 
-  database:
-    type: opaque
-    secrets:
-      database-host: sensorenregister-t-kbroh.postgres.database.azure.com
-      database-name: main
-      database-user: sensorenregister-app-t
-
 ingress:
   app:
     className: nginx-internal  # App specific
