@@ -23,7 +23,7 @@ extends:
   parameters:
     name: sensorenregister-backend
     build:
-      analyzeImages:
+      producedImages:
       - opdrachten/sensorenregister-api-dev
       - opdrachten/sensorenregister-api-test
     dev:
