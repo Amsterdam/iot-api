@@ -13,7 +13,7 @@ image:
 nodepool: cccopdracc01  # Environment specific
 
 # Default host for the ingress resources
-host: sensorenregister.opdr-a.azure.amsterdam.nl  # App specific
+host: acc.sensorenregister.amsterdam.nl  # App specific
 
 # Specify the keyvault that has the certificate
 secrets:
@@ -28,4 +28,4 @@ secrets:
 
 ingress:
   app:
-    className: nginx-internal  # App specific
+    className: nginx-external  # App specific
