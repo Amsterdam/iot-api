@@ -10,6 +10,9 @@ image:
 labels:
   app: sensorenregister
 
+tempDirs:
+- /tmp
+
 network:
   allow-ingress:
     selector: app == 'sensorenregister'
@@ -39,10 +42,6 @@ jobs:
       helm.sh/hook-weight: "-5"
     labels:
       component: migrate
-    volumes:
-      - name: tmp
-        spec:
-          emptyDir: {}
     resources:
       requests:
         cpu: 100m
@@ -52,9 +51,6 @@ jobs:
         memory: "512Mi"
     containers:
       - name: main
-        volumes:
-          - name: tmp
-            mountPath: /tmp
         secrets:
           - database
           - vault
@@ -82,10 +78,6 @@ jobs:
       helm.sh/hook: post-install,post-upgrade
     labels:
       component: import
-    volumes:
-      - name: tmp
-        spec:
-          emptyDir: {}
     resources:
       requests:
         cpu: 100m
@@ -95,9 +87,6 @@ jobs:
         memory: "512Mi"
     containers:
       - name: main
-        volumes:
-          - name: tmp
-            mountPath: /tmp
         secrets:
           - database
           - vault
@@ -111,18 +100,11 @@ cronJobs:
     labels:
       component: import
     schedule: "0 * * * *"
-    volumes:
-      - name: tmp
-        spec:
-          emptyDir: {}
     containers:
       - name: main
         secrets:
           - database
           - vault
-        volumes:
-          - name: tmp
-            mountPath: /tmp
         command:
           - python
           - manage.py
@@ -146,18 +128,11 @@ deployments:
       limits:
         cpu: 1
         memory: "512Mi"
-    volumes:
-      - name: tmp
-        spec:
-          emptyDir: {}
     containers:
       - name: main
         secrets:
           - database
           - vault
-        volumes:
-          - name: tmp
-            mountPath: /tmp
         ports:
           - port: 8000
             name: http
@@ -170,18 +145,11 @@ deployments:
       ADMIN_ENABLED: true
       API_ENABLED: false
       ADMIN_PATH: /
-    volumes:
-      - name: tmp
-        spec:
-          emptyDir: {}
     containers:
       - name: main
         secrets:
           - database
           - vault
-        volumes:
-          - name: tmp
-            mountPath: /tmp
         ports:
           - port: 8000
             name: http
