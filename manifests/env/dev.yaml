@@ -27,5 +27,5 @@ secrets:
       database-user: sensorenregister-app-o
 
 ingress:
-  app:
-    className: nginx-internal  # App specific
+  backend-external:
+    enabled: false

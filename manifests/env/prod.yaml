@@ -27,5 +27,7 @@ secrets:
       database-user: sensorenregister-app-p
 
 ingress:
-  app:
-    className: nginx-external  # App specific
+  backend-internal:
+    host: sensorenregister.opdr.azure.amsterdam.nl
+  backend-external:
+    enabled: true
