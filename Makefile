@@ -21,7 +21,6 @@ HELM_ARGS = manifests/chart \
 	--set image.tag=${VERSION}\
 	--set image.registry=${REGISTRY}
 
-
 help:                               ## Show this help.
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
@@ -57,18 +56,6 @@ build:
 
 push: build
 	$(dc) push
-
-deploy: manifests
-	helm upgrade --install ssr-backend $(HELM_ARGS) $(ARGS)
-
-manifests:
-	@helm template ssr-backend $(HELM_ARGS) $(ARGS)
-
-update-chart:
-	rm -rf manifests/chart
-	git clone --branch 1.8.0 --depth 1 git@github.com:Amsterdam/helm-application.git manifests/chart
-	rm -rf manifests/chart/.git
-
 app:
 	$(run) --service-ports app
 
