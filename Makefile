@@ -1,6 +1,6 @@
 # This Makefile is based on the Makefile defined in the Python Best Practices repository:
 # https://git.datapunt.amsterdam.nl/Datapunt/python-best-practices/blob/master/dependency_management/
-.PHONY: help pip-tools install requirements update test init manifests deploy
+.PHONY: help pip-tools install requirements update test init
 
 UID:=$(shell id --user)
 GID:=$(shell id --group)
@@ -14,12 +14,6 @@ dc = docker compose
 run = $(dc) run --rm -u ${UID}:${GID}
 manage = $(run) dev python manage.py
 pytest = $(run) test pytest $(ARGS)
-
-HELM_ARGS = manifests/chart \
-	-f manifests/values.yaml \
-	-f manifests/env/${ENVIRONMENT}.yaml \
-	--set image.tag=${VERSION}\
-	--set image.registry=${REGISTRY}
 
 help:                               ## Show this help.
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
