@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from datapunt_api.rest import DatapuntViewSet
-from django.utils import timezone
 from rest_framework import routers, views
 from rest_framework.response import Response
 
@@ -19,13 +18,16 @@ class IotRootView(routers.APIRootView):
     """
 
 
-class PingView(views.APIView):
+class RootView(views.APIView):
     throttle_classes = ()
     authentication_classes = ()
     permission_classes = ()
 
     def get(self, request):
-        return Response({'date': timezone.now()})
+        data = {k: v for k, v in request.META.items() if k.startswith('HTTP_')}
+        data['REMOTE_ADDR'] = request.META.get('REMOTE_ADDR')
+        data['HTTP_X_FORWARDED_FOR'] = request.META.get('HTTP_X_FORWARDED_FOR')
+        return Response(data)
 
 
 class DevicesViewSet(DatapuntViewSet):

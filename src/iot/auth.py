@@ -1,6 +1,4 @@
-import keycloak_oidc.auth
-from django.conf import settings
-from django.contrib.auth.models import Group
+import mozilla_django_oidc.auth
 from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -12,26 +10,29 @@ def oidc_login(request, **kwargs):
     return HttpResponseRedirect(redirect)
 
 
-class OIDCAuthenticationBackend(keycloak_oidc.auth.OIDCAuthenticationBackend):
+class OIDCAuthenticationBackend(mozilla_django_oidc.auth.OIDCAuthenticationBackend):
+    def create_user(self, claims):
+        user = super(OIDCAuthenticationBackend, self).create_user(claims)
+        return self.update_user(user, claims)
+
+    def update_user(self, user, claims):
+        user.first_name = claims.get('given_name', '')
+        user.last_name = claims.get('family_name', '')
+        user.save()
+        self.update_groups(user, claims)
+        return user
+
     def update_groups(self, user, claims):
         """
-        Transform roles obtained from keycloak into Django Groups and
-        add them to the user. Note that any role not passed via keycloak
-        will be removed from the user.
+        We can use this method to update the groups of the user
+        based on the roles passed by Azure AD. At the moment we receive none,
+        and we assume any user that is able log in is an admin.
         """
         with transaction.atomic():
             user.groups.clear()
-            user.is_staff = False
-            user.is_superuser = False
+            user.is_staff = True
+            user.is_superuser = True
             user.save()
-
-            for role in claims.get('roles'):
-                group, _ = Group.objects.get_or_create(name=role)
-                if settings.DEBUG or role == settings.SENSOR_REGISTER_ADMIN_ROLE_NAME:
-                    user.is_staff = True
-                    user.is_superuser = True
-                user.save()
-                group.user_set.add(user)
 
     def authenticate(self, request, **kwargs):
         user = super().authenticate(request, **kwargs)

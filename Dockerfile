@@ -1,9 +1,22 @@
-FROM amsterdam/python:3.9-buster as app
-MAINTAINER datapunt@amsterdam.nl
+FROM python:3.11 as app
+
+RUN apt-get update \
+  && apt-get autoremove -y \
+  && apt-get install --no-install-recommends -y \
+  postgresql-client-15 \
+  gdal-bin \
+  libgdal-dev \
+  && rm -rf /var/lib/apt/lists/* /var/cache/debconf/*-old \
+  && pip install --upgrade pip \
+  && useradd --user-group -m app
+
+ENV VIRTUAL_ENV=/opt/venv
+RUN python3 -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 WORKDIR /app/install
 COPY requirements.txt requirements.txt
-RUN pip install -r requirements.txt
+RUN pip install -r requirements.txt && pip cache purge
 
 COPY deploy /app/deploy
 
@@ -16,7 +29,9 @@ ARG OIDC_RP_CLIENT_ID=not-used
 ARG OIDC_RP_CLIENT_SECRET=not-used
 RUN DATABASE_ENABLED=false python manage.py collectstatic --no-input
 
-USER datapunt
+RUN mkdir /home/app/.azure
+RUN chown app:app /home/app/.azure
+USER app
 
 CMD ["/app/deploy/docker-run.sh"]
 
@@ -24,27 +39,29 @@ CMD ["/app/deploy/docker-run.sh"]
 FROM app as dev
 
 USER root
+RUN apt-get update \
+  && apt-get autoremove -y \
+  && apt-get install --no-install-recommends -y \
+  netcat-openbsd \
+  && rm -rf /var/lib/apt/lists/* /var/cache/debconf/*-old
+
 WORKDIR /app/install
 ADD requirements_dev.txt requirements_dev.txt
-RUN pip install -r requirements_dev.txt
+RUN pip install -r requirements_dev.txt && pip cache purge
 
 WORKDIR /app/src
-USER datapunt
+USER app
 
-# Any process that requires to write in the home dir
-# we write to /tmp since we have no home dir
-ENV HOME /tmp
-
-CMD ["./manage.py", "runserver", "0.0.0.0:8000"]
+# CMD ["./manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["/app/deploy/docker-run.sh"]
 
 # stage 3, tests
 FROM dev as tests
 
-USER datapunt
 WORKDIR /app/tests
 ADD tests .
 
-ENV COVERAGE_FILE=/tmp/.coverage
+# ENV COVERAGE_FILE=/home/runner/.coverage
 ENV PYTHONPATH=/app/src
 
 CMD ["pytest"]

@@ -723,7 +723,6 @@ class TestGetCenterCoordinates:
 
 
 class TestGetCenterCoordinatesInvalidResponses:
-
     HERENGRACHT_POSTCODE_RESPONSE = json.dumps({"results": [{"straat": "Herengracht"}]})
 
     @pytest.fixture(autouse=True)

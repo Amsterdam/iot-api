@@ -2,8 +2,16 @@
 # https://git.datapunt.amsterdam.nl/Datapunt/python-best-practices/blob/master/dependency_management/
 .PHONY: help pip-tools install requirements update test init
 
-dc = docker-compose
-run = $(dc) run --rm
+UID:=$(shell id --user)
+GID:=$(shell id --group)
+
+ENVIRONMENT ?= local
+VERSION ?= latest
+REGISTRY ?= localhost:5000
+REPOSITORY ?= opdrachten/sensorenregister-api
+
+dc = docker compose
+run = $(dc) run --rm -u ${UID}:${GID}
 manage = $(run) dev python manage.py
 pytest = $(run) test pytest $(ARGS)
 
@@ -11,32 +19,37 @@ help:                               ## Show this help.
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
 pip-tools:
-	pip install pip-tools
+	pip install -U pip-tools
 
 install: pip-tools                  ## Install requirements and sync venv with expected state as defined in requirements.txt
 	pip-sync requirements_dev.txt
 
-requirements: pip-tools             ## Upgrade requirements (in requirements.in) to latest versions and compile requirements.txt
-	pip-compile --upgrade --output-file requirements.txt requirements.in
-	pip-compile --upgrade --output-file requirements_dev.txt requirements_dev.in
+requirements:              ## Upgrade requirements (in requirements.in) to latest versions and compile requirements.txt
+	pip-compile --resolver=backtracking --upgrade --output-file requirements.txt  --allow-unsafe requirements.in
+	pip-compile --resolver=backtracking --upgrade --output-file requirements_dev.txt  --allow-unsafe requirements_dev.in
 
 upgrade: requirements install       ## Run 'requirements' and 'install' targets
 
 migrations:                         ## Make migrations
 	$(manage) makemigrations $(ARGS)
 
-migrate:                            ## Migrate
+migrate:
 	$(manage) migrate
+
+import:
+	$(manage) import_api
 
 urls:
 	$(manage) show_urls
+
+urls:
+	$(manage) createsuperuser
 
 build:
 	$(dc) build
 
 push: build
 	$(dc) push
-
 app:
 	$(run) --service-ports app
 
@@ -59,22 +72,20 @@ lint:                               ## Execute lint checks
 	$(run) test isort --diff --check /app/src/$(APP) /app/tests/$(APP)
 	$(run) test black --diff --check /app/src/$(APP) /app/tests/$(APP)
 
-test: lint                          ## Execute tests
-	$(run) test pytest /app/tests/$(APP) $(ARGS)
+test:                               ## Execute tests
+	$(run) test pytest --junitxml=junit-results.xml --cov=. --cov-report=xml /app/tests/$(APP) $(ARGS)
 
-qa: lint test                      ## Execute all QA tools
+k6:
+	$(run) k6
 
 pdb:
-	$(run) test pytest /app/tests/$(APP) --pdb $(ARGS)
+	$(run) test pytest /app/tests/$(APP) --pdb --pdbcls=IPython.terminal.debugger:TerminalPdb $(ARGS)
 
 clean:                              ## Clean docker stuff
 	$(dc) down -v --remove-orphans
 
 bash:
-	$(dc) run --rm dev bash
+	$(run) dev bash
 
 bash-test:
-	$(dc) run --rm test bash
-
-env:
-	env | sort
+	$(run) test bash
